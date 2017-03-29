@@ -1,0 +1,43 @@
+﻿@using Gateway.Web.Database
+@using Gateway.Web.Models
+@using Version = Gateway.Web.Models.Version
+@{
+    ViewBag.Title = "Controller";
+}
+<h2>@ViewBag.Title.</h2>
+<h3>@ViewBag.Message</h3>
+
+<div class="hero-unit">
+
+    <h2>@Model.Name</h2>
+
+    <h3>Versions</h3>
+
+    <div id="list-meta">
+        <ul>
+            @foreach (Version item in Model.Versions)
+            {
+                <li>
+                    <b>@item.Alias</b> @item.Name - @item.Status 
+                </li>
+            }
+        </ul>
+    </div>
+
+    <br />
+    <br />
+    <h3>Last @Model.RecentRequestsCount requests</h3>
+
+    <div id="list-meta">
+        <ul>
+            @foreach (Request item in Model.Requests)
+            {
+                <li>
+                    @item.StartUtc User=<b>@item.User</b> Version=<b>@item.Version</b> Resource=<b>@item.Resource</b>
+                </li>
+            }
+        </ul>
+    </div>
+
+    <br />
+</div>
