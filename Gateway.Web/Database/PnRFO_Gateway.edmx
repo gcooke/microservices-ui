@@ -1,0 +1,387 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="GatewayModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Controller">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Type" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="UserCallLimitPerSec" Type="int" Nullable="false" />
+          <Property Name="TimeToLiveSec" Type="int" Nullable="false" />
+          <Property Name="Configuration" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="ScalingStrategy" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Weighting" Type="int" Nullable="false" />
+          <Property Name="MaxInstances" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Payload">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CorrelationId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Direction" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="CompressionType" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Data" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="UpdateTime" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Request">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CorrelationId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ParentCorrelationId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="User" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="IpAddress" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Controller" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Version" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Resource" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="RequestType" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Priority" Type="int" Nullable="false" />
+          <Property Name="IsAsync" Type="bit" Nullable="false" />
+          <Property Name="StartUtc" Type="datetime" Nullable="false" />
+          <Property Name="UpdateTime" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Response">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CorrelationId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="EndUtc" Type="datetime" Nullable="false" />
+          <Property Name="TimeTakeMs" Type="smallint" Nullable="false" />
+          <Property Name="ResultCode" Type="int" Nullable="false" />
+          <Property Name="ResultMessage" Type="nvarchar" MaxLength="255" />
+          <Property Name="UpdateTime" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Status">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="StatusChange">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ControllerId" Type="bigint" Nullable="false" />
+          <Property Name="VersionId" Type="bigint" Nullable="false" />
+          <Property Name="StatusId" Type="int" Nullable="false" />
+          <Property Name="User" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Version">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ControllerId" Type="bigint" Nullable="false" />
+          <Property Name="Version" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Alias" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="StatusId" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Version_Controller">
+          <End Role="Controller" Type="Self.Controller" Multiplicity="1" />
+          <End Role="Version" Type="Self.Version" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Controller">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Version">
+              <PropertyRef Name="ControllerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Version_Status">
+          <End Role="Status" Type="Self.Status" Multiplicity="1" />
+          <End Role="Version" Type="Self.Version" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Status">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Version">
+              <PropertyRef Name="StatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="GatewayModelStoreContainer">
+          <EntitySet Name="Controller" EntityType="Self.Controller" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Payload" EntityType="Self.Payload" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Request" EntityType="Self.Request" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Response" EntityType="Self.Response" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Status" EntityType="Self.Status" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StatusChange" EntityType="Self.StatusChange" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Version" EntityType="Self.Version" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Version_Controller" Association="Self.FK_Version_Controller">
+            <End Role="Controller" EntitySet="Controller" />
+            <End Role="Version" EntitySet="Version" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Version_Status" Association="Self.FK_Version_Status">
+            <End Role="Status" EntitySet="Status" />
+            <End Role="Version" EntitySet="Version" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="GatewayModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Controller">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Type" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UserCallLimitPerSec" Type="Int32" Nullable="false" />
+          <Property Name="TimeToLiveSec" Type="Int32" Nullable="false" />
+          <Property Name="Configuration" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ScalingStrategy" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Weighting" Type="Int32" Nullable="false" />
+          <Property Name="MaxInstances" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Versions" Relationship="Self.FK_Version_Controller" FromRole="Controller" ToRole="Version" />
+        </EntityType>
+        <EntityType Name="Payload">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CorrelationId" Type="Guid" Nullable="false" />
+          <Property Name="Direction" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CompressionType" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Data" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UpdateTime" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="Request">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CorrelationId" Type="Guid" Nullable="false" />
+          <Property Name="ParentCorrelationId" Type="Guid" Nullable="false" />
+          <Property Name="User" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IpAddress" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Controller" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Version" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Resource" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="RequestType" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Priority" Type="Int32" Nullable="false" />
+          <Property Name="IsAsync" Type="Boolean" Nullable="false" />
+          <Property Name="StartUtc" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdateTime" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="Response">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CorrelationId" Type="Guid" Nullable="false" />
+          <Property Name="EndUtc" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="TimeTakeMs" Type="Int16" Nullable="false" />
+          <Property Name="ResultCode" Type="Int32" Nullable="false" />
+          <Property Name="ResultMessage" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="UpdateTime" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="Status">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Versions" Relationship="Self.FK_Version_Status" FromRole="Status" ToRole="Version" />
+        </EntityType>
+        <EntityType Name="StatusChange">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ControllerId" Type="Int64" Nullable="false" />
+          <Property Name="VersionId" Type="Int64" Nullable="false" />
+          <Property Name="StatusId" Type="Int32" Nullable="false" />
+          <Property Name="User" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="Version">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ControllerId" Type="Int64" Nullable="false" />
+          <Property Name="Version1" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Alias" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="StatusId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Controller" Relationship="Self.FK_Version_Controller" FromRole="Version" ToRole="Controller" />
+          <NavigationProperty Name="Status" Relationship="Self.FK_Version_Status" FromRole="Version" ToRole="Status" />
+        </EntityType>
+        <Association Name="FK_Version_Controller">
+          <End Role="Controller" Type="Self.Controller" Multiplicity="1" />
+          <End Role="Version" Type="Self.Version" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Controller">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Version">
+              <PropertyRef Name="ControllerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Version_Status">
+          <End Role="Status" Type="Self.Status" Multiplicity="1" />
+          <End Role="Version" Type="Self.Version" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Status">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Version">
+              <PropertyRef Name="StatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="GatewayEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Controllers" EntityType="Self.Controller" />
+          <EntitySet Name="Payloads" EntityType="Self.Payload" />
+          <EntitySet Name="Requests" EntityType="Self.Request" />
+          <EntitySet Name="Responses" EntityType="Self.Response" />
+          <EntitySet Name="Status" EntityType="Self.Status" />
+          <EntitySet Name="StatusChanges" EntityType="Self.StatusChange" />
+          <EntitySet Name="Versions" EntityType="Self.Version" />
+          <AssociationSet Name="FK_Version_Controller" Association="Self.FK_Version_Controller">
+            <End Role="Controller" EntitySet="Controllers" />
+            <End Role="Version" EntitySet="Versions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Version_Status" Association="Self.FK_Version_Status">
+            <End Role="Status" EntitySet="Status" />
+            <End Role="Version" EntitySet="Versions" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="GatewayModelStoreContainer" CdmEntityContainer="GatewayEntities">
+          <EntitySetMapping Name="Controllers">
+            <EntityTypeMapping TypeName="GatewayModel.Controller">
+              <MappingFragment StoreEntitySet="Controller">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="UserCallLimitPerSec" ColumnName="UserCallLimitPerSec" />
+                <ScalarProperty Name="TimeToLiveSec" ColumnName="TimeToLiveSec" />
+                <ScalarProperty Name="Configuration" ColumnName="Configuration" />
+                <ScalarProperty Name="ScalingStrategy" ColumnName="ScalingStrategy" />
+                <ScalarProperty Name="Weighting" ColumnName="Weighting" />
+                <ScalarProperty Name="MaxInstances" ColumnName="MaxInstances" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Payloads">
+            <EntityTypeMapping TypeName="GatewayModel.Payload">
+              <MappingFragment StoreEntitySet="Payload">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="CorrelationId" ColumnName="CorrelationId" />
+                <ScalarProperty Name="Direction" ColumnName="Direction" />
+                <ScalarProperty Name="CompressionType" ColumnName="CompressionType" />
+                <ScalarProperty Name="Data" ColumnName="Data" />
+                <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Requests">
+            <EntityTypeMapping TypeName="GatewayModel.Request">
+              <MappingFragment StoreEntitySet="Request">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="CorrelationId" ColumnName="CorrelationId" />
+                <ScalarProperty Name="ParentCorrelationId" ColumnName="ParentCorrelationId" />
+                <ScalarProperty Name="User" ColumnName="User" />
+                <ScalarProperty Name="IpAddress" ColumnName="IpAddress" />
+                <ScalarProperty Name="Controller" ColumnName="Controller" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+                <ScalarProperty Name="Resource" ColumnName="Resource" />
+                <ScalarProperty Name="RequestType" ColumnName="RequestType" />
+                <ScalarProperty Name="Priority" ColumnName="Priority" />
+                <ScalarProperty Name="IsAsync" ColumnName="IsAsync" />
+                <ScalarProperty Name="StartUtc" ColumnName="StartUtc" />
+                <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Responses">
+            <EntityTypeMapping TypeName="GatewayModel.Response">
+              <MappingFragment StoreEntitySet="Response">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="CorrelationId" ColumnName="CorrelationId" />
+                <ScalarProperty Name="EndUtc" ColumnName="EndUtc" />
+                <ScalarProperty Name="TimeTakeMs" ColumnName="TimeTakeMs" />
+                <ScalarProperty Name="ResultCode" ColumnName="ResultCode" />
+                <ScalarProperty Name="ResultMessage" ColumnName="ResultMessage" />
+                <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Status">
+            <EntityTypeMapping TypeName="GatewayModel.Status">
+              <MappingFragment StoreEntitySet="Status">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StatusChanges">
+            <EntityTypeMapping TypeName="GatewayModel.StatusChange">
+              <MappingFragment StoreEntitySet="StatusChange">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ControllerId" ColumnName="ControllerId" />
+                <ScalarProperty Name="VersionId" ColumnName="VersionId" />
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
+                <ScalarProperty Name="User" ColumnName="User" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Versions">
+            <EntityTypeMapping TypeName="GatewayModel.Version">
+              <MappingFragment StoreEntitySet="Version">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ControllerId" ColumnName="ControllerId" />
+                <ScalarProperty Name="Version1" ColumnName="Version" />
+                <ScalarProperty Name="Alias" ColumnName="Alias" />
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -1,0 +1,58 @@
+﻿@using Gateway.Web.Models
+@{
+    ViewBag.Title = "Controllers";
+}
+<h2>@ViewBag.Title.</h2>
+<h3>@ViewBag.Message</h3>
+
+<div class="hero-unit">
+    <p>
+        All controllers currently registered
+    </p>
+
+    <div class="containerx bulk">
+        @foreach (ControllerModel controller in Model.Controllers)
+            {
+            <div class="widget">
+                <div class="content">
+                    <a href="none">
+                        <img src="~/Content/img/controller.png" alt="" class="avatar" style="float: left;" />
+                    </a>
+
+                    <div class="list-head clearfix">
+                        <h3>
+                            <a href="~/Home/ControllerInfo/@controller.Name">@controller.Name</a>
+                        </h3>
+
+                        <br />
+                        <div style="float: left;">
+                            <b>Requests</b>
+                            <div id="list-meta">
+                                <ul>
+                                    @foreach (var item in controller.RequestSummary)
+                                    {
+                                        <li>@item.Key: <b>@item.Value</b></li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div style="float: right;">
+                            <b>Versions</b>
+                            <div id="list-meta">
+                                <ul>
+                                    @foreach (var item in controller.VersionSummary)
+                                    {
+                                        <li>@item.Key: <b>@item.Value</b></li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <br />
+</div>
