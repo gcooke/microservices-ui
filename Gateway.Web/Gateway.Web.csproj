@@ -253,6 +253,7 @@
     </Content>
     <Content Include="Views\Home\ControllerInfo.cshtml" />
     <None Include="Properties\PublishProfiles\local.pubxml" />
+    <None Include="Properties\PublishProfiles\remote.pubxml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
