@@ -1,31 +1,34 @@
 ﻿@using Gateway.Web.Database
 @using Gateway.Web.Models
+@using Gateway.Web.Utils
+@using Newtonsoft.Json
 @using Version = Gateway.Web.Models.Version
 @{
     ViewBag.Title = "Controller";
 }
-<h2>@ViewBag.Title.</h2>
+<h2>@Model.Name @ViewBag.Title.</h2>
 <h3>@ViewBag.Message</h3>
 
 <div class="hero-unit">
 
-    <h2>@Model.Name</h2>
+    <h3>Info</h3>
+    <pre>
+JHBPSM020000757
+@Html.Encode(Html.Raw(XmlExtensions.FetchControllerInfo("JHBPSM020000757",Model.Name)))
+JHBPSM020000758
+@Html.Encode(Html.Raw(XmlExtensions.FetchControllerInfo("JHBPSM020000758", Model.Name)))
+</pre>
+    <br/>
 
-    <h3>Versions</h3>
+    <h3>Queues</h3>
+    <pre>
+JHBPSM020000757
+@Html.Encode(Html.Raw(XmlExtensions.FetchQueueInfo("JHBPSM020000757",Model.Name)))
+JHBPSM020000758
+@Html.Encode(Html.Raw(XmlExtensions.FetchQueueInfo("JHBPSM020000758", Model.Name)))
+</pre>
+    <br/>
 
-    <div id="list-meta">
-        <ul>
-            @foreach (Version item in Model.Versions)
-            {
-                <li>
-                    <b>@item.Alias</b> @item.Name - @item.Status 
-                </li>
-            }
-        </ul>
-    </div>
-
-    <br />
-    <br />
     <h3>Last @Model.RecentRequestsCount requests</h3>
 
     <div id="list-meta">
@@ -40,4 +43,21 @@
     </div>
 
     <br />
+
+    <h3>Versions</h3>
+
+    <div id="list-meta">
+        <ul>
+            @foreach (Version item in Model.Versions)
+            {
+                <li>
+                    <b>@item.Alias</b> @item.Name - @item.Status
+                </li>
+            }
+        </ul>
+    </div>
+
+    <br />
+    <br />
+
 </div>
