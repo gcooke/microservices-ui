@@ -6,6 +6,10 @@ namespace Gateway.Web.Database
 {
     public class ResponseStats
     {
+        public const int Second = 1000;
+        public const int Minute = 60000;
+        public const int Hour = 3600000;
+
         private readonly Dictionary<string, ResponseStat> _stats;
 
         public ResponseStats(IEnumerable<spGetResponseStatsAll_Result> data)
@@ -29,7 +33,7 @@ namespace Gateway.Web.Database
 
             if (count.HasValue)
             {
-                if (resultCode == 0)
+                if (resultCode == 1)
                     stat.SuccessCount += count.Value;
                 else
                     stat.FailureCount += count.Value;
@@ -62,7 +66,16 @@ namespace Gateway.Web.Database
         {
             ResponseStat stat;
             if (_stats.TryGetValue(name, out stat))
-                return stat.AvgResponseMs + "ms";
+            {
+                if (stat.AvgResponseMs > Hour)
+                    return Math.Round((double)stat.AvgResponseMs / Hour, 2) + " hr";
+                else if (stat.AvgResponseMs > Minute)
+                    return Math.Round((double)stat.AvgResponseMs / Minute, 2) + " min";
+                else if (stat.AvgResponseMs > Second)
+                    return Math.Round((double)stat.AvgResponseMs / Second, 2) + " sec";
+                else
+                    return stat.AvgResponseMs + "ms";
+            }
             return "";
         }
     }
