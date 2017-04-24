@@ -21,5 +21,6 @@ namespace Gateway.Web.Database
         public int ResultCode { get; set; }
         public string ResultMessage { get; set; }
         public System.DateTime UpdateTime { get; set; }
+        public int QueueTimeMs { get; set; }
     }
 }
