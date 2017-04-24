@@ -142,8 +142,17 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\ControllersController.cs" />
+    <Compile Include="Controllers\ControllerController.cs" />
+    <Compile Include="Controllers\UtilsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Models\Catalogue.cs" />
+    <Compile Include="Database\ResponseStats.cs" />
+    <Compile Include="Database\spGetRequestStatsAll_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\spGetRequestStats_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
     <Compile Include="Database\Controller.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
@@ -168,8 +177,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>PnRFO_Gateway.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Database\spGetResponseStatsAll_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\ControllerDetailModel.cs" />
-    <Compile Include="Models\RecentRequests.cs" />
+    <Compile Include="Models\ControllerRequestsSummaryModel.cs" />
     <Compile Include="Database\Request.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
@@ -199,6 +211,8 @@
   <ItemGroup>
     <Content Include="Content\css\bootstrap.css" />
     <Content Include="Content\css\bootstrap.min.css" />
+    <Content Include="Content\css\simple-sidebar.css" />
+    <Content Include="Content\img\bg.jpg" />
     <Content Include="Content\img\controller.png" />
     <Content Include="Content\img\redstone_logo.png" />
     <Content Include="Database\PnRFO_Gateway.Context.tt">
@@ -241,7 +255,7 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Controllers.cshtml" />
+    <Content Include="Views\Controllers\Dashboard.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\HowTo.cshtml" />
     <Content Include="Views\Home\Consul.cshtml" />
@@ -252,9 +266,23 @@
     <Content Include="Database\PnRFO_Gateway.edmx.diagram">
       <DependentUpon>PnRFO_Gateway.edmx</DependentUpon>
     </Content>
-    <Content Include="Views\Home\ControllerInfo.cshtml" />
+    <Content Include="Views\Controller\Dashboard.cshtml" />
     <None Include="Properties\PublishProfiles\local.pubxml" />
     <None Include="Properties\PublishProfiles\remote.pubxml" />
+    <Content Include="Views\Shared\_ControllerNav.cshtml" />
+    <Content Include="Views\Controller\Workers.cshtml" />
+    <Content Include="Views\Controller\Versions.cshtml" />
+    <Content Include="Views\Controller\Queues.cshtml" />
+    <Content Include="Views\Controller\History.cshtml" />
+    <Content Include="Views\Controller\Configuration.cshtml" />
+    <Content Include="Views\Shared\_Layout.NoFooter.cshtml" />
+    <Content Include="Views\Utils\Glyphs.cshtml" />
+    <Content Include="Views\Controller\RequestsChart.cshtml" />
+    <Content Include="Views\Shared\_ControllersNav.cshtml" />
+    <Content Include="Views\Controllers\Workers.cshtml" />
+    <Content Include="Views\Controllers\Queues.cshtml" />
+    <Content Include="Views\Controllers\History.cshtml" />
+    <Content Include="Views\Controllers\Servers.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

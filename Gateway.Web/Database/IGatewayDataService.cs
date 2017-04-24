@@ -1,10 +1,12 @@
-﻿using Gateway.Web.Models;
+﻿using System;
+using Gateway.Web.Models;
 
 namespace Gateway.Web.Database
 {
     public interface IGatewayDataService
     {
-        Catalogue GetCatalogue();
+        ControllersModel GetControllers(DateTime start);
         ControllerDetailModel GetControllerInfo(string name);
+        ControllerRequestsSummaryModel GetControllerRequestSummary(string name, DateTime start);
     }
 }

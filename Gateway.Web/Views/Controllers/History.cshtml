@@ -1,0 +1,23 @@
+﻿@using Gateway.Web.Database
+@using Gateway.Web.Models
+@using Gateway.Web.Utils
+@using Newtonsoft.Json
+@using Version = Gateway.Web.Models.Version
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "All Controllers";
+    ViewBag.Current = "History";
+}
+@{ Html.RenderPartial("_ControllersNav"); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+
+        <h3>History</h3>
+
+        <br/>
+        under construction - this page will show the last x requests. It will support 
+        keyword/user/correlation id searches.
+
+    </div>
+</div>

@@ -1,23 +1,18 @@
-﻿using System.Collections.Generic;
-using Gateway.Web.Database;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Gateway.Web.Models
 {
     public class ControllersModel
     {
-        private readonly IGatewayDataService _dataService;
-
-        public ControllersModel(IGatewayDataService dataService)
+        public ControllersModel()
         {
-            _dataService = dataService;
-
             Controllers = new List<ControllerModel>();
-
-            var catalogue = _dataService.GetCatalogue();
-            foreach (var controller in catalogue.Controllers)
-                Controllers.Add(controller);
+            HistoryStartTime = DateTime.Today.AddDays(-7);
         }
 
         public List<ControllerModel> Controllers { get; private set; }
+
+        public DateTime HistoryStartTime { get; set; }
     }
 }

@@ -24,12 +24,6 @@ namespace Gateway.Web.Controllers
             return View();
         }
 
-        public ActionResult Controllers()
-        {
-            var model = new ControllersModel(_dataService);
-            return View(model);
-        }
-
         public ActionResult HowTo()
         {
             return View();
@@ -39,12 +33,6 @@ namespace Gateway.Web.Controllers
         {
             //ViewBag.Message = "Your consule page.";
             return View();
-        }
-
-        public ActionResult ControllerInfo(string id)
-        {
-            var model = _dataService.GetControllerInfo(id);
-            return View(model);
-        }
+        }        
     }
 }

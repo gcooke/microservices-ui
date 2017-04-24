@@ -12,6 +12,8 @@ namespace Gateway.Web.Database
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class GatewayEntities : DbContext
     {
@@ -32,5 +34,36 @@ namespace Gateway.Web.Database
         public virtual DbSet<Status> Status { get; set; }
         public virtual DbSet<StatusChange> StatusChanges { get; set; }
         public virtual DbSet<Version> Versions { get; set; }
+    
+        public virtual ObjectResult<spGetRequestStats_Result> spGetRequestStats(Nullable<System.DateTime> start, string controller)
+        {
+            var startParameter = start.HasValue ?
+                new ObjectParameter("Start", start) :
+                new ObjectParameter("Start", typeof(System.DateTime));
+    
+            var controllerParameter = controller != null ?
+                new ObjectParameter("Controller", controller) :
+                new ObjectParameter("Controller", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetRequestStats_Result>("spGetRequestStats", startParameter, controllerParameter);
+        }
+    
+        public virtual ObjectResult<spGetRequestStatsAll_Result> spGetRequestStatsAll(Nullable<System.DateTime> start)
+        {
+            var startParameter = start.HasValue ?
+                new ObjectParameter("Start", start) :
+                new ObjectParameter("Start", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetRequestStatsAll_Result>("spGetRequestStatsAll", startParameter);
+        }
+    
+        public virtual ObjectResult<spGetResponseStatsAll_Result> spGetResponseStatsAll(Nullable<System.DateTime> start)
+        {
+            var startParameter = start.HasValue ?
+                new ObjectParameter("Start", start) :
+                new ObjectParameter("Start", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetResponseStatsAll_Result>("spGetResponseStatsAll", startParameter);
+        }
     }
 }

@@ -1,0 +1,78 @@
+﻿@using System.Xml.Schema
+@using Gateway.Web.Models
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "All Controllers";
+    ViewBag.Current = "Dashboard";
+}
+@{ Html.RenderPartial("_ControllersNav"); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+
+        <h3>Controllers</h3>
+
+        <div class="containerx bulk">
+            @foreach (ControllerModel controller in Model.Controllers)
+            {
+                <div class="widget">
+                    <div class="content">
+                        <a href="none">
+                            <img src="~/Content/img/controller.png" alt="" class="avatar" style="float: left;"/>
+                        </a>
+
+                        <div class="list-head clearfix">
+                            <h3 style="margin: 0 40px 0 0;">
+                                <a href="~/Controller/Dashboard/@controller.Name">@controller.Name</a>
+                            </h3>
+                            <small>
+                                @foreach (var item in controller.VersionSummary)
+                                {
+                                    <span>@item.Key: <b>@item.Value</b></span>
+                                }
+                            </small>
+                            <br/>
+                            <br/>
+
+                            <div style="float: left;">
+                                <table style="min-width: 200px; padding: 10px">
+                                    <tr>
+                                        <td style="width: 150px">
+                                            <span class="glyphicon glyphicon-log-in" style="color: green"></span>&nbsp;&nbsp;Calls
+                                        </td>
+                                        <td>@controller.TotalCalls</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width: 150px">
+                                            <span class="glyphicon glyphicon-thumbs-down" style="color: red"></span>&nbsp;&nbsp;Errors
+                                        </td>
+                                        <td>@controller.TotalErrors</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width: 150px">
+                                            <span class="glyphicon glyphicon-resize-full" style="color: gray"></span>&nbsp;&nbsp;Bandwidth
+                                        </td>
+                                        <td>...</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width: 150px">
+                                            <span class="glyphicon glyphicon-time" style="color: black"></span>&nbsp;&nbsp;Response Time
+                                        </td>
+                                        <td>@controller.AverageResponse</td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <div style="float: left;">
+                                <img src="/Controller/RequestsChart?id=@controller.Name&date=@Model.HistoryStartTime.ToString("yyyyMMdd")"/>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <br/>
+    </div>
+</div>

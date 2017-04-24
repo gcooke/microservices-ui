@@ -1,0 +1,23 @@
+﻿@using Gateway.Web.Database
+@using Gateway.Web.Models
+@using Gateway.Web.Utils
+@using Newtonsoft.Json
+@using Version = Gateway.Web.Models.Version
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "Controller";
+    ViewBag.Current = "Workers";
+}
+@{ Html.RenderPartial("_ControllerNav", (ControllerDetailModel)@Model); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+
+        <h3>Workers</h3>
+
+        <br />
+        under construction - this page will show worker by controller version including machine
+        and process info.
+
+    </div>
+</div>

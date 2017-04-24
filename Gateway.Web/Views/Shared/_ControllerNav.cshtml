@@ -1,0 +1,56 @@
+﻿<!-- Sidebar -->
+<div id="sidebar-wrapper">
+    <br />
+    <div>
+        <img class="profileimg" src="@Url.Content("~/Content/img/controller.png")" style="height: 36px">
+        <b class="profilename">@Model.Name @ViewBag.Title</b>
+    </div>
+
+    <ul class="sidebar-nav">
+        <li>
+            <a href="~/Controller/Dashboard/@Model.Name"
+               class="@(ViewBag.Current == "Controller" ? "active" : "")">
+                <span class="glyphicon glyphicon-stats"></span>&nbsp;&nbsp;Dashboard
+            </a>
+        </li>
+        <li>
+            <a href="~/Controller/Workers/@Model.Name"
+               class="@(ViewBag.Current == "Workers" ? "active" : "")">
+                <span class="glyphicon glyphicon-cloud"></span>&nbsp;&nbsp;Workers
+            </a>
+        </li>
+        <li>
+            <a href="~/Controller/Versions/@Model.Name"
+               class="@(ViewBag.Current == "Versions" ? "active" : "")">
+                <span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;Versions
+            </a>
+        </li>
+        <li>
+            <a href="~/Controller/Queues/@Model.Name"
+               class="@(ViewBag.Current == "Queues" ? "active" : "")">
+                <span class="glyphicon glyphicon-random"></span>&nbsp;&nbsp;Queues
+            </a>
+        </li>
+        <li>
+            <a href="~/Controller/History/@Model.Name"
+               class="@(ViewBag.Current == "History" ? "active" : "")">
+                <span class="glyphicon glyphicon-search"></span>&nbsp;&nbsp;History
+            </a>
+        </li>
+        <li>
+            <a href="~/Controller/Configuration/@Model.Name"
+               class="@(ViewBag.Current == "Configuration" ? "active" : "")">
+                <span class="glyphicon glyphicon-cog"></span>&nbsp;&nbsp;Configuration
+            </a>
+        </li>
+        <li>
+            &nbsp;
+        </li>
+        <li>
+            <a href="~/Controllers/Dashboard" style="color: yellow">
+                <span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp;&nbsp;All Controllers
+            </a>
+        </li>
+    </ul>
+</div>
+<!-- /#sidebar-wrapper -->

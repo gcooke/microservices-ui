@@ -11,28 +11,23 @@ namespace Gateway.Web.Database
             //PnRFO_GatewayEntities
         }
 
-        public Catalogue GetCatalogue()
+        public ControllersModel GetControllers(DateTime start)
         {
-            var result = new Catalogue();
+            var result = new ControllersModel();
 
             using (var database = new GatewayEntities())
             {
-                var recent = GetRequestSummary(database);
+                // Get stats
+                var stats = new ResponseStats(database.spGetResponseStatsAll(start));
+                
                 foreach (var controller in database.Controllers)
                 {
-                    result.Controllers.Add(controller.ToModel(recent));
+                    var model = controller.ToModel(stats);
+                    result.Controllers.Add(model);
                 }
             }
 
             return result;
-        }
-
-        private RecentRequests GetRequestSummary(GatewayEntities database)
-        {
-            var yesterday = DateTime.Now.AddDays(-1);
-            var requests = database.Requests
-                                   .Where(r => r.StartUtc > yesterday);
-            return new RecentRequests(requests);
         }
 
         public ControllerDetailModel GetControllerInfo(string name)
@@ -47,6 +42,31 @@ namespace Gateway.Web.Database
                 result.Name = name;
                 result.Versions.AddRange(controller.Versions.Select(v => v.ToModel()));
                 result.Requests.AddRange(GetRecentRequests(database, name, result.RecentRequestsCount));
+                return result;
+            }
+        }
+
+        public ControllerRequestsSummaryModel GetControllerRequestSummary(string name, DateTime start)
+        {
+            using (var database = new GatewayEntities())
+            {
+                var controller = database.Controllers.FirstOrDefault(c => c.Name == name);
+                if (controller == null)
+                    return new ControllerRequestsSummaryModel() { Name = "Unknown controller" };
+
+                // Get recent requests
+                var results = database.spGetRequestStats(start, name);
+                var result = new ControllerRequestsSummaryModel();
+                result.Name = name;
+                foreach (var item in results.OrderBy(r=>r.Date))
+                {
+                    if (item.Count != null && item.Date != null)
+                    {
+                        var label = item.Date.Value.ToString("dd MMM");
+                        result.RequestSummary.Add(new ChartItem(label, item.Count.Value));
+                    }
+                }
+
                 return result;
             }
         }

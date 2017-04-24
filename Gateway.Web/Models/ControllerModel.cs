@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Gateway.Web.Models
 {
@@ -6,13 +8,13 @@ namespace Gateway.Web.Models
     {
         public ControllerModel()
         {
-            RequestSummary = new List<InfoItem>();
             VersionSummary = new List<InfoItem>();
         }
 
         public string Name { get; set; }
-
-        public List<InfoItem> RequestSummary { get; private set; }
+        public int TotalCalls { get; set; }
+        public int TotalErrors { get; set; }
+        public string AverageResponse { get; set; }
 
         public List<InfoItem> VersionSummary { get; private set; }
     }
@@ -27,5 +29,5 @@ namespace Gateway.Web.Models
 
         public string Key { get; set; }
         public string Value { get; set; }
-    }
+    }    
 }

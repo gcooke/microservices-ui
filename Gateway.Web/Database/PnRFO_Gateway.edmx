@@ -114,6 +114,16 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="spGetRequestStats" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Start" Type="datetime" Mode="In" />
+          <Parameter Name="Controller" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="spGetRequestStatsAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Start" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="spGetResponseStatsAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Start" Type="datetime" Mode="In" />
+        </Function>
         <EntityContainer Name="GatewayModelStoreContainer">
           <EntitySet Name="Controller" EntityType="Self.Controller" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Payload" EntityType="Self.Payload" Schema="dbo" store:Type="Tables" />
@@ -264,7 +274,33 @@
             <End Role="Status" EntitySet="Status" />
             <End Role="Version" EntitySet="Versions" />
           </AssociationSet>
+          <FunctionImport Name="spGetRequestStats" ReturnType="Collection(GatewayModel.spGetRequestStats_Result)">
+            <Parameter Name="Start" Mode="In" Type="DateTime" />
+            <Parameter Name="Controller" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="spGetRequestStatsAll" ReturnType="Collection(GatewayModel.spGetRequestStatsAll_Result)">
+          <Parameter Name="Start" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="spGetResponseStatsAll" ReturnType="Collection(GatewayModel.spGetResponseStatsAll_Result)">
+            <Parameter Name="Start" Mode="In" Type="DateTime" />
+          </FunctionImport>
         </EntityContainer>
+        <ComplexType Name="spGetRequestStats_Result">
+          <Property Type="DateTime" Name="Date" Nullable="true" />
+          <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="Count" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="spGetRequestStatsAll_Result">
+          <Property Type="DateTime" Name="Date" Nullable="true" />
+          <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="Count" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="spGetResponseStatsAll_Result">
+          <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="ResultCode" Nullable="true" />
+          <Property Type="Int32" Name="AvgResponseMs" Nullable="true" />
+          <Property Type="Int32" Name="Count" Nullable="true" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -363,6 +399,34 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="spGetRequestStats" FunctionName="GatewayModel.Store.spGetRequestStats">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GatewayModel.spGetRequestStats_Result">
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Controller" ColumnName="Controller" />
+                <ScalarProperty Name="Count" ColumnName="Count" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetRequestStatsAll" FunctionName="GatewayModel.Store.spGetRequestStatsAll">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GatewayModel.spGetRequestStatsAll_Result">
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Controller" ColumnName="Controller" />
+                <ScalarProperty Name="Count" ColumnName="Count" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetResponseStatsAll" FunctionName="GatewayModel.Store.spGetResponseStatsAll">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GatewayModel.spGetResponseStatsAll_Result">
+                <ScalarProperty Name="Controller" ColumnName="Controller" />
+                <ScalarProperty Name="ResultCode" ColumnName="ResultCode" />
+                <ScalarProperty Name="AvgResponseMs" ColumnName="AvgResponseMs" />
+                <ScalarProperty Name="Count" ColumnName="Count" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

@@ -1,4 +1,5 @@
-﻿@{
+﻿@using System.Web.UI.WebControls
+@{
     ViewBag.Title = "Home Page";
 }
 
@@ -9,7 +10,14 @@
 </div>*@
 
 <div class="row">
-    <div class="col-md-4">
+
+    <h3>Home</h3>
+
+    <br />
+    under construction - this page will include various charts showing number of requests, response times
+    and queue sizes.
+
+    @*<div class="col-md-4">
         <h2>Gateways</h2>
         <p>
             List all current gateways.
@@ -19,11 +27,11 @@
     <div class="col-md-4">
         <h2>Controllers</h2>
         <p>Information about controllers.</p>
-        <p><a class="btn btn-default" href="@Url.Action("Controllers", "Home")">Learn more &raquo;</a></p>
+        <p><a class="btn btn-default" href="@Url.Action("Dashboard", "Controllers")">Learn more &raquo;</a></p>
     </div>
     <div class="col-md-4">
         <h2>Consule Key-Value Store</h2>
         <p>Information about console store.</p>
         <p><a class="btn btn-default" href="@Url.Action("Consul", "Home")">Learn more &raquo;</a></p>
-    </div>
+    </div>*@
 </div>

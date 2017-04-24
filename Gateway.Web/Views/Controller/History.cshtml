@@ -1,0 +1,37 @@
+﻿@using Gateway.Web.Database
+@using Gateway.Web.Models
+@using Gateway.Web.Utils
+@using Newtonsoft.Json
+@using Version = Gateway.Web.Models.Version
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "Controller";
+    ViewBag.Current = "History";
+}
+@{ Html.RenderPartial("_ControllerNav", (ControllerDetailModel)@Model); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+
+        <h3>Last @Model.RecentRequestsCount requests</h3>
+
+        <br />
+        under construction - this page will show the last x requests. It will support
+        keyword/user/correlation id searches and a user will be able to click through to 
+        request details.
+
+        <div id="list-meta">
+            <ul>
+                @foreach (Request item in Model.Requests)
+            {
+                    <li>
+                        @item.StartUtc User=<b>@item.User</b> Version=<b>@item.Version</b> Resource=<b>@item.Resource</b>
+                    </li>
+                }
+            </ul>
+        </div>
+
+        <br/>
+
+    </div>
+</div>

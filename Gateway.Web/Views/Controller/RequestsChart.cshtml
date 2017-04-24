@@ -1,0 +1,20 @@
+﻿@using System.Xml.Schema
+@using Gateway.Web.Models
+@{
+    ViewBag.Title = "Controllers";
+}
+
+@{
+    var model = (ControllerRequestsSummaryModel)@Model;
+    
+
+    var chart = new Chart(600, 100, theme: ChartTheme.Vanilla)
+        .AddSeries("Requests",
+                   xValue: model.RequestSummary,
+                   yValues: model.RequestSummary,
+                   xField: "Key",
+                   yFields: "Value", 
+                   chartType:"Line");
+    
+        chart.Write();
+}

@@ -6,15 +6,14 @@ namespace Gateway.Web.Database
 {
     public static class ModelEx
     {
-        public static ControllerModel ToModel(this Controller controller, RecentRequests recent)
+        public static ControllerModel ToModel(this Controller controller, ResponseStats stats)
         {
             var result = new ControllerModel();
 
             result.Name = controller.Name;
-            foreach (var item in recent.GetTotals(controller.Name))
-            {
-                result.RequestSummary.Add(new InfoItem(item.Key, item.Value.ToString()));
-            }
+            result.TotalCalls = stats.GetTotalCalls(controller.Name);
+            result.TotalErrors = stats.GetTotalErrors(controller.Name);
+            result.AverageResponse = stats.GetAverageResponse(controller.Name);
             foreach (var group in controller.Versions.GroupBy(v => v.Status.Name))
             {
                 result.VersionSummary.Add(new InfoItem(group.Key, group.Count().ToString()));

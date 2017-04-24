@@ -1,0 +1,31 @@
+﻿@using Gateway.Web.Database
+@using Gateway.Web.Models
+@using Gateway.Web.Utils
+@using Newtonsoft.Json
+@using Version = Gateway.Web.Models.Version
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "Controller";
+    ViewBag.Current = "Controller";
+}
+@{ Html.RenderPartial("_ControllerNav", (ControllerDetailModel)@Model); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+
+        <h3>Info</h3>
+
+        <br />
+        under construction - this page will show a summary of the controller stats.
+
+        <pre>
+JHBPSM020000757
+@Html.Encode(Html.Raw(XmlExtensions.FetchControllerInfo("JHBPSM020000757", Model.Name)))
+JHBPSM020000758
+@Html.Encode(Html.Raw(XmlExtensions.FetchControllerInfo("JHBPSM020000758", Model.Name)))
+</pre>
+        <br />
+        
+
+    </div>
+</div>
