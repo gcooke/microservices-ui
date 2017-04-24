@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="GatewayModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="GatewayModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Controller">
           <Key>
             <PropertyRef Name="Id" />
@@ -13,7 +13,7 @@
           <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="Type" Type="nvarchar" MaxLength="10" Nullable="false" />
           <Property Name="UserCallLimitPerSec" Type="int" Nullable="false" />
-          <Property Name="TimeToLiveSec" Type="int" Nullable="false" />
+          <Property Name="TimeToLiveSec" Type="int" />
           <Property Name="Configuration" Type="nvarchar" MaxLength="200" Nullable="false" />
           <Property Name="ScalingStrategy" Type="nvarchar" MaxLength="10" Nullable="false" />
           <Property Name="Weighting" Type="int" Nullable="false" />
@@ -55,9 +55,10 @@
           <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="CorrelationId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="EndUtc" Type="datetime" Nullable="false" />
-          <Property Name="TimeTakeMs" Type="smallint" Nullable="false" />
+          <Property Name="QueueTimeMs" Type="int" Nullable="false" />
+          <Property Name="TimeTakeMs" Type="int" Nullable="false" />
           <Property Name="ResultCode" Type="int" Nullable="false" />
-          <Property Name="ResultMessage" Type="nvarchar" MaxLength="255" />
+          <Property Name="ResultMessage" Type="nvarchar(max)" />
           <Property Name="UpdateTime" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="Status">
@@ -130,8 +131,7 @@
             <End Role="Version" EntitySet="Version" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="GatewayModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -143,7 +143,7 @@
           <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Type" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="UserCallLimitPerSec" Type="Int32" Nullable="false" />
-          <Property Name="TimeToLiveSec" Type="Int32" Nullable="false" />
+          <Property Name="TimeToLiveSec" Type="Int32" />
           <Property Name="Configuration" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ScalingStrategy" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Weighting" Type="Int32" Nullable="false" />
@@ -188,8 +188,9 @@
           <Property Name="EndUtc" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="TimeTakeMs" Type="Int16" Nullable="false" />
           <Property Name="ResultCode" Type="Int32" Nullable="false" />
-          <Property Name="ResultMessage" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="ResultMessage" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="UpdateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="QueueTimeMs" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="Status">
           <Key>
@@ -319,6 +320,7 @@
           <EntitySetMapping Name="Responses">
             <EntityTypeMapping TypeName="GatewayModel.Response">
               <MappingFragment StoreEntitySet="Response">
+                <ScalarProperty Name="QueueTimeMs" ColumnName="QueueTimeMs" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="CorrelationId" ColumnName="CorrelationId" />
                 <ScalarProperty Name="EndUtc" ColumnName="EndUtc" />

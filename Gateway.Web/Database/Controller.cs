@@ -24,7 +24,7 @@ namespace Gateway.Web.Database
         public string Name { get; set; }
         public string Type { get; set; }
         public int UserCallLimitPerSec { get; set; }
-        public int TimeToLiveSec { get; set; }
+        public Nullable<int> TimeToLiveSec { get; set; }
         public string Configuration { get; set; }
         public string ScalingStrategy { get; set; }
         public int Weighting { get; set; }
