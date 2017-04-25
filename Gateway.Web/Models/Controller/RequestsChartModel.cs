@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace Gateway.Web.Models
+namespace Gateway.Web.Models.Controller
 {
-    public class ControllerRequestsSummaryModel
+    public class RequestsChartModel : BaseControllerModel
     {
-        public ControllerRequestsSummaryModel()
+        public RequestsChartModel(string name) : base(name)
         {
             RequestSummary = new List<ChartItem>();
         }
 
-        public string Name { get; set; }
         public List<ChartItem> RequestSummary { get; private set; }
     }
 
@@ -22,7 +20,15 @@ namespace Gateway.Web.Models
             Value = value;
         }
 
+        public ChartItem(string key, int value, int value2)
+        {
+            Key = key;
+            Value = value;
+            Value2 = value2;
+        }
+
         public string Key { get; set; }
         public int Value { get; set; }
+        public int Value2 { get; set; }
     }
 }

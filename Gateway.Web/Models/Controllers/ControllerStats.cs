@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace Gateway.Web.Models
+namespace Gateway.Web.Models.Controllers
 {
-    public class ControllerModel
+    public class ControllerStats
     {
-        public ControllerModel()
+        public ControllerStats()
         {
             VersionSummary = new List<InfoItem>();
         }

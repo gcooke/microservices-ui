@@ -1,8 +1,9 @@
 ﻿@using Gateway.Web.Database
 @using Gateway.Web.Models
+@using Gateway.Web.Models.Controllers
 @using Gateway.Web.Utils
 @using Newtonsoft.Json
-@using Version = Gateway.Web.Models.Version
+@using Version = Gateway.Web.Models.Controller.Version
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
     ViewBag.Title = "All Controllers";
@@ -15,9 +16,52 @@
 
         <h3>Servers</h3>
 
-        <br/>
-        under construction - this page will include all servers that have a consul instance running
-        and will show memory, disk usage, cpu etc.
+        <div class="containerx bulk">
+            @foreach (Server server in Model.Servers)
+            {
+                <div class="widget">
+                    <div class="content">
+                        <div class="list-head clearfix">
+                            <h3 style="margin: 0 40px 0 0;">
+                                <span class="glyphicon glyphicon-hdd"></span> @server.Name
+                            </h3>
+                            <small>
+                                Queues: <b>@server.Queues</b>
+                                Workers: <b>@server.Workers</b>
+                            </small>
+                            <br />
+                            <br />
+
+                            <div style="float: left;">
+                                <table style="min-width: 200px; padding: 10px">
+                                    <tr>
+                                        <td style="width: 150px">
+                                            <span class="glyphicon glyphicon-tasks" style="color: green"></span>&nbsp;&nbsp;CPU
+                                        </td>
+                                        <td>?</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width: 150px">
+                                            <span class="glyphicon glyphicon-thumbs-up" style="color: red"></span>&nbsp;&nbsp;Memory
+                                        </td>
+                                        <td>?</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width: 150px">
+                                            <span class="glyphicon glyphicon-hdd" style="color: gray"></span>&nbsp;&nbsp;Disk
+                                        </td>
+                                        <td>?</td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <br />
 
     </div>
 </div>

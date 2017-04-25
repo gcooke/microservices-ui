@@ -7,26 +7,22 @@
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
     ViewBag.Title = "Controller";
-    ViewBag.Current = "Queues";
+    ViewBag.Current = "Request";
 }
 @{ Html.RenderPartial("_ControllerNav", (BaseControllerModel)@Model); }
 
 <div id="page-content-wrapper">
     <div class="hero-unit">
 
-        <h3>Queues</h3>
+        <h3>Payloads</h3>
 
-        <br />
-        under construction - this page will show queue stats for all gateways
-
-        <pre>
-JHBPSM020000757
-@Html.Encode(Html.Raw(XmlExtensions.FetchQueueInfo("JHBPSM020000757", Model.Name)))
-JHBPSM020000758
-@Html.Encode(Html.Raw(XmlExtensions.FetchQueueInfo("JHBPSM020000758", Model.Name)))
-</pre>
-        <br />
-
+        @foreach (PayloadModel payload in Model.Items)
+        {
+            <br />
+            <br />
+            <h4>@payload.Direction</h4>
+            <pre>@payload.Data</pre>
+        }
 
     </div>
 </div>

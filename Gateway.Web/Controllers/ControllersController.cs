@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Web.Mvc;
 using Gateway.Web.Database;
 using Gateway.Web.Models;
+using Gateway.Web.Models.Controllers;
 using Controller = System.Web.Mvc.Controller;
 
 namespace Gateway.Web.Controllers
@@ -19,28 +20,35 @@ namespace Gateway.Web.Controllers
         public ActionResult Dashboard()
         {
             var start = DateTime.Today.AddDays(-7);
-            var model = _dataService.GetControllers(start);
+            var controllers = _dataService.GetControllerStatistics(start);
+            var model = new DashboardModel();
+            model.Controllers.AddRange(controllers);
             return View(model);
-        }
-        
-        public ActionResult History()
-        {
-            return View();
-        }
-        
-        public ActionResult Queues()
-        {
-            return View();
         }
 
         public ActionResult Servers()
         {
-            return View();
+            var model = new ServersModel();
+            model.Servers.Add(new Server() { Name = "JHBPSM020000757" });
+            return View(model);
+        }
+
+        public ActionResult History()
+        {
+            var model = new HistoryModel();
+            return View(model);
+        }
+
+        public ActionResult Queues()
+        {
+            var model = new QueuesModel();
+            return View(model);
         }
 
         public ActionResult Workers()
         {
-            return View();
+            var model = new WorkersModel();
+            return View(model);
         }
     }
 }

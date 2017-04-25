@@ -1,37 +1,53 @@
 ﻿@using Gateway.Web.Database
 @using Gateway.Web.Models
+@using Gateway.Web.Models.Controller
 @using Gateway.Web.Utils
 @using Newtonsoft.Json
-@using Version = Gateway.Web.Models.Version
+@using Version = Gateway.Web.Models.Controller.Version
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
     ViewBag.Title = "Controller";
     ViewBag.Current = "History";
 }
-@{ Html.RenderPartial("_ControllerNav", (ControllerDetailModel)@Model); }
+@{ Html.RenderPartial("_ControllerNav", (BaseControllerModel)@Model); }
 
 <div id="page-content-wrapper">
     <div class="hero-unit">
 
-        <h3>Last @Model.RecentRequestsCount requests</h3>
+        <h3>Last @Model.Requests.Count requests</h3>
 
         <br />
         under construction - this page will show the last x requests. It will support
-        keyword/user/correlation id searches and a user will be able to click through to 
+        keyword/user/correlation id searches and a user will be able to click through to
         request details.
 
-        <div id="list-meta">
-            <ul>
-                @foreach (Request item in Model.Requests)
+        <div class="containerx bulk">
+            @foreach (HistoryItem history in Model.Requests)
             {
-                    <li>
-                        @item.StartUtc User=<b>@item.User</b> Version=<b>@item.Version</b> Resource=<b>@item.Resource</b>
-                    </li>
-                }
-            </ul>
+                <div class="widget">
+                    <div class="content">
+                        <div class="list-head clearfix" style="float: left">
+                            @*<h3 style="margin: 0 40px 0 0;">
+                                    <img src="~/Content/img/controller.png" alt="" class="avatar" />
+                                    <a href="~/Controller/Dashboard/@controller.Name">@controller.Name</a>
+                                </h3>*@
+                            <small>Start: <b>@history.StartUtc</b> End: <b>@history.EndUtc @string.Format("({0}ms)", history.TimeTakeMs)</b></small>
+                            <br />
+                            <small>User: <b>@history.User</b></small>
+                            <br />
+                            <small>Resource: <b>@history.Resource</b></small>
+                            <br />
+                            <small>Result: <b>@history.ResultMessage @string.Format("({0})", history.ResultCode)</b></small>
+                        </div>
+                        <div style="float: right">
+                            <a class="btn btn-default" href="@Url.Action("Request", "Controller", new { name = history.Controller, correlationId = history.CorrelationId })">View &raquo;</a>
+                        </div>
+                    </div>
+                </div>
+            }
         </div>
 
-        <br/>
+        <br />
 
     </div>
 </div>

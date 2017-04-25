@@ -1,5 +1,6 @@
 ﻿@using System.Xml.Schema
 @using Gateway.Web.Models
+@using Gateway.Web.Models.Controllers
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
     ViewBag.Title = "All Controllers";
@@ -11,18 +12,16 @@
     <div class="hero-unit">
 
         <h3>Controllers</h3>
+        <p>Statistics for last 7 days</p>
 
         <div class="containerx bulk">
-            @foreach (ControllerModel controller in Model.Controllers)
+            @foreach (ControllerStats controller in Model.Controllers)
             {
                 <div class="widget">
                     <div class="content">
-                        <a href="none">
-                            <img src="~/Content/img/controller.png" alt="" class="avatar" style="float: left;"/>
-                        </a>
-
                         <div class="list-head clearfix">
                             <h3 style="margin: 0 40px 0 0;">
+                                <img src="~/Content/img/controller.png" alt="" class="avatar"/>
                                 <a href="~/Controller/Dashboard/@controller.Name">@controller.Name</a>
                             </h3>
                             <small>
@@ -56,7 +55,7 @@
                                     </tr>
                                     <tr>
                                         <td style="width: 150px">
-                                            <span class="glyphicon glyphicon-time" style="color: black"></span>&nbsp;&nbsp;Response Time
+                                            <span class="glyphicon glyphicon-time" style="color: black"></span>&nbsp;&nbsp;Avg. Response
                                         </td>
                                         <td>@controller.AverageResponse</td>
                                     </tr>

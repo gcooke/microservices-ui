@@ -1,14 +1,15 @@
 ﻿@using Gateway.Web.Database
 @using Gateway.Web.Models
+@using Gateway.Web.Models.Controller
 @using Gateway.Web.Utils
 @using Newtonsoft.Json
-@using Version = Gateway.Web.Models.Version
+@using Version = Gateway.Web.Models.Controller.Version
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
     ViewBag.Title = "Controller";
     ViewBag.Current = "Versions";
 }
-@{ Html.RenderPartial("_ControllerNav", (ControllerDetailModel)@Model); }
+@{ Html.RenderPartial("_ControllerNav", (BaseControllerModel)@Model); }
 
 <div id="page-content-wrapper">
     <div class="hero-unit">

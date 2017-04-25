@@ -1,12 +1,22 @@
 ﻿using System;
-using Gateway.Web.Models;
+using System.Collections.Generic;
+using Gateway.Web.Models.Controller;
+using Gateway.Web.Models.Controllers;
 
 namespace Gateway.Web.Database
 {
     public interface IGatewayDataService
     {
-        ControllersModel GetControllers(DateTime start);
-        ControllerDetailModel GetControllerInfo(string name);
-        ControllerRequestsSummaryModel GetControllerRequestSummary(string name, DateTime start);
+        List<ControllerStats> GetControllerStatistics(DateTime start);
+
+        List<HistoryItem> GetRecentRequests(string controller, DateTime start);
+
+        ResponseStats GetResponseStats(DateTime start);
+
+        RequestsChartModel GetControllerRequestSummary(string name, DateTime start);
+
+        TimeChartModel GetControllerTimeSummary(string name, DateTime start);
+
+        RequestModel GetRequestDetails(string name, string correlationId);
     }
 }
