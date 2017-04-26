@@ -35,6 +35,7 @@ namespace Gateway.Web.Controllers
         public ActionResult Queues(string id)
         {
             var model = new QueuesModel(id);
+            model.Queues = _dataService.GetControllerQueueSummary(id, model.HistoryStartTime);
             return View(model);
         }
 
@@ -82,6 +83,16 @@ namespace Gateway.Web.Controllers
                 start = DateTime.Today.AddDays(-1);
 
             var model = _dataService.GetControllerTimeSummary(id, start);
+            return View(model);
+        }
+
+        public ActionResult QueueChart(string id, string date)
+        {
+            DateTime start;
+            if (!DateTime.TryParseExact(date, "yyyyMMdd", CultureInfo.CurrentCulture, DateTimeStyles.None, out start))
+                start = DateTime.Today.AddDays(-1);
+
+            var model = _dataService.GetControllerQueueSummary(id, start);
             return View(model);
         }
     }

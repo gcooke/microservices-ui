@@ -1,0 +1,24 @@
+﻿@using System.Xml.Schema
+@using Gateway.Web.Models
+@using Gateway.Web.Models.Controllers
+@{
+    ViewBag.Title = "Controllers";
+}
+
+@{
+    var model = (QueueChartModel)@Model;
+
+
+    var chart = new Chart(600, 400, theme: ChartTheme.Vanilla);
+
+    foreach (var version in model.Versions)
+        chart.AddSeries(version.Label,
+            xValue: version.Items,
+            yValues: version.Items,
+            xField: "Time",
+            yFields: "Count",
+            chartType: "Line");
+
+    chart.AddLegend();
+    chart.Write();    
+}

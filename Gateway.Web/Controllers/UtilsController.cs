@@ -9,6 +9,11 @@ namespace Gateway.Web.Controllers
         {
         }
 
+        public ActionResult Errors()
+        {
+            return View();
+        }
+
         public ActionResult Glyphs()
         {
             return View();

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Gateway.Web.Models.Controller;
+using Gateway.Web.Models.Controllers;
 
 namespace Gateway.Web.Database
 {
@@ -116,13 +117,62 @@ namespace Gateway.Web.Database
             return result;
         }
 
-        //private Request[] GetRecentRequests(GatewayEntities database, string controller, int count)
-        //{
-        //    var requests = database.Requests
-        //                           .Where(r => r.Controller == controller)
-        //                           .OrderByDescending(r => r.StartUtc)
-        //                           .Take(count);
-        //    return requests.ToArray();
-        //}
+        public Models.Controller.QueueChartModel GetControllerQueueSummary(string name, DateTime start)
+        {
+            using (var database = new GatewayEntities())
+            {
+                var results = database.spGetQueueCounts(start, name);
+                var result = new Models.Controller.QueueChartModel(name);
+
+                foreach (var group in results.GroupBy(r => r.Version))
+                {
+                    var series = new Models.Controller.VersionQueueChartModel(group.Key);
+                    foreach (var value in group)
+                    {
+                        var updateTime = value.Date.Value.Add(TimeSpan.Parse(value.Hour));
+                        var item = new Models.Controller.QueueCount(updateTime, value.LastEnqueue, value.LastDequeue, value.ItemCount.Value);
+                        series.Items.Add(item);
+                    }
+
+                    // Add zero item
+                    if (series.Items.Last().Time < DateTime.Now.AddSeconds(-30))
+                        series.Items.Add(new Models.Controller.QueueCount(DateTime.Now, null, null, 0));
+
+                    result.Versions.Add(series);
+                }
+
+                return result;
+            }
+        }
+
+        public Models.Controllers.QueueChartModel GetControllerQueueSummary(DateTime start)
+        {
+            using (var database = new GatewayEntities())
+            {
+                var results = database.spGetQueueCountsAll(start);
+                var result = new Models.Controllers.QueueChartModel();
+
+                foreach (var group in results.GroupBy(r => string.Format("{0} ({1})", r.Controller, r.Version)))
+                {
+                    var last = group.Last();
+                    var series = new Models.Controllers.VersionQueueChartModel(last);
+                    foreach (var value in group)
+                    {
+                        var updateTime = value.Date.Value.Add(TimeSpan.Parse(value.Hour));
+                        var item = new Models.Controllers.QueueCount(updateTime, value.ItemCount.Value);
+                        series.Items.Add(item);
+                    }
+                    // Add zero item
+                    if (series.Items.Last().Time < DateTime.Now.AddSeconds(-60))
+                    {
+                        series.Items.Add(new Models.Controllers.QueueCount(DateTime.Now, 0));
+                        series.LastCount = 0;
+                    }
+                    result.Versions.Add(series);
+                }
+
+                return result;
+            }
+        }
     }
 }

@@ -144,9 +144,16 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\ControllersController.cs" />
     <Compile Include="Controllers\ControllerController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\UtilsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Database\ResponseStats.cs" />
+    <Compile Include="Database\spGetQueueCountsAll_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\spGetQueueCounts_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
     <Compile Include="Database\spGetRecentRequests_Result.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
@@ -187,6 +194,7 @@
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Controllers\HistoryModel.cs" />
+    <Compile Include="Models\Controllers\QueueChartModel.cs" />
     <Compile Include="Models\Controllers\QueuesModel.cs" />
     <Compile Include="Models\Controllers\ServersModel.cs" />
     <Compile Include="Models\Controllers\WorkersModel.cs" />
@@ -194,6 +202,7 @@
     <Compile Include="Models\Controller\HistoryModel.cs" />
     <Compile Include="Models\Controller\QueuesModel.cs" />
     <Compile Include="Models\Controller\RequestModel.cs" />
+    <Compile Include="Models\Controller\QueueChartModel.cs" />
     <Compile Include="Models\Controller\TimeChartModel.cs" />
     <Compile Include="Models\Controller\VersionsModel.cs" />
     <Compile Include="Models\Controller\WorkersModel.cs" />
@@ -272,7 +281,7 @@
     </Content>
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Error\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Controllers\Dashboard.cshtml" />
@@ -305,6 +314,10 @@
     <Content Include="Views\Controllers\Servers.cshtml" />
     <Content Include="Views\Controller\TimeChart.cshtml" />
     <Content Include="Views\Controller\Request.cshtml" />
+    <Content Include="Views\Error\InternalServer.cshtml" />
+    <Content Include="Views\Error\NotFound.cshtml" />
+    <Content Include="Views\Controller\QueueChart.cshtml" />
+    <Content Include="Views\Controllers\QueueChart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

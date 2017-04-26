@@ -18,5 +18,9 @@ namespace Gateway.Web.Database
         TimeChartModel GetControllerTimeSummary(string name, DateTime start);
 
         RequestModel GetRequestDetails(string name, string correlationId);
+
+        Models.Controller.QueueChartModel GetControllerQueueSummary(string name, DateTime start);
+
+        Models.Controllers.QueueChartModel GetControllerQueueSummary(DateTime start);
     }
 }

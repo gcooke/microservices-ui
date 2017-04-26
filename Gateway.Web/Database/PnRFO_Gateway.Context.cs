@@ -91,5 +91,27 @@ namespace Gateway.Web.Database
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetRecentRequests_Result>("spGetRecentRequests", startParameter, controllerParameter);
         }
+    
+        public virtual ObjectResult<spGetQueueCounts_Result> spGetQueueCounts(Nullable<System.DateTime> start, string controller)
+        {
+            var startParameter = start.HasValue ?
+                new ObjectParameter("Start", start) :
+                new ObjectParameter("Start", typeof(System.DateTime));
+    
+            var controllerParameter = controller != null ?
+                new ObjectParameter("Controller", controller) :
+                new ObjectParameter("Controller", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetQueueCounts_Result>("spGetQueueCounts", startParameter, controllerParameter);
+        }
+    
+        public virtual ObjectResult<spGetQueueCountsAll_Result> spGetQueueCountsAll(Nullable<System.DateTime> start)
+        {
+            var startParameter = start.HasValue ?
+                new ObjectParameter("Start", start) :
+                new ObjectParameter("Start", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetQueueCountsAll_Result>("spGetQueueCountsAll", startParameter);
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using System.Web.Mvc;
 using Gateway.Web.Database;
 using Gateway.Web.Models;
@@ -22,7 +23,7 @@ namespace Gateway.Web.Controllers
             var start = DateTime.Today.AddDays(-7);
             var controllers = _dataService.GetControllerStatistics(start);
             var model = new DashboardModel();
-            model.Controllers.AddRange(controllers);
+            model.Controllers.AddRange(controllers.OrderBy(c => c.Name));
             return View(model);
         }
 
@@ -42,12 +43,23 @@ namespace Gateway.Web.Controllers
         public ActionResult Queues()
         {
             var model = new QueuesModel();
+            model.Queues = _dataService.GetControllerQueueSummary(model.HistoryStartTime);
             return View(model);
         }
 
         public ActionResult Workers()
         {
             var model = new WorkersModel();
+            return View(model);
+        }
+
+        public ActionResult QueueChart(string date)
+        {
+            DateTime start;
+            if (!DateTime.TryParseExact(date, "yyyyMMdd", CultureInfo.CurrentCulture, DateTimeStyles.None, out start))
+                start = DateTime.Today.AddDays(-1);
+
+            var model = _dataService.GetControllerQueueSummary(start);
             return View(model);
         }
     }

@@ -9,6 +9,11 @@ namespace Gateway.Web.Models.Controller
     {
         public QueuesModel(string name) : base(name)
         {
+            HistoryStartTime = DateTime.Now.AddDays(-1);
         }
+
+        public DateTime HistoryStartTime { get; set; }
+
+        public QueueChartModel Queues { get; set; }
     }
 }

@@ -114,6 +114,13 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="spGetQueueCounts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Start" Type="datetime" Mode="In" />
+          <Parameter Name="Controller" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="spGetQueueCountsAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Start" Type="datetime" Mode="In" />
+        </Function>
         <Function Name="spGetRecentRequests" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Start" Type="datetime" Mode="In" />
           <Parameter Name="Controller" Type="nvarchar" Mode="In" />
@@ -300,6 +307,13 @@
             <Parameter Name="Start" Mode="In" Type="DateTime" />
             <Parameter Name="Controller" Mode="In" Type="String" />
           </FunctionImport>
+          <FunctionImport Name="spGetQueueCounts" ReturnType="Collection(GatewayModel.spGetQueueCounts_Result)">
+            <Parameter Name="Start" Mode="In" Type="DateTime" />
+            <Parameter Name="Controller" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="spGetQueueCountsAll" ReturnType="Collection(GatewayModel.spGetQueueCountsAll_Result)">
+            <Parameter Name="Start" Mode="In" Type="DateTime" />
+          </FunctionImport>
         </EntityContainer>
         <ComplexType Name="spGetRequestStats_Result">
           <Property Type="DateTime" Name="Date" Nullable="true" />
@@ -340,6 +354,26 @@
           <Property Type="Int32" Name="TimeTakeMs" Nullable="true" />
           <Property Type="Int32" Name="ResultCode" Nullable="true" />
           <Property Type="String" Name="ResultMessage" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="spGetQueueCounts_Result">
+          <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Version" Nullable="false" MaxLength="100" />
+          <Property Type="DateTime" Name="Date" Nullable="true" />
+          <Property Type="String" Name="Hour" Nullable="true" MaxLength="61" />
+          <Property Type="Int32" Name="ItemCount" Nullable="true" />
+          <Property Type="DateTime" Name="LastEnqueue" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="LastDequeue" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Server" Nullable="true" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="spGetQueueCountsAll_Result">
+          <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Version" Nullable="false" MaxLength="100" />
+          <Property Type="DateTime" Name="Date" Nullable="true" />
+          <Property Type="String" Name="Hour" Nullable="true" MaxLength="61" />
+          <Property Type="Int32" Name="ItemCount" Nullable="true" />
+          <Property Type="DateTime" Name="LastEnqueue" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="LastDequeue" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Server" Nullable="true" MaxLength="100" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -496,6 +530,34 @@
                 <ScalarProperty Name="TimeTakeMs" ColumnName="TimeTakeMs" />
                 <ScalarProperty Name="ResultCode" ColumnName="ResultCode" />
                 <ScalarProperty Name="ResultMessage" ColumnName="ResultMessage" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetQueueCounts" FunctionName="GatewayModel.Store.spGetQueueCounts">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GatewayModel.spGetQueueCounts_Result">
+                <ScalarProperty Name="Controller" ColumnName="Controller" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Hour" ColumnName="Hour" />
+                <ScalarProperty Name="ItemCount" ColumnName="ItemCount" />
+                <ScalarProperty Name="LastEnqueue" ColumnName="LastEnqueue" />
+                <ScalarProperty Name="LastDequeue" ColumnName="LastDequeue" />
+                <ScalarProperty Name="Server" ColumnName="Server" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetQueueCountsAll" FunctionName="GatewayModel.Store.spGetQueueCountsAll">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GatewayModel.spGetQueueCountsAll_Result">
+                <ScalarProperty Name="Controller" ColumnName="Controller" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Hour" ColumnName="Hour" />
+                <ScalarProperty Name="ItemCount" ColumnName="ItemCount" />
+                <ScalarProperty Name="LastEnqueue" ColumnName="LastEnqueue" />
+                <ScalarProperty Name="LastDequeue" ColumnName="LastDequeue" />
+                <ScalarProperty Name="Server" ColumnName="Server" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
