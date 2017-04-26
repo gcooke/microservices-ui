@@ -226,6 +226,7 @@
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Controller\Version.cs" />
+    <Compile Include="Models\Home\IndexModel.cs" />
     <Compile Include="Registrations.cs" />
     <Compile Include="UnityDependencyResolver.cs" />
     <Compile Include="Global.asax.cs">
