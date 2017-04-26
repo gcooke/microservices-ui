@@ -1,0 +1,64 @@
+﻿@using Gateway.Web.Database
+@using Gateway.Web.Models
+@using Gateway.Web.Models.Controller
+@using Gateway.Web.Utils
+@using Newtonsoft.Json
+@using Version = Gateway.Web.Models.Controller.Version
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "Controller";
+    ViewBag.Current = "Controller";
+}
+@{ Html.RenderPartial("_ControllerNav", (BaseControllerModel)@Model); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+
+        <h3>@Model.Name</h3>
+
+        <h4>Statistics</h4>
+        <div>
+            <table style="min-width: 200px; padding: 10px">
+                <tr>
+                    <td style="width: 150px">
+                        <span class="glyphicon glyphicon-log-in" style="color: green"></span>&nbsp;&nbsp;Calls
+                    </td>
+                    <td>@Model.TotalCalls</td>
+                </tr>
+                <tr>
+                    <td style="width: 150px">
+                        <span class="glyphicon glyphicon-thumbs-down" style="color: red"></span>&nbsp;&nbsp;Errors
+                    </td>
+                    <td>@Model.TotalErrors</td>
+                </tr>
+                <tr>
+                    <td style="width: 150px">
+                        <span class="glyphicon glyphicon-resize-full" style="color: gray"></span>&nbsp;&nbsp;Bandwidth
+                    </td>
+                    <td>...</td>
+                </tr>
+                <tr>
+                    <td style="width: 150px">
+                        <span class="glyphicon glyphicon-time" style="color: black"></span>&nbsp;&nbsp;Avg. Response
+                    </td>
+                    <td>@Model.AverageResponse</td>
+                </tr>
+            </table>
+        </div>
+
+        <br/><br/>
+        <h4>Requests</h4>
+        <div>
+            <img src="/Controller/RequestsChart?id=@Model.Name&date=@Model.HistoryStartTime.ToString("yyyyMMdd")"/>
+        </div>
+
+        <br /><br />
+        <h4>Response Times</h4>
+        <div>
+            <img src="/Controller/TimeChart?id=@Model.Name&date=@Model.HistoryStartTime.ToString("yyyyMMdd")"/>
+        </div>
+               
+        <br />
+
+    </div>
+</div>

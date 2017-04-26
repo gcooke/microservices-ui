@@ -1,0 +1,41 @@
+﻿@using Gateway.Web.Models.Controller
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "Controller";
+    ViewBag.Current = "Queues";
+}
+@{ Html.RenderPartial("_ControllerNav", (BaseControllerModel)@Model); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+
+        <h3>Queues</h3>
+
+        <br />
+        <div>
+            <img src="/Controller/QueueChart?id=@Model.Name&date=@Model.HistoryStartTime.ToString("yyyyMMdd")" />
+        </div>
+
+
+        <table style="width: 100%">
+            <thead>
+                <tr>
+                    <td><b>Time</b></td>
+                    <td><b>Last Enqueue</b></td>
+                    <td><b>Last Dequeue</b></td>
+                    <td><b>Count</b></td>
+                </tr>
+            </thead>
+            @foreach (QueueCount version in Model.Queues.AllItems)
+            {
+                <tr>
+                    <td>@version.Time</td>
+                    <td>@version.LastEnqueue</td>
+                    <td>@version.LastDequeue</td>
+                    <td>@version.Count</td>
+                </tr>
+            }
+        </table>
+
+    </div>
+</div>

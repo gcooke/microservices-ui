@@ -1,0 +1,41 @@
+﻿<!-- Sidebar -->
+<div id="sidebar-wrapper">
+    <br />
+    <div>
+        <b class="profilename">@ViewBag.Title</b>
+    </div>
+
+    <ul class="sidebar-nav">
+        <li>
+            <a href="~/Controllers/Dashboard/"
+               class="@(ViewBag.Current == "Dashboard" ? "active" : "")">
+                <span class="glyphicon glyphicon-stats"></span>&nbsp;&nbsp;Dashboard
+            </a>
+        </li>
+        <li>
+            <a href="~/Controllers/Servers/"
+               class="@(ViewBag.Current == "Servers" ? "active" : "")">
+                <span class="glyphicon glyphicon-hdd"></span>&nbsp;&nbsp;Servers
+            </a>
+        </li>   
+        <li>
+            <a href="~/Controllers/Workers/"
+               class="@(ViewBag.Current == "Workers" ? "active" : "")">
+                <span class="glyphicon glyphicon-cloud"></span>&nbsp;&nbsp;Workers
+            </a>
+        </li>        
+        <li>
+            <a href="~/Controllers/Queues/"
+               class="@(ViewBag.Current == "Queues" ? "active" : "")">
+                <span class="glyphicon glyphicon-random"></span>&nbsp;&nbsp;Queues
+            </a>
+        </li>
+        <li>
+            <a href="~/Controllers/History/"
+               class="@(ViewBag.Current == "History" ? "active" : "")">
+                <span class="glyphicon glyphicon-search"></span>&nbsp;&nbsp;History
+            </a>
+        </li>        
+    </ul>
+</div>
+<!-- /#sidebar-wrapper -->

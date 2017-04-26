@@ -1,0 +1,37 @@
+﻿@using Gateway.Web.Database
+@using Gateway.Web.Models
+@using Gateway.Web.Models.Controller
+@using Gateway.Web.Utils
+@using Newtonsoft.Json
+@using Version = Gateway.Web.Models.Controller.Version
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "Controller";
+    ViewBag.Current = "Versions";
+}
+@{ Html.RenderPartial("_ControllerNav", (BaseControllerModel)@Model); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+
+        <h3>Versions</h3>
+
+        <br />
+        under construction - this page will show all versions with their status. Modification
+        of version status will also be done here.
+
+        <div id="list-meta">
+            <ul>
+                @foreach (Version item in Model.Versions)
+            {
+                    <li>
+                        <b>@item.Alias</b> @item.Name - @item.Status
+                    </li>
+                }
+            </ul>
+        </div>
+
+        <br />
+
+    </div>
+</div>

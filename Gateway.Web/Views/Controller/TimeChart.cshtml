@@ -1,0 +1,28 @@
+﻿@using System.Xml.Schema
+@using Gateway.Web.Models
+@using Gateway.Web.Models.Controller
+@using Gateway.Web.Models.Controllers
+@{
+    ViewBag.Title = "Controllers";
+}
+
+@{
+    var model = (TimeChartModel)@Model;
+
+
+    var chart = new Chart(600, 100, theme: ChartTheme.Vanilla)
+        .AddSeries("Avg Time",
+                   xValue: model.TimeSummary,
+                   yValues: model.TimeSummary,
+                   xField: "Key",
+                   yFields: "Value")
+        .AddSeries("Max Time",
+                   xValue: model.TimeSummary,
+                   yValues: model.TimeSummary,
+                   xField: "Key",
+                   yFields: "Value2",
+                   chartType: "Line")
+        .AddLegend();
+
+    chart.Write();
+}

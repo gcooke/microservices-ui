@@ -1,0 +1,46 @@
+﻿@using Gateway.Web.Database
+@using Gateway.Web.Models
+@using Gateway.Web.Models.Controllers
+@using Gateway.Web.Utils
+@using Newtonsoft.Json
+@using Version = Gateway.Web.Models.Controller.Version
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "All Controllers";
+    ViewBag.Current = "Queues";
+}
+@{ Html.RenderPartial("_ControllersNav"); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+
+        <h3>Queues</h3>
+
+        <br />
+        <div>
+            <img src="/Controllers/QueueChart?date=@Model.HistoryStartTime.ToString("yyyyMMdd")" />
+        </div>
+
+        <table style="width: 100%">
+            <thead>
+                <tr>
+                    <td><b>Controller</b></td>
+                    <td><b>Version</b></td>
+                    <td><b>Last Enqueue</b></td>
+                    <td><b>Last Dequeue</b></td>
+                    <td><b>Count</b></td>
+                </tr>
+            </thead>
+            @foreach (VersionQueueChartModel version in Model.Queues.Versions)
+            {
+                <tr>
+                    <td>@version.Controller</td>
+                    <td>@version.Version</td>
+                    <td>@version.LastEnqueue</td>
+                    <td>@version.LastDequeue</td>
+                    <td>@version.LastCount</td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>

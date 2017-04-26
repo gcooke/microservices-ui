@@ -1,4 +1,4 @@
-﻿namespace Gateway.Web.Models
+﻿namespace Gateway.Web.Models.Controller
 {
     public class Version
     {
