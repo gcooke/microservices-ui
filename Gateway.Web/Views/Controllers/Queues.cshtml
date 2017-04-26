@@ -34,7 +34,7 @@
             @foreach (VersionQueueChartModel version in Model.Queues.Versions)
             {
                 <tr>
-                    <td>@version.Controller</td>
+                    <td><a href="~/Controller/Dashboard/@version.Controller">@version.Controller</a></td>
                     <td>@version.Version</td>
                     <td>@version.LastEnqueue</td>
                     <td>@version.LastDequeue</td>

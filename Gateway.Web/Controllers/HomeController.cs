@@ -1,6 +1,7 @@
 ﻿using System.Web.Mvc;
 using Gateway.Web.Database;
 using Gateway.Web.Models;
+using Gateway.Web.Models.Home;
 using Controller = System.Web.Mvc.Controller;
 
 namespace Gateway.Web.Controllers
@@ -16,7 +17,9 @@ namespace Gateway.Web.Controllers
 
         public ActionResult Index()
         {
-            return View();
+            var model = new IndexModel();
+            model.Queues = _dataService.GetControllerQueueSummary(model.HistoryStartTime);
+            return View(model);
         }
 
         public ActionResult About()
