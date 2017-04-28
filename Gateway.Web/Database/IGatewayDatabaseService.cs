@@ -5,7 +5,7 @@ using Gateway.Web.Models.Controllers;
 
 namespace Gateway.Web.Database
 {
-    public interface IGatewayDataService
+    public interface IGatewayDatabaseService
     {
         List<ControllerStats> GetControllerStatistics(DateTime start);
 

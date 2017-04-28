@@ -2,23 +2,30 @@
 using Gateway.Web.Database;
 using Gateway.Web.Models;
 using Gateway.Web.Models.Home;
+using Gateway.Web.Services;
 using Controller = System.Web.Mvc.Controller;
 
 namespace Gateway.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IGatewayDataService _dataService;
+        private readonly IGatewayDatabaseService _dataService;
+        private readonly IGatewayService _gateway;
 
-        public HomeController(IGatewayDataService dataService)
+        public HomeController(IGatewayDatabaseService dataService, IGatewayService gateway)
         {
             _dataService = dataService;
+            _gateway = gateway;
         }
 
         public ActionResult Index()
         {
             var model = new IndexModel();
             model.Queues = _dataService.GetControllerQueueSummary(model.HistoryStartTime);
+            foreach (var item in _gateway.GetCurrentQueues())
+            {
+                model.Current.Add(item);
+            }
             return View(model);
         }
 

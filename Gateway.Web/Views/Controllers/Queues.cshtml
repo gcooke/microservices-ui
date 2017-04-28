@@ -1,5 +1,6 @@
 ﻿@using Gateway.Web.Database
 @using Gateway.Web.Models
+@using Gateway.Web.Models.Controller
 @using Gateway.Web.Models.Controllers
 @using Gateway.Web.Utils
 @using Newtonsoft.Json
@@ -29,16 +30,18 @@
                     <td><b>Last Enqueue</b></td>
                     <td><b>Last Dequeue</b></td>
                     <td><b>Count</b></td>
+                    <td><b>Workers</b></td>
                 </tr>
             </thead>
-            @foreach (VersionQueueChartModel version in Model.Queues.Versions)
+            @foreach (QueueModel version in Model.Current)
             {
                 <tr>
-                    <td><a href="~/Controller/Dashboard/@version.Controller">@version.Controller</a></td>
+                    <td><a href="~/Controller/Queues/@version.Controller">@version.Controller</a></td>
                     <td>@version.Version</td>
                     <td>@version.LastEnqueue</td>
                     <td>@version.LastDequeue</td>
-                    <td>@version.LastCount</td>
+                    <td>@version.Length</td>
+                    <td>@version.Workers</td>
                 </tr>
             }
         </table>

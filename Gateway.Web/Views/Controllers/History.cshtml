@@ -1,5 +1,6 @@
 ﻿@using Gateway.Web.Database
 @using Gateway.Web.Models
+@using Gateway.Web.Models.Controller
 @using Gateway.Web.Utils
 @using Newtonsoft.Json
 @using Version = Gateway.Web.Models.Controller.Version
@@ -13,11 +14,21 @@
 <div id="page-content-wrapper">
     <div class="hero-unit">
 
-        <h3>History</h3>
+        <h3>Last @Model.Requests.Count requests</h3>
 
-        <br/>
-        under construction - this page will show the last x requests. It will support 
-        keyword/user/correlation id searches.
+        <br />
+        under construction - this page will show the last x requests. It will support
+        keyword/user/correlation id searches and a user will be able to click through to
+        request details.
+
+        <div class="containerx bulk">
+            @foreach (HistoryItem history in Model.Requests)
+            {
+                Html.RenderPartial("_HistoryItem", history);
+            }
+        </div>
+
+        <br />
 
     </div>
 </div>
