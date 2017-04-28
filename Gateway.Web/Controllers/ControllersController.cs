@@ -38,10 +38,9 @@ namespace Gateway.Web.Controllers
 
         public ActionResult History()
         {
-            //var items = _dataService.GetRecentRequests(DateTime.Today.AddDays(-7));
-
+            var items = _dataService.GetRecentRequests(DateTime.Today.AddDays(-30));
             var model = new HistoryModel();
-            //model.Requests.AddRange(items);
+            model.Requests.AddRange(items);
             return View(model);
         }
 

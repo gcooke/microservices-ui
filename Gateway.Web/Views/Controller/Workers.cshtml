@@ -1,9 +1,5 @@
-﻿@using Gateway.Web.Database
-@using Gateway.Web.Models
-@using Gateway.Web.Models.Controller
-@using Gateway.Web.Utils
-@using Newtonsoft.Json
-@using Version = Gateway.Web.Models.Controller.Version
+﻿@using Gateway.Web.Models.Controller
+@using Gateway.Web.Services
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
     ViewBag.Title = "Controller";
@@ -17,8 +13,29 @@
         <h3>Workers</h3>
 
         <br />
-        under construction - this page will show worker by controller version including machine
-        and process info.
+
+        <table style="width: 100%">
+            <thead>
+                <tr>
+                    <td><b>Service</b></td>
+                    <td><b>Server</b></td>
+                    <td><b>Id</b></td>
+                    <td><b>Port</b></td>
+                </tr>
+            </thead>
+            @foreach (ControllerInformation info in Model.State)
+            {
+                foreach (var version in info.Versions)
+                {
+                    <tr>
+                        <td>@version.Service.Service</td>
+                        <td>@version.Service.Address</td>
+                        <td>@version.Service.ID</td>
+                        <td>@version.Service.Port</td>
+                    </tr>
+                }
+            }
+        </table>
 
     </div>
 </div>

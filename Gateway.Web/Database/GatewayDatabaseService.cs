@@ -32,6 +32,20 @@ namespace Gateway.Web.Database
             return result;
         }
 
+        public List<HistoryItem> GetRecentRequests(DateTime start)
+        {
+            var result = new List<HistoryItem>();
+            using (var database = new GatewayEntities())
+            {
+                var items = database.spGetRecentRequestsAll(start, "");
+                foreach (var item in items)
+                {
+                    result.Add(item.ToModel());
+                }
+            }
+            return result;
+        }
+
         public List<HistoryItem> GetRecentRequests(string controller, DateTime start)
         {
             var result = new List<HistoryItem>();
@@ -163,6 +177,24 @@ namespace Gateway.Web.Database
 
                 return result;
             }
+        }
+
+        public VersionsModel GetControllerVersions(string name)
+        {
+            var result = new VersionsModel(name);
+            name = name.ToUpper();
+            using (var database = new GatewayEntities())
+            {
+                var versions = new List<Models.Controller.Version>();
+                foreach (var item in database.Versions
+                                             .Where(v => v.Controller.Name.ToUpper() == name))
+                {
+                    versions.Add(item.ToModel());
+                }
+
+                result.Versions.AddRange(versions.OrderBy(v => v.SemVar));
+            }
+            return result;
         }
     }
 }

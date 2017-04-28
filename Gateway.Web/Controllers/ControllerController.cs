@@ -48,7 +48,7 @@ namespace Gateway.Web.Controllers
 
         public ActionResult Versions(string id)
         {
-            var model = new VersionsModel(id);
+            var model = _dataService.GetControllerVersions(id);
             return View(model);
         }
 
