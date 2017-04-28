@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Xml.Linq;
@@ -84,6 +85,14 @@ namespace Gateway.Web.Services
         {
             var docs = Fetch("health/queues", string.Empty);
             return GetCurrentQueues(docs);
+        }
+
+        public XElement GetReport(string report)
+        {
+            var doc = Fetch("api/reporting/latest/{0}", report).FirstOrDefault();
+
+            var element = doc.Document.Descendants("RiskValue").FirstOrDefault();
+            return element;
         }
 
         private IEnumerable<QueueModel> GetCurrentQueues(IEnumerable<ServerResponse> docs)
