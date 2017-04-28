@@ -3,17 +3,20 @@ using System.Globalization;
 using System.Web.Mvc;
 using Gateway.Web.Database;
 using Gateway.Web.Models.Controller;
+using Gateway.Web.Services;
 using Controller = System.Web.Mvc.Controller;
 
 namespace Gateway.Web.Controllers
 {
     public class ControllerController : Controller
     {
-        private readonly IGatewayDataService _dataService;
+        private readonly IGatewayDatabaseService _dataService;
+        private readonly IGatewayService _gateway;
 
-        public ControllerController(IGatewayDataService dataService)
+        public ControllerController(IGatewayDatabaseService dataService, IGatewayService gateway)
         {
             _dataService = dataService;
+            _gateway = gateway;
         }
 
         public ActionResult Dashboard(string id)
@@ -36,18 +39,22 @@ namespace Gateway.Web.Controllers
         {
             var model = new QueuesModel(id);
             model.Queues = _dataService.GetControllerQueueSummary(id, model.HistoryStartTime);
+            foreach (var item in _gateway.GetCurrentQueues(id))
+            {
+                model.Current.Add(item);
+            }
             return View(model);
         }
 
         public ActionResult Versions(string id)
         {
-            var model = new VersionsModel(id);
+            var model = _dataService.GetControllerVersions(id);
             return View(model);
         }
 
         public ActionResult Workers(string id)
         {
-            var model = new WorkersModel(id);
+            var model = _gateway.GetWorkers(id);
             return View(model);
         }
 

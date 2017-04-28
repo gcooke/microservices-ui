@@ -10,10 +10,13 @@ namespace Gateway.Web.Models.Controller
         public QueuesModel(string name) : base(name)
         {
             HistoryStartTime = DateTime.Now.AddDays(-1);
+            Current = new List<QueueModel>();
         }
 
         public DateTime HistoryStartTime { get; set; }
 
         public QueueChartModel Queues { get; set; }
+
+        public List<QueueModel> Current { get; set; }
     }
 }

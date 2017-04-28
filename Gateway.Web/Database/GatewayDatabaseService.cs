@@ -6,9 +6,9 @@ using Gateway.Web.Models.Controllers;
 
 namespace Gateway.Web.Database
 {
-    public class GatewayDataService : IGatewayDataService
+    public class GatewayDatabaseService : IGatewayDatabaseService
     {
-        public GatewayDataService()
+        public GatewayDatabaseService()
         {
             //PnRFO_GatewayEntities
         }
@@ -29,6 +29,20 @@ namespace Gateway.Web.Database
                 }
             }
 
+            return result;
+        }
+
+        public List<HistoryItem> GetRecentRequests(DateTime start)
+        {
+            var result = new List<HistoryItem>();
+            using (var database = new GatewayEntities())
+            {
+                var items = database.spGetRecentRequestsAll(start, "");
+                foreach (var item in items)
+                {
+                    result.Add(item.ToModel());
+                }
+            }
             return result;
         }
 
@@ -130,13 +144,9 @@ namespace Gateway.Web.Database
                     foreach (var value in group)
                     {
                         var updateTime = value.Date.Value.Add(TimeSpan.Parse(value.Hour));
-                        var item = new Models.Controller.QueueCount(updateTime, value.LastEnqueue, value.LastDequeue, value.ItemCount.Value);
+                        var item = new Models.Controller.QueueCount(group.Key, updateTime, value.LastEnqueue, value.LastDequeue, value.ItemCount.Value);
                         series.Items.Add(item);
                     }
-
-                    // Add zero item
-                    if (series.Items.Last().Time < DateTime.Now.AddSeconds(-30))
-                        series.Items.Add(new Models.Controller.QueueCount(DateTime.Now, null, null, 0));
 
                     result.Versions.Add(series);
                 }
@@ -155,24 +165,36 @@ namespace Gateway.Web.Database
                 foreach (var group in results.GroupBy(r => string.Format("{0} ({1})", r.Controller, r.Version)))
                 {
                     var last = group.Last();
-                    var series = new Models.Controllers.VersionQueueChartModel(last);
+                    var series = new Models.Controllers.VersionQueueChartModel(last.Controller, last.Version);
                     foreach (var value in group)
                     {
                         var updateTime = value.Date.Value.Add(TimeSpan.Parse(value.Hour));
-                        var item = new Models.Controllers.QueueCount(updateTime, value.ItemCount.Value);
+                        var item = new Models.Controllers.QueueCount(group.Key, updateTime, value.LastEnqueue, value.LastDequeue, value.ItemCount.Value);
                         series.Items.Add(item);
-                    }
-                    // Add zero item
-                    if (series.Items.Last().Time < DateTime.Now.AddSeconds(-60))
-                    {
-                        series.Items.Add(new Models.Controllers.QueueCount(DateTime.Now, 0));
-                        series.LastCount = 0;
                     }
                     result.Versions.Add(series);
                 }
 
                 return result;
             }
+        }
+
+        public VersionsModel GetControllerVersions(string name)
+        {
+            var result = new VersionsModel(name);
+            name = name.ToUpper();
+            using (var database = new GatewayEntities())
+            {
+                var versions = new List<Models.Controller.Version>();
+                foreach (var item in database.Versions
+                                             .Where(v => v.Controller.Name.ToUpper() == name))
+                {
+                    versions.Add(item.ToModel());
+                }
+
+                result.Versions.AddRange(versions.OrderBy(v => v.SemVar));
+            }
+            return result;
         }
     }
 }

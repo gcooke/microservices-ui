@@ -16,16 +16,37 @@
 
         <h3>Versions</h3>
 
-        <br />
         under construction - this page will show all versions with their status. Modification
         of version status will also be done here.
+
+        <br />
 
         <div id="list-meta">
             <ul>
                 @foreach (Version item in Model.Versions)
-            {
+                {
                     <li>
-                        <b>@item.Alias</b> @item.Name - @item.Status
+                        @if (item.IsActive)
+                        {
+                            <span style="color:DarkBlue">
+                                <b>
+                                    @item.Alias
+                                    @item.Name
+                                    <span>-</span>
+                                    @item.Status
+                                </b>
+                            </span>
+                        }
+                        else
+                        {
+                            <span style="color:gray">
+                                @item.Alias
+                                @item.Name
+                                <span>-</span>
+                                @item.Status
+                            </span>
+                        }
+
                     </li>
                 }
             </ul>

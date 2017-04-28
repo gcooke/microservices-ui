@@ -16,35 +16,35 @@ namespace Gateway.Web.Models.Controllers
 
     public class VersionQueueChartModel
     {
-        public VersionQueueChartModel(spGetQueueCountsAll_Result lastRecord)
+        public VersionQueueChartModel(string controller, string version)
         {
-            Controller = lastRecord.Controller;
-            Version = lastRecord.Version;
-            LastEnqueue = lastRecord.LastEnqueue;
-            LastDequeue = lastRecord.LastDequeue;
+            Controller = controller;
+            Version = version;
             Label = string.Format("{0} ({1})", Controller, Version);
-            LastCount = lastRecord.ItemCount.Value;
             Items = new List<QueueCount>();
         }
 
         public string Label { get; set; }
         public string Controller { get; set; }
         public string Version { get; set; }
-        public DateTime? LastEnqueue { get; set; }
-        public DateTime? LastDequeue { get; set; }
-        public int LastCount { get; set; }
         public List<QueueCount> Items { get; private set; }
     }
 
     public class QueueCount
     {
-        public QueueCount(DateTime time, int count)
+        public QueueCount(string version, DateTime time, DateTime? lastEnqueue, DateTime? lastDequeue, int count)
         {
+            Version = version;
             Time = time;
+            LastEnqueue = lastEnqueue;
+            LastDequeue = lastDequeue;
             Count = count;
         }
 
+        public string Version { get; set; }
         public DateTime Time { get; set; }
+        public DateTime? LastEnqueue { get; set; }
+        public DateTime? LastDequeue { get; set; }
         public int Count { get; set; }
     }
 }

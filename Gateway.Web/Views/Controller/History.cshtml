@@ -24,26 +24,7 @@
         <div class="containerx bulk">
             @foreach (HistoryItem history in Model.Requests)
             {
-                <div class="widget">
-                    <div class="content">
-                        <div class="list-head clearfix" style="float: left">
-                            @*<h3 style="margin: 0 40px 0 0;">
-                                    <img src="~/Content/img/controller.png" alt="" class="avatar" />
-                                    <a href="~/Controller/Dashboard/@controller.Name">@controller.Name</a>
-                                </h3>*@
-                            <small>Start: <b>@history.StartUtc</b> End: <b>@history.EndUtc @string.Format("({0}ms)", history.TimeTakeMs)</b></small>
-                            <br />
-                            <small>User: <b>@history.User</b></small>
-                            <br />
-                            <small>Resource: <b>@history.Resource</b></small>
-                            <br />
-                            <small>Result: <b>@history.ResultMessage @string.Format("({0})", history.ResultCode)</b></small>
-                        </div>
-                        <div style="float: right">
-                            <a class="btn btn-default" href="@Url.Action("Request", "Controller", new { name = history.Controller, correlationId = history.CorrelationId })">View &raquo;</a>
-                        </div>
-                    </div>
-                </div>
+                Html.RenderPartial("_HistoryItem", history);
             }
         </div>
 

@@ -9,14 +9,43 @@
 <div id="page-content-wrapper">
     <div class="hero-unit">
 
-        <h3>Queues</h3>
+        <h3>Current Queues</h3>
+        <hr/>
+
+        <table style="width: 100%">
+            <thead>
+                <tr>
+                    <td><b>Server</b></td>
+                    <td><b>Version</b></td>
+                    <td><b>Last Enqueue</b></td>
+                    <td><b>Last Dequeue</b></td>
+                    <td><b>Count</b></td>
+                    <td><b>Workers</b></td>
+                </tr>
+            </thead>
+            @foreach (QueueModel version in Model.Current)
+            {
+                <tr>
+                    <td>@version.Server</td>
+                    <td>@version.Version</td>
+                    <td>@version.LastEnqueue</td>
+                    <td>@version.LastDequeue</td>
+                    <td>@version.Length</td>
+                    <td>@version.Workers</td>
+                </tr>
+            }
+        </table>
+
+        <br />
+        <h3>History</h3>
+        <hr />
 
         <br />
         <div>
             <img src="/Controller/QueueChart?id=@Model.Name&date=@Model.HistoryStartTime.ToString("yyyyMMdd")" />
         </div>
 
-
+        <br />
         <table style="width: 100%">
             <thead>
                 <tr>
@@ -29,6 +58,7 @@
             @foreach (QueueCount version in Model.Queues.AllItems)
             {
                 <tr>
+                    <td>@version.Version</td>
                     <td>@version.Time</td>
                     <td>@version.LastEnqueue</td>
                     <td>@version.LastDequeue</td>
@@ -36,6 +66,8 @@
                 </tr>
             }
         </table>
+
+        <br />
 
     </div>
 </div>

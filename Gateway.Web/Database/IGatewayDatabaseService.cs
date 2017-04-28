@@ -5,9 +5,11 @@ using Gateway.Web.Models.Controllers;
 
 namespace Gateway.Web.Database
 {
-    public interface IGatewayDataService
+    public interface IGatewayDatabaseService
     {
         List<ControllerStats> GetControllerStatistics(DateTime start);
+
+        List<HistoryItem> GetRecentRequests(DateTime start);
 
         List<HistoryItem> GetRecentRequests(string controller, DateTime start);
 
@@ -22,5 +24,7 @@ namespace Gateway.Web.Database
         Models.Controller.QueueChartModel GetControllerQueueSummary(string name, DateTime start);
 
         Models.Controllers.QueueChartModel GetControllerQueueSummary(DateTime start);
+
+        VersionsModel GetControllerVersions(string name);
     }
 }

@@ -40,14 +40,16 @@ namespace Gateway.Web.Models.Controller
 
     public class QueueCount
     {
-        public QueueCount(DateTime time, DateTime? lastEnqueue, DateTime? lastDequeue, int count)
+        public QueueCount(string version, DateTime time, DateTime? lastEnqueue, DateTime? lastDequeue, int count)
         {
+            Version = version;
             Time = time;
             LastEnqueue = lastEnqueue;
             LastDequeue = lastDequeue;
             Count = count;
         }
 
+        public string Version { get; set; }
         public DateTime Time { get; set; }
         public DateTime? LastEnqueue { get; set; }
         public DateTime? LastDequeue { get; set; }

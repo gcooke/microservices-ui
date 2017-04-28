@@ -142,16 +142,22 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\ReportingController.cs" />
     <Compile Include="Controllers\ControllersController.cs" />
     <Compile Include="Controllers\ControllerController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\UtilsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Database\GatewayDatabaseService.cs" />
+    <Compile Include="Database\IGatewayDatabaseService.cs" />
     <Compile Include="Database\ResponseStats.cs" />
     <Compile Include="Database\spGetQueueCountsAll_Result.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\spGetQueueCounts_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\spGetRecentRequestsAll_Result.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\spGetRecentRequests_Result.cs">
@@ -166,8 +172,6 @@
     <Compile Include="Database\Controller.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
-    <Compile Include="Database\GatewayDataService.cs" />
-    <Compile Include="Database\IGatewayDataService.cs" />
     <Compile Include="Database\ModelEx.cs" />
     <Compile Include="Database\Payload.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
@@ -197,9 +201,9 @@
     <Compile Include="Models\Controllers\QueueChartModel.cs" />
     <Compile Include="Models\Controllers\QueuesModel.cs" />
     <Compile Include="Models\Controllers\ServersModel.cs" />
-    <Compile Include="Models\Controllers\WorkersModel.cs" />
     <Compile Include="Models\Controller\HistoryItem.cs" />
     <Compile Include="Models\Controller\HistoryModel.cs" />
+    <Compile Include="Models\Controller\QueueModel.cs" />
     <Compile Include="Models\Controller\QueuesModel.cs" />
     <Compile Include="Models\Controller\RequestModel.cs" />
     <Compile Include="Models\Controller\QueueChartModel.cs" />
@@ -227,7 +231,14 @@
     </Compile>
     <Compile Include="Models\Controller\Version.cs" />
     <Compile Include="Models\Home\IndexModel.cs" />
+    <Compile Include="Models\Reporting\PfeModel.cs" />
     <Compile Include="Registrations.cs" />
+    <Compile Include="Services\ControllerInformation.cs" />
+    <Compile Include="Services\GatewayService.cs" />
+    <Compile Include="Services\IGatewayService.cs" />
+    <Compile Include="Services\ProcessInformation.cs" />
+    <Compile Include="Services\QueueInformation.cs" />
+    <Compile Include="Services\ServerInformation.cs" />
     <Compile Include="UnityDependencyResolver.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -236,6 +247,7 @@
     <Compile Include="Models\Controllers\DashboardModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\Compression.cs" />
+    <Compile Include="Utils\SerializationEx.cs" />
     <Compile Include="Utils\XmlExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -319,6 +331,8 @@
     <Content Include="Views\Error\NotFound.cshtml" />
     <Content Include="Views\Controller\QueueChart.cshtml" />
     <Content Include="Views\Controllers\QueueChart.cshtml" />
+    <Content Include="Views\Shared\_HistoryItem.cshtml" />
+    <Content Include="Views\Reporting\Pfe.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
