@@ -3,19 +3,44 @@
 @using Gateway.Web.Models.Controllers
 @using System.Web.UI.WebControls
 @using Gateway.Web.Models.Controller
+@using Gateway.Web.Models.Reporting
 
 <div class="row">
 
     <h3>Report</h3>
 
     <br />
-    under construction 
-    
-    <br/>
+    under construction
+
+    <br />
     <h3>PFE Report</h3>
 
     <br />
 
-    <pre>@Model.ReportXml</pre>
+    <table style="width: 100%">
+        <thead>
+            <tr>
+                <td><b>Site</b></td>
+                <td><b>Counterparty</b></td>
+                <td><b>Values</b></td>
+            </tr>
+        </thead>
+        @foreach (XvaResult result in Model.Items)
+            {
+            <tr>
+                <td style="vertical-align: top">@result.Site</td>
+                <td style="vertical-align: top">@result.Counterparty</td>
+                <td>
+                    @foreach (PfePoint point in result.Items)
+                    {
+                        <b>@point.Date</b>
+                        <i>-</i>
+                        <span>@point.Value</span>
+                        <br />
+                    }
+                </td>
+            </tr>
+        }
+    </table>
 
 </div>

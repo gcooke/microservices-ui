@@ -13,6 +13,6 @@ namespace Gateway.Web.Services
         IEnumerable<QueueModel> GetCurrentQueues(string controller);
         IEnumerable<QueueModel> GetCurrentQueues();
 
-        XElement GetReport(string url);
+        XElement[] GetReport(string url);
     }
 }
