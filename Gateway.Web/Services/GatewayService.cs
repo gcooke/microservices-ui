@@ -87,11 +87,11 @@ namespace Gateway.Web.Services
             return GetCurrentQueues(docs);
         }
 
-        public XElement GetReport(string report)
+        public XElement[] GetReport(string report)
         {
-            var doc = Fetch("api/reporting/latest/{0}", report).FirstOrDefault();
+            var doc = Fetch("api/riskdata/latest/{0}", report).FirstOrDefault();
 
-            var element = doc.Document.Descendants("RiskValue").FirstOrDefault();
+            var element = doc.Document.Descendants("xVAReturnResult").ToArray();
             return element;
         }
 
@@ -152,7 +152,7 @@ namespace Gateway.Web.Services
                 }))
                 {
                     client.DefaultRequestHeaders.Add("Accept", "application/xml");
-
+                    
                     var response = client.GetAsync(uri);
                     response.Wait();
                     if (response.Result.StatusCode != HttpStatusCode.OK)
