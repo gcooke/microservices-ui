@@ -17,8 +17,8 @@ namespace Gateway.Web.Database
         public long Id { get; set; }
         public System.Guid CorrelationId { get; set; }
         public string Direction { get; set; }
-        public string CompressionType { get; set; }
-        public string Data { get; set; }
+        public string PayloadType { get; set; }
+        public byte[] Data { get; set; }
         public System.DateTime UpdateTime { get; set; }
     }
 }

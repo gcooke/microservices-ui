@@ -151,6 +151,9 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Database\GatewayDatabaseService.cs" />
     <Compile Include="Database\IGatewayDatabaseService.cs" />
+    <Compile Include="Database\Payload.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
     <Compile Include="Database\QueueSize.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
@@ -177,9 +180,6 @@
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\ModelEx.cs" />
-    <Compile Include="Database\Payload.cs">
-      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
-    </Compile>
     <Compile Include="Database\PnRFO_Gateway.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
