@@ -4,6 +4,10 @@ namespace Gateway.Web.Models.Controller
 {
     public class HistoryItem
     {
+        private static TimeSpan Hour = TimeSpan.FromHours(1);
+        private static TimeSpan Minute = TimeSpan.FromMinutes(1);
+        private static TimeSpan Second = TimeSpan.FromSeconds(1);
+
         public Guid CorrelationId { get; set; }
         public string User { get; set; }
         public string IpAddress { get; set; }
@@ -23,6 +27,46 @@ namespace Gateway.Web.Models.Controller
         public bool WasSuccessful
         {
             get { return ResultCode == 1; }
+        }
+
+        public string TimeTakenFormatted
+        {
+            get
+            {
+                if (TimeTakeMs.HasValue)
+                {
+                    var time = TimeSpan.FromMilliseconds(TimeTakeMs.Value);
+                    if(time > Hour)
+                        return string.Format("{0:N2} hour", time.TotalHours);
+
+                    if (time > Minute)
+                        return string.Format("{0:N2} min", time.TotalMinutes);
+
+                    if (time > Second)
+                        return string.Format("{0:N2} sec", time.TotalSeconds);
+
+                    return string.Format("{0} ms", TimeTakeMs);
+                }
+                return string.Empty;
+            }
+        }
+
+        public string ResultFormatted
+        {
+            get
+            {
+                if (!TimeTakeMs.HasValue)
+                    return "Pending...";
+
+                if (ResultCode == 1)
+                {
+                    return ResultMessage;
+                }
+                else
+                {
+                    return "ERROR " + ResultMessage;
+                }
+            }
         }
 
         public string StartFormatted
