@@ -28,14 +28,16 @@
             <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">@history.Resource</td>
             <td>@history.StartFormatted</td>
             <td>@history.TimeTakeMs <span>ms</span></td>
-            @if (history.WasSuccessful)
-            {
-                <td>@history.ResultMessage</td>
-            }
-            else
-            {
-                <td>ERROR @history.ResultMessage</td>
-            }
+            <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
+                @if (history.WasSuccessful)
+                {
+                    @history.ResultMessage
+                }
+                else
+                {
+                    <span>ERROR</span> @history.ResultMessage
+                }
+            </td>
             <td>
                 @Html.ActionLink("View", "Detail", "Request", new { correlationId = history.CorrelationId }, new { @class = "hoverlink" })
             </td>

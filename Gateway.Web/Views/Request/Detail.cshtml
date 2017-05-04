@@ -60,24 +60,23 @@
                 <td><b>Is Async</b></td>
                 <td>@Model.IsAsync</td>
             </tr>
-            <tr>
-                <td><b>Result Code</b></td>
-                <td>@Model.ResultCode</td>
-                <td><b>Result Message</b></td>
-                <td>@Model.ResultMessage</td>
-            </tr>
         </table>
+
+        <br/>
+        <h3>Result</h3>
+        <b>Result Code: </b> @Model.ResultCode
+        <br/>
+        <b>Result Message:</b>
+        <br/>
+        <pre>@Model.ResultMessage</pre>
 
         <br />
         <h3>Payloads</h3>
-
         @foreach (PayloadModel payload in Model.Items)
         {
-            <br />
-            <br />
-            <h4>@payload.Direction</h4>
-            <pre>@payload.Data</pre>
+        <br />
+        <h4>@payload.Direction</h4>
+        <pre>@payload.Data</pre>
         }
-
     </div>
 </div>
