@@ -1,0 +1,83 @@
+﻿@using Gateway.Web.Database
+@using Gateway.Web.Models
+@using Gateway.Web.Models.Controller
+@using Gateway.Web.Models.Request
+@using Gateway.Web.Utils
+@using Newtonsoft.Json
+@using Version = Gateway.Web.Models.Controller.Version
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "Request";
+    ViewBag.Current = "Details";
+}
+@{ Html.RenderPartial("_RequestNav", (RequestModel)@Model); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+
+        <h3>Details</h3>
+
+        <table style="width: 100%; white-space: nowrap" class="datatable">
+            <tr>
+                <td><b>Controller</b></td>
+                <td>@Model.Controller</td>
+                <td><b>Version</b></td>
+                <td>@Model.Version</td>
+            </tr>
+            <tr>
+                <td><b>Start Utc</b></td>
+                <td>@Model.StartUtc</td>
+                <td><b>End Utc</b></td>
+                <td>@Model.EndUtc</td>
+            </tr>
+            <tr>
+                <td><b>Queue Time ms</b></td>
+                <td>@Model.QueueTimeMs</td>
+                <td><b>Time Taken ms</b></td>
+                <td>@Model.TimeTakenMs</td>
+            </tr>
+            <tr>
+                <td><b>User</b></td>
+                <td>@Model.User</td>
+                <td><b>Ip Address</b></td>
+                <td>@Model.IpAddress</td>
+            </tr>
+            <tr>
+                <td><b>Correlation Id</b></td>
+                <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">@Model.CorrelationId</td>
+                <td><b>Parent Correlation Id</b></td>
+                <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">@Model.ParentCorrelationId</td>
+            </tr>
+            <tr>
+                <td><b>Resource</b></td>
+                <td>@Model.Resource</td>
+                <td><b>Request Type</b></td>
+                <td>@Model.RequestType</td>
+            </tr>
+            <tr>
+                <td><b>Priority</b></td>
+                <td>@Model.Priority</td>
+                <td><b>Is Async</b></td>
+                <td>@Model.IsAsync</td>
+            </tr>
+            <tr>
+                <td><b>Result Code</b></td>
+                <td>@Model.ResultCode</td>
+                <td><b>Result Message</b></td>
+                <td>@Model.ResultMessage</td>
+            </tr>
+        </table>
+
+        <br />
+        <h3>Payloads</h3>
+
+        @foreach (PayloadModel payload in Model.Items)
+        {
+            <br />
+            <br />
+            <h4>@payload.Direction</h4>
+            <pre>@payload.Data</pre>
+        }
+
+    </div>
+</div>

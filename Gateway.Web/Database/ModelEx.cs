@@ -23,9 +23,9 @@ namespace Gateway.Web.Database
 
         public static Models.Controller.Version ToModel(this Version version)
         {
-            var result = new Models.Controller.Version(version.Id, 
-                version.Version1, 
-                version.Alias, 
+            var result = new Models.Controller.Version(version.Id,
+                version.Version1,
+                version.Alias,
                 version.Status.Name);
             return result;
         }

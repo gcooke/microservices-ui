@@ -17,15 +17,9 @@
         <h3>Last @Model.Requests.Count requests</h3>
 
         <br />
-        under construction - this page will show the last x requests. It will support
-        keyword/user/correlation id searches and a user will be able to click through to
-        request details.
 
         <div class="containerx bulk">
-            @foreach (HistoryItem history in Model.Requests)
-            {
-                Html.RenderPartial("_HistoryItem", history);
-            }
+            @{ Html.RenderPartial("_HistoryItems", (List<HistoryItem>)@Model.Requests); }
         </div>
 
         <br />

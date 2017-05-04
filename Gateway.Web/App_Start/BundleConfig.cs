@@ -26,6 +26,7 @@ namespace Gateway.Web
             bundles.Add(new StyleBundle("~/styles/css").Include(
                       "~/Content/css/bootstrap.css",
                       "~/Content/css/simple-sidebar.css",
+                      "~/Content/css/datatable.css",
                       "~/Content/css/Site.css"));
         }
     }

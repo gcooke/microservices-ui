@@ -28,13 +28,7 @@ namespace Gateway.Web.Controllers
             model.AverageResponse = stats.GetAverageResponse(id);
             return View(model);
         }
-
-        public ActionResult Request(string name, string correlationId)
-        {
-            var model = _dataService.GetRequestDetails(name, correlationId);
-            return View(model);
-        }
-
+        
         public ActionResult Queues(string id)
         {
             var model = new QueuesModel(id);

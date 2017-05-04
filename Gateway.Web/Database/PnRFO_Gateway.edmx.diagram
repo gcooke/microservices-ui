@@ -14,6 +14,7 @@
         <EntityTypeShape EntityType="GatewayModel.Version" Width="1.5" PointX="3" PointY="1.25" IsExpanded="true" />
         <AssociationConnector Association="GatewayModel.FK_Version_Controller" ManuallyRouted="false" />
         <AssociationConnector Association="GatewayModel.FK_Version_Status" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="GatewayModel.QueueSize" Width="1.5" PointX="7.375" PointY="7.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

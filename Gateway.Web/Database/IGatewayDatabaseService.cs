@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Controllers;
+using Gateway.Web.Models.Request;
 
 namespace Gateway.Web.Database
 {
@@ -19,7 +20,7 @@ namespace Gateway.Web.Database
 
         TimeChartModel GetControllerTimeSummary(string name, DateTime start);
 
-        RequestModel GetRequestDetails(string name, string correlationId);
+        RequestModel GetRequestDetails(string correlationId);
 
         Models.Controller.QueueChartModel GetControllerQueueSummary(string name, DateTime start);
 

@@ -12,15 +12,15 @@ namespace Gateway.Web.Database
     using System;
     using System.Collections.Generic;
     
-    public partial class Response
+    public partial class QueueSize
     {
         public long Id { get; set; }
-        public System.Guid CorrelationId { get; set; }
-        public System.DateTime EndUtc { get; set; }
-        public int TimeTakeMs { get; set; }
-        public int ResultCode { get; set; }
-        public string ResultMessage { get; set; }
+        public string Controller { get; set; }
+        public string Version { get; set; }
         public System.DateTime UpdateTime { get; set; }
-        public int QueueTimeMs { get; set; }
+        public int ItemCount { get; set; }
+        public System.DateTime LastEnqueue { get; set; }
+        public Nullable<System.DateTime> LastDequeue { get; set; }
+        public string Server { get; set; }
     }
 }
