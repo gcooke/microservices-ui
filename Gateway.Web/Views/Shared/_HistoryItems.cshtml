@@ -1,0 +1,45 @@
+﻿@using Gateway.Web.Models.Controller
+@{var items = (List<HistoryItem>)Model;}
+
+<table style="width: 100%; white-space: nowrap" class="datatable">
+    <thead>
+        <tr>
+            <td><b>Controller</b></td>
+            <td><b>Version</b></td>
+            <td><b>User</b></td>
+            <td><b>Resource</b></td>
+            <td><b>Time</b></td>
+            <td><b>Time Taken</b></td>
+            <td><b>Result</b></td>
+            <td><b>Action</b></td>
+        </tr>
+    </thead>
+
+    @foreach (var history in items)
+    {
+        <tr>
+            <td>
+                <a href="~/Controller/History/@history.Controller" class="hoverlink">@history.Controller</a>
+            </td>
+            <td>
+                <a href="~/Controller/Versions/@history.Controller" class="hoverlink">@history.Version</a>
+            </td>
+            <td>@history.UserFormatted</td>
+            <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">@history.Resource</td>
+            <td>@history.StartFormatted</td>
+            <td>@history.TimeTakeMs <span>ms</span></td>
+            @if (history.WasSuccessful)
+            {
+                <td>@history.ResultMessage</td>
+            }
+            else
+            {
+                <td>ERROR @history.ResultMessage</td>
+            }
+            <td>
+                @Html.ActionLink("View", "Detail", "Request", new { correlationId = history.CorrelationId }, new { @class = "hoverlink" })
+            </td>
+        </tr>
+    }
+
+</table>

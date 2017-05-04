@@ -30,6 +30,19 @@
           <Property Name="Data" Type="nvarchar(max)" Nullable="false" />
           <Property Name="UpdateTime" Type="datetime" Nullable="false" />
         </EntityType>
+        <EntityType Name="QueueSizes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Controller" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Version" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="UpdateTime" Type="datetime" Nullable="false" />
+          <Property Name="ItemCount" Type="int" Nullable="false" />
+          <Property Name="LastEnqueue" Type="datetime" Nullable="false" />
+          <Property Name="LastDequeue" Type="datetime" />
+          <Property Name="Server" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
         <EntityType Name="Request">
           <Key>
             <PropertyRef Name="Id" />
@@ -146,6 +159,7 @@
         <EntityContainer Name="GatewayModelStoreContainer">
           <EntitySet Name="Controller" EntityType="Self.Controller" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Payload" EntityType="Self.Payload" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="QueueSizes" EntityType="Self.QueueSizes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Request" EntityType="Self.Request" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Response" EntityType="Self.Response" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Status" EntityType="Self.Status" Schema="dbo" store:Type="Tables" />
@@ -215,7 +229,7 @@
           <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="CorrelationId" Type="Guid" Nullable="false" />
           <Property Name="EndUtc" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="TimeTakeMs" Type="Int16" Nullable="false" />
+          <Property Name="TimeTakeMs" Type="Int32" Nullable="false" />
           <Property Name="ResultCode" Type="Int32" Nullable="false" />
           <Property Name="ResultMessage" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="UpdateTime" Type="DateTime" Nullable="false" Precision="3" />
@@ -322,6 +336,7 @@
             <Parameter Name="Start" Mode="In" Type="DateTime" />
             <Parameter Name="Controller" Mode="In" Type="String" />
           </FunctionImport>
+          <EntitySet Name="QueueSizes" EntityType="GatewayModel.QueueSize" />
         </EntityContainer>
         <ComplexType Name="spGetRequestStats_Result">
           <Property Type="DateTime" Name="Date" Nullable="true" />
@@ -400,6 +415,19 @@
           <Property Type="Int32" Name="ResultCode" Nullable="true" />
           <Property Type="String" Name="ResultMessage" Nullable="true" />
         </ComplexType>
+        <EntityType Name="QueueSize">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Controller" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Version" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="UpdateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ItemCount" Type="Int32" Nullable="false" />
+          <Property Name="LastEnqueue" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastDequeue" Type="DateTime" Precision="3" />
+          <Property Name="Server" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -607,6 +635,20 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="QueueSizes">
+            <EntityTypeMapping TypeName="GatewayModel.QueueSize">
+              <MappingFragment StoreEntitySet="QueueSizes">
+                <ScalarProperty Name="Server" ColumnName="Server" />
+                <ScalarProperty Name="LastDequeue" ColumnName="LastDequeue" />
+                <ScalarProperty Name="LastEnqueue" ColumnName="LastEnqueue" />
+                <ScalarProperty Name="ItemCount" ColumnName="ItemCount" />
+                <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+                <ScalarProperty Name="Controller" ColumnName="Controller" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

@@ -18,6 +18,25 @@ namespace Gateway.Web.Models.Controller
         public int? QueueTimeMs { get; set; }
         public int? TimeTakeMs { get; set; }
         public int? ResultCode { get; set; }
-        public string  ResultMessage { get; set; }
+        public string ResultMessage { get; set; }
+
+        public bool WasSuccessful
+        {
+            get { return ResultCode == 1; }
+        }
+
+        public string StartFormatted
+        {
+            get { return StartUtc.ToLocalTime().ToString("dd MMM HH:mm:ss"); }
+        }
+
+        public string UserFormatted
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(User) || !User.Contains("\\")) return User;
+                return User.Substring(User.IndexOf('\\') + 1);
+            }
+        }
     }
 }

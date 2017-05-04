@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Controllers;
+using Gateway.Web.Models.Request;
 
 namespace Gateway.Web.Database
 {
@@ -117,12 +118,17 @@ namespace Gateway.Web.Database
             }
         }
 
-        public RequestModel GetRequestDetails(string name, string correlationId)
+        public RequestModel GetRequestDetails(string correlationId)
         {
-            var result = new RequestModel(name);
+            var result = new RequestModel();
             var id = Guid.Parse(correlationId);
             using (var database = new GatewayEntities())
             {
+                var request = database.Requests.FirstOrDefault(r => r.CorrelationId == id);
+                var response = database.Responses.FirstOrDefault(r => r.CorrelationId == id);
+                PopulateFields(result, request);
+                PopulateFields(result, response);
+                result.CorrelationId = id;
                 foreach (var item in database.Payloads.Where(p => p.CorrelationId == id))
                 {
                     result.Items.Add(new PayloadModel(item));
@@ -131,6 +137,33 @@ namespace Gateway.Web.Database
             return result;
         }
 
+        private void PopulateFields(RequestModel result, Response response)
+        {
+            if (response == null) return;
+
+            result.EndUtc = response.EndUtc;
+            result.QueueTimeMs = response.QueueTimeMs;
+            result.TimeTakenMs = response.TimeTakeMs;
+            result.ResultCode = response.ResultCode;
+            result.ResultMessage = response.ResultMessage;
+            result.UpdateTime = response.UpdateTime;
+        }
+
+        private void PopulateFields(RequestModel result, Request request)
+        {
+            if (request == null) return;
+            result.ParentCorrelationId = request.ParentCorrelationId;
+            result.User = request.User;
+            result.IpAddress = request.IpAddress;
+            result.Controller = request.Controller;
+            result.Version = request.Version;
+            result.Resource = request.Resource;
+            result.RequestType = request.RequestType;
+            result.Priority = request.Priority;
+            result.IsAsync = request.IsAsync;
+            result.StartUtc = request.StartUtc;
+        }
+        
         public Models.Controller.QueueChartModel GetControllerQueueSummary(string name, DateTime start)
         {
             using (var database = new GatewayEntities())

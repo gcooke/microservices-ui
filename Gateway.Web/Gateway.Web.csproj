@@ -142,6 +142,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\RequestController.cs" />
     <Compile Include="Controllers\ReportingController.cs" />
     <Compile Include="Controllers\ControllersController.cs" />
     <Compile Include="Controllers\ControllerController.cs" />
@@ -150,6 +151,9 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Database\GatewayDatabaseService.cs" />
     <Compile Include="Database\IGatewayDatabaseService.cs" />
+    <Compile Include="Database\QueueSize.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
     <Compile Include="Database\ResponseStats.cs" />
     <Compile Include="Database\spGetQueueCountsAll_Result.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
@@ -205,7 +209,7 @@
     <Compile Include="Models\Controller\HistoryModel.cs" />
     <Compile Include="Models\Controller\QueueModel.cs" />
     <Compile Include="Models\Controller\QueuesModel.cs" />
-    <Compile Include="Models\Controller\RequestModel.cs" />
+    <Compile Include="Models\Request\RequestModel.cs" />
     <Compile Include="Models\Controller\QueueChartModel.cs" />
     <Compile Include="Models\Controller\TimeChartModel.cs" />
     <Compile Include="Models\Controller\VersionsModel.cs" />
@@ -253,6 +257,7 @@
   <ItemGroup>
     <Content Include="Content\css\bootstrap.css" />
     <Content Include="Content\css\bootstrap.min.css" />
+    <Content Include="Content\css\datatable.css" />
     <Content Include="Content\css\simple-sidebar.css" />
     <Content Include="Content\img\bg.jpg" />
     <Content Include="Content\img\controller.png" />
@@ -326,13 +331,14 @@
     <Content Include="Views\Controllers\History.cshtml" />
     <Content Include="Views\Controllers\Servers.cshtml" />
     <Content Include="Views\Controller\TimeChart.cshtml" />
-    <Content Include="Views\Controller\Request.cshtml" />
+    <Content Include="Views\Request\Detail.cshtml" />
     <Content Include="Views\Error\InternalServer.cshtml" />
     <Content Include="Views\Error\NotFound.cshtml" />
     <Content Include="Views\Controller\QueueChart.cshtml" />
     <Content Include="Views\Controllers\QueueChart.cshtml" />
-    <Content Include="Views\Shared\_HistoryItem.cshtml" />
     <Content Include="Views\Reporting\Pfe.cshtml" />
+    <Content Include="Views\Shared\_HistoryItems.cshtml" />
+    <Content Include="Views\Shared\_RequestNav.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
