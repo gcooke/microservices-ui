@@ -27,16 +27,9 @@
             <td>@history.UserFormatted</td>
             <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">@history.Resource</td>
             <td>@history.StartFormatted</td>
-            <td>@history.TimeTakeMs <span>ms</span></td>
+            <td>@history.TimeTakenFormatted</td>
             <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
-                @if (history.WasSuccessful)
-                {
-                    @history.ResultMessage
-                }
-                else
-                {
-                    <span>ERROR</span> @history.ResultMessage
-                }
+                @history.ResultFormatted                
             </td>
             <td>
                 @Html.ActionLink("View", "Detail", "Request", new { correlationId = history.CorrelationId }, new { @class = "hoverlink" })
