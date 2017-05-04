@@ -1,9 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using System.Web.UI;
 using System.Xml.Linq;
 using Gateway.Web.Database;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Utils;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Bson;
+using Newtonsoft.Json.Linq;
 
 namespace Gateway.Web.Models.Request
 {
@@ -40,7 +46,7 @@ namespace Gateway.Web.Models.Request
         public PayloadModel(Payload payload)
         {
             Direction = payload.Direction;
-            SetData(payload.Data, payload.CompressionType);
+            SetData(payload.Data, payload.PayloadType);
             FormatData();
         }
 
@@ -48,14 +54,35 @@ namespace Gateway.Web.Models.Request
 
         public string Direction { get; set; }
 
-        private void SetData(string data, string compression)
+        private void SetData(byte[] data, string payloadType)
         {
             try
             {
-                if (compression == "gzip")
-                    Data = Compression.UnCompressGZip(data);
-                else
-                    Data = data;
+                switch (payloadType)
+                {
+                    case "XElement":
+                        using (var ms = new MemoryStream(data))
+                        {
+                            Data = XElement.Load(ms).ToString(SaveOptions.None);
+                        }
+                        break;
+                    case "JObject":
+                        using (var ms = new MemoryStream(data))
+                        {
+                            using (var br = new BsonReader(ms))
+                            {
+                                Data = JObject.Load(br).ToString(Formatting.Indented);
+                            }
+                        }
+                        break;
+                    case "String":
+                        Data = Encoding.Unicode.GetString(data);
+                        break;
+                    case "Binary":
+                    default:
+                        Data = Convert.ToBase64String(data);
+                        break;
+                }
             }
             catch (Exception ex)
             {
@@ -80,9 +107,9 @@ namespace Gateway.Web.Models.Request
 
             try
             {
-                    Data = Data.Replace("&gt;", ">");
-                    Data = Data.Replace("&lt;", "<");
-                    Data = Data.Replace("\\r\\n", Environment.NewLine);
+                Data = Data.Replace("&gt;", ">");
+                Data = Data.Replace("&lt;", "<");
+                Data = Data.Replace("\\r\\n", Environment.NewLine);
             }
             catch (Exception)
             {

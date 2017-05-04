@@ -26,8 +26,8 @@
           <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="CorrelationId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Direction" Type="nvarchar" MaxLength="10" Nullable="false" />
-          <Property Name="CompressionType" Type="nvarchar" MaxLength="10" Nullable="false" />
-          <Property Name="Data" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="PayloadType" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Data" Type="varbinary(max)" Nullable="false" />
           <Property Name="UpdateTime" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="QueueSizes">
@@ -193,17 +193,6 @@
           <Property Name="MaxInstances" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Versions" Relationship="Self.FK_Version_Controller" FromRole="Controller" ToRole="Version" />
         </EntityType>
-        <EntityType Name="Payload">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CorrelationId" Type="Guid" Nullable="false" />
-          <Property Name="Direction" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="CompressionType" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Data" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="UpdateTime" Type="DateTime" Nullable="false" Precision="3" />
-        </EntityType>
         <EntityType Name="Request">
           <Key>
             <PropertyRef Name="Id" />
@@ -293,7 +282,6 @@
         </Association>
         <EntityContainer Name="GatewayEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Controllers" EntityType="Self.Controller" />
-          <EntitySet Name="Payloads" EntityType="Self.Payload" />
           <EntitySet Name="Requests" EntityType="Self.Request" />
           <EntitySet Name="Responses" EntityType="Self.Response" />
           <EntitySet Name="Status" EntityType="Self.Status" />
@@ -337,6 +325,7 @@
             <Parameter Name="Controller" Mode="In" Type="String" />
           </FunctionImport>
           <EntitySet Name="QueueSizes" EntityType="GatewayModel.QueueSize" />
+          <EntitySet Name="Payloads" EntityType="GatewayModel.Payload" />
         </EntityContainer>
         <ComplexType Name="spGetRequestStats_Result">
           <Property Type="DateTime" Name="Date" Nullable="true" />
@@ -428,6 +417,17 @@
           <Property Name="LastDequeue" Type="DateTime" Precision="3" />
           <Property Name="Server" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
+        <EntityType Name="Payload">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CorrelationId" Type="Guid" Nullable="false" />
+          <Property Name="Direction" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="PayloadType" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Data" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
+          <Property Name="UpdateTime" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -446,18 +446,6 @@
                 <ScalarProperty Name="ScalingStrategy" ColumnName="ScalingStrategy" />
                 <ScalarProperty Name="Weighting" ColumnName="Weighting" />
                 <ScalarProperty Name="MaxInstances" ColumnName="MaxInstances" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Payloads">
-            <EntityTypeMapping TypeName="GatewayModel.Payload">
-              <MappingFragment StoreEntitySet="Payload">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="CorrelationId" ColumnName="CorrelationId" />
-                <ScalarProperty Name="Direction" ColumnName="Direction" />
-                <ScalarProperty Name="CompressionType" ColumnName="CompressionType" />
-                <ScalarProperty Name="Data" ColumnName="Data" />
-                <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -645,6 +633,18 @@
                 <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
                 <ScalarProperty Name="Version" ColumnName="Version" />
                 <ScalarProperty Name="Controller" ColumnName="Controller" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Payloads">
+            <EntityTypeMapping TypeName="GatewayModel.Payload">
+              <MappingFragment StoreEntitySet="Payload">
+                <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
+                <ScalarProperty Name="Data" ColumnName="Data" />
+                <ScalarProperty Name="PayloadType" ColumnName="PayloadType" />
+                <ScalarProperty Name="Direction" ColumnName="Direction" />
+                <ScalarProperty Name="CorrelationId" ColumnName="CorrelationId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
