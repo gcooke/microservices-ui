@@ -4,6 +4,10 @@
 @using System.Web.UI.WebControls
 @using Gateway.Web.Models.Controller
 @using Gateway.Web.Models.Reporting
+@{
+    Layout = "~/Views/Shared/_Layout.Reports.cshtml";
+    ViewBag.Title = "PFE";
+}
 
 <div class="row">
 
@@ -17,12 +21,24 @@
 
     <br />
 
-    <table style="width: 100%">
+    <table class="datatable">
         <thead>
             <tr>
                 <td><b>Site</b></td>
                 <td><b>Counterparty</b></td>
                 <td><b>Values</b></td>
+                <td><b>0D</b></td>
+                <td><b>3D</b></td>
+                <td><b>1W</b></td>
+                <td><b>2W</b></td>
+                <td><b>3W</b></td>
+                <td><b>1M</b></td>
+                <td><b>2M</b></td>
+                <td><b>1Y</b></td>
+                <td><b>2Y</b></td>
+                <td><b>3Y</b></td>
+                <td><b>4Y</b></td>
+                <td><b>etc</b></td>
             </tr>
         </thead>
         @foreach (XvaResult result in Model.Items)
@@ -30,15 +46,18 @@
             <tr>
                 <td style="vertical-align: top">@result.Site</td>
                 <td style="vertical-align: top">@result.Counterparty</td>
-                <td>
-                    @foreach (PfePoint point in result.Items)
-                    {
-                        <b>@point.Date</b>
-                        <i>-</i>
-                        <span>@point.Value</span>
-                        <br />
-                    }
-                </td>
+                <td>@result.Point_0D.FormattedValue</td>
+                <td>@result.Point_3D.FormattedValue</td>
+                <td>@result.Point_1W.FormattedValue</td>
+                <td>@result.Point_2W.FormattedValue</td>
+                <td>@result.Point_3W.FormattedValue</td>
+                <td>@result.Point_1M.FormattedValue</td>
+                <td>@result.Point_2M.FormattedValue</td>
+                <td>@result.Point_1Y.FormattedValue</td>
+                <td>@result.Point_2Y.FormattedValue</td>
+                <td>@result.Point_3Y.FormattedValue</td>
+                <td>@result.Point_4Y.FormattedValue</td>
+                <td>@result.Point_Other.FormattedValue</td>
             </tr>
         }
     </table>
