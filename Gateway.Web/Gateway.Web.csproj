@@ -346,6 +346,7 @@
     <Content Include="Views\Shared\_RequestNav.cshtml" />
     <Content Include="Views\User\History.cshtml" />
     <Content Include="Views\Shared\_UserNav.cshtml" />
+    <Content Include="Views\Shared\_Layout.Reports.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
