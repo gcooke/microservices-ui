@@ -14,6 +14,8 @@ namespace Gateway.Web.Database
 
         List<HistoryItem> GetRecentRequests(string controller, DateTime start);
 
+        List<HistoryItem> GetRecentUserRequests(string user, DateTime start);
+
         ResponseStats GetResponseStats(DateTime start);
 
         RequestsChartModel GetControllerRequestSummary(string name, DateTime start);

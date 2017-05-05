@@ -61,6 +61,20 @@ namespace Gateway.Web.Database
             return result;
         }
 
+        public List<HistoryItem> GetRecentUserRequests(string user, DateTime start)
+        {
+            var result = new List<HistoryItem>();
+            using (var database = new GatewayEntities())
+            {
+                var items = database.spGetRecentUserRequests(start, user);
+                foreach (var item in items)
+                {
+                    result.Add(item.ToModel());
+                }
+            }
+            return result;
+        }
+
         public ResponseStats GetResponseStats(DateTime start)
         {
             using (var database = new GatewayEntities())

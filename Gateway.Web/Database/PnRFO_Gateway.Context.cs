@@ -127,5 +127,18 @@ namespace Gateway.Web.Database
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetRecentRequestsAll_Result>("spGetRecentRequestsAll", startParameter, controllerParameter);
         }
+    
+        public virtual ObjectResult<spGetRecentUserRequests_Result> spGetRecentUserRequests(Nullable<System.DateTime> start, string user)
+        {
+            var startParameter = start.HasValue ?
+                new ObjectParameter("Start", start) :
+                new ObjectParameter("Start", typeof(System.DateTime));
+    
+            var userParameter = user != null ?
+                new ObjectParameter("User", user) :
+                new ObjectParameter("User", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetRecentUserRequests_Result>("spGetRecentUserRequests", startParameter, userParameter);
+        }
     }
 }

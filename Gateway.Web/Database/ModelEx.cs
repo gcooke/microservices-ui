@@ -71,6 +71,27 @@ namespace Gateway.Web.Database
             result.ResultMessage = item.ResultMessage;
             return result;
         }
+
+        public static Models.Controller.HistoryItem ToModel(this spGetRecentUserRequests_Result item)
+        {
+            var result = new Models.Controller.HistoryItem();
+            result.CorrelationId = item.CorrelationId;
+            result.User = item.User;
+            result.IpAddress = item.IpAddress;
+            result.Controller = item.Controller;
+            result.Version = item.Version;
+            result.Resource = item.Resource;
+            result.RequestType = item.RequestType;
+            result.Priority = item.Priority;
+            result.IsAsync = item.IsAsync;
+            result.StartUtc = item.StartUtc;
+            result.EndUtc = item.EndUtc;
+            result.QueueTimeMs = item.QueueTimeMs;
+            result.TimeTakeMs = item.TimeTakeMs;
+            result.ResultCode = item.ResultCode;
+            result.ResultMessage = item.ResultMessage;
+            return result;
+        }
     }
 
 }

@@ -142,6 +142,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\RequestController.cs" />
     <Compile Include="Controllers\ReportingController.cs" />
     <Compile Include="Controllers\ControllersController.cs" />
@@ -168,6 +169,9 @@
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\spGetRecentRequests_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\spGetRecentUserRequests_Result.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\spGetRequestStatsAll_Result.cs">
@@ -236,6 +240,7 @@
     <Compile Include="Models\Controller\Version.cs" />
     <Compile Include="Models\Home\IndexModel.cs" />
     <Compile Include="Models\Reporting\PfeModel.cs" />
+    <Compile Include="Models\User\HistoryModel.cs" />
     <Compile Include="Registrations.cs" />
     <Compile Include="Services\ControllerInformation.cs" />
     <Compile Include="Services\GatewayService.cs" />
@@ -339,6 +344,8 @@
     <Content Include="Views\Reporting\Pfe.cshtml" />
     <Content Include="Views\Shared\_HistoryItems.cshtml" />
     <Content Include="Views\Shared\_RequestNav.cshtml" />
+    <Content Include="Views\User\History.cshtml" />
+    <Content Include="Views\Shared\_UserNav.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
