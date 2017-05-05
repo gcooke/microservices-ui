@@ -1,0 +1,26 @@
+﻿<!-- Sidebar -->
+<div id="sidebar-wrapper">
+    <br />
+    <div>
+        <img class="profileimg" src="@Url.Content("~/Content/img/controller.png")" style="height: 36px">
+        <b class="profilename">@Model.Name @ViewBag.Title</b>
+    </div>
+
+    <ul class="sidebar-nav">
+        <li>
+            <a href="~/User/History?name=@Model.Name"
+               class="@(ViewBag.Current == "History" ? "active" : "")">
+                <span class="glyphicon glyphicon-transfer"></span>&nbsp;&nbsp;Details
+            </a>
+        </li>
+        <li>
+            &nbsp;
+        </li>
+        <li>
+            <a href="javascript:void(0);" onclick="history.go(-1);" style="color: yellow">
+                <span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp;&nbsp;Return
+            </a>
+        </li>
+    </ul>
+</div>
+<!-- /#sidebar-wrapper -->
