@@ -306,9 +306,6 @@
           <FunctionImport Name="spGetRequestStatsAll" ReturnType="Collection(GatewayModel.spGetRequestStatsAll_Result)">
           <Parameter Name="Start" Mode="In" Type="DateTime" />
           </FunctionImport>
-          <FunctionImport Name="spGetResponseStatsAll" ReturnType="Collection(GatewayModel.spGetResponseStatsAll_Result)">
-          <Parameter Name="Start" Mode="In" Type="DateTime" />
-          </FunctionImport>
           <FunctionImport Name="spGetTimeStats" ReturnType="Collection(GatewayModel.spGetTimeStats_Result)">
             <Parameter Name="Start" Mode="In" Type="DateTime" />
             <Parameter Name="Controller" Mode="In" Type="String" />
@@ -334,6 +331,9 @@
             <Parameter Name="Start" Mode="In" Type="DateTime" />
             <Parameter Name="User" Mode="In" Type="String" />
           </FunctionImport>
+          <FunctionImport Name="spGetResponseStatsAll" ReturnType="Collection(GatewayModel.spGetResponseStatsAll_Result)">
+            <Parameter Name="Start" Mode="In" Type="DateTime" />
+          </FunctionImport>
         </EntityContainer>
         <ComplexType Name="spGetRequestStats_Result">
           <Property Type="DateTime" Name="Date" Nullable="true" />
@@ -343,12 +343,6 @@
         <ComplexType Name="spGetRequestStatsAll_Result">
           <Property Type="DateTime" Name="Date" Nullable="true" />
           <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
-          <Property Type="Int32" Name="Count" Nullable="true" />
-        </ComplexType>
-        <ComplexType Name="spGetResponseStatsAll_Result">
-          <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
-          <Property Type="Int32" Name="ResultCode" Nullable="true" />
-          <Property Type="Int32" Name="AvgResponseMs" Nullable="true" />
           <Property Type="Int32" Name="Count" Nullable="true" />
         </ComplexType>
         <ComplexType Name="spGetTimeStats_Result">
@@ -453,6 +447,12 @@
           <Property Type="Int32" Name="ResultCode" Nullable="true" />
           <Property Type="String" Name="ResultMessage" Nullable="true" />
         </ComplexType>
+        <ComplexType Name="spGetResponseStatsAll_Result">
+          <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="ResultCode" Nullable="true" />
+          <Property Type="Int64" Name="AvgResponseMs" Nullable="true" />
+          <Property Type="Int32" Name="Count" Nullable="true" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -553,16 +553,6 @@
               <ComplexTypeMapping TypeName="GatewayModel.spGetRequestStatsAll_Result">
                 <ScalarProperty Name="Date" ColumnName="Date" />
                 <ScalarProperty Name="Controller" ColumnName="Controller" />
-                <ScalarProperty Name="Count" ColumnName="Count" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="spGetResponseStatsAll" FunctionName="GatewayModel.Store.spGetResponseStatsAll">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="GatewayModel.spGetResponseStatsAll_Result">
-                <ScalarProperty Name="Controller" ColumnName="Controller" />
-                <ScalarProperty Name="ResultCode" ColumnName="ResultCode" />
-                <ScalarProperty Name="AvgResponseMs" ColumnName="AvgResponseMs" />
                 <ScalarProperty Name="Count" ColumnName="Count" />
               </ComplexTypeMapping>
             </ResultMapping>
@@ -692,6 +682,16 @@
                 <ScalarProperty Name="TimeTakeMs" ColumnName="TimeTakeMs" />
                 <ScalarProperty Name="ResultCode" ColumnName="ResultCode" />
                 <ScalarProperty Name="ResultMessage" ColumnName="ResultMessage" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetResponseStatsAll" FunctionName="GatewayModel.Store.spGetResponseStatsAll">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GatewayModel.spGetResponseStatsAll_Result">
+                <ScalarProperty Name="Controller" ColumnName="Controller" />
+                <ScalarProperty Name="ResultCode" ColumnName="ResultCode" />
+                <ScalarProperty Name="AvgResponseMs" ColumnName="AvgResponseMs" />
+                <ScalarProperty Name="Count" ColumnName="Count" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

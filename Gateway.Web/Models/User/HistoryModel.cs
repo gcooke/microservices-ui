@@ -11,6 +11,6 @@ namespace Gateway.Web.Models.User
             Requests = new List<HistoryItem>();
         }
 
-        public List<HistoryItem> Requests { get; private set; }
+        public List<HistoryItem> Requests { get; private set; }        
     }
 }

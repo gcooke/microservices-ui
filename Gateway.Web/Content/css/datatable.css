@@ -40,3 +40,8 @@
 .datatable tr:nth-child(even) {
   background-color: #E9E9E9;  
 }
+
+.taken_bg {
+    background-color: red;
+    z-index: -1;
+}

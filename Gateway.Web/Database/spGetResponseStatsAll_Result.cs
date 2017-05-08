@@ -15,7 +15,7 @@ namespace Gateway.Web.Database
     {
         public string Controller { get; set; }
         public Nullable<int> ResultCode { get; set; }
-        public Nullable<int> AvgResponseMs { get; set; }
+        public Nullable<long> AvgResponseMs { get; set; }
         public Nullable<int> Count { get; set; }
     }
 }
