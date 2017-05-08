@@ -29,5 +29,9 @@ namespace Gateway.Web.Database
         Models.Controllers.QueueChartModel GetControllerQueueSummary(DateTime start);
 
         VersionsModel GetControllerVersions(string name);
+
+        IEnumerable<Status> GetVersionStatuses();
+
+        bool HasStatusChanged(string controller, string version, string status);
     }
 }

@@ -1,8 +1,4 @@
-﻿@using Gateway.Web.Database
-@using Gateway.Web.Models
-@using Gateway.Web.Models.Controller
-@using Gateway.Web.Utils
-@using Newtonsoft.Json
+﻿@using Gateway.Web.Models.Controller
 @using Version = Gateway.Web.Models.Controller.Version
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
@@ -20,39 +16,72 @@
         of version status will also be done here.
 
         <br />
+        <br />
 
         <div id="list-meta">
-            <ul>
+        @using (Html.BeginForm("UpdateVersionStatuses", "Controller", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+
+            List<SelectListItem> listItems = new List<SelectListItem>();
+            listItems.Add(new SelectListItem
+            {
+                Value = Model.Name,
+                Text = Model.Name,
+                Selected = true
+            });
+       
+
+            @Html.DropDownList(
+                "id",
+                listItems,
+                new { @class = "form-control", @style = "display:none" }
+            )
+            <table style="width: 100%">
+                <tr>
+                    <th>Alias</th>
+                    <th>Version</th>
+                    <th>Current Status</th>
+                    <th>Update Status</th>
+                    <th>Delete</th>
+                </tr>
+
                 @foreach (Version item in Model.Versions)
                 {
-                    <li>
+                    <tr>
                         @if (item.IsActive)
                         {
                             <span style="color:DarkBlue">
-                                <b>
-                                    @item.Alias
-                                    @item.Name
-                                    <span>-</span>
-                                    @item.Status
-                                </b>
+                                <td>@item.Alias</td>
+                                <td>@item.Name</td>
+                                <td>@item.Status</td>
+                                <td>@Html.DropDownList(@item.Name + "_StatusSelection", item.ApplicableStatuses, new { @class = "form-control", @style = "width:80%" })</td>
+                            </span>
+                        }
+                        else if (item.Status == "Disabled")
+                        {
+                            <span style="color:indianred">
+                                <td>@item.Alias</td>
+                                <td>@item.Name</td>
+                                <td>@item.Status</td>
+                                <td>@Html.DropDownList(@item.Name + "_StatusSelection", item.ApplicableStatuses, new { @class = "form-control", @style = "width:80%" })</td>
+                                <td>@Html.CheckBox(@item.Name + "_Delete")</td>
                             </span>
                         }
                         else
                         {
                             <span style="color:gray">
-                                @item.Alias
-                                @item.Name
-                                <span>-</span>
-                                @item.Status
+                                <td>@item.Alias</td>
+                                <td>@item.Name</td>
+                                <td>@item.Status</td>
+                                <td>@Html.DropDownList(@item.Name + "_StatusSelection", item.ApplicableStatuses, new { @class = "form-control", @style = "width:80%" })</td>
                             </span>
                         }
-
-                    </li>
-                }
-            </ul>
+                    </tr>
+               }
+            </table>
+            <input id="UpdateBtn" type="submit" value="Update All" />
+        }
         </div>
-
         <br />
-
     </div>
 </div>
