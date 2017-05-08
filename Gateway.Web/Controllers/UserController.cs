@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using Gateway.Web.Database;
 using Gateway.Web.Models.User;
 using Gateway.Web.Services;
+using Gateway.Web.Utils;
 using Controller = System.Web.Mvc.Controller;
 
 namespace Gateway.Web.Controllers
@@ -24,6 +25,7 @@ namespace Gateway.Web.Controllers
 
             var model = new HistoryModel(id);
             model.Requests.AddRange(items);
+            model.Requests.SetRelativePercentages();
             return View(model);
         }
     }

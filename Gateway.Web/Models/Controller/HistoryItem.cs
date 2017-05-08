@@ -29,6 +29,8 @@ namespace Gateway.Web.Models.Controller
             get { return ResultCode == 1; }
         }
 
+        public int RelativePercentage { get; set; }
+
         public string TimeTakenFormatted
         {
             get
@@ -36,14 +38,14 @@ namespace Gateway.Web.Models.Controller
                 if (TimeTakeMs.HasValue)
                 {
                     var time = TimeSpan.FromMilliseconds(TimeTakeMs.Value);
-                    if(time > Hour)
-                        return string.Format("{0:N2} hour", time.TotalHours);
+                    if (time > Hour)
+                        return string.Format("{0:N2} hours", time.TotalHours);
 
                     if (time > Minute)
-                        return string.Format("{0:N2} min", time.TotalMinutes);
+                        return string.Format("{0:N2} mins", time.TotalMinutes);
 
                     if (time > Second)
-                        return string.Format("{0:N2} sec", time.TotalSeconds);
+                        return string.Format("{0:N2} secs", time.TotalSeconds);
 
                     return string.Format("{0} ms", TimeTakeMs);
                 }

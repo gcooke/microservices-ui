@@ -22,7 +22,7 @@ namespace Gateway.Web.Database
             }
         }
 
-        private void Add(string controller, int? resultCode, int? count, int? avgResponseMs)
+        private void Add(string controller, int? resultCode, int? count, long? avgResponseMs)
         {
             ResponseStat stat;
             if (!_stats.TryGetValue(controller, out stat))
@@ -84,6 +84,6 @@ namespace Gateway.Web.Database
     {
         public int SuccessCount { get; set; }
         public int FailureCount { get; set; }
-        public int AvgResponseMs { get; set; }
+        public long AvgResponseMs { get; set; }
     }
 }

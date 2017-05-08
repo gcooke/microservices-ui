@@ -58,15 +58,6 @@ namespace Gateway.Web.Database
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetRequestStatsAll_Result>("spGetRequestStatsAll", startParameter);
         }
     
-        public virtual ObjectResult<spGetResponseStatsAll_Result> spGetResponseStatsAll(Nullable<System.DateTime> start)
-        {
-            var startParameter = start.HasValue ?
-                new ObjectParameter("Start", start) :
-                new ObjectParameter("Start", typeof(System.DateTime));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetResponseStatsAll_Result>("spGetResponseStatsAll", startParameter);
-        }
-    
         public virtual ObjectResult<spGetTimeStats_Result> spGetTimeStats(Nullable<System.DateTime> start, string controller)
         {
             var startParameter = start.HasValue ?
@@ -139,6 +130,15 @@ namespace Gateway.Web.Database
                 new ObjectParameter("User", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetRecentUserRequests_Result>("spGetRecentUserRequests", startParameter, userParameter);
+        }
+    
+        public virtual ObjectResult<spGetResponseStatsAll_Result> spGetResponseStatsAll(Nullable<System.DateTime> start)
+        {
+            var startParameter = start.HasValue ?
+                new ObjectParameter("Start", start) :
+                new ObjectParameter("Start", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetResponseStatsAll_Result>("spGetResponseStatsAll", startParameter);
         }
     }
 }

@@ -29,7 +29,11 @@
             </td>
             <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">@history.Resource</td>
             <td>@history.StartFormatted</td>
-            <td>@history.TimeTakenFormatted</td>
+            <td>
+                <div style="width: @history.RelativePercentage%; background: rgb(128, 177, 133); overflow: visible;">
+                    @history.TimeTakenFormatted
+                </div>                
+            </td>
             <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
                 @history.ResultFormatted                
             </td>

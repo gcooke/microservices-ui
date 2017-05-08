@@ -6,6 +6,7 @@ using Gateway.Web.Database;
 using Gateway.Web.Models;
 using Gateway.Web.Models.Controllers;
 using Gateway.Web.Services;
+using Gateway.Web.Utils;
 using Controller = System.Web.Mvc.Controller;
 
 namespace Gateway.Web.Controllers
@@ -41,6 +42,7 @@ namespace Gateway.Web.Controllers
             var items = _dataService.GetRecentRequests(DateTime.Today.AddDays(-30));
             var model = new HistoryModel();
             model.Requests.AddRange(items);
+            model.Requests.SetRelativePercentages();
             return View(model);
         }
 
