@@ -7,6 +7,8 @@ using System.Xml.Linq;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Controllers;
 using Gateway.Web.Utils;
+using System.Threading.Tasks;
+using System.Text;
 
 namespace Gateway.Web.Services
 {
@@ -170,6 +172,95 @@ namespace Gateway.Web.Services
             {
                 // Should somehow output this
                 return null;
+            } 
+        }
+
+        private async Task<HttpResponseMessage> Put(string endpoint, HttpRequestMessage message)
+        {
+            try
+            {
+                using (var client = new HttpClient(new HttpClientHandler
+                {
+                    UseDefaultCredentials = true,
+                    AllowAutoRedirect = true
+                }))
+                {
+                    HttpResponseMessage response = await client.PutAsync(endpoint, message.Content);
+                    return response.EnsureSuccessStatusCode();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Should somehow output this
+                return null;
+            }
+        }
+
+        private async Task<HttpResponseMessage> Post(string endpoint, HttpRequestMessage message)
+        {
+            try
+            {
+                using (var client = new HttpClient(new HttpClientHandler
+                {
+                    UseDefaultCredentials = true,
+                    AllowAutoRedirect = true
+                }))
+                {
+                    HttpResponseMessage response = await client.PostAsync(endpoint, message.Content);
+                    return response.EnsureSuccessStatusCode();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Should somehow output this
+                return null;
+            }
+        }
+
+        public async void UpdateControllerVersionStatuses(string controller, Dictionary<string, string> versionStatusUpdates)
+        {
+            foreach(var version in versionStatusUpdates.Keys)
+            {
+                //Try send to each gateway, but break after a successful update.
+                foreach(var gateway in _gateways)
+                {
+                    // Use below url for testing catelogue locally
+                    //var url = string.Format("api/catalogue/0.0/controllers/{0}/versions/{1}", controller, version);
+
+                    var url = string.Format("api/catalogue/latest/controllers/{0}/versions/{1}", controller, version);
+                    url = string.Format("http://{0}:{1}/{2}", gateway, _port, url);
+
+                    HttpRequestMessage message = new HttpRequestMessage()
+                    {
+                        Method = HttpMethod.Put,
+                        Content = new StringContent(versionStatusUpdates[version], Encoding.UTF8)
+                    };
+
+                    var result = await Put(url, message);
+                    if(result != null) { break; }
+                } 
+            }
+        }
+
+        public void MarkVersionsForDelete(string controller, Dictionary<string, bool> versionsMarkedForDelete)
+        {
+            // TODO: Code for deleting disabled versions.
+        }
+
+        public async void RefreshCatalogueForAllGateways()
+        {
+            foreach (var gateway in _gateways)
+            {
+                var url = "/health/refreshCatalogue";
+                url = string.Format("http://{0}:{1}/{2}", gateway, _port, url);
+
+                HttpRequestMessage message = new HttpRequestMessage()
+                {
+                    Method = HttpMethod.Post,
+                };
+
+                var result = await Post(url, message);
+                if (result != null) { break; }
             }
         }
 

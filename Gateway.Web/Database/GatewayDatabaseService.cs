@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Gateway.Web.Models.Controller;
-using Gateway.Web.Models.Controllers;
 using Gateway.Web.Models.Request;
 
 namespace Gateway.Web.Database
@@ -238,10 +237,38 @@ namespace Gateway.Web.Database
                 {
                     versions.Add(item.ToModel());
                 }
-
                 result.Versions.AddRange(versions.OrderBy(v => v.SemVar));
             }
             return result;
+        }
+
+        public IEnumerable<Status> GetVersionStatuses()
+        {
+            using (var database = new GatewayEntities())
+            {
+                return database.Status.ToList();
+            }
+        }
+
+        public bool HasStatusChanged(string controllerName, string versionName, string status)
+        {
+            using (var database = new GatewayEntities())
+            {
+                var controller = database.Controllers
+                    .Where(c => c.Name == controllerName).Select(c => c).First();
+
+                if (controller != null)
+                {
+                    var version = controller.Versions
+                    .Where(v => v.Version1 == versionName).Select(v => v).FirstOrDefault();
+
+                    if (version != null)
+                    {
+                        if (status != version.Status.Name) return true;
+                    } 
+                }
+                return false;
+            }
         }
     }
 }
