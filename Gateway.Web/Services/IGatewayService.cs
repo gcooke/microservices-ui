@@ -12,7 +12,9 @@ namespace Gateway.Web.Services
         WorkersModel GetWorkers(string controller);
         IEnumerable<QueueModel> GetCurrentQueues(string controller);
         IEnumerable<QueueModel> GetCurrentQueues();
-
         XElement[] GetReport(string url);
+        void UpdateControllerVersionStatuses(string controller, Dictionary<string, string> versionStatusUpdates);
+        void MarkVersionsForDelete(string controller, Dictionary<string, bool> versionsMarkedForDelete);
+        void RefreshCatalogueForAllGateways();
     }
 }

@@ -6,6 +6,9 @@ using Gateway.Web.Models.Controller;
 using Gateway.Web.Services;
 using Gateway.Web.Utils;
 using Controller = System.Web.Mvc.Controller;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Gateway.Web.Controllers
 {
@@ -27,7 +30,7 @@ namespace Gateway.Web.Controllers
             model.TotalCalls = stats.GetTotalCalls(id);
             model.TotalErrors = stats.GetTotalErrors(id);
             model.AverageResponse = stats.GetAverageResponse(id);
-            return View(model);
+            return View("Dashboard", model);
         }
         
         public ActionResult Queues(string id)
@@ -44,7 +47,57 @@ namespace Gateway.Web.Controllers
         public ActionResult Versions(string id)
         {
             var model = _dataService.GetControllerVersions(id);
+
+            foreach (var version in model.Versions)
+            {
+                version.ApplicableStatuses = from status in _dataService.GetVersionStatuses()
+                                             select new SelectListItem
+                                             {
+                                                 Text = status.Name,
+                                                 Value = status.Name,
+                                                 Selected = version.Status == status.Name
+                                             };
+            }
             return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult UpdateVersionStatuses(FormCollection collection)
+        {
+            var controllerId = collection["id"];
+            var statusUpdatesDict = new Dictionary<string, string>();
+            var versionsMarkedForDelete = new Dictionary<string, bool>();
+
+            foreach (var key in collection.Keys)
+            {
+                if (key.ToString() != "id")
+                {
+                    var versionName = key.ToString().Split('_')[0];
+                    if (key.ToString().Contains("_Delete"))
+                    {
+                        var markedForDelete = bool.Parse(collection[key.ToString()].Split(',')[0]);
+                        versionsMarkedForDelete.Add(versionName, markedForDelete);
+                    }
+                    else
+                    {
+                        var newStatus = collection[key.ToString()];
+                        // Only add to collection if the status has changed.
+                        if (_dataService.HasStatusChanged(controllerId, versionName, newStatus))
+                        {
+                            statusUpdatesDict.Add(versionName, newStatus);
+                        }   
+                    }
+                }
+            }
+            var updateTasks = new List<Task>();
+            updateTasks.Add(Task.Factory.StartNew(() => _gateway.UpdateControllerVersionStatuses(controllerId, statusUpdatesDict)));
+            updateTasks.Add(Task.Factory.StartNew(() => _gateway.MarkVersionsForDelete(controllerId, versionsMarkedForDelete)));
+
+            Task.WaitAll(updateTasks.ToArray());
+            Task.Factory.StartNew(() => _gateway.RefreshCatalogueForAllGateways());
+
+            //Setup next view
+            return Dashboard(controllerId);
         }
 
         public ActionResult Workers(string id)
