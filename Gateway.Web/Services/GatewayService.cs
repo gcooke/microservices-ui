@@ -196,6 +196,27 @@ namespace Gateway.Web.Services
             }
         }
 
+        private async Task<HttpResponseMessage> Delete(string endpoint, HttpRequestMessage message)
+        {
+            try
+            {
+                using (var client = new HttpClient(new HttpClientHandler
+                {
+                    UseDefaultCredentials = true,
+                    AllowAutoRedirect = true
+                }))
+                {
+                    HttpResponseMessage response = await client.DeleteAsync(endpoint);
+                    return response.EnsureSuccessStatusCode();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Should somehow output this
+                return null;
+            }
+        }
+
         private async Task<HttpResponseMessage> Post(string endpoint, HttpRequestMessage message)
         {
             try
@@ -242,13 +263,33 @@ namespace Gateway.Web.Services
             }
         }
 
-        public void MarkVersionsForDelete(string controller, Dictionary<string, bool> versionsMarkedForDelete)
+        public async void MarkVersionsForDelete(string controller, List<string> versionsMarkedForDelete)
         {
-            // TODO: Code for deleting disabled versions.
+            foreach (var version in versionsMarkedForDelete)
+            {
+                //Try send to each gateway, but break after a successful update.
+                foreach (var gateway in _gateways)
+                {
+                    // Use below url for testing catelogue locally
+                    //var url = string.Format("api/catalogue/0.0/controllers/{0}/versions/{1}", controller, version);
+
+                    var url = string.Format("api/catalogue/latest/controllers/{0}/versions/{1}", controller, version);
+                    url = string.Format("http://{0}:{1}/{2}", gateway, _port, url);
+
+                    HttpRequestMessage message = new HttpRequestMessage()
+                    {
+                        Method = HttpMethod.Delete
+                    };
+
+                    var result = await Delete(url, message);
+                    if (result != null) { break; }
+                }
+            }
         }
 
         public async void RefreshCatalogueForAllGateways()
         {
+            // Ask each gateway to refresh
             foreach (var gateway in _gateways)
             {
                 var url = "/health/refreshCatalogue";
@@ -259,8 +300,7 @@ namespace Gateway.Web.Services
                     Method = HttpMethod.Post,
                 };
 
-                var result = await Post(url, message);
-                if (result != null) { break; }
+                await Post(url, message);
             }
         }
 

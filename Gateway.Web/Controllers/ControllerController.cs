@@ -66,7 +66,7 @@ namespace Gateway.Web.Controllers
         {
             var controllerId = collection["id"];
             var statusUpdatesDict = new Dictionary<string, string>();
-            var versionsMarkedForDelete = new Dictionary<string, bool>();
+            var versionsMarkedForDelete = new List<string>();
 
             foreach (var key in collection.Keys)
             {
@@ -76,7 +76,8 @@ namespace Gateway.Web.Controllers
                     if (key.ToString().Contains("_Delete"))
                     {
                         var markedForDelete = bool.Parse(collection[key.ToString()].Split(',')[0]);
-                        versionsMarkedForDelete.Add(versionName, markedForDelete);
+                        if(markedForDelete)
+                            versionsMarkedForDelete.Add(versionName);
                     }
                     else
                     {

@@ -14,7 +14,7 @@ namespace Gateway.Web.Services
         IEnumerable<QueueModel> GetCurrentQueues();
         XElement[] GetReport(string url);
         void UpdateControllerVersionStatuses(string controller, Dictionary<string, string> versionStatusUpdates);
-        void MarkVersionsForDelete(string controller, Dictionary<string, bool> versionsMarkedForDelete);
+        void MarkVersionsForDelete(string controller, List<string> versionsMarkedForDelete);
         void RefreshCatalogueForAllGateways();
     }
 }
