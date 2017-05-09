@@ -9,9 +9,20 @@ namespace Gateway.Web.Models.Reporting
     {
         public PfeModel()
         {
-            Items = new List<XvaResult>();
+            Items = new List<PfeSite>();
         }
 
+        public List<PfeSite> Items { get; set; }
+    }
+
+    public class PfeSite
+    {
+        public PfeSite(string site)
+        {
+            Site = site;
+            Items = new List<XvaResult>();
+        }
+        public string Site { get; set; }
         public List<XvaResult> Items { get; set; }
     }
 

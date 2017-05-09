@@ -13,6 +13,7 @@ namespace Gateway.Web.Services
         IEnumerable<QueueModel> GetCurrentQueues(string controller);
         IEnumerable<QueueModel> GetCurrentQueues();
         XElement[] GetReport(string url);
+        string[] GetSites();
         void UpdateControllerVersionStatuses(string controller, Dictionary<string, string> versionStatusUpdates);
         void MarkVersionsForDelete(string controller, List<string> versionsMarkedForDelete);
         void RefreshCatalogueForAllGateways();

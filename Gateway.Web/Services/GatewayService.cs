@@ -9,6 +9,7 @@ using Gateway.Web.Models.Controllers;
 using Gateway.Web.Utils;
 using System.Threading.Tasks;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace Gateway.Web.Services
 {
@@ -97,6 +98,16 @@ namespace Gateway.Web.Services
             return element;
         }
 
+        public string[] GetSites()
+        {
+            var doc = Fetch("api/tradestore/latest/{0}", "LegalEntities").FirstOrDefault();
+
+            var element = doc.Document.Descendants("Result").ToArray().FirstOrDefault();
+            var legalEntities = JsonConvert.DeserializeObject<IEnumerable<string>>(element.Value);
+
+            return legalEntities.ToArray();
+        }
+
         private IEnumerable<QueueModel> GetCurrentQueues(IEnumerable<ServerResponse> docs)
         {
             foreach (var doc in docs)
@@ -154,7 +165,7 @@ namespace Gateway.Web.Services
                 }))
                 {
                     client.DefaultRequestHeaders.Add("Accept", "application/xml");
-                    
+
                     var response = client.GetAsync(uri);
                     response.Wait();
                     if (response.Result.StatusCode != HttpStatusCode.OK)
@@ -172,7 +183,7 @@ namespace Gateway.Web.Services
             {
                 // Should somehow output this
                 return null;
-            } 
+            }
         }
 
         private async Task<HttpResponseMessage> Put(string endpoint, HttpRequestMessage message)
@@ -240,10 +251,10 @@ namespace Gateway.Web.Services
 
         public async void UpdateControllerVersionStatuses(string controller, Dictionary<string, string> versionStatusUpdates)
         {
-            foreach(var version in versionStatusUpdates.Keys)
+            foreach (var version in versionStatusUpdates.Keys)
             {
                 //Try send to each gateway, but break after a successful update.
-                foreach(var gateway in _gateways)
+                foreach (var gateway in _gateways)
                 {
                     // Use below url for testing catelogue locally
                     //var url = string.Format("api/catalogue/0.0/controllers/{0}/versions/{1}", controller, version);
@@ -258,8 +269,8 @@ namespace Gateway.Web.Services
                     };
 
                     var result = await Put(url, message);
-                    if(result != null) { break; }
-                } 
+                    if (result != null) { break; }
+                }
             }
         }
 
