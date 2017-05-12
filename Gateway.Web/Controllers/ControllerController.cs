@@ -62,7 +62,7 @@ namespace Gateway.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult UpdateVersionStatuses(FormCollection collection)
+        public async Task<ActionResult> UpdateVersionStatuses(FormCollection collection)
         {
             var controllerId = collection["id"];
             var statusUpdatesDict = new Dictionary<string, string>();
@@ -90,12 +90,13 @@ namespace Gateway.Web.Controllers
                     }
                 }
             }
-            var updateTasks = new List<Task>();
-            updateTasks.Add(Task.Factory.StartNew(() => _gateway.UpdateControllerVersionStatuses(controllerId, statusUpdatesDict)));
-            updateTasks.Add(Task.Factory.StartNew(() => _gateway.MarkVersionsForDelete(controllerId, versionsMarkedForDelete)));
 
-            Task.WaitAll(updateTasks.ToArray());
-            Task.Factory.StartNew(() => _gateway.RefreshCatalogueForAllGateways());
+            var updateVersionTask = _gateway.UpdateControllerVersionStatuses(controllerId, statusUpdatesDict);
+            var markVersionsForDeleteTask = _gateway.MarkVersionsForDelete(controllerId, versionsMarkedForDelete);
+
+            await Task.WhenAll(updateVersionTask, markVersionsForDeleteTask);
+
+            await _gateway.RefreshCatalogueForAllGateways();
 
             //Setup next view
             return Dashboard(controllerId);
