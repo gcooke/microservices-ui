@@ -249,7 +249,7 @@ namespace Gateway.Web.Services
             }
         }
 
-        public async void UpdateControllerVersionStatuses(string controller, Dictionary<string, string> versionStatusUpdates)
+        public async Task UpdateControllerVersionStatuses(string controller, Dictionary<string, string> versionStatusUpdates)
         {
             foreach (var version in versionStatusUpdates.Keys)
             {
@@ -274,7 +274,7 @@ namespace Gateway.Web.Services
             }
         }
 
-        public async void MarkVersionsForDelete(string controller, List<string> versionsMarkedForDelete)
+        public async Task MarkVersionsForDelete(string controller, List<string> versionsMarkedForDelete)
         {
             foreach (var version in versionsMarkedForDelete)
             {
@@ -298,7 +298,7 @@ namespace Gateway.Web.Services
             }
         }
 
-        public async void RefreshCatalogueForAllGateways()
+        public async Task RefreshCatalogueForAllGateways()
         {
             // Ask each gateway to refresh
             foreach (var gateway in _gateways)
