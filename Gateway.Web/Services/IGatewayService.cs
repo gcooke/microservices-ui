@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Controllers;
@@ -14,8 +15,8 @@ namespace Gateway.Web.Services
         IEnumerable<QueueModel> GetCurrentQueues();
         XElement[] GetReport(string url);
         string[] GetSites();
-        void UpdateControllerVersionStatuses(string controller, Dictionary<string, string> versionStatusUpdates);
-        void MarkVersionsForDelete(string controller, List<string> versionsMarkedForDelete);
-        void RefreshCatalogueForAllGateways();
+        Task UpdateControllerVersionStatuses(string controller, Dictionary<string, string> versionStatusUpdates);
+        Task MarkVersionsForDelete(string controller, List<string> versionsMarkedForDelete);
+        Task RefreshCatalogueForAllGateways();
     }
 }
