@@ -16,6 +16,7 @@ namespace Gateway.Web.Services
     public class GatewayService : IGatewayService
     {
         private readonly string[] _gateways = new[] { "JHBPSM020000757", "JHBPSM020000758" };
+           
         private readonly int _port = 7010;
 
         public GatewayService()
