@@ -246,7 +246,7 @@ namespace Gateway.Web.Database
         {
             using (var database = new GatewayEntities())
             {
-                return database.Status.ToList();
+                return database.Status.Where(s => s.Name != "Deleted").ToList();
             }
         }
 

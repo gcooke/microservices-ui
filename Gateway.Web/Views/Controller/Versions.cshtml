@@ -47,37 +47,40 @@
 
                 @foreach (Version item in Model.Versions)
                 {
-                    <tr>
-                        @if (item.IsActive)
-                        {
-                            <span style="color:DarkBlue">
+                    if (item.Status != "Deleted")
+                     {
+                         <tr>
+                             @if (item.IsActive)
+                             {
+                                 <span style="color: DarkBlue">
                                 <td>@item.Alias</td>
                                 <td>@item.Name</td>
                                 <td>@item.Status</td>
-                                <td>@Html.DropDownList(@item.Name + "_StatusSelection", item.ApplicableStatuses, new { @class = "form-control", @style = "width:80%" })</td>
+                                <td>@Html.DropDownList(@item.Name + "_StatusSelection", item.ApplicableStatuses, new {@class = "form-control", @style = "width:80%"})</td>
                             </span>
-                        }
-                        else if (item.Status == "Disabled")
-                        {
-                            <span style="color:indianred">
+                             }
+                             else if (item.Status == "Disabled")
+                             {
+                                 <span style="color: indianred">
                                 <td>@item.Alias</td>
                                 <td>@item.Name</td>
                                 <td>@item.Status</td>
-                                <td>@Html.DropDownList(@item.Name + "_StatusSelection", item.ApplicableStatuses, new { @class = "form-control", @style = "width:80%" })</td>
+                                <td>@Html.DropDownList(@item.Name + "_StatusSelection", item.ApplicableStatuses, new {@class = "form-control", @style = "width:80%"})</td>
                                 <td>@Html.CheckBox(@item.Name + "_Delete")</td>
                             </span>
-                        }
-                        else
-                        {
-                            <span style="color:gray">
+                             }
+                             else
+                             {
+                                 <span style="color: gray">
                                 <td>@item.Alias</td>
                                 <td>@item.Name</td>
                                 <td>@item.Status</td>
-                                <td>@Html.DropDownList(@item.Name + "_StatusSelection", item.ApplicableStatuses, new { @class = "form-control", @style = "width:80%" })</td>
+                                <td>@Html.DropDownList(@item.Name + "_StatusSelection", item.ApplicableStatuses, new {@class = "form-control", @style = "width:80%"})</td>
                             </span>
-                        }
-                    </tr>
-               }
+                             }
+                         </tr>
+                     }
+                }
             </table>
             <input id="UpdateBtn" type="submit" value="Update All" />
         }
