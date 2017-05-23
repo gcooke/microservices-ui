@@ -88,8 +88,7 @@ namespace Gateway.Web.Models.Request
             }
             catch (Exception ex)
             {
-                Data = string.Format("Could not decompress data: {0}", ex.Message);
-                throw;
+                Data = string.Format("Could not decompress payload data: {0}", ex.Message);
             }
         }
 
