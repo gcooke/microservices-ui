@@ -141,8 +141,8 @@ namespace Gateway.Web.Database
                 var response = database.Responses.FirstOrDefault(r => r.CorrelationId == id);
                 PopulateFields(result, request);
                 PopulateFields(result, response);
-                result.CorrelationId = id;
-                foreach (var item in database.Payloads.Where(p => p.CorrelationId == id))
+                result.CorrelationId = id;                
+                foreach (var item in database.spGetPayloads(id))
                 {
                     result.Items.Add(new PayloadModel(item));
                 }
@@ -246,7 +246,7 @@ namespace Gateway.Web.Database
         {
             using (var database = new GatewayEntities())
             {
-                return database.Status.ToList();
+                return database.Status.Where(s => s.Name != "Deleted").ToList();
             }
         }
 

@@ -27,8 +27,10 @@
           <Property Name="CorrelationId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Direction" Type="nvarchar" MaxLength="10" Nullable="false" />
           <Property Name="PayloadType" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="CompressionType" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Data" Type="varbinary(max)" Nullable="false" />
           <Property Name="UpdateTime" Type="datetime" Nullable="false" />
+          <Property Name="DataLengthBytes" Type="bigint" />
         </EntityType>
         <EntityType Name="QueueSizes">
           <Key>
@@ -127,6 +129,9 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="spGetPayloads" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CorrelationId" Type="uniqueidentifier" Mode="In" />
+        </Function>
         <Function Name="spGetQueueCounts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Start" Type="datetime" Mode="In" />
           <Parameter Name="Controller" Type="nvarchar" Mode="In" />
@@ -228,15 +233,6 @@
           <Property Name="UpdateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="QueueTimeMs" Type="Int32" Nullable="false" />
         </EntityType>
-        <EntityType Name="Status">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Versions" Relationship="Self.FK_Version_Status" FromRole="Status" ToRole="Version" />
-        </EntityType>
         <EntityType Name="StatusChange">
           <Key>
             <PropertyRef Name="Id" />
@@ -258,7 +254,7 @@
           <Property Name="Alias" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="StatusId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Controller" Relationship="Self.FK_Version_Controller" FromRole="Version" ToRole="Controller" />
-          <NavigationProperty Name="Status" Relationship="Self.FK_Version_Status" FromRole="Version" ToRole="Status" />
+          <NavigationProperty Name="Status" Relationship="GatewayModel.FK_Version_Status" FromRole="Version" ToRole="Status" />
         </EntityType>
         <Association Name="FK_Version_Controller">
           <End Role="Controller" Type="Self.Controller" Multiplicity="1" />
@@ -272,31 +268,14 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Version_Status">
-          <End Role="Status" Type="Self.Status" Multiplicity="1" />
-          <End Role="Version" Type="Self.Version" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Status">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Version">
-              <PropertyRef Name="StatusId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="GatewayEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Controllers" EntityType="Self.Controller" />
           <EntitySet Name="Requests" EntityType="Self.Request" />
           <EntitySet Name="Responses" EntityType="Self.Response" />
-          <EntitySet Name="Status" EntityType="Self.Status" />
           <EntitySet Name="StatusChanges" EntityType="Self.StatusChange" />
           <EntitySet Name="Versions" EntityType="Self.Version" />
           <AssociationSet Name="FK_Version_Controller" Association="Self.FK_Version_Controller">
             <End Role="Controller" EntitySet="Controllers" />
-            <End Role="Version" EntitySet="Versions" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Version_Status" Association="Self.FK_Version_Status">
-            <End Role="Status" EntitySet="Status" />
             <End Role="Version" EntitySet="Versions" />
           </AssociationSet>
           <FunctionImport Name="spGetRequestStats" ReturnType="Collection(GatewayModel.spGetRequestStats_Result)">
@@ -332,7 +311,15 @@
             <Parameter Name="User" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="spGetResponseStatsAll" ReturnType="Collection(GatewayModel.spGetResponseStatsAll_Result)">
-            <Parameter Name="Start" Mode="In" Type="DateTime" />
+          <Parameter Name="Start" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <EntitySet Name="Status" EntityType="GatewayModel.Status" />
+          <AssociationSet Name="FK_Version_Status" Association="GatewayModel.FK_Version_Status">
+            <End Role="Status" EntitySet="Status" />
+            <End Role="Version" EntitySet="Versions" />
+          </AssociationSet>
+          <FunctionImport Name="spGetPayloads" ReturnType="Collection(GatewayModel.spGetPayloads_Result)">
+            <Parameter Name="CorrelationId" Mode="In" Type="Guid" />
           </FunctionImport>
         </EntityContainer>
         <ComplexType Name="spGetRequestStats_Result">
@@ -429,6 +416,8 @@
           <Property Name="PayloadType" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="Data" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
           <Property Name="UpdateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CompressionType" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DataLengthBytes" Type="Int64" />
         </EntityType>
         <ComplexType Name="spGetRecentUserRequests_Result">
           <Property Type="Guid" Name="CorrelationId" Nullable="false" />
@@ -452,6 +441,37 @@
           <Property Type="Int32" Name="ResultCode" Nullable="true" />
           <Property Type="Int64" Name="AvgResponseMs" Nullable="true" />
           <Property Type="Int32" Name="Count" Nullable="true" />
+        </ComplexType>
+        <EntityType Name="Status">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Versions" Relationship="GatewayModel.FK_Version_Status" FromRole="Status" ToRole="Version" />
+        </EntityType>
+        <Association Name="FK_Version_Status">
+          <End Type="GatewayModel.Status" Role="Status" Multiplicity="1" />
+          <End Type="GatewayModel.Version" Role="Version" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Status">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Version">
+              <PropertyRef Name="StatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="spGetPayloads_Result">
+          <Property Type="Int64" Name="Id" Nullable="false" />
+          <Property Type="Guid" Name="CorrelationId" Nullable="false" />
+          <Property Type="String" Name="Direction" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="PayloadType" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="CompressionType" Nullable="false" MaxLength="50" />
+          <Property Type="Binary" Name="Data" Nullable="true" />
+          <Property Type="DateTime" Name="UpdateTime" Nullable="false" Precision="23" />
+          <Property Type="Int64" Name="DataLengthBytes" Nullable="true" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -504,15 +524,6 @@
                 <ScalarProperty Name="ResultCode" ColumnName="ResultCode" />
                 <ScalarProperty Name="ResultMessage" ColumnName="ResultMessage" />
                 <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Status">
-            <EntityTypeMapping TypeName="GatewayModel.Status">
-              <MappingFragment StoreEntitySet="Status">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -655,6 +666,8 @@
           <EntitySetMapping Name="Payloads">
             <EntityTypeMapping TypeName="GatewayModel.Payload">
               <MappingFragment StoreEntitySet="Payload">
+                <ScalarProperty Name="DataLengthBytes" ColumnName="DataLengthBytes" />
+                <ScalarProperty Name="CompressionType" ColumnName="CompressionType" />
                 <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
                 <ScalarProperty Name="Data" ColumnName="Data" />
                 <ScalarProperty Name="PayloadType" ColumnName="PayloadType" />
@@ -692,6 +705,29 @@
                 <ScalarProperty Name="ResultCode" ColumnName="ResultCode" />
                 <ScalarProperty Name="AvgResponseMs" ColumnName="AvgResponseMs" />
                 <ScalarProperty Name="Count" ColumnName="Count" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="Status">
+            <EntityTypeMapping TypeName="GatewayModel.Status">
+              <MappingFragment StoreEntitySet="Status">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="spGetPayloads" FunctionName="GatewayModel.Store.spGetPayloads">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GatewayModel.spGetPayloads_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="CorrelationId" ColumnName="CorrelationId" />
+                <ScalarProperty Name="Direction" ColumnName="Direction" />
+                <ScalarProperty Name="PayloadType" ColumnName="PayloadType" />
+                <ScalarProperty Name="CompressionType" ColumnName="CompressionType" />
+                <ScalarProperty Name="Data" ColumnName="Data" />
+                <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
+                <ScalarProperty Name="DataLengthBytes" ColumnName="DataLengthBytes" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

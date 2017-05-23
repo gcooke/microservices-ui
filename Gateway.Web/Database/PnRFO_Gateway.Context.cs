@@ -30,11 +30,11 @@ namespace Gateway.Web.Database
         public virtual DbSet<Controller> Controllers { get; set; }
         public virtual DbSet<Request> Requests { get; set; }
         public virtual DbSet<Response> Responses { get; set; }
-        public virtual DbSet<Status> Status { get; set; }
         public virtual DbSet<StatusChange> StatusChanges { get; set; }
         public virtual DbSet<Version> Versions { get; set; }
         public virtual DbSet<QueueSize> QueueSizes { get; set; }
         public virtual DbSet<Payload> Payloads { get; set; }
+        public virtual DbSet<Status> Status { get; set; }
     
         public virtual ObjectResult<spGetRequestStats_Result> spGetRequestStats(Nullable<System.DateTime> start, string controller)
         {
@@ -139,6 +139,15 @@ namespace Gateway.Web.Database
                 new ObjectParameter("Start", typeof(System.DateTime));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetResponseStatsAll_Result>("spGetResponseStatsAll", startParameter);
+        }
+    
+        public virtual ObjectResult<spGetPayloads_Result> spGetPayloads(Nullable<System.Guid> correlationId)
+        {
+            var correlationIdParameter = correlationId.HasValue ?
+                new ObjectParameter("CorrelationId", correlationId) :
+                new ObjectParameter("CorrelationId", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetPayloads_Result>("spGetPayloads", correlationIdParameter);
         }
     }
 }
