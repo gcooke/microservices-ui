@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Web.UI;
 using System.Xml.Linq;
+using Bagl.Cib.MSF.Contracts.Compression;
 using Gateway.Web.Database;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Utils;
@@ -43,10 +44,10 @@ namespace Gateway.Web.Models.Request
 
     public class PayloadModel
     {
-        public PayloadModel(Payload payload)
+        public PayloadModel(spGetPayloads_Result payload)
         {
             Direction = payload.Direction;
-            SetData(payload.Data, payload.PayloadType);
+            SetData(payload.Data, payload.DataLengthBytes, payload.CompressionType, payload.PayloadType);
             FormatData();
         }
 
@@ -54,33 +55,34 @@ namespace Gateway.Web.Models.Request
 
         public string Direction { get; set; }
 
-        private void SetData(byte[] data, string payloadType)
+        public bool IsLarge { get; set; }
+
+        private void SetData(byte[] data, long? lengthInBytes, string compressionType, string payloadType)
         {
             try
             {
+                if (lengthInBytes >= 50000)
+                {
+                    Data = string.Format("Payload size {0:N2} kilobytes", data.Length / 10000m);
+                    IsLarge = true;
+                    return;
+                }
+
+                var bytes = compressionType == "GZIP" ? data.DecompressByGZip() : data;
                 switch (payloadType)
                 {
                     case "XElement":
-                        using (var ms = new MemoryStream(data))
-                        {
-                            Data = XElement.Load(ms).ToString(SaveOptions.None);
-                        }
+                        Data = GetXElement(bytes).ToString(SaveOptions.None);
                         break;
                     case "JObject":
-                        using (var ms = new MemoryStream(data))
-                        {
-                            using (var br = new BsonReader(ms))
-                            {
-                                Data = JObject.Load(br).ToString(Formatting.Indented);
-                            }
-                        }
+                        Data = GetJObject(bytes).ToString(Formatting.Indented);
                         break;
                     case "String":
-                        Data = Encoding.Unicode.GetString(data);
+                        Data = Encoding.Unicode.GetString(bytes);
                         break;
                     case "Binary":
                     default:
-                        Data = Convert.ToBase64String(data);
+                        Data = Convert.ToBase64String(bytes);
                         break;
                 }
             }
@@ -88,6 +90,25 @@ namespace Gateway.Web.Models.Request
             {
                 Data = string.Format("Could not decompress data: {0}", ex.Message);
                 throw;
+            }
+        }
+
+        private static XElement GetXElement(byte[] bytes)
+        {
+            using (MemoryStream ms = new MemoryStream(bytes))
+            {
+                return XElement.Load(ms);
+            }
+        }
+
+        private static JObject GetJObject(byte[] bytes)
+        {
+            using (MemoryStream ms = new MemoryStream(bytes))
+            {
+                using (BsonReader br = new BsonReader(ms))
+                {
+                    return JObject.Load(br);
+                }
             }
         }
 

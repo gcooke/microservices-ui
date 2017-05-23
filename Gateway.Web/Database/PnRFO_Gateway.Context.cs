@@ -140,5 +140,14 @@ namespace Gateway.Web.Database
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetResponseStatsAll_Result>("spGetResponseStatsAll", startParameter);
         }
+    
+        public virtual ObjectResult<spGetPayloads_Result> spGetPayloads(Nullable<System.Guid> correlationId)
+        {
+            var correlationIdParameter = correlationId.HasValue ?
+                new ObjectParameter("CorrelationId", correlationId) :
+                new ObjectParameter("CorrelationId", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetPayloads_Result>("spGetPayloads", correlationIdParameter);
+        }
     }
 }

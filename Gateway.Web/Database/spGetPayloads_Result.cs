@@ -10,17 +10,16 @@
 namespace Gateway.Web.Database
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class Payload
+    public partial class spGetPayloads_Result
     {
         public long Id { get; set; }
         public System.Guid CorrelationId { get; set; }
         public string Direction { get; set; }
         public string PayloadType { get; set; }
+        public string CompressionType { get; set; }
         public byte[] Data { get; set; }
         public System.DateTime UpdateTime { get; set; }
-        public string CompressionType { get; set; }
         public Nullable<long> DataLengthBytes { get; set; }
     }
 }
