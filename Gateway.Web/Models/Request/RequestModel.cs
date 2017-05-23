@@ -71,43 +71,17 @@ namespace Gateway.Web.Models.Request
                 var bytes = compressionType == "GZIP" ? data.DecompressByGZip() : data;
                 switch (payloadType)
                 {
-                    case "XElement":
-                        Data = GetXElement(bytes).ToString(SaveOptions.None);
-                        break;
-                    case "JObject":
-                        Data = GetJObject(bytes).ToString(Formatting.Indented);
-                        break;
-                    case "String":
-                        Data = Encoding.Unicode.GetString(bytes);
-                        break;
                     case "Binary":
-                    default:
                         Data = Convert.ToBase64String(bytes);
+                        break;
+                    default:
+                        Data = Encoding.UTF8.GetString(bytes);
                         break;
                 }
             }
             catch (Exception ex)
             {
                 Data = string.Format("Could not decompress payload data: {0}", ex.Message);
-            }
-        }
-
-        private static XElement GetXElement(byte[] bytes)
-        {
-            using (MemoryStream ms = new MemoryStream(bytes))
-            {
-                return XElement.Load(ms);
-            }
-        }
-
-        private static JObject GetJObject(byte[] bytes)
-        {
-            using (MemoryStream ms = new MemoryStream(bytes))
-            {
-                using (BsonReader br = new BsonReader(ms))
-                {
-                    return JObject.Load(br);
-                }
             }
         }
 
@@ -119,6 +93,9 @@ namespace Gateway.Web.Models.Request
             {
                 if (Data.StartsWith("<"))
                     Data = XElement.Parse(Data).ToString(SaveOptions.None);
+
+                if (Data.StartsWith("{"))
+                    Data = JObject.Parse(Data).ToString(Formatting.Indented);
             }
             catch (Exception)
             {
