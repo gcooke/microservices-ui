@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 using Gateway.Web.Database;
 using Gateway.Web.Models;
 using Gateway.Web.Models.Home;
@@ -43,6 +44,12 @@ namespace Gateway.Web.Controllers
         {
             //ViewBag.Message = "Your consule page.";
             return View();
-        }        
+        }
+
+        public ActionResult Reporting()
+        {
+            var path = Request.Url.GetLeftPart(UriPartial.Authority);
+            return Redirect(path + "/Reporting");
+        }
     }
 }
