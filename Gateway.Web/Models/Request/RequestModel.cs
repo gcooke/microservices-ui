@@ -68,16 +68,35 @@ namespace Gateway.Web.Models.Request
                     return;
                 }
 
-                var bytes = compressionType == "GZIP" ? data.DecompressByGZip() : data;
-                switch (payloadType)
+                if (Direction == "Request")
                 {
-                    case "Binary":
-                        Data = Convert.ToBase64String(bytes);
-                        break;
-                    default:
-                        Data = Encoding.UTF8.GetString(bytes);
-                        break;
+                    switch (payloadType)
+                    {
+                        case "Binary":
+                            var bytes = compressionType == "GZIP" ? data.DecompressByGZip() : data;
+                            Data = Convert.ToBase64String(bytes);
+                            break;
+                        default:
+                            var x = Encoding.UTF8.GetString(data);
+                            var str = compressionType == "GZIP" ? x.DecompressByGZip() : x;
+                            Data = str;
+                            break;
+                    }
                 }
+                else
+                {
+                    var bytes = compressionType == "GZIP" ? data.DecompressByGZip() : data;
+                    switch (payloadType)
+                    {
+                        case "Binary":
+                            Data = Convert.ToBase64String(bytes);
+                            break;
+                        default:
+                            Data = Encoding.UTF8.GetString(bytes);
+                            break;
+                    }
+                }
+
             }
             catch (Exception ex)
             {
