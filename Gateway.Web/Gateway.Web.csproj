@@ -193,7 +193,6 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\RequestController.cs" />
-    <Compile Include="Controllers\ReportingController.cs" />
     <Compile Include="Controllers\ControllersController.cs" />
     <Compile Include="Controllers\ControllerController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
@@ -291,7 +290,6 @@
     </Compile>
     <Compile Include="Models\Controller\Version.cs" />
     <Compile Include="Models\Home\IndexModel.cs" />
-    <Compile Include="Models\Reporting\PfeModel.cs" />
     <Compile Include="Models\User\HistoryModel.cs" />
     <Compile Include="Registrations.cs" />
     <Compile Include="Services\ControllerInformation.cs" />
@@ -394,7 +392,6 @@
     <Content Include="Views\Error\NotFound.cshtml" />
     <Content Include="Views\Controller\QueueChart.cshtml" />
     <Content Include="Views\Controllers\QueueChart.cshtml" />
-    <Content Include="Views\Reporting\Pfe.cshtml" />
     <Content Include="Views\Shared\_HistoryItems.cshtml" />
     <Content Include="Views\Shared\_RequestNav.cshtml" />
     <Content Include="Views\User\History.cshtml" />
