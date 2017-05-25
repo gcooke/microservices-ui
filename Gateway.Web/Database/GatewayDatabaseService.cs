@@ -150,6 +150,15 @@ namespace Gateway.Web.Database
             return result;
         }
 
+        public PayloadData GetPayload(long id)
+        {
+            using (var database = new GatewayEntities())
+            {
+                var payload = database.Payloads.FirstOrDefault(p => p.Id == id);
+                return new PayloadData(payload);
+            }
+        }
+
         private void PopulateFields(RequestModel result, Response response)
         {
             if (response == null) return;

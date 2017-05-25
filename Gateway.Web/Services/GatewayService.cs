@@ -16,7 +16,7 @@ namespace Gateway.Web.Services
     public class GatewayService : IGatewayService
     {
         private readonly string[] _gateways = new[] { "JHBPSM020000757", "JHBPSM020000758" };
-           
+
         private readonly int _port = 7010;
 
         public GatewayService()
@@ -107,6 +107,24 @@ namespace Gateway.Web.Services
             var legalEntities = JsonConvert.DeserializeObject<IEnumerable<string>>(element.Value);
 
             return legalEntities.ToArray();
+        }
+
+        public void ExpireWorkItem(string id)
+        {
+            //Send to each gateway
+            foreach (var gateway in _gateways)
+            {
+                var url = string.Format("health/queueitem/{0}", id);
+                url = string.Format("http://{0}:{1}/{2}", gateway, _port, url);
+
+                HttpRequestMessage message = new HttpRequestMessage()
+                {
+                    Method = HttpMethod.Delete
+                };
+
+                var result = Delete(url, message);
+                result.Wait(2000);
+            }
         }
 
         private IEnumerable<QueueModel> GetCurrentQueues(IEnumerable<ServerResponse> docs)
@@ -218,6 +236,7 @@ namespace Gateway.Web.Services
                     AllowAutoRedirect = true
                 }))
                 {
+                    client.Timeout = TimeSpan.FromSeconds(20);
                     HttpResponseMessage response = await client.DeleteAsync(endpoint);
                     return response.EnsureSuccessStatusCode();
                 }

@@ -24,6 +24,8 @@ namespace Gateway.Web.Database
 
         RequestModel GetRequestDetails(string correlationId);
 
+        PayloadData GetPayload(long id);
+
         Models.Controller.QueueChartModel GetControllerQueueSummary(string name, DateTime start);
 
         Models.Controllers.QueueChartModel GetControllerQueueSummary(DateTime start);

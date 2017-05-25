@@ -39,6 +39,11 @@ namespace Gateway.Web.Models.Request
         public string ResultMessage { get; set; }
         public DateTime UpdateTime { get; set; }
 
+        public bool IsBusy
+        {
+            get { return EndUtc == DateTime.MinValue; }
+        }
+
         public List<PayloadModel> Items { get; private set; }
     }
 
@@ -46,10 +51,13 @@ namespace Gateway.Web.Models.Request
     {
         public PayloadModel(spGetPayloads_Result payload)
         {
+            Id = payload.Id;
             Direction = payload.Direction;
             SetData(payload.Data, payload.DataLengthBytes, payload.CompressionType, payload.PayloadType);
             FormatData();
         }
+
+        public long Id { get; set; }
 
         public string Data { get; set; }
 
@@ -63,7 +71,7 @@ namespace Gateway.Web.Models.Request
             {
                 if (lengthInBytes >= 50000)
                 {
-                    Data = string.Format("Payload size {0:N2} kilobytes", data.Length / 10000m);
+                    Data = string.Format("Payload size {0:N2} kilobytes. Download below.", lengthInBytes / 10000m);
                     IsLarge = true;
                     return;
                 }
