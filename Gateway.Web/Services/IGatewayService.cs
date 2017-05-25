@@ -15,6 +15,9 @@ namespace Gateway.Web.Services
         IEnumerable<QueueModel> GetCurrentQueues();
         XElement[] GetReport(string url);
         string[] GetSites();
+
+        void ExpireWorkItem(string id);
+
         Task UpdateControllerVersionStatuses(string controller, Dictionary<string, string> versionStatusUpdates);
         Task MarkVersionsForDelete(string controller, List<string> versionsMarkedForDelete);
         Task RefreshCatalogueForAllGateways();

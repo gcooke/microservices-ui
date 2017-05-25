@@ -203,6 +203,7 @@
     <Compile Include="Database\Payload.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
+    <Compile Include="Database\PayloadData.cs" />
     <Compile Include="Database\QueueSize.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>

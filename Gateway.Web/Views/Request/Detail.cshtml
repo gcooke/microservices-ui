@@ -28,7 +28,12 @@
                 <td><b>Start Utc</b></td>
                 <td>@Model.StartUtc</td>
                 <td><b>End Utc</b></td>
-                <td>@Model.EndUtc</td>
+                <td>
+                    @if (!Model.IsBusy)
+                    {
+                        @Model.EndUtc
+                    }
+                </td>
             </tr>
             <tr>
                 <td><b>Queue Time ms</b></td>
@@ -62,21 +67,36 @@
             </tr>
         </table>
 
-        <br/>
-        <h3>Result</h3>
-        <b>Result Code: </b> @Model.ResultCode
-        <br/>
-        <b>Result Message:</b>
-        <br/>
-        <pre>@Model.ResultMessage</pre>
+        @if (Model.IsBusy)
+        {
+            <br />
+            <h3>Actions</h3>
+            <br />
+            @Html.ActionLink("Cancel Work Item", "Cancel", "Request", new { correlationId = Model.CorrelationId }, new { @class = "hoverlink" })
+            <br />
+        }
+
+        @if (!Model.IsBusy)
+        {
+            <br />
+            <h3>Result</h3>
+            <b>Result Code: </b>
+            @Model.ResultCode
+            <br />
+            <b>Result Message:</b>
+            <br />
+            <pre>@Model.ResultMessage</pre>
+            <br />
+        }
 
         <br />
         <h3>Payloads</h3>
         @foreach (PayloadModel payload in Model.Items)
         {
-        <br />
-        <h4>@payload.Direction</h4>
-        <pre>@payload.Data</pre>
+            <br />
+            <h4>@payload.Direction</h4>
+            <pre>@payload.Data</pre>
+            @Html.ActionLink("Download Payload", "Download", "Request", new { correlationId = Model.CorrelationId, payloadId = payload.Id }, new { @class = "hoverlink" })
         }
     </div>
 </div>
