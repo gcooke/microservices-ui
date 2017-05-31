@@ -60,12 +60,12 @@
       <HintPath>..\packages\Bagl.Cib.MIT.Scheduling.1.0.3\lib\net452\Bagl.Cib.MIT.Scheduling.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Bagl.Cib.MSF.ClientAPI, Version=1.0.376.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Bagl.Cib.MSF.ClientAPI.1.0.376\lib\net452\Bagl.Cib.MSF.ClientAPI.dll</HintPath>
+    <Reference Include="Bagl.Cib.MSF.ClientAPI, Version=1.0.399.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bagl.Cib.MSF.ClientAPI.1.0.399\lib\net452\Bagl.Cib.MSF.ClientAPI.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Bagl.Cib.MSF.Contracts, Version=1.0.376.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Bagl.Cib.MSF.ClientAPI.1.0.376\lib\net452\Bagl.Cib.MSF.Contracts.dll</HintPath>
+    <Reference Include="Bagl.Cib.MSF.Contracts, Version=1.0.399.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bagl.Cib.MSF.ClientAPI.1.0.399\lib\net452\Bagl.Cib.MSF.Contracts.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -335,6 +335,8 @@
     <Content Include="Content\css\Site.css" />
     <Content Include="Content\js\bootstrap.js" />
     <Content Include="Content\js\bootstrap.min.js" />
+    <Content Include="appsettings.config" />
+    <Content Include="connectionstrings.config" />
     <None Include="Content\js\jquery-1.10.2.intellisense.js" />
     <Content Include="Content\js\jquery-1.10.2.js" />
     <Content Include="Content\js\jquery-1.10.2.min.js" />

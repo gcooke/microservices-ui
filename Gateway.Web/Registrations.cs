@@ -1,15 +1,15 @@
-﻿using Gateway.Web.Database;
+﻿using Bagl.Cib.MIT.IoC;
+using Gateway.Web.Database;
 using Gateway.Web.Services;
-using Microsoft.Practices.Unity;
 
 namespace Gateway.Web
 {
     public static class Registrations
     {
-        public static void Register(IUnityContainer container)
+        public static void Register(ISystemInformation information)
         {
-            container.RegisterType<IGatewayDatabaseService, GatewayDatabaseService>(new ContainerControlledLifetimeManager());
-            container.RegisterType<IGatewayService, GatewayService>(new ContainerControlledLifetimeManager());
+            information.RegisterType<IGatewayDatabaseService, GatewayDatabaseService>(Scope.Singleton);
+            information.RegisterType<IGatewayService, GatewayService>(Scope.Singleton);
         }
     }
 }
