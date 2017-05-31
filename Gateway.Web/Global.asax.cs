@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using Bagl.Cib.MIT.IoC.Models;
+using Bagl.Cib.MIT.Logging;
 using Microsoft.Practices.Unity;
 
 namespace Gateway.Web
@@ -20,6 +21,7 @@ namespace Gateway.Web
             var container = new UnityContainer();
             var information = new SystemInformation("Redstone.UI", environment, SessionKeyType.Application, new string[0], container);
             Registrations.Register(information);
+            container.Resolve<ILoggingService>().Initialize(information.LoggingInformation);
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
         }        
     }
