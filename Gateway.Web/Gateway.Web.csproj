@@ -318,6 +318,7 @@
     <Content Include="Content\css\simple-sidebar.css" />
     <Content Include="Content\img\bg.jpg" />
     <Content Include="Content\img\controller.png" />
+    <Content Include="Content\img\redstone_logo.dev.png" />
     <Content Include="Content\img\redstone_logo.prod.png" />
     <Content Include="Content\img\redstone_logo.uat.png" />
     <Content Include="Database\PnRFO_Gateway.Context.tt">
@@ -402,6 +403,7 @@
     <Content Include="Views\Shared\_UserNav.cshtml" />
     <Content Include="Views\Shared\_NavigationBar.Uat.cshtml" />
     <Content Include="Views\Shared\_NavigationBar.Prod.cshtml" />
+    <Content Include="Views\Shared\_NavigationBar.Dev.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
