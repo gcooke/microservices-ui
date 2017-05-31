@@ -5,6 +5,20 @@ VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gateway.Web", "Gateway.Web\Gateway.Web.csproj", "{0320F0B5-EF96-4D8C-8F7E-32460EC5ED62}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configuration", "Configuration", "{E000579C-5A9C-4BC1-B161-E77D95113667}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UAT", "UAT", "{855287C5-50EE-4B60-9EC7-475B8B3CE6D0}"
+	ProjectSection(SolutionItems) = preProject
+		Configuration\UAT\appsettings.config = Configuration\UAT\appsettings.config
+		Configuration\UAT\connectionstrings.config = Configuration\UAT\connectionstrings.config
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PROD", "PROD", "{000A16F4-8E10-428B-A634-55CCE0253F31}"
+	ProjectSection(SolutionItems) = preProject
+		Configuration\PROD\appsettings.config = Configuration\PROD\appsettings.config
+		Configuration\PROD\connectionstrings.config = Configuration\PROD\connectionstrings.config
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,6 +32,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{855287C5-50EE-4B60-9EC7-475B8B3CE6D0} = {E000579C-5A9C-4BC1-B161-E77D95113667}
+		{000A16F4-8E10-428B-A634-55CCE0253F31} = {E000579C-5A9C-4BC1-B161-E77D95113667}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35

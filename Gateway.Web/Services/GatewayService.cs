@@ -9,19 +9,37 @@ using Gateway.Web.Models.Controllers;
 using Gateway.Web.Utils;
 using System.Threading.Tasks;
 using System.Text;
+using Bagl.Cib.MIT.IoC;
 using Newtonsoft.Json;
 
 namespace Gateway.Web.Services
 {
     public class GatewayService : IGatewayService
     {
-        private readonly string[] _gateways = new[] { "JHBPSM020000757", "JHBPSM020000758" };
+        private readonly string[] _gateways;
 
         private readonly int _port = 7010;
 
-        public GatewayService()
+        public GatewayService(ISystemInformation information)
         {
+            var gateways = information.GetSetting("KnownGateways", GetDefaultKnownGateways(information.EnvironmentName));
+            _gateways = gateways.Split(';');
+        }
 
+        private string GetDefaultKnownGateways(string environment)
+        {
+            var env = (environment ?? string.Empty).ToUpper();
+            switch (env)
+            {
+                case "DEV":
+                    return "jhbdsm020000245;jhbdsm020000244";
+                case "UAT":
+                    return "jhbpsm020000757;jhbpsm020000758";
+                case "PRD":
+                case "PROD":
+                default:
+                    return "JHBPSM050000114";
+            }
         }
 
         public ServersModel GetServers()
