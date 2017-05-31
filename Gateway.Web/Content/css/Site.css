@@ -117,3 +117,32 @@ pre {
     white-space: -o-pre-wrap;    /* Opera 7 */
     word-wrap: break-word;       /* Internet Explorer 5.5+ */
 }
+
+/*  Override background colors depending on environment  */
+.navbar-dev {
+    background-color: #446e9b;
+    border-color: #345578;
+    background-image: -webkit-linear-gradient(#6d94bf, #446e9b 50%, #3e648d);
+    background-image: -o-linear-gradient(#6d94bf, #446e9b 50%, #3e648d);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#6d94bf), color-stop(50%, #446e9b), to(#3e648d));
+    background-image: linear-gradient(#6d94bf, #446e9b 50%, #3e648d);
+}
+
+.navbar-uat {
+    background-color: #409449;
+    border-color: #33793B;
+    background-image: -webkit-linear-gradient(#5AB865, #409449 50%, #33793B);
+    background-image: -o-linear-gradient(#5AB865, #409449 50%, #33793B);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#5AB865), color-stop(50%, #409449), to(#33793B));
+    background-image: linear-gradient(#5AB865, #409449 50%, #33793B);
+}
+
+.navbar-prod {
+    background-color: #D50707;
+    border-color: #990505;
+    background-image: -webkit-linear-gradient(#F93B3B, #D50707 50%, #990505);
+    background-image: -o-linear-gradient(#F93B3B, #D50707 50%, #990505);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#F93B3B), color-stop(50%, #D50707), to(#990505));
+    background-image: linear-gradient(#F93B3B, #D50707 50%, #990505);
+}
+
