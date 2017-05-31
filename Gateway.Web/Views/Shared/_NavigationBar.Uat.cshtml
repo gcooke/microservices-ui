@@ -1,0 +1,25 @@
+﻿<div class="navbar navbar-default navbar-fixed-top">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a href="@Url.Action("Index", "Home")" class="navbar-brand" style="padding: 10px 10px;">
+            <img alt="Redstone" src="@Url.Content("~/Content/img/redstone_logo.uat.png")" style="height: 36px">
+        </a>
+    </div>
+    <div class="container">
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                <li>@Html.ActionLink("About", "About", "Home")</li>
+                <li>@Html.ActionLink("Controllers", "Dashboard", "Controllers")</li>
+                <li>@Html.ActionLink("How To", "HowTo", "Home")</li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>@Html.ActionLink("Reporting", "Reporting", "Home")</li>
+            </ul>
+        </div>
+    </div>
+</div>

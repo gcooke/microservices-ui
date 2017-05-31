@@ -10,6 +10,8 @@ namespace Gateway.Web
 {
     public class MvcApplication : System.Web.HttpApplication
     {
+        public static string Environment { get; set; }
+
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
@@ -17,9 +19,9 @@ namespace Gateway.Web
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            var environment = ConfigurationManager.AppSettings["Environment"];
+            Environment = ConfigurationManager.AppSettings["Environment"];
             var container = new UnityContainer();
-            var information = new SystemInformation("Redstone.UI", environment, SessionKeyType.Application, new string[0], container);
+            var information = new SystemInformation("Redstone.UI", Environment, SessionKeyType.Application, new string[0], container);
             Registrations.Register(information);
             container.Resolve<ILoggingService>().Initialize(information.LoggingInformation);
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
