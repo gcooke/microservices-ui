@@ -33,7 +33,7 @@ namespace Gateway.Web.Controllers
             model.AverageResponse = stats.GetAverageResponse(id);
             return View("Dashboard", model);
         }
-        
+
         public ActionResult Queues(string id)
         {
             var model = new QueuesModel(id);
@@ -45,9 +45,10 @@ namespace Gateway.Web.Controllers
             return View(model);
         }
 
-        public ActionResult Versions(string id)
+        public ActionResult Versions(string id, string[] updateResults = null)
         {
             var model = _dataService.GetControllerVersions(id);
+            model.UpdateResults = updateResults;
 
             foreach (var version in model.Versions)
             {
@@ -59,14 +60,14 @@ namespace Gateway.Web.Controllers
                                                  Selected = version.Status == status.Name
                                              };
             }
-            return View(model);
+            return View("Versions", model);
         }
 
         [HttpPost]
-        public async Task<ActionResult> UpdateVersionStatuses(FormCollection collection)
+        public ActionResult UpdateVersionStatuses(FormCollection collection)
         {
-            var controllerId = collection["id"];
-            var statusUpdatesDict = new Dictionary<string, string>();
+            var controllerName = collection["id"];
+            var statusUpdates = new List<VersionUpdate>();
             var versionsMarkedForDelete = new List<string>();
 
             foreach (var key in collection.Keys)
@@ -77,30 +78,25 @@ namespace Gateway.Web.Controllers
                     if (key.ToString().Contains("_Delete"))
                     {
                         var markedForDelete = bool.Parse(collection[key.ToString()].Split(',')[0]);
-                        if(markedForDelete)
-                            versionsMarkedForDelete.Add(versionName);
+                        if (markedForDelete)
+                            statusUpdates.Add(new VersionUpdate(controllerName, versionName, "Deleted"));
                     }
                     else
                     {
                         var newStatus = collection[key.ToString()];
                         // Only add to collection if the status has changed.
-                        if (_dataService.HasStatusChanged(controllerId, versionName, newStatus))
+                        if (_dataService.HasStatusChanged(controllerName, versionName, newStatus))
                         {
-                            statusUpdatesDict.Add(versionName, newStatus);
-                        }   
+                            statusUpdates.Add(new VersionUpdate(controllerName, versionName, newStatus));
+                        }
                     }
                 }
             }
 
-            var updateVersionTask = _gateway.UpdateControllerVersionStatuses(controllerId, statusUpdatesDict);
-            var markVersionsForDeleteTask = _gateway.MarkVersionsForDelete(controllerId, versionsMarkedForDelete);
-
-            await Task.WhenAll(updateVersionTask, markVersionsForDeleteTask);
-
-            await _gateway.RefreshCatalogueForAllGateways();
+            var results = _gateway.UpdateControllerVersionStatuses(statusUpdates);
 
             //Setup next view
-            return Dashboard(controllerId);
+            return Versions(controllerName, results);
         }
 
         public ActionResult Workers(string id)

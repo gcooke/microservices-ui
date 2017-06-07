@@ -1,9 +1,6 @@
-﻿using System.Net.Mime;
-using System.Web.Mvc;
-using Bagl.Cib.MSF.ClientAPI.Gateway;
+﻿using System.Web.Mvc;
 using Gateway.Web.Database;
 using Gateway.Web.Services;
-using WebGrease;
 using Controller = System.Web.Mvc.Controller;
 
 namespace Gateway.Web.Controllers

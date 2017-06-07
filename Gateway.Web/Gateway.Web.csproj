@@ -48,8 +48,8 @@
       <HintPath>..\packages\Bagl.Cib.MIT.IO.1.0.3\lib\net452\Bagl.Cib.MIT.IO.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Bagl.Cib.MIT.IoC, Version=1.0.8.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Bagl.Cib.MIT.IoC.1.0.8\lib\net452\Bagl.Cib.MIT.IoC.dll</HintPath>
+    <Reference Include="Bagl.Cib.MIT.IoC, Version=1.0.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bagl.Cib.MIT.IoC.1.0.9\lib\net452\Bagl.Cib.MIT.IoC.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Bagl.Cib.MIT.Logging, Version=1.0.25.0, Culture=neutral, PublicKeyToken=6d1ad0679d79c706, processorArchitecture=MSIL">
@@ -60,12 +60,12 @@
       <HintPath>..\packages\Bagl.Cib.MIT.Scheduling.1.0.3\lib\net452\Bagl.Cib.MIT.Scheduling.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Bagl.Cib.MSF.ClientAPI, Version=1.0.399.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Bagl.Cib.MSF.ClientAPI.1.0.399\lib\net452\Bagl.Cib.MSF.ClientAPI.dll</HintPath>
+    <Reference Include="Bagl.Cib.MSF.ClientAPI, Version=1.0.416.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bagl.Cib.MSF.ClientAPI.1.0.416\lib\net452\Bagl.Cib.MSF.ClientAPI.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Bagl.Cib.MSF.Contracts, Version=1.0.399.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Bagl.Cib.MSF.ClientAPI.1.0.399\lib\net452\Bagl.Cib.MSF.Contracts.dll</HintPath>
+    <Reference Include="Bagl.Cib.MSF.Contracts, Version=1.0.416.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bagl.Cib.MSF.ClientAPI.1.0.416\lib\net452\Bagl.Cib.MSF.Contracts.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -299,6 +299,7 @@
     <Compile Include="Services\ProcessInformation.cs" />
     <Compile Include="Services\QueueInformation.cs" />
     <Compile Include="Services\ServerInformation.cs" />
+    <Compile Include="Services\VersionUpdate.cs" />
     <Compile Include="UnityDependencyResolver.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

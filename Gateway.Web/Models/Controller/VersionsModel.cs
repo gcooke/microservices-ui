@@ -11,6 +11,7 @@ namespace Gateway.Web.Models.Controller
             Versions = new List<Version>();
         }
 
+        public string[] UpdateResults { get; set; }
         public List<Version> Versions { get; private set; }
 
     }
