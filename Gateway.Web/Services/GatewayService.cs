@@ -282,12 +282,14 @@ namespace Gateway.Web.Services
             if (response.Successfull)
             {
                 var element = response.Content.GetPayloadAsXElement();
+                var interim = new List<Version>();
                 foreach (var version in element.Descendants("Version"))
                 {
-                    result.Versions.Add(new Version(version.Attribute("Name").Value, "", version.Attribute("Status").Value));
+                    interim.Add(new Version(version.Attribute("Name").Value, "", version.Attribute("Status").Value));
                 }
+                result.Versions.AddRange(interim.OrderBy(v => v.SemVar));
             }
-            
+
             return result;
         }
 
