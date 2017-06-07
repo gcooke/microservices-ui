@@ -18,8 +18,6 @@ namespace Gateway.Web.Services
 
         void ExpireWorkItem(string id);
 
-        Task UpdateControllerVersionStatuses(string controller, Dictionary<string, string> versionStatusUpdates);
-        Task MarkVersionsForDelete(string controller, List<string> versionsMarkedForDelete);
-        Task RefreshCatalogueForAllGateways();
+        string[] UpdateControllerVersionStatuses(List<VersionUpdate> versionStatusUpdates);
     }
 }

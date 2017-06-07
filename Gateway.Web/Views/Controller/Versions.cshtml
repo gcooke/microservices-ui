@@ -12,78 +12,85 @@
 
         <h3>Versions</h3>
 
-        under construction - this page will show all versions with their status. Modification
-        of version status will also be done here.
-
         <br />
+        @{
+            if (Model.UpdateResults != null)
+            {
+                foreach (var result in Model.UpdateResults)
+                {
+                    <strong style="color: darkblue">@result</strong><br />
+                }
+                <br />
+            }
+        }
         <br />
 
         <div id="list-meta">
-        @using (Html.BeginForm("UpdateVersionStatuses", "Controller", FormMethod.Post, new { enctype = "multipart/form-data" }))
-        {
-
-            List<SelectListItem> listItems = new List<SelectListItem>();
-            listItems.Add(new SelectListItem
+            @using (Html.BeginForm("UpdateVersionStatuses", "Controller", FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
-                Value = Model.Name,
-                Text = Model.Name,
-                Selected = true
-            });
-       
 
-            @Html.DropDownList(
+                List<SelectListItem> listItems = new List<SelectListItem>();
+                listItems.Add(new SelectListItem
+                {
+                    Value = Model.Name,
+                    Text = Model.Name,
+                    Selected = true
+                });
+
+
+                @Html.DropDownList(
                 "id",
                 listItems,
                 new { @class = "form-control", @style = "display:none" }
             )
-            <table style="width: 100%">
-                <tr>
-                    <th>Alias</th>
-                    <th>Version</th>
-                    <th>Current Status</th>
-                    <th>Update Status</th>
-                    <th>Delete</th>
-                </tr>
+                <table style="width: 100%">
+                    <tr>
+                        <th>Alias</th>
+                        <th>Version</th>
+                        <th>Current Status</th>
+                        <th>Update Status</th>
+                        <th>Delete</th>
+                    </tr>
 
-                @foreach (Version item in Model.Versions)
-                {
-                    if (item.Status != "Deleted")
-                     {
-                         <tr>
-                             @if (item.IsActive)
-                             {
-                                 <span style="color: DarkBlue">
-                                <td>@item.Alias</td>
-                                <td>@item.Name</td>
-                                <td>@item.Status</td>
-                                <td>@Html.DropDownList(@item.Name + "_StatusSelection", item.ApplicableStatuses, new {@class = "form-control", @style = "width:80%"})</td>
-                            </span>
-                             }
-                             else if (item.Status == "Disabled")
-                             {
-                                 <span style="color: indianred">
-                                <td>@item.Alias</td>
-                                <td>@item.Name</td>
-                                <td>@item.Status</td>
-                                <td>@Html.DropDownList(@item.Name + "_StatusSelection", item.ApplicableStatuses, new {@class = "form-control", @style = "width:80%"})</td>
-                                <td>@Html.CheckBox(@item.Name + "_Delete")</td>
-                            </span>
-                             }
-                             else
-                             {
-                                 <span style="color: gray">
-                                <td>@item.Alias</td>
-                                <td>@item.Name</td>
-                                <td>@item.Status</td>
-                                <td>@Html.DropDownList(@item.Name + "_StatusSelection", item.ApplicableStatuses, new {@class = "form-control", @style = "width:80%"})</td>
-                            </span>
-                             }
-                         </tr>
-                     }
-                }
-            </table>
-            <input id="UpdateBtn" type="submit" value="Update All" />
-        }
+                    @foreach (Version item in Model.Versions)
+                    {
+                        if (item.Status != "Deleted")
+                        {
+                            <tr>
+                                @if (item.IsActive)
+                                {
+                                    <span style="color: DarkBlue">
+                                        <td>@item.Alias</td>
+                                        <td>@item.Name</td>
+                                        <td>@item.Status</td>
+                                        <td>@Html.DropDownList(@item.Name + "_StatusSelection", item.ApplicableStatuses, new { @class = "form-control", @style = "width:80%" })</td>
+                                    </span>
+                                }
+                                else if (item.Status == "Disabled")
+                                {
+                                    <span style="color: indianred">
+                                        <td>@item.Alias</td>
+                                        <td>@item.Name</td>
+                                        <td>@item.Status</td>
+                                        <td>@Html.DropDownList(@item.Name + "_StatusSelection", item.ApplicableStatuses, new { @class = "form-control", @style = "width:80%" })</td>
+                                        <td>@Html.CheckBox(@item.Name + "_Delete")</td>
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span style="color: gray">
+                                        <td>@item.Alias</td>
+                                        <td>@item.Name</td>
+                                        <td>@item.Status</td>
+                                        <td>@Html.DropDownList(@item.Name + "_StatusSelection", item.ApplicableStatuses, new { @class = "form-control", @style = "width:80%" })</td>
+                                    </span>
+                                }
+                            </tr>
+                        }
+                    }
+                </table>
+                <input id="UpdateBtn" type="submit" value="Update All" />
+            }
         </div>
         <br />
     </div>

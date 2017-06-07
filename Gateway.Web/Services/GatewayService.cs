@@ -10,18 +10,24 @@ using Gateway.Web.Utils;
 using System.Threading.Tasks;
 using System.Text;
 using Bagl.Cib.MIT.IoC;
+using Bagl.Cib.MIT.Logging;
+using Bagl.Cib.MSF.ClientAPI.Gateway;
 using Newtonsoft.Json;
 
 namespace Gateway.Web.Services
 {
     public class GatewayService : IGatewayService
     {
+        private readonly IGatewayRestService _restService;
         private readonly string[] _gateways;
+        private readonly ILogger _logger;
 
         private readonly int _port = 7010;
 
-        public GatewayService(ISystemInformation information)
+        public GatewayService(ISystemInformation information, IGatewayRestService restService, ILoggingService loggingService)
         {
+            _restService = restService;
+            _logger = loggingService.GetLogger(this);
             var gateways = information.GetSetting("KnownGateways", GetDefaultKnownGateways(information.EnvironmentName));
             _gateways = gateways.Split(';');
         }
@@ -223,27 +229,6 @@ namespace Gateway.Web.Services
             }
         }
 
-        private async Task<HttpResponseMessage> Put(string endpoint, HttpRequestMessage message)
-        {
-            try
-            {
-                using (var client = new HttpClient(new HttpClientHandler
-                {
-                    UseDefaultCredentials = true,
-                    AllowAutoRedirect = true
-                }))
-                {
-                    HttpResponseMessage response = await client.PutAsync(endpoint, message.Content);
-                    return response.EnsureSuccessStatusCode();
-                }
-            }
-            catch (Exception ex)
-            {
-                // Should somehow output this
-                return null;
-            }
-        }
-
         private async Task<HttpResponseMessage> Delete(string endpoint, HttpRequestMessage message)
         {
             try
@@ -287,70 +272,24 @@ namespace Gateway.Web.Services
             }
         }
 
-        public async Task UpdateControllerVersionStatuses(string controller, Dictionary<string, string> versionStatusUpdates)
+        public string[] UpdateControllerVersionStatuses(List<VersionUpdate> versionStatusUpdates)
         {
-            foreach (var version in versionStatusUpdates.Keys)
+            var result = new List<string>();
+            foreach (var item in versionStatusUpdates.OrderBy(s => s.Status))
             {
-                //Try send to each gateway, but break after a successful update.
-                foreach (var gateway in _gateways)
-                {
-                    // Use below url for testing catelogue locally
-                    //var url = string.Format("api/catalogue/0.0/controllers/{0}/versions/{1}", controller, version);
+                _logger.InfoFormat("Sending instruction to update {0}/{1} to status {2}", item.Controller, item.Version, item.Status);
+                var query = string.Format("controllers/{0}/versions/{1}", item.Controller, item.Version);
+                var content = item.Status;
+                var response = _restService.Put("Catalogue", "latest", query, content);
 
-                    var url = string.Format("api/catalogue/latest/controllers/{0}/versions/{1}", controller, version);
-                    url = string.Format("http://{0}:{1}/{2}", gateway, _port, url);
+                if (response.Successfull)
+                    result.Add(string.Format("Successfully updated verion {0} to {1}", item.Version, item.Status));
+                else
+                    result.Add(string.Format("Failed to update version {0} to {1}: {2}", item.Version, item.Status, response.Message));
 
-                    HttpRequestMessage message = new HttpRequestMessage()
-                    {
-                        Method = HttpMethod.Put,
-                        Content = new StringContent(versionStatusUpdates[version], Encoding.UTF8)
-                    };
-
-                    var result = await Put(url, message);
-                    if (result != null) { break; }
-                }
+                _logger.InfoFormat("Response for update (success={0}): {1}", response.Successfull, response.Message);
             }
-        }
-
-        public async Task MarkVersionsForDelete(string controller, List<string> versionsMarkedForDelete)
-        {
-            foreach (var version in versionsMarkedForDelete)
-            {
-                //Try send to each gateway, but break after a successful update.
-                foreach (var gateway in _gateways)
-                {
-                    // Use below url for testing catelogue locally
-                    //var url = string.Format("api/catalogue/0.0/controllers/{0}/versions/{1}", controller, version);
-
-                    var url = string.Format("api/catalogue/latest/controllers/{0}/versions/{1}", controller, version);
-                    url = string.Format("http://{0}:{1}/{2}", gateway, _port, url);
-
-                    HttpRequestMessage message = new HttpRequestMessage()
-                    {
-                        Method = HttpMethod.Delete
-                    };
-
-                    var result = await Delete(url, message);
-                    if (result != null) { break; }
-                }
-            }
-        }
-
-        public async Task RefreshCatalogueForAllGateways()
-        {
-            // Ask each gateway to refresh
-            foreach (var gateway in _gateways)
-            {
-                var url = "/health/refreshCatalogue";
-                url = string.Format("http://{0}:{1}/{2}", gateway, _port, url);
-
-                HttpRequestMessage message = new HttpRequestMessage()
-                {
-                    Method = HttpMethod.Post,
-                };
-
-                await Post(url, message);
-            }
+            return result.ToArray();
         }
 
         private class ServerResponse
