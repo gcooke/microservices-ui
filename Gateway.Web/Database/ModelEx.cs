@@ -15,6 +15,7 @@ namespace Gateway.Web.Database
             result.AverageResponse = stats.GetAverageResponse(controller.Name);
             foreach (var group in controller.Versions.GroupBy(v => v.Status.Name))
             {
+                if (group.Key == "Deleted") continue;
                 result.VersionSummary.Add(new InfoItem(group.Key, group.Count().ToString()));
             }
             return result;
