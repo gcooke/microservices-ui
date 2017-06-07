@@ -19,17 +19,7 @@ namespace Gateway.Web.Database
             }
             return result;
         }
-
-
-        public static Models.Controller.Version ToModel(this Version version)
-        {
-            var result = new Models.Controller.Version(version.Id,
-                version.Version1,
-                version.Alias,
-                version.Status.Name);
-            return result;
-        }
-
+        
         public static Models.Controller.HistoryItem ToModel(this spGetRecentRequests_Result item)
         {
             var result = new Models.Controller.HistoryItem();

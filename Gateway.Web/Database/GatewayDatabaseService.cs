@@ -233,24 +233,7 @@ namespace Gateway.Web.Database
                 return result;
             }
         }
-
-        public VersionsModel GetControllerVersions(string name)
-        {
-            var result = new VersionsModel(name);
-            name = name.ToUpper();
-            using (var database = new GatewayEntities())
-            {
-                var versions = new List<Models.Controller.Version>();
-                foreach (var item in database.Versions
-                                             .Where(v => v.Controller.Name.ToUpper() == name))
-                {
-                    versions.Add(item.ToModel());
-                }
-                result.Versions.AddRange(versions.OrderBy(v => v.SemVar));
-            }
-            return result;
-        }
-
+        
         public IEnumerable<Status> GetVersionStatuses()
         {
             using (var database = new GatewayEntities())

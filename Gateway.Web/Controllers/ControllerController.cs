@@ -47,7 +47,7 @@ namespace Gateway.Web.Controllers
 
         public ActionResult Versions(string id, string[] updateResults = null)
         {
-            var model = _dataService.GetControllerVersions(id);
+            var model = _gateway.GetControllerVersions(id);
             model.UpdateResults = updateResults;
 
             foreach (var version in model.Versions)

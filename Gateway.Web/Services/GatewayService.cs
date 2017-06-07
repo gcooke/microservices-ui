@@ -13,6 +13,7 @@ using Bagl.Cib.MIT.IoC;
 using Bagl.Cib.MIT.Logging;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
 using Newtonsoft.Json;
+using Version = Gateway.Web.Models.Controller.Version;
 
 namespace Gateway.Web.Services
 {
@@ -270,6 +271,24 @@ namespace Gateway.Web.Services
                 // Should somehow output this
                 return null;
             }
+        }
+
+        public VersionsModel GetControllerVersions(string name)
+        {
+            var query = string.Format("controllers/{0}", name);
+            var response = _restService.Get("Catalogue", "latest", query);
+
+            var result = new VersionsModel(name);
+            if (response.Successfull)
+            {
+                var element = response.Content.GetPayloadAsXElement();
+                foreach (var version in element.Descendants("Version"))
+                {
+                    result.Versions.Add(new Version(version.Attribute("Name").Value, "", version.Attribute("Status").Value));
+                }
+            }
+            
+            return result;
         }
 
         public string[] UpdateControllerVersionStatuses(List<VersionUpdate> versionStatusUpdates)

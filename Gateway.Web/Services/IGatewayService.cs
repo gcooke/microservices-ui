@@ -16,6 +16,8 @@ namespace Gateway.Web.Services
         XElement[] GetReport(string url);
         string[] GetSites();
 
+        VersionsModel GetControllerVersions(string name);
+
         void ExpireWorkItem(string id);
 
         string[] UpdateControllerVersionStatuses(List<VersionUpdate> versionStatusUpdates);
