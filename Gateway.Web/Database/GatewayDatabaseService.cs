@@ -256,7 +256,7 @@ namespace Gateway.Web.Database
 
                     if (version != null)
                     {
-                        if (status != version.Status.Name) return true;
+                        return status != version.Status.Name;
                     }
                     return status != "Inactive";
                 }
