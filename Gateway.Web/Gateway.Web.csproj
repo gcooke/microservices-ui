@@ -405,6 +405,7 @@
     <Content Include="Views\Shared\_NavigationBar.Uat.cshtml" />
     <Content Include="Views\Shared\_NavigationBar.Prod.cshtml" />
     <Content Include="Views\Shared\_NavigationBar.Dev.cshtml" />
+    <Content Include="Views\Request\Timings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
