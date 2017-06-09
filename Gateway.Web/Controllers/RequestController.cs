@@ -16,7 +16,19 @@ namespace Gateway.Web.Controllers
             _gateway = gateway;
         }
 
-        public ActionResult Detail(string correlationId)
+        public ActionResult Summary(string correlationId)
+        {
+            var model = _dataService.GetRequestSummary(correlationId);
+            return View(model);
+        }
+
+        public ActionResult Payloads(string correlationId)
+        {
+            var model = _dataService.GetRequestPayloads(correlationId);
+            return View(model);
+        }
+
+        public ActionResult Details(string correlationId)
         {
             var model = _dataService.GetRequestDetails(correlationId);
             return View(model);
@@ -29,7 +41,7 @@ namespace Gateway.Web.Controllers
             // This is a crude approach to waiting for the audit to be written prior to refreshing the page.
             System.Threading.Thread.Sleep(2000);
 
-            return Redirect("~/Request/Detail?correlationId=" + correlationId);
+            return Redirect("~/Request/Summary?correlationId=" + correlationId);
         }
 
         public ActionResult Download(string correlationId, long payloadId)

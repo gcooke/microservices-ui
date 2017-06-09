@@ -10,19 +10,15 @@
 namespace Gateway.Web.Database
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class Response
+    public partial class spGetRequestChildSummary_Result
     {
-        public long Id { get; set; }
-        public System.Guid CorrelationId { get; set; }
-        public System.DateTime EndUtc { get; set; }
-        public int TimeTakeMs { get; set; }
-        public int ResultCode { get; set; }
-        public string ResultMessage { get; set; }
-        public System.DateTime UpdateTime { get; set; }
-        public int QueueTimeMs { get; set; }
-        public Nullable<int> Size { get; set; }
+        public string Controller { get; set; }
+        public Nullable<int> RequestCount { get; set; }
         public string SizeUnit { get; set; }
+        public Nullable<int> Size { get; set; }
+        public Nullable<System.Guid> LastCorrelationId { get; set; }
+        public Nullable<System.DateTime> MinStartUtc { get; set; }
+        public Nullable<System.DateTime> MaxEndUtc { get; set; }
     }
 }

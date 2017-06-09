@@ -131,9 +131,9 @@ namespace Gateway.Web.Database
             }
         }
 
-        public RequestModel GetRequestDetails(string correlationId)
+        public Summary GetRequestSummary(string correlationId)
         {
-            var result = new RequestModel();
+            var result = new Summary();
             var id = Guid.Parse(correlationId);
             using (var database = new GatewayEntities())
             {
@@ -142,6 +142,43 @@ namespace Gateway.Web.Database
                 PopulateFields(result, request);
                 PopulateFields(result, response);
                 result.CorrelationId = id;                
+            }
+            return result;
+        }
+
+        public Details GetRequestDetails(string correlationId)
+        {
+            var result = new Details();
+            var id = Guid.Parse(correlationId);
+            using (var database = new GatewayEntities())
+            {
+                var request = database.Requests.FirstOrDefault(r => r.CorrelationId == id);
+                var response = database.Responses.FirstOrDefault(r => r.CorrelationId == id);
+                PopulateFields(result, request);
+                PopulateFields(result, response);
+                result.CorrelationId = id;
+
+                if (result.EndUtc > DateTime.MinValue)
+                    result.WallClockTime = (result.EndUtc - result.StartUtc).ToString("h'h 'm'm 's's'");
+                foreach(var item in database.spGetRequestChildSummary(id))
+                    result.Items.Add(item.ToModel());
+            }
+            return result;
+        }
+
+        public Payloads GetRequestPayloads(string correlationId)
+        {
+            var result = new Payloads();
+            var id = Guid.Parse(correlationId);
+            using (var database = new GatewayEntities())
+            {
+                var request = database.Requests.FirstOrDefault(r => r.CorrelationId == id);
+                result.CorrelationId = id;
+                if (request != null)
+                {
+                    result.Controller = request.Controller;
+                    result.Version = request.Version;
+                }
                 foreach (var item in database.spGetPayloads(id))
                 {
                     result.Items.Add(new PayloadModel(item));
@@ -149,7 +186,7 @@ namespace Gateway.Web.Database
             }
             return result;
         }
-
+        
         public PayloadData GetPayload(long id)
         {
             using (var database = new GatewayEntities())
@@ -159,7 +196,7 @@ namespace Gateway.Web.Database
             }
         }
 
-        private void PopulateFields(RequestModel result, Response response)
+        private void PopulateFields(Summary result, Response response)
         {
             if (response == null) return;
 
@@ -171,7 +208,7 @@ namespace Gateway.Web.Database
             result.UpdateTime = response.UpdateTime;
         }
 
-        private void PopulateFields(RequestModel result, Request request)
+        private void PopulateFields(Summary result, Request request)
         {
             if (request == null) return;
             result.ParentCorrelationId = request.ParentCorrelationId;

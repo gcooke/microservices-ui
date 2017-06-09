@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Gateway.Web.Models.Controllers;
 
 namespace Gateway.Web.Database
@@ -20,7 +21,7 @@ namespace Gateway.Web.Database
             }
             return result;
         }
-        
+
         public static Models.Controller.HistoryItem ToModel(this spGetRecentRequests_Result item)
         {
             var result = new Models.Controller.HistoryItem();
@@ -81,6 +82,21 @@ namespace Gateway.Web.Database
             result.TimeTakeMs = item.TimeTakeMs;
             result.ResultCode = item.ResultCode;
             result.ResultMessage = item.ResultMessage;
+            return result;
+        }
+
+        public static Models.Request.DetailRow ToModel(this spGetRequestChildSummary_Result item)
+        {
+            var result = new Models.Request.DetailRow();
+            result.Controller = item.Controller;
+            result.RequestCount = item.RequestCount;
+            result.SizeUnit = item.SizeUnit;
+            result.Size = item.Size;
+            if (item.MinStartUtc.HasValue)
+                result.MinStart = item.MinStartUtc.Value.ToLocalTime();
+            if (item.MaxEndUtc.HasValue)
+                result.MaxEnd = item.MaxEndUtc.Value.ToLocalTime();
+
             return result;
         }
     }
