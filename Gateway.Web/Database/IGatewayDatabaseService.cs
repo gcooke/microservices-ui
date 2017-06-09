@@ -22,7 +22,11 @@ namespace Gateway.Web.Database
 
         TimeChartModel GetControllerTimeSummary(string name, DateTime start);
 
-        RequestModel GetRequestDetails(string correlationId);
+        Summary GetRequestSummary(string correlationId);
+
+        Details GetRequestDetails(string correlationId);
+
+        Payloads GetRequestPayloads(string correlationId);
 
         PayloadData GetPayload(long id);
 

@@ -8,14 +8,15 @@
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
     ViewBag.Title = "Request";
-    ViewBag.Current = "Details";
+    ViewBag.Current = "Summary";
+    var title = (string)Model.ParentCorrelationId.ToString();
 }
-@{ Html.RenderPartial("_RequestNav", (RequestModel)@Model); }
+@{ Html.RenderPartial("_RequestNav", (Summary)@Model); }
 
 <div id="page-content-wrapper">
     <div class="hero-unit">
 
-        <h3>Details</h3>
+        <h3>Summary</h3>
 
         <table style="width: 100%; white-space: nowrap" class="datatable">
             <tr>
@@ -51,7 +52,12 @@
                 <td><b>Correlation Id</b></td>
                 <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">@Model.CorrelationId</td>
                 <td><b>Parent Correlation Id</b></td>
-                <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">@Model.ParentCorrelationId</td>
+                <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
+                    @if (Model.ParentCorrelationId != Guid.Empty)
+                    {
+                        @Html.ActionLink(title, "Summary", "Request", new { correlationId = Model.ParentCorrelationId }, new { @class = "hoverlink" })
+                    }
+                </td>
             </tr>
             <tr>
                 <td><b>Resource</b></td>
@@ -86,17 +92,6 @@
             <b>Result Message:</b>
             <br />
             <pre>@Model.ResultMessage</pre>
-            <br />
-        }
-
-        <br />
-        <h3>Payloads</h3>
-        @foreach (PayloadModel payload in Model.Items)
-        {
-            <br />
-            <h4>@payload.Direction</h4>
-            <pre>@payload.Data</pre>
-            @Html.ActionLink("Download Payload", "Download", "Request", new { correlationId = Model.CorrelationId, payloadId = payload.Id }, new { @class = "hoverlink" })
             <br />
         }
     </div>

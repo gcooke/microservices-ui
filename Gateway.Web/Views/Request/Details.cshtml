@@ -1,0 +1,64 @@
+﻿@using Gateway.Web.Database
+@using Gateway.Web.Models
+@using Gateway.Web.Models.Controller
+@using Gateway.Web.Models.Request
+@using Gateway.Web.Utils
+@using Newtonsoft.Json
+@using Version = Gateway.Web.Models.Controller.Version
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "Request";
+    ViewBag.Current = "Details";
+}
+@{ Html.RenderPartial("_RequestNav", (Details)@Model); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+
+        <h3>Details</h3>
+
+        <table class="datatable">
+            <thead>
+                <tr>
+                    <td style="width:50%">Attribute</td>
+                    <td>Value</td>
+                </tr>
+            </thead>
+            <tr>
+                <td><b>Wall Clock Time</b></td>
+                <td>@Model.WallClockTime</td>
+            </tr>
+            <tr>
+                <td><b>Total Time</b></td>
+                <td>not available</td>
+            </tr>
+        </table>
+
+        <br/>
+        <h3>Child Requests</h3>
+
+        <table style="width: 100%; white-space: nowrap" class="datatable">
+            <thead>
+                <tr>
+                    <td>Controller</td>
+                    <td>Requests</td>
+                    <td>Items</td>
+                    <td>Min Start</td>
+                    <td>Max End</td>
+                </tr>
+            </thead>
+            @foreach (DetailRow row in Model.Items)
+            {
+                <tr>
+                    <td>@row.Controller</td>
+                    <td>@row.RequestCount</td>
+                    <td>@row.Size @row.SizeUnit</td>
+                    <td>@row.MinStart</td>
+                    <td>@row.MaxEnd</td>
+                </tr>
+            }
+        </table>
+
+
+    </div>
+</div>

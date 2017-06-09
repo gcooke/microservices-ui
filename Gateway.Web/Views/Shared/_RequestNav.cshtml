@@ -8,9 +8,27 @@
 
     <ul class="sidebar-nav">
         <li>
-            <a href="~/Request/Detail?correlationId=@Model.CorrelationId"
+            <a href="~/Request/Summary?correlationId=@Model.CorrelationId"
+               class="@(ViewBag.Current == "Summary" ? "active" : "")">
+                <span class="glyphicon glyphicon-transfer"></span>&nbsp;&nbsp;Summary
+            </a>
+        </li>
+        <li>
+            <a href="~/Request/Payloads?correlationId=@Model.CorrelationId"
+               class="@(ViewBag.Current == "Payloads" ? "active" : "")">
+                <span class="glyphicon glyphicon-transfer"></span>&nbsp;&nbsp;Payloads
+            </a>
+        </li>
+        <li>
+            <a href="~/Request/Details?correlationId=@Model.CorrelationId"
                class="@(ViewBag.Current == "Details" ? "active" : "")">
                 <span class="glyphicon glyphicon-transfer"></span>&nbsp;&nbsp;Details
+            </a>
+        </li>
+        <li>
+            <a href="~/Request/Timings?correlationId=@Model.CorrelationId"
+               class="@(ViewBag.Current == "Timings" ? "active" : "")">
+                <span class="glyphicon glyphicon-transfer"></span>&nbsp;&nbsp;Timings
             </a>
         </li>
         <li>

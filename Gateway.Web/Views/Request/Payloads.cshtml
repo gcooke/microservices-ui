@@ -1,0 +1,28 @@
+﻿@using Gateway.Web.Database
+@using Gateway.Web.Models
+@using Gateway.Web.Models.Controller
+@using Gateway.Web.Models.Request
+@using Gateway.Web.Utils
+@using Newtonsoft.Json
+@using Version = Gateway.Web.Models.Controller.Version
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "Request";
+    ViewBag.Current = "Payloads";
+}
+@{ Html.RenderPartial("_RequestNav", (Payloads)@Model); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+
+        <h3>Payloads</h3>
+        @foreach (PayloadModel payload in Model.Items)
+        {
+            <br />
+            <h4>@payload.Direction</h4>
+            <pre>@payload.Data</pre>
+            @Html.ActionLink("Download Payload", "Download", "Request", new { correlationId = Model.CorrelationId, payloadId = payload.Id }, new { @class = "hoverlink" })
+            <br />
+        }
+    </div>
+</div>
