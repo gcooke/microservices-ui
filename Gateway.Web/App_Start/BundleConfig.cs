@@ -24,11 +24,18 @@ namespace Gateway.Web
                       "~/Content/js/bootstrap.js",
                       "~/Content/js/respond.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/angular").Include(
+                        "~/Scripts/angular.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/ui.grid").Include(
+                        "~/Scripts/ui-grid.js"));
+
             bundles.Add(new StyleBundle("~/styles/css").Include(
                       "~/Content/css/bootstrap.css",
                       "~/Content/css/simple-sidebar.css",
                       string.Equals(environment, "uat", StringComparison.CurrentCultureIgnoreCase) ? "~/Content/css/datatable.uat.css" : "~/Content/css/datatable.css",
-                      "~/Content/css/Site.css"));
+                      "~/Content/css/Site.css",
+                      "~/Content/ui-grid.css"));
         }
     }
 }

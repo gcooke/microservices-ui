@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using Gateway.Web.Database;
+using Gateway.Web.Models.Request;
 using Gateway.Web.Services;
 using Gateway.Web.Utils;
 using Controller = System.Web.Mvc.Controller;
@@ -12,6 +13,8 @@ namespace Gateway.Web.Controllers
     {
         private readonly IGatewayDatabaseService _dataService;
         private readonly IGatewayService _gateway;
+        private const string CurrentRequestCorrelationId = "CurrentRequestCorrelationId";
+
 
         public RequestController(IGatewayDatabaseService dataService, IGatewayService gateway)
         {
@@ -63,7 +66,25 @@ namespace Gateway.Web.Controllers
 
         public ActionResult Timings(string correlationId)
         {
-            return View();
+            //TODO: Implement Angular Routing/Implement in one request
+            TempData.Remove(CurrentRequestCorrelationId);
+            TempData.Add(CurrentRequestCorrelationId, correlationId);
+            return View(new RequestPayload { CorrelationId = Guid.Parse(correlationId) });
+        }
+
+        public JsonResult GetRequestTree()
+        {
+            //TODO: Implement Angular Routing
+            object id;
+            if (!TempData.TryGetValue(CurrentRequestCorrelationId, out id))
+                return Json(null, JsonRequestBehavior.AllowGet);
+
+            Guid correlationId;
+            if (!Guid.TryParse(Convert.ToString(id), out correlationId))
+                return Json(null, JsonRequestBehavior.AllowGet);
+
+            var data = _gateway.GetRequestTree(correlationId);
+            return Json(data, JsonRequestBehavior.AllowGet);
         }
     }
 }
