@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using System;
+using System.Web;
 using System.Web.Optimization;
 
 namespace Gateway.Web
@@ -6,7 +7,7 @@ namespace Gateway.Web
     public class BundleConfig
     {
         // For more information on bundling, visit http://go.microsoft.com/fwlink/?LinkId=301862
-        public static void RegisterBundles(BundleCollection bundles)
+        public static void RegisterBundles(BundleCollection bundles, string environment)
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Content/js/jquery-{version}.js"));
@@ -26,7 +27,7 @@ namespace Gateway.Web
             bundles.Add(new StyleBundle("~/styles/css").Include(
                       "~/Content/css/bootstrap.css",
                       "~/Content/css/simple-sidebar.css",
-                      "~/Content/css/datatable.css",
+                      string.Equals(environment, "uat", StringComparison.CurrentCultureIgnoreCase) ? "~/Content/css/datatable.uat.css" : "~/Content/css/datatable.css",
                       "~/Content/css/Site.css"));
         }
     }
