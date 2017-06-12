@@ -14,12 +14,13 @@ namespace Gateway.Web
 
         protected void Application_Start()
         {
+            Environment = ConfigurationManager.AppSettings["Environment"];
+
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
-            BundleConfig.RegisterBundles(BundleTable.Bundles);
+            BundleConfig.RegisterBundles(BundleTable.Bundles, Environment);
 
-            Environment = ConfigurationManager.AppSettings["Environment"];
             var container = new UnityContainer();
             var information = new SystemInformation("Redstone.UI", Environment, SessionKeyType.Application, new string[0], container);
             Registrations.Register(information);

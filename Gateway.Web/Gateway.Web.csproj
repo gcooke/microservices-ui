@@ -324,6 +324,7 @@
   <ItemGroup>
     <Content Include="Content\css\bootstrap.css" />
     <Content Include="Content\css\bootstrap.min.css" />
+    <Content Include="Content\css\datatable.uat.css" />
     <Content Include="Content\css\datatable.css" />
     <Content Include="Content\css\simple-sidebar.css" />
     <Content Include="Content\img\bg.jpg" />
