@@ -11,10 +11,16 @@ namespace Gateway.Web
     public class MvcApplication : System.Web.HttpApplication
     {
         public static string Environment { get; set; }
+        public static string FavIcon { get; set; }
+        public static string ControllerIcon { get; set; }
+        public static string SiteLogo { get; set; }
 
         protected void Application_Start()
         {
             Environment = ConfigurationManager.AppSettings["Environment"];
+            FavIcon = "/content/img/favicon." + Environment + ".png";
+            ControllerIcon = "/content/img/controller." + Environment + ".png";
+            SiteLogo = "~/Content/img/redstone_logo." + Environment + ".png";
 
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);

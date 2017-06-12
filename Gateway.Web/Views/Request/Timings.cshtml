@@ -1,1 +1,34 @@
-﻿
+﻿@using Gateway.Web.Database
+@using Gateway.Web.Models
+@using Gateway.Web.Models.Controller
+@using Gateway.Web.Models.Request
+@using Gateway.Web.Utils
+@using Newtonsoft.Json
+@using Version = Gateway.Web.Models.Controller.Version
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "Request";
+    ViewBag.Current = "Timings";
+}
+@{ Html.RenderPartial("_RequestNav", (RequestPayload)Model); }
+
+<div id="page-content-wrapper" ng-controller="requestTimingsController">
+    <div class="hero-unit">
+        <h3>Timings</h3>
+        <div class="row" align="center">
+            <img ng-show="dataLoading === true" alt="Loading  Content" src="~/Content/img/ajax-loader.gif" />
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div ui-grid="gridOptions"
+                     ui-grid-tree-view class="grid"
+                     ui-grid-auto-resize></div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script src="~/app/modules/app.js"></script>
+    <script src="~/app/services/requestTimingsService.js"></script>
+    <script src="~/app/controllers/requestTimingsController.js"></script>
+}

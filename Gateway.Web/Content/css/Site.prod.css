@@ -1,0 +1,143 @@
+﻿body {
+	padding-top: 50px;
+	padding-bottom: 40px;
+}
+		  
+.home-discover {
+	background: whitesmoke;
+}
+
+li [class^="icon-"], .the-icons li [class*=" icon-"] {
+	width: 32px;
+	font-size: 16px;
+}
+
+li [class^="icon-"], li [class*=" icon-"] {
+	display: inline-block;
+	width: 1.25em;
+	text-align: center;
+}
+
+i, cite, em, var, address, dfn {
+	font-style: italic;
+}
+
+.list-head {
+	margin-left: 5px;
+}
+
+.list-meta {
+	color: #777;
+	margin-top: 0;
+	font-size: 13px;
+}
+
+
+.avatar {
+	margin-top: 2px;
+	margin-bottom: 3px;
+	border-radius: 15px;
+	width: 24px;
+	height: 24px;
+}
+
+.readme {
+	margin-top: 20px;
+}
+
+.containerx {
+	margin: 0 0px;
+}
+
+.containerx .bulk {
+	background-color: white;
+}
+
+.containerx .readme {
+	display: none;
+}
+
+.containerx .packages {
+	display: none;
+}
+
+.containerx div.widget {
+	width: 100%;
+}
+
+.containerx .widget .main {
+	display: block;
+}
+
+div.packages ul {
+	list-style: none;
+	margin: 0;
+	padding: 5px;
+	position: relative;
+}
+			
+.widget {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 15px;
+	background: #fff;
+	float: left;
+	margin: 5px 5px;	
+}
+
+.contributors {
+	height: 50px;
+}
+
+.widget .main {
+	display: none;
+}
+
+.open {
+	position: relative;
+}
+
+.list-widget {
+	max-width: 1000px;
+	padding-right: 20px;
+}
+
+a {
+    color: #205081
+}
+
+.hoverlink {
+    color: #777;
+}
+
+.sidebar-nav li a:hover {
+    color: #205081;
+}
+
+#sidebar-wrapper {
+ background: #D1D1D1;
+ color: #000;
+}
+
+.sidebar-nav {
+ color: #727478;
+}
+
+.sidebar-nav li a {
+ color: #000;
+}
+
+pre {
+    white-space: pre-wrap;       /* Since CSS 2.1 */
+    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+    white-space: -pre-wrap;      /* Opera 4-6 */
+    white-space: -o-pre-wrap;    /* Opera 7 */
+    word-wrap: break-word;       /* Internet Explorer 5.5+ */
+}
+
+.navbar-env {
+    background-color: #205081;
+    border-color: #205081;
+    background-image: none;
+}
+

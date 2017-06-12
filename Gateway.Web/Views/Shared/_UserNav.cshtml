@@ -2,7 +2,7 @@
 <div id="sidebar-wrapper">
     <br />
     <div>
-        <img class="profileimg" src="@Url.Content("~/Content/img/controller.png")" style="height: 36px">
+        <img class="profileimg" src="@Url.Content(MvcApplication.ControllerIcon)" style="height: 36px">
         <b class="profilename">@Model.Name @ViewBag.Title</b>
     </div>
 
@@ -17,7 +17,7 @@
             &nbsp;
         </li>
         <li>
-            <a href="@Url.Action("ReturnToAllHistory", "Home")" class="hoverlink" style="color: yellow">
+            <a href="@Url.Action("ReturnToAllHistory", "Home")" class="hoverlink" style="color: white">
                 <span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp;&nbsp; Return
             </a>
         </li>
