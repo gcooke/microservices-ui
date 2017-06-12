@@ -141,27 +141,28 @@ namespace Gateway.Web.Database
                 var response = database.Responses.FirstOrDefault(r => r.CorrelationId == id);
                 PopulateFields(result, request);
                 PopulateFields(result, response);
-                result.CorrelationId = id;                
-            }
-            return result;
-        }
-
-        public Details GetRequestDetails(string correlationId)
-        {
-            var result = new Details();
-            var id = Guid.Parse(correlationId);
-            using (var database = new GatewayEntities())
-            {
-                var request = database.Requests.FirstOrDefault(r => r.CorrelationId == id);
-                var response = database.Responses.FirstOrDefault(r => r.CorrelationId == id);
-                PopulateFields(result, request);
-                PopulateFields(result, response);
                 result.CorrelationId = id;
 
                 if (result.EndUtc > DateTime.MinValue)
                     result.WallClockTime = (result.EndUtc - result.StartUtc).ToString("h'h 'm'm 's's'");
-                foreach(var item in database.spGetRequestChildSummary(id))
+                foreach (var item in database.spGetRequestChildSummary(id))
                     result.Items.Add(item.ToModel());
+            }
+            return result;
+        }
+        
+        public Children GetRequestChildren(string correlationId)
+        {
+            var result = new Children();
+            var id = Guid.Parse(correlationId);
+            result.CorrelationId = id;
+            using (var database = new GatewayEntities())
+            {
+                var items = database.spGetChildRequests(id);
+                foreach (var item in items)
+                {
+                    result.Requests.Add(item.ToModel());
+                }
             }
             return result;
         }

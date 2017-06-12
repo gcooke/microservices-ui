@@ -24,7 +24,7 @@ namespace Gateway.Web.Database
 
         Summary GetRequestSummary(string correlationId);
 
-        Details GetRequestDetails(string correlationId);
+        Children GetRequestChildren(string correlationId);
 
         Payloads GetRequestPayloads(string correlationId);
 

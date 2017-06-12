@@ -208,6 +208,9 @@
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\ResponseStats.cs" />
+    <Compile Include="Database\spGetChildRequests_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
     <Compile Include="Database\spGetPayloads_Result.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
@@ -271,8 +274,8 @@
     <Compile Include="Models\Controller\HistoryModel.cs" />
     <Compile Include="Models\Controller\QueueModel.cs" />
     <Compile Include="Models\Controller\QueuesModel.cs" />
+    <Compile Include="Models\Request\Children.cs" />
     <Compile Include="Models\Request\Payloads.cs" />
-    <Compile Include="Models\Request\Details.cs" />
     <Compile Include="Models\Request\Summary.cs" />
     <Compile Include="Models\Controller\QueueChartModel.cs" />
     <Compile Include="Models\Controller\TimeChartModel.cs" />
@@ -399,7 +402,6 @@
     <Content Include="Views\Controllers\History.cshtml" />
     <Content Include="Views\Controllers\Servers.cshtml" />
     <Content Include="Views\Controller\TimeChart.cshtml" />
-    <Content Include="Views\Request\Details.cshtml" />
     <Content Include="Views\Error\InternalServer.cshtml" />
     <Content Include="Views\Error\NotFound.cshtml" />
     <Content Include="Views\Controller\QueueChart.cshtml" />
@@ -414,6 +416,7 @@
     <Content Include="Views\Request\Timings.cshtml" />
     <Content Include="Views\Request\Payloads.cshtml" />
     <Content Include="Views\Request\Summary.cshtml" />
+    <Content Include="Views\Request\Children.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

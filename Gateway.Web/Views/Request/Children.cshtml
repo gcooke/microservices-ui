@@ -1,0 +1,31 @@
+﻿@using Gateway.Web.Database
+@using Gateway.Web.Models
+@using Gateway.Web.Models.Controller
+@using Gateway.Web.Models.Request
+@using Gateway.Web.Utils
+@using Newtonsoft.Json
+@using Version = Gateway.Web.Models.Controller.Version
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "Request";
+    ViewBag.Current = "Children";
+}
+@{ Html.RenderPartial("_RequestNav", (Children)@Model); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+
+        <h3>Child Requests</h3>
+
+        <br />
+
+        <div class="containerx bulk">
+            @{ Html.RenderPartial("_HistoryItems", (List<HistoryItem>)@Model.Requests); }
+        </div>
+
+        <br />
+
+
+
+    </div>
+</div>

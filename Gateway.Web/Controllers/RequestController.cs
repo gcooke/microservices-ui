@@ -1,6 +1,9 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Linq;
+using System.Web.Mvc;
 using Gateway.Web.Database;
 using Gateway.Web.Services;
+using Gateway.Web.Utils;
 using Controller = System.Web.Mvc.Controller;
 
 namespace Gateway.Web.Controllers
@@ -28,9 +31,17 @@ namespace Gateway.Web.Controllers
             return View(model);
         }
 
-        public ActionResult Details(string correlationId)
+        public ActionResult Children(string correlationId, string filter = "")
         {
-            var model = _dataService.GetRequestDetails(correlationId);
+            Session.RegisterLastHistoryLocation(Request.Url);
+
+            var model = _dataService.GetRequestChildren(correlationId);
+            if (!string.IsNullOrEmpty(filter))
+            {
+                // Remove all requests that don't match the controller name.
+                model.Requests.RemoveAll(
+                    r => !string.Equals(r.Controller, filter, StringComparison.CurrentCultureIgnoreCase));
+            }
             return View(model);
         }
 

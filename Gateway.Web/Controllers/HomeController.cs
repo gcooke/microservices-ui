@@ -50,6 +50,8 @@ namespace Gateway.Web.Controllers
         public ActionResult ReturnToHistory()
         {
             var uri = Session.GetLastHistoryLocation();
+            while(uri != null && uri == Request.UrlReferrer)
+                uri = Session.GetLastHistoryLocation();
             if (uri == null) return Redirect(string.Empty);
 
             return Redirect(uri.ToString());

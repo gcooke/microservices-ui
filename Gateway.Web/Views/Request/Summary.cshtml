@@ -20,15 +20,15 @@
 
         <table style="width: 100%; white-space: nowrap" class="datatable">
             <tr>
-                <td><b>Controller</b></td>
-                <td>@Model.Controller</td>
-                <td><b>Version</b></td>
-                <td>@Model.Version</td>
+                <td class="columnheader" style="width: 10%">Controller</td>
+                <td style="width: 40%">@Model.Controller</td>
+                <td class="columnheader" style="width: 10%">Version</td>
+                <td style="width: 40%">@Model.Version</td>
             </tr>
             <tr>
-                <td><b>Start Utc</b></td>
+                <td class="columnheader">Start Utc</td>
                 <td>@Model.StartUtc</td>
-                <td><b>End Utc</b></td>
+                <td class="columnheader">End Utc</td>
                 <td>
                     @if (!Model.IsBusy)
                     {
@@ -37,21 +37,21 @@
                 </td>
             </tr>
             <tr>
-                <td><b>Queue Time ms</b></td>
+                <td class="columnheader">Queue Time ms</td>
                 <td>@Model.QueueTimeMs</td>
-                <td><b>Time Taken ms</b></td>
+                <td class="columnheader">Time Taken ms</td>
                 <td>@Model.TimeTakenMs</td>
             </tr>
             <tr>
-                <td><b>User</b></td>
+                <td class="columnheader">User</td>
                 <td>@Model.User</td>
-                <td><b>Ip Address</b></td>
+                <td class="columnheader">Ip Address</td>
                 <td>@Model.IpAddress</td>
             </tr>
             <tr>
-                <td><b>Correlation Id</b></td>
+                <td class="columnheader">Correlation Id</td>
                 <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">@Model.CorrelationId</td>
-                <td><b>Parent Correlation Id</b></td>
+                <td class="columnheader">Parent Correlation Id</td>
                 <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
                     @if (Model.ParentCorrelationId != Guid.Empty)
                     {
@@ -60,16 +60,22 @@
                 </td>
             </tr>
             <tr>
-                <td><b>Resource</b></td>
+                <td class="columnheader">Resource</td>
                 <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">@Model.Resource</td>
-                <td><b>Request Type</b></td>
+                <td class="columnheader">Request Type</td>
                 <td>@Model.RequestType</td>
             </tr>
             <tr>
-                <td><b>Priority</b></td>
+                <td class="columnheader">Priority</td>
                 <td>@Model.Priority</td>
-                <td><b>Is Async</b></td>
+                <td class="columnheader">Is Async</td>
                 <td>@Model.IsAsync</td>
+            </tr>
+            <tr>
+                <td class="columnheader">Wall Clock Time</td>
+                <td>@Model.WallClockTime</td>
+                <td class="columnheader"></td>
+                <td></td>
             </tr>
         </table>
 
@@ -86,13 +92,53 @@
         {
             <br />
             <h3>Result</h3>
-            <b>Result Code: </b>
-            @Model.ResultCode
+            <table style="width: 100%; white-space: nowrap" class="datatable">
+                <thead>
+                    <tr>
+                        <td style="width: 5%">Code</td>
+                        <td style="width: 95%">Message</td>
+                    </tr>
+                </thead>
+                <tr>
+                    <td>@Model.ResultCode</td>
+                    <td style="word-wrap: break-word">@Model.ResultMessage</td>
+                </tr>
+            </table>
             <br />
-            <b>Result Message:</b>
+        }
+
+        @if (Model.HasChildren)
+        {
             <br />
-            <pre>@Model.ResultMessage</pre>
-            <br />
+            <h3>Child Requests</h3>
+
+            <table style="width: 100%; white-space: nowrap" class="datatable">
+                <thead>
+                    <tr>
+                        <td>Controller</td>
+                        <td>Requests</td>
+                        <td>Successful</td>
+                        <td>Items</td>
+                        <td>Min Start</td>
+                        <td>Max End</td>
+                    </tr>
+                </thead>
+                @foreach (DetailRow row in Model.Items)
+                {
+                    <tr>
+                        <td>@row.Controller</td>
+                        <td>@row.RequestCount</td>
+                        <td>
+                            <a href="@Url.Action("Children", "Request", new { correlationId = Model.CorrelationId, filter = row.Controller })" class="hoverlink">
+                                (@row.SuccessfulCount / @row.CompletedCount)
+                            </a>
+                        </td>
+                        <td>@row.Size @row.SizeUnit</td>
+                        <td>@row.MinStart</td>
+                        <td>@row.MaxEnd</td>
+                    </tr>
+                }
+            </table>
         }
     </div>
 </div>
