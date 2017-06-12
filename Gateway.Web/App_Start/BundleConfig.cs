@@ -30,11 +30,14 @@ namespace Gateway.Web
             bundles.Add(new ScriptBundle("~/bundles/ui.grid").Include(
                         "~/Scripts/ui-grid.js"));
 
+            var dataTableCss = string.Format("~/Content/css/datatable.{0}.css", environment);
+            var siteCss = string.Format("~/Content/css/Site.{0}.css", environment);
+
             bundles.Add(new StyleBundle("~/styles/css").Include(
                       "~/Content/css/bootstrap.css",
                       "~/Content/css/simple-sidebar.css",
-                      string.Equals(environment, "uat", StringComparison.CurrentCultureIgnoreCase) ? "~/Content/css/datatable.uat.css" : "~/Content/css/datatable.css",
-                      "~/Content/css/Site.css",
+                      dataTableCss,
+                      siteCss,
                       "~/Content/ui-grid.css"));
         }
     }

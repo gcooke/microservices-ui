@@ -6,10 +6,11 @@
     <title>@ViewBag.Title - Redstone</title>
     @Styles.Render("~/styles/css")
     @Scripts.Render("~/bundles/modernizr")
-    <link rel="shortcut icon" type="image/x-icon" href="/favicon.png" />
+    <link rel="icon" type="image/x-icon" href="@Url.Content(MvcApplication.FavIcon)" />
+    <link rel="shortcut icon" type="image/x-icon" href="@Url.Content(MvcApplication.FavIcon)" />
 </head>
 <body ng-app="app">
-    @{ Html.RenderPartial("_NavigationBar." + MvcApplication.Environment); }
+    @{ Html.RenderPartial("_NavigationBar"); }
 
     <div class="container body-content">
         @RenderBody()

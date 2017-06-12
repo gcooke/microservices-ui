@@ -329,12 +329,19 @@
     <Content Include="app\services\requestTimingsService.js" />
     <Content Include="Content\css\bootstrap.css" />
     <Content Include="Content\css\bootstrap.min.css" />
+    <Content Include="Content\css\datatable.dev.css" />
     <Content Include="Content\css\datatable.uat.css" />
-    <Content Include="Content\css\datatable.css" />
+    <Content Include="Content\css\datatable.prod.css" />
     <Content Include="Content\css\simple-sidebar.css" />
     <Content Include="Content\img\ajax-loader.gif" />
+    <Content Include="Content\css\Site.dev.css" />
+    <Content Include="Content\css\Site.uat.css" />
     <Content Include="Content\img\bg.jpg" />
-    <Content Include="Content\img\controller.png" />
+    <Content Include="Content\img\controller.dev.png" />
+    <Content Include="Content\img\controller.prod.png" />
+    <Content Include="Content\img\controller.uat.png" />
+    <Content Include="Content\img\favicon.dev.png" />
+    <Content Include="Content\img\favicon.uat.png" />
     <Content Include="Content\img\redstone_logo.dev.png" />
     <Content Include="Content\img\redstone_logo.prod.png" />
     <Content Include="Content\img\redstone_logo.uat.png" />
@@ -350,10 +357,10 @@
       <DependentUpon>PnRFO_Gateway.edmx</DependentUpon>
       <LastGenOutput>PnRFO_Gateway.cs</LastGenOutput>
     </Content>
-    <Content Include="favicon.png" />
+    <Content Include="Content\img\favicon.prod.png" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="Content\css\Site.css" />
+    <Content Include="Content\css\Site.prod.css" />
     <Content Include="Content\js\bootstrap.js" />
     <Content Include="Content\js\bootstrap.min.js" />
     <Content Include="appsettings.config" />
@@ -1181,9 +1188,7 @@
     <Content Include="Views\Shared\_RequestNav.cshtml" />
     <Content Include="Views\User\History.cshtml" />
     <Content Include="Views\Shared\_UserNav.cshtml" />
-    <Content Include="Views\Shared\_NavigationBar.Uat.cshtml" />
-    <Content Include="Views\Shared\_NavigationBar.Prod.cshtml" />
-    <Content Include="Views\Shared\_NavigationBar.Dev.cshtml" />
+    <Content Include="Views\Shared\_NavigationBar.cshtml" />
     <Content Include="Views\Request\Timings.cshtml" />
     <Content Include="Views\Request\Payloads.cshtml" />
     <Content Include="Views\Request\Summary.cshtml" />
