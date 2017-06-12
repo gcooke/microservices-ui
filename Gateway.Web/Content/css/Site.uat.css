@@ -115,8 +115,9 @@ a {
 }
 
 #sidebar-wrapper {
- background: #D1D1D1;
+ background: #F5F5F5;
  color: #000;
+ border-right: 1px solid #CCCCCC;
 }
 
 .sidebar-nav {
