@@ -37,6 +37,16 @@
   color: #FFF;
 }
 
+.datatable .columnheader {
+  border: 1px solid #828282;
+  background-color: #bcbcbc;
+  background-color: #990505;
+  color: #FFF;
+  font-weight: bold;
+  text-align: left;
+  padding-left: 0.3em;
+}
+
 .datatable tr:nth-child(even) {
   background-color: #E9E9E9;  
 }

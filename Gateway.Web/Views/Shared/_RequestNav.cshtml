@@ -18,11 +18,11 @@
                class="@(ViewBag.Current == "Payloads" ? "active" : "")">
                 <span class="glyphicon glyphicon-transfer"></span>&nbsp;&nbsp;Payloads
             </a>
-        </li>
+        </li>        
         <li>
-            <a href="~/Request/Details?correlationId=@Model.CorrelationId"
-               class="@(ViewBag.Current == "Details" ? "active" : "")">
-                <span class="glyphicon glyphicon-transfer"></span>&nbsp;&nbsp;Details
+            <a href="~/Request/Children?correlationId=@Model.CorrelationId"
+               class="@(ViewBag.Current == "Children" ? "active" : "")">
+                <span class="glyphicon glyphicon-transfer"></span>&nbsp;&nbsp;Children
             </a>
         </li>
         <li>
@@ -35,8 +35,8 @@
             &nbsp;
         </li>
         <li>
-            <a href="javascript:void(0);" onclick="history.go(-1);" style="color: yellow">
-                <span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp;&nbsp;Return
+            <a href="@Url.Action("ReturnToHistory", "Home")" class="hoverlink" style="color: yellow">
+                <span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp;&nbsp; Return
             </a>
         </li>
     </ul>

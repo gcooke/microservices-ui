@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Gateway.Web.Models.Request
 {
@@ -6,7 +7,11 @@ namespace Gateway.Web.Models.Request
     {
         public Summary()
         {
+            Items = new List<DetailRow>();
         }
+
+        public string WallClockTime { get; set; }
+        public List<DetailRow> Items { get; private set; }
 
         public Guid CorrelationId { get; set; }
         public Guid ParentCorrelationId { get; set; }
@@ -30,5 +35,22 @@ namespace Gateway.Web.Models.Request
         {
             get { return EndUtc == DateTime.MinValue; }
         }
+
+        public bool HasChildren
+        {
+            get { return Items.Count > 0; }
+        }
+    }
+
+    public class DetailRow
+    {
+        public string Controller { get; set; }
+        public int? RequestCount { get; set; }
+        public int? SuccessfulCount { get; set; }
+        public int? CompletedCount { get; set; }
+        public string SizeUnit { get; set; }
+        public int? Size { get; set; }
+        public DateTime? MinStart { get; set; }
+        public DateTime? MaxEnd { get; set; }
     }
 }

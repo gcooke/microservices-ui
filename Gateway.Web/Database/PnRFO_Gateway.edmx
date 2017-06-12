@@ -131,6 +131,9 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="spGetChildRequests" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="correlationId" Type="uniqueidentifier" Mode="In" />
+        </Function>
         <Function Name="spGetPayloads" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CorrelationId" Type="uniqueidentifier" Mode="In" />
         </Function>
@@ -329,7 +332,10 @@
           <Parameter Name="CorrelationId" Mode="In" Type="Guid" />
           </FunctionImport>
           <FunctionImport Name="spGetRequestChildSummary" ReturnType="Collection(GatewayModel.spGetRequestChildSummary_Result)">
-            <Parameter Name="correllationId" Mode="In" Type="Guid" />
+          <Parameter Name="correllationId" Mode="In" Type="Guid" />
+          </FunctionImport>
+          <FunctionImport Name="spGetChildRequests" ReturnType="Collection(GatewayModel.spGetChildRequests_Result)">
+            <Parameter Name="correlationId" Mode="In" Type="Guid" />
           </FunctionImport>
         </EntityContainer>
         <ComplexType Name="spGetRequestStats_Result">
@@ -487,10 +493,29 @@
           <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
           <Property Type="Int32" Name="RequestCount" Nullable="true" />
           <Property Type="String" Name="SizeUnit" Nullable="true" MaxLength="20" />
+          <Property Type="Int32" Name="Completed" Nullable="true" />
+          <Property Type="Int32" Name="SuccessfulCount" Nullable="true" />
           <Property Type="Int32" Name="Size" Nullable="true" />
           <Property Type="Guid" Name="LastCorrelationId" Nullable="true" />
           <Property Type="DateTime" Name="MinStartUtc" Nullable="true" Precision="23" />
           <Property Type="DateTime" Name="MaxEndUtc" Nullable="true" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="spGetChildRequests_Result">
+          <Property Type="Guid" Name="CorrelationId" Nullable="false" />
+          <Property Type="String" Name="User" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="IpAddress" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Version" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Resource" Nullable="false" MaxLength="255" />
+          <Property Type="String" Name="RequestType" Nullable="false" MaxLength="10" />
+          <Property Type="Int32" Name="Priority" Nullable="false" />
+          <Property Type="Boolean" Name="IsAsync" Nullable="false" />
+          <Property Type="DateTime" Name="StartUtc" Nullable="false" Precision="23" />
+          <Property Type="DateTime" Name="EndUtc" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="QueueTimeMs" Nullable="true" />
+          <Property Type="Int32" Name="TimeTakeMs" Nullable="true" />
+          <Property Type="Int32" Name="ResultCode" Nullable="true" />
+          <Property Type="String" Name="ResultMessage" Nullable="true" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -758,10 +783,33 @@
                 <ScalarProperty Name="Controller" ColumnName="Controller" />
                 <ScalarProperty Name="RequestCount" ColumnName="RequestCount" />
                 <ScalarProperty Name="SizeUnit" ColumnName="SizeUnit" />
+                <ScalarProperty Name="Completed" ColumnName="Completed" />
+                <ScalarProperty Name="SuccessfulCount" ColumnName="SuccessfulCount" />
                 <ScalarProperty Name="Size" ColumnName="Size" />
                 <ScalarProperty Name="LastCorrelationId" ColumnName="LastCorrelationId" />
                 <ScalarProperty Name="MinStartUtc" ColumnName="MinStartUtc" />
                 <ScalarProperty Name="MaxEndUtc" ColumnName="MaxEndUtc" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetChildRequests" FunctionName="GatewayModel.Store.spGetChildRequests">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GatewayModel.spGetChildRequests_Result">
+                <ScalarProperty Name="CorrelationId" ColumnName="CorrelationId" />
+                <ScalarProperty Name="User" ColumnName="User" />
+                <ScalarProperty Name="IpAddress" ColumnName="IpAddress" />
+                <ScalarProperty Name="Controller" ColumnName="Controller" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+                <ScalarProperty Name="Resource" ColumnName="Resource" />
+                <ScalarProperty Name="RequestType" ColumnName="RequestType" />
+                <ScalarProperty Name="Priority" ColumnName="Priority" />
+                <ScalarProperty Name="IsAsync" ColumnName="IsAsync" />
+                <ScalarProperty Name="StartUtc" ColumnName="StartUtc" />
+                <ScalarProperty Name="EndUtc" ColumnName="EndUtc" />
+                <ScalarProperty Name="QueueTimeMs" ColumnName="QueueTimeMs" />
+                <ScalarProperty Name="TimeTakeMs" ColumnName="TimeTakeMs" />
+                <ScalarProperty Name="ResultCode" ColumnName="ResultCode" />
+                <ScalarProperty Name="ResultMessage" ColumnName="ResultMessage" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

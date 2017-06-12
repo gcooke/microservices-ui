@@ -21,6 +21,8 @@ namespace Gateway.Web.Controllers
 
         public ActionResult History(string id)
         {
+            Session.RegisterLastHistoryLocation(Request.Url);
+
             var items = _dataService.GetRecentUserRequests("INTRANET\\" + id, DateTime.Today.AddDays(-7));
 
             var model = new HistoryModel(id);

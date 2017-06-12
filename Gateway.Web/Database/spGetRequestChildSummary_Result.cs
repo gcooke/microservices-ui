@@ -16,6 +16,8 @@ namespace Gateway.Web.Database
         public string Controller { get; set; }
         public Nullable<int> RequestCount { get; set; }
         public string SizeUnit { get; set; }
+        public Nullable<int> Completed { get; set; }
+        public Nullable<int> SuccessfulCount { get; set; }
         public Nullable<int> Size { get; set; }
         public Nullable<System.Guid> LastCorrelationId { get; set; }
         public Nullable<System.DateTime> MinStartUtc { get; set; }
