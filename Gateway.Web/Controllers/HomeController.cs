@@ -4,6 +4,7 @@ using Gateway.Web.Database;
 using Gateway.Web.Models;
 using Gateway.Web.Models.Home;
 using Gateway.Web.Services;
+using Gateway.Web.Utils;
 using Controller = System.Web.Mvc.Controller;
 
 namespace Gateway.Web.Controllers
@@ -44,6 +45,19 @@ namespace Gateway.Web.Controllers
         {
             //ViewBag.Message = "Your consule page.";
             return View();
+        }
+
+        public ActionResult ReturnToHistory()
+        {
+            var uri = Session.GetLastHistoryLocation();
+            if (uri == null) return Redirect(string.Empty);
+
+            return Redirect(uri.ToString());
+        }
+
+        public ActionResult ReturnToAllHistory()
+        {
+            return Redirect("/Controllers/History");
         }
 
         public ActionResult Reporting()

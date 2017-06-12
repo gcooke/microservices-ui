@@ -39,6 +39,8 @@ namespace Gateway.Web.Controllers
 
         public ActionResult History()
         {
+            Session.RegisterLastHistoryLocation(Request.Url);
+
             var items = _dataService.GetRecentRequests(DateTime.Today.AddDays(-30));
             var model = new HistoryModel();
             model.Requests.AddRange(items);

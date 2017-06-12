@@ -25,7 +25,7 @@ namespace Gateway.Web.Controllers
         }
 
         public ActionResult Dashboard(string id)
-        {
+        {            
             var stats = _dataService.GetResponseStats(DateTime.Today.AddDays(-7));
             var model = new DashboardModel(id);
             model.TotalCalls = stats.GetTotalCalls(id);
@@ -107,6 +107,8 @@ namespace Gateway.Web.Controllers
 
         public ActionResult History(string id)
         {
+            Session.RegisterLastHistoryLocation(Request.Url);
+
             var items = _dataService.GetRecentRequests(id, DateTime.Today.AddDays(-7));
 
             var model = new HistoryModel(id);
