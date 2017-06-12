@@ -1,17 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.Serialization;
 using System.Xml.Linq;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Controllers;
 using Gateway.Web.Utils;
 using System.Threading.Tasks;
 using System.Text;
+using System.Xml;
+using System.Xml.XPath;
 using Bagl.Cib.MIT.IoC;
 using Bagl.Cib.MIT.Logging;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
+using Gateway.Web.Models.Request;
 using Newtonsoft.Json;
 using Version = Gateway.Web.Models.Controller.Version;
 
@@ -22,7 +27,6 @@ namespace Gateway.Web.Services
         private readonly IGatewayRestService _restService;
         private readonly string[] _gateways;
         private readonly ILogger _logger;
-
         private readonly int _port = 7010;
 
         public GatewayService(ISystemInformation information, IGatewayRestService restService, ILoggingService loggingService)
@@ -311,6 +315,27 @@ namespace Gateway.Web.Services
                 _logger.InfoFormat("Response for update (success={0}): {1}", response.Successfull, response.Message);
             }
             return result.ToArray();
+        }
+
+        public RequestPayload GetRequestTree(Guid correlationId)
+        {
+            var responses = Fetch("api/Catalogue/latest/tree/{0}?includepayloads=false", correlationId.ToString());
+
+            if (!responses.Any())
+                return null;// new RequestPayload() { CorrelationId = correlationId };
+
+            var response = responses.First();
+
+            var namespaceManager = new XmlNamespaceManager(new NameTable());
+            namespaceManager.AddNamespace("empty", "http://schemas.datacontract.org/2004/07/Bagl.Cib.MSF.Contracts.Model.TypedResponse");
+            var xml = response.Document.XPathSelectElement("/empty:Response/empty:Payload/Request", namespaceManager).ToString();
+
+            var serializer = new DataContractSerializer(typeof(RequestPayload));
+
+            using (var ms = new MemoryStream(Encoding.UTF8.GetBytes(xml)))
+            {
+                return (RequestPayload)serializer.ReadObject(ms);
+            }
         }
 
         private class ServerResponse
