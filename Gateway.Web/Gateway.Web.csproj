@@ -365,6 +365,7 @@
     <Content Include="Content\js\bootstrap.min.js" />
     <Content Include="appsettings.config" />
     <Content Include="connectionstrings.config" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.woff2" />
     <None Include="Content\js\jquery-1.10.2.intellisense.js" />
     <Content Include="Content\js\jquery-1.10.2.js" />
     <Content Include="Content\js\jquery-1.10.2.min.js" />
@@ -1194,7 +1195,6 @@
     <Content Include="Views\Request\Summary.cshtml" />
     <Content Include="Views\Request\Children.cshtml" />
     <Content Include="Scripts\version.json" />
-    <Content Include="Scripts\errors.json" />
     <Content Include="Scripts\angular.min.js.map" />
     <Content Include="Scripts\angular-touch.min.js.map" />
     <Content Include="Scripts\angular-sanitize.min.js.map" />

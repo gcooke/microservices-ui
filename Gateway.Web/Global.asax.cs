@@ -27,6 +27,7 @@ namespace Gateway.Web
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles, Environment);
 
+            BundleTable.EnableOptimizations = true;
             var container = new UnityContainer();
             var information = new SystemInformation("Redstone.UI", Environment, SessionKeyType.Application, new string[0], container);
             Registrations.Register(information);
