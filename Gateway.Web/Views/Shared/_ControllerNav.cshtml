@@ -1,9 +1,18 @@
 ﻿<!-- Sidebar -->
 <div id="sidebar-wrapper">
     <br />
-    <div>
-        <img class="profileimg" src="@Url.Content(MvcApplication.ControllerIcon)" style="height: 36px">
-        <b class="profilename">@Model.Name @ViewBag.Title</b>
+    <div style="margin-left: 10px; height: 50px">
+        <div style="float: left">
+            <img class="sidebar-img" src="@Url.Content(MvcApplication.ControllerIcon)" style="height: 48px">
+        </div>
+        <div style="float: left; margin-top: 5px">
+            <span class="sidebar-title">@Model.Name</span><br/>
+            <span class="sidebar-subtitle">@ViewBag.Title</span>
+        </div>
+    </div>
+
+    <div class="sidebar-navheader">
+        <strong>DETAILS</strong>
     </div>
 
     <ul class="sidebar-nav">
@@ -46,6 +55,14 @@
         <li>
             &nbsp;
         </li>
+        
+    </ul>
+
+    <div class="sidebar-navheader">
+        <strong>NAVIGATION</strong>
+    </div>
+
+    <ul class="sidebar-nav">
         <li>
             <a href="~/Controllers/Dashboard">
                 <span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp;&nbsp;All Controllers

@@ -19,10 +19,36 @@ BOOTSTRAP http://getbootstrap.com/components/
  transition: all 0.5s ease;
 }
 
-.profilename 
+.sidebar-img
 {
-    margin-left: 10px;
-    font-size: 16px;    
+    margin: 0px 0px 0px 10px;
+}
+
+.sidebar-title
+{
+    margin: 10px 0px 0px 10px;
+    font-family: Arial;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 0.5; 
+}
+
+.sidebar-subtitle
+{
+    margin: 0px 0px 0px 10px;
+    font-size: 13px;    
+    line-height: 0.5; 
+}
+
+.sidebar-navheader {
+    font-size: 13px;    
+    border-top: 1px solid #CCCCCC;
+    margin: 20px 10px 0px 10px;
+    color: #847070;
+    font-family: Arial;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 20px;
 }
 
 #wrapper.toggled
@@ -69,10 +95,8 @@ BOOTSTRAP http://getbootstrap.com/components/
 
 .sidebar-nav
 {
- position: absolute;
- top: 60px;
  width: 250px;
- margin: 0;
+ margin: 10px 0px 0 0;
  padding: 0;
  list-style: none;
 }
@@ -101,7 +125,7 @@ BOOTSTRAP http://getbootstrap.com/components/
 {
  text-decoration: none;
  color: #111111;
- font-weight:bold;
+ /*font-weight:bold;*/
  background: rgba(224,224,224,1.0);
 }
 
