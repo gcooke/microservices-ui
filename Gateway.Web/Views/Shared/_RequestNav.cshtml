@@ -1,9 +1,18 @@
 ﻿<!-- Sidebar -->
 <div id="sidebar-wrapper">
     <br />
-    <div>
-        <img class="profileimg" src="@Url.Content(MvcApplication.ControllerIcon)" style="height: 36px">
-        <b class="profilename">@ViewBag.Title</b>
+    <div style="margin-left: 10px; height: 50px">
+        <div style="float: left">
+            <img class="sidebar-img" src="@Url.Content(MvcApplication.ControllerIcon)" style="height: 48px">
+        </div>
+        <div style="float: left; margin-top: 5px">
+            <span class="sidebar-title">@ViewBag.Title</span><br/>
+            <span class="sidebar-subtitle">@ViewBag.Current</span>
+        </div>
+    </div>
+
+    <div class="sidebar-navheader">
+        <strong>DETAILS</strong>
     </div>
 
     <ul class="sidebar-nav">
@@ -18,7 +27,7 @@
                class="@(ViewBag.Current == "Payloads" ? "active" : "")">
                 <span class="glyphicon glyphicon-transfer"></span>&nbsp;&nbsp;Payloads
             </a>
-        </li>        
+        </li>
         <li>
             <a href="~/Request/Children?correlationId=@Model.CorrelationId"
                class="@(ViewBag.Current == "Children" ? "active" : "")">
@@ -34,8 +43,15 @@
         <li>
             &nbsp;
         </li>
+    </ul>
+
+    <div class="sidebar-navheader">
+        <strong>NAVIGATION</strong>
+    </div>
+
+    <ul class="sidebar-nav">
         <li>
-            <a href="@Url.Action("ReturnToHistory", "Home")" class="hoverlink" style="color: white">
+            <a href="@Url.Action("ReturnToHistory", "Home")" class="hoverlink">
                 <span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp;&nbsp; Return
             </a>
         </li>
