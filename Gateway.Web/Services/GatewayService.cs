@@ -227,7 +227,7 @@ namespace Gateway.Web.Services
                     return XDocument.Parse(responseContent.Result);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Should somehow output this
                 return null;
@@ -249,7 +249,7 @@ namespace Gateway.Web.Services
                     return response.EnsureSuccessStatusCode();
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Should somehow output this
                 return null;
@@ -270,7 +270,7 @@ namespace Gateway.Web.Services
                     return response.EnsureSuccessStatusCode();
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Should somehow output this
                 return null;

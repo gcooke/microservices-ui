@@ -27,7 +27,7 @@ namespace Gateway.Web
             bundles.Add(new ScriptBundle("~/bundles/angular").Include(
                         "~/Scripts/angular.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/ui.grid").Include(
+            bundles.Add(new ScriptBundle("~/bundles/ui-grid").Include(
                         "~/Scripts/ui-grid.js"));
 
             var dataTableCss = string.Format("~/Content/css/datatable.{0}.css", environment);
@@ -38,7 +38,8 @@ namespace Gateway.Web
                       "~/Content/css/simple-sidebar.css",
                       dataTableCss,
                       siteCss,
-                      "~/Content/ui-grid.css"));
+                      "~/Content/ui-grid*"
+                      ));
         }
     }
 }
