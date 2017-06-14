@@ -52,7 +52,7 @@ namespace Gateway.Web.Controllers
             var uri = Session.GetLastHistoryLocation();
             while(uri != null && uri == Request.UrlReferrer)
                 uri = Session.GetLastHistoryLocation();
-            if (uri == null) return Redirect(string.Empty);
+            if (uri == null) return ReturnToAllHistory();
 
             return Redirect(uri.ToString());
         }
