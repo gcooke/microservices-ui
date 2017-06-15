@@ -137,7 +137,12 @@ pre {
 }
 
 .navbar-env {
-    background-color: #409449;
+    background-color: #33793B;
     border-color: #33793B;
-    background-image: none;
+    
+    background-image: url("/Content/img/header.uat.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
+
