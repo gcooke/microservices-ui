@@ -18,8 +18,8 @@ namespace Gateway.Web
         protected void Application_Start()
         {
             Environment = ConfigurationManager.AppSettings["Environment"];
-            FavIcon = "/content/img/favicon." + Environment + ".png";
-            ControllerIcon = "/content/img/controller." + Environment + ".png";
+            FavIcon = "~/content/img/favicon." + Environment + ".png";
+            ControllerIcon = "~/content/img/controller." + Environment + ".png";
             SiteLogo = "~/Content/img/redstone_logo." + Environment + ".png";
 
             AreaRegistration.RegisterAllAreas();

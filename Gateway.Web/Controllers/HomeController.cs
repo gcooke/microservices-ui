@@ -59,7 +59,7 @@ namespace Gateway.Web.Controllers
 
         public ActionResult ReturnToAllHistory()
         {
-            return Redirect("/Controllers/History");
+            return Redirect("~/Controllers/History");
         }
 
         public ActionResult Reporting()

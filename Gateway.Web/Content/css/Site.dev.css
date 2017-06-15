@@ -137,10 +137,10 @@ pre {
 }
 
 .navbar-env {
-    background-color: #0D3555;
-    border-color: #0D3555;
+    background-color: #990505;
+    border-color: #990505;
     
-    background-image: url("/Content/img/header.dev.jpg");
+    background-image: url("support/content/img/header.dev.jpg");
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
