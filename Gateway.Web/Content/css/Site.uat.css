@@ -103,7 +103,7 @@ div.packages ul {
 }
 
 a {
-    color: #33793B
+    color: #990505
 }
 
 .hoverlink {
@@ -111,7 +111,7 @@ a {
 }
 
 .sidebar-nav li a:hover {
-    color: #33793B;
+    color: #990505;
 }
 
 #sidebar-wrapper {
@@ -137,10 +137,11 @@ pre {
 }
 
 .navbar-env {
-    background-color: #33793B;
-    border-color: #33793B;
-    
-    background-image: url("support/content/img/header.uat.jpg");
+    background-color: #343434;
+    border: 0;
+    border-bottom: 1px solid #9396A5;
+
+    background-image: none;    
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;

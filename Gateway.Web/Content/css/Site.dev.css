@@ -103,7 +103,7 @@ div.packages ul {
 }
 
 a {
-    color: #ED212D
+    color: #990505
 }
 
 .hoverlink {
@@ -137,10 +137,11 @@ pre {
 }
 
 .navbar-env {
-    background-color: #990505;
-    border-color: #990505;
-    
-    background-image: url("support/content/img/header.dev.jpg");
+    background-color: #343434;
+    border: 0;
+    border-bottom: 1px solid #9396A5;
+
+    background-image: none;    
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
