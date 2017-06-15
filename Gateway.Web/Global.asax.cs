@@ -20,7 +20,7 @@ namespace Gateway.Web
             Environment = ConfigurationManager.AppSettings["Environment"];
             FavIcon = "~/content/img/favicon." + Environment + ".png";
             ControllerIcon = "~/content/img/controller." + Environment + ".png";
-            SiteLogo = "~/Content/img/redstone_logo." + Environment + ".png";
+            SiteLogo = "~/Content/img/Redstone." + Environment + ".png";
 
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
