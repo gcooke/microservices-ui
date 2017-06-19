@@ -345,6 +345,9 @@
     <Content Include="Content\img\header.dev.jpg" />
     <Content Include="Content\img\header.prod.jpg" />
     <Content Include="Content\img\header.uat.jpg" />
+    <Content Include="Content\img\Redstone.DEV.png" />
+    <Content Include="Content\img\Redstone.PROD.png" />
+    <Content Include="Content\img\Redstone.UAT.png" />
     <Content Include="Content\ui-grid.css" />
     <Content Include="Content\ui-grid.min.css" />
     <Content Include="Database\PnRFO_Gateway.Context.tt">
