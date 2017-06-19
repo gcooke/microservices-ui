@@ -198,6 +198,9 @@
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\UtilsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Database\Alias.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
     <Compile Include="Database\GatewayDatabaseService.cs" />
     <Compile Include="Database\IGatewayDatabaseService.cs" />
     <Compile Include="Database\Payload.cs">
@@ -266,6 +269,7 @@
     <Compile Include="Database\Status.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Controllers\AliasesModel.cs" />
     <Compile Include="Models\Controllers\HistoryModel.cs" />
     <Compile Include="Models\Controllers\QueueChartModel.cs" />
     <Compile Include="Models\Controllers\QueuesModel.cs" />
@@ -348,6 +352,7 @@
     <Content Include="Content\img\Redstone.DEV.png" />
     <Content Include="Content\img\Redstone.PROD.png" />
     <Content Include="Content\img\Redstone.UAT.png" />
+    <Content Include="Content\js\checkall.js" />
     <Content Include="Content\ui-grid.css" />
     <Content Include="Content\ui-grid.min.css" />
     <Content Include="Database\PnRFO_Gateway.Context.tt">
@@ -1210,6 +1215,7 @@
     <Content Include="Scripts\angular-cookies.min.js.map" />
     <Content Include="Scripts\angular-aria.min.js.map" />
     <Content Include="Scripts\angular-animate.min.js.map" />
+    <Content Include="Views\Controllers\Aliases.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

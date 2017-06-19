@@ -1,47 +1,27 @@
-﻿@using System.Xml.Schema
-@using Gateway.Web.Models
-@using Gateway.Web.Models.Controllers
-@using System.Web.UI.WebControls
-@using Gateway.Web.Models.Controller
+﻿@using Gateway.Web.Models.Controller
+@{
+    ViewBag.Title = "Dashboard";
+}
 
 <div class="row">
 
-    <h3>Home</h3>
+    <h3>Redstone Dashboard</h3>
+    <p>Welcome to the Redstone API Gateway Dashboard.</p>
 
-    <br />
-    under construction - this page will include various charts showing number of requests, response times
-    and queue sizes.
-    
+    <ul>
+        <li>@Html.ActionLink("Controllers", "Dashboard", "Controllers")</li>
+        <li>@Html.ActionLink("Current Running Hosts", "Workers", "Controllers")</li>
+        <li>@Html.ActionLink("Recent History", "History", "Controllers")</li>
+    </ul>
     <br/>
-    <h3>Current Queue Sizes</h3>
 
+    <br/>
+    <h3>Last @Model.Requests.Count requests</h3>
     <br />
-    <div>
-        <img src="~/Controllers/QueueChart?date=@Model.HistoryStartTime.ToString("yyyyMMdd")" />
+
+    <div class="containerx bulk">
+        @{ Html.RenderPartial("_HistoryItems", (List<HistoryItem>)@Model.Requests); }
     </div>
 
-    <table style="width: 100%">
-        <thead>
-            <tr>
-                <td><b>Controller</b></td>
-                <td><b>Version</b></td>
-                <td><b>Last Enqueue</b></td>
-                <td><b>Last Dequeue</b></td>
-                <td><b>Count</b></td>
-                <td><b>Workers</b></td>
-            </tr>
-        </thead>
-        @foreach (QueueModel version in Model.Current)
-            {
-            <tr>
-                <td><a href="~/Controller/Queues/@version.Controller">@version.Controller</a></td>
-                <td>@version.Version</td>
-                <td>@version.LastEnqueue</td>
-                <td>@version.LastDequeue</td>
-                <td>@version.Length</td>
-                <td>@version.Workers</td>
-            </tr>
-        }
-    </table>
-
+    <br />
 </div>

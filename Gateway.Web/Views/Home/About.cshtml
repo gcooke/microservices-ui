@@ -7,7 +7,64 @@
     <h3>About</h3>
 
     <br />
-    under construction - this page will show general information about redstone, contact details
-    and wiki links.
+
+    <h4>What is Redstone?</h4>
+    <p>
+        Redstone is an API gateway that creates an abstraction layer between all consumers and data sources. It ensures
+        that consumers have access to all data and functions that they need whilst providing a single point for
+        monitoring and support.
+    </p>
+    <br />
+    <p>
+        The Redstone framework provides non-functional requirements such as logging, audit and authentication
+        so that developers creating the controller end-points can focus on functional requirements. In addition
+        the framework can provision computing resources automatically and can scale under load.
+    </p>
+
+    <br />
+    <h4>Redstone Features</h4>
+    <strong>Controllers can run anywhere</strong>
+    <ul>
+        <li>The goal of the Redstone framework is to be able to scale up to any cloud or computing resource available.</li>
+        <li>As such controllers are written so that they are agnostic of where they are run.</li>         
+    </ul>
+    <br/>
+
+    <strong>Priority Queuing</strong>
+    <ul>
+        <li>All requests are tagged with a priority level.</li>
+        <li>7 Levels = Lowest, Very Low, Low, Normal, Above Normal, High, Very High, Highest.</li>
+        <li>This allows for simultaneous processing of slow low priority tasks and high priority fast tasks such as pre-deal checking or intraday user requests.</li>
+    </ul>
+    <br/>
+
+    <strong>End-point Versioning as Standard</strong>
+    <ul>
+        <li>Fast delivery of controller features whilst keeping the environment stable.</li>
+        <li>Versions can be run side-by-side and scaled independently.</li>
+    </ul>
+    <br/>
+
+    <strong>Asynchronous Requests</strong>
+    <ul>
+        <li>Consumers can choose to make synchronous or asynchronous requests.</li>
+        <li>Initial asynchronous responses include resource identifier.</li>
+        <li>Retrieval of progress and final result is done through the resource identifier.</li>
+    </ul>
+    <br/>
+
+    <strong>Re-entrant Requests</strong>
+    <ul>
+        <li>Controllers can make subsequent gateway requests.</li>
+        <li>All requests tagged with correlation identifier for log retrieval.</li>
+    </ul>
+    <br/>
+
+    <strong>All functions are fulfilled by pull rather than push mechanisms</strong>
+    <ul>
+        <li>Any requirement can be covered mostly by RESTful requests by target systems</li>
+        <li>Anywhere that this is not suitable an external utility must pull data from the relevant controllers, performs any transformations and pushes the data to the external systems.</li>
+    </ul>
+    <br/>
 
 </div>

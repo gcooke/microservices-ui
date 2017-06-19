@@ -35,6 +35,7 @@ namespace Gateway.Web.Database
         public virtual DbSet<QueueSize> QueueSizes { get; set; }
         public virtual DbSet<Payload> Payloads { get; set; }
         public virtual DbSet<Status> Status { get; set; }
+        public virtual DbSet<Alias> Aliases { get; set; }
     
         public virtual ObjectResult<spGetRequestStats_Result> spGetRequestStats(Nullable<System.DateTime> start, string controller)
         {

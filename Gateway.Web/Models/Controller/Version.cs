@@ -31,10 +31,9 @@ namespace Gateway.Web.Models.Controller
                 SemVar = new System.Version();
 
             ApplicableStatuses = new List<SelectListItem>();
-
         }
 
-        public IEnumerable<SelectListItem> ApplicableStatuses { get; set; }
+        public List<SelectListItem> ApplicableStatuses { get; private set; }
 
         
     }

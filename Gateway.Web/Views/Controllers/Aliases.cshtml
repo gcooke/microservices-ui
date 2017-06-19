@@ -1,0 +1,64 @@
+﻿@using System.Xml.Schema
+@using Gateway.Web.Database
+@using Gateway.Web.Models
+@using Gateway.Web.Models.Controllers
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "All Controllers";
+    ViewBag.Current = "Aliases";
+}
+@{ Html.RenderPartial("_ControllersNav"); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+
+        <h3>Aliases</h3>
+
+        @{
+            if (Model.UpdateResults != null)
+            {
+                foreach (var result in Model.UpdateResults)
+                {
+                    <strong style="color: darkblue">@result</strong><br />
+                }
+                <br />
+            }
+        }
+        <br />
+
+        <div id="containerx bulk">
+            @using (Html.BeginForm("UpdateAliases", "Controllers", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+
+                <table style="width: 100%; white-space: nowrap" class="datatable">
+                    <thead>
+                        <tr>
+                            <td>Id</td>
+                            <td>Alias</td>
+                            <td>Delete</td>
+                        </tr>
+                    </thead>
+
+                    @foreach (Alias item in Model.Items)
+                    {
+                        <tr>
+                            <td>@item.Id</td>
+                            <td>@Html.TextBox(@item.Id + "_Name", item.Name, new { @class = "form-control", })</td>
+                            <td>@Html.CheckBox(@item.Id + "_Delete")</td>
+                        </tr>
+                    }
+
+                    <tr>
+                        <td><i>new</i></td>
+                        <td>@Html.TextBox("0_Name", "", new { @class = "form-control", })</td>
+                        <td></td>
+                    </tr>
+                </table>
+
+                <br />
+                <input id="UpdateBtn" type="submit" value="Update All" />
+            }
+        </div>
+        <br />
+    </div>
+</div>
