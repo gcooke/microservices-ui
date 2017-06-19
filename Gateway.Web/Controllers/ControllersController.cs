@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
@@ -37,6 +38,12 @@ namespace Gateway.Web.Controllers
             return View(model);
         }
 
+        public ActionResult Aliases()
+        {
+            var model = _dataService.GetAliases();
+            return View("Aliases", model);
+        }
+
         public ActionResult History()
         {
             Session.RegisterLastHistoryLocation(Request.Url);
@@ -73,6 +80,36 @@ namespace Gateway.Web.Controllers
 
             var model = _dataService.GetControllerQueueSummary(start);
             return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult UpdateAliases(FormCollection collection)
+        {
+            var updates = new List<Alias>();
+            var itemsMarkedForDelete = new List<int>();
+
+            foreach (var key in collection.Keys)
+            {
+                var id = int.Parse(key.ToString().Split('_')[0]);
+                if (key.ToString().Contains("_Delete"))
+                {
+                    var markedForDelete = bool.Parse(collection[key.ToString()].Split(',')[0]);
+                    if (markedForDelete)
+                        itemsMarkedForDelete.Add(id);
+                }
+                else
+                {
+                    var newName = collection[key.ToString()];
+                    updates.Add(new Alias() { Id = id, Name = newName });
+                }
+            }
+
+            updates.RemoveAll(t => itemsMarkedForDelete.Contains(t.Id));
+            var results = _dataService.UpdateAliases(updates);
+
+            var model = _dataService.GetAliases();
+            model.UpdateResults = results;
+            return View("Aliases", model);
         }
     }
 }

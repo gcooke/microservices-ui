@@ -62,7 +62,10 @@ namespace Gateway.Web.Models.Controller
 
                 if (ResultCode == 1)
                 {
-                    return ResultMessage;
+                    if(!string.IsNullOrEmpty(ResultMessage))
+                        return ResultMessage;
+
+                    return "Success";
                 }
                 else
                 {

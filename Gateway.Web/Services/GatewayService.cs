@@ -289,7 +289,9 @@ namespace Gateway.Web.Services
                 var interim = new List<Version>();
                 foreach (var version in element.Descendants("Version"))
                 {
-                    interim.Add(new Version(version.Attribute("Name").Value, "", version.Attribute("Status").Value));
+                    var aliasA = version.Attribute("Alias");
+                    var alias = aliasA != null ? aliasA.Value : "";
+                    interim.Add(new Version(version.Attribute("Name").Value, alias, version.Attribute("Status").Value));
                 }
                 result.Versions.AddRange(interim.OrderBy(v => v.SemVar));
             }
@@ -302,15 +304,15 @@ namespace Gateway.Web.Services
             var result = new List<string>();
             foreach (var item in versionStatusUpdates.OrderBy(s => s.Status))
             {
-                _logger.InfoFormat("Sending instruction to update {0}/{1} to status {2}", item.Controller, item.Version, item.Status);
+                _logger.InfoFormat("Sending instruction to update {0}/{1} to status {2} with alias '{3}'", item.Controller, item.Version, item.Status, item.Alias);
                 var query = string.Format("controllers/{0}/versions/{1}", item.Controller, item.Version);
-                var content = item.Status;
+                var content = string.Format("{0}|{1}", item.Status, item.Alias);
                 var response = _restService.Put("Catalogue", "latest", query, content);
 
                 if (response.Successfull)
-                    result.Add(string.Format("Successfully updated verion {0} to {1}", item.Version, item.Status));
+                    result.Add(string.Format("Successfully updated version {0} to {1} {2}", item.Version, item.Status, item.Alias));
                 else
-                    result.Add(string.Format("Failed to update version {0} to {1}: {2}", item.Version, item.Status, response.Message));
+                    result.Add(string.Format("Failed to update version {0} to {1} {2}: {3}", item.Version, item.Status, item.Alias, response.Message));
 
                 _logger.InfoFormat("Response for update (success={0}): {1}", response.Successfull, response.Message);
             }

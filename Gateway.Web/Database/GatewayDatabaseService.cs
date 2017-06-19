@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Gateway.Web.Models.Controller;
+using Gateway.Web.Models.Controllers;
 using Gateway.Web.Models.Request;
 
 namespace Gateway.Web.Database
@@ -82,6 +83,19 @@ namespace Gateway.Web.Database
             }
         }
 
+        public AliasesModel GetAliases()
+        {
+            var result = new AliasesModel();
+            using (var database = new GatewayEntities())
+            {
+                foreach (var item in database.Aliases)
+                {
+                    result.Items.Add(item);
+                }
+            }
+            return result;
+        }
+
         public RequestsChartModel GetControllerRequestSummary(string name, DateTime start)
         {
             using (var database = new GatewayEntities())
@@ -150,7 +164,7 @@ namespace Gateway.Web.Database
             }
             return result;
         }
-        
+
         public Children GetRequestChildren(string correlationId)
         {
             var result = new Children();
@@ -187,7 +201,7 @@ namespace Gateway.Web.Database
             }
             return result;
         }
-        
+
         public PayloadData GetPayload(long id)
         {
             using (var database = new GatewayEntities())
@@ -223,7 +237,7 @@ namespace Gateway.Web.Database
             result.IsAsync = request.IsAsync;
             result.StartUtc = request.StartUtc;
         }
-        
+
         public Models.Controller.QueueChartModel GetControllerQueueSummary(string name, DateTime start)
         {
             using (var database = new GatewayEntities())
@@ -271,7 +285,7 @@ namespace Gateway.Web.Database
                 return result;
             }
         }
-        
+
         public IEnumerable<Status> GetVersionStatuses()
         {
             using (var database = new GatewayEntities())
@@ -280,7 +294,7 @@ namespace Gateway.Web.Database
             }
         }
 
-        public bool HasStatusChanged(string controllerName, string versionName, string status)
+        public bool HasStatusChanged(string controllerName, string versionName, string status, string alias)
         {
             using (var database = new GatewayEntities())
             {
@@ -294,12 +308,50 @@ namespace Gateway.Web.Database
 
                     if (version != null)
                     {
-                        return status != version.Status.Name;
+                        return status != version.Status.Name || alias != version.Alias;
                     }
                     return status != "Inactive";
                 }
                 return false;
             }
+        }
+
+        public string[] UpdateAliases(List<Alias> aliases)
+        {
+            var result = new List<string>();
+            using (var database = new GatewayEntities())
+            {
+                foreach (var item in database.Aliases.ToArray())
+                {
+                    var updated = aliases.FirstOrDefault(a => a.Id == item.Id);
+
+                    // check for deletes.
+                    if (updated == null)
+                    {
+                        result.Add(string.Format("Deleted alias '{0}'", item.Name));
+                        database.Aliases.Remove(item);
+                    }
+                    // check for updates.
+                    else if (updated.Name != item.Name)
+                    {
+                        result.Add(string.Format("Updated alias '{0}' to '{1}'", item.Name, updated.Name));
+                        item.Name = updated.Name;
+                    }
+                }
+                
+                // Check for inserts
+                var add = aliases.FirstOrDefault(a => a.Id == 0);
+                if (add != null && !string.IsNullOrEmpty(add.Name))
+                {
+                    var alias = database.Aliases.Create();
+                    alias.Name = add.Name;
+                    database.Aliases.Add(alias);
+                    result.Add(string.Format("Added new alias '{0}'", add.Name));
+                }
+
+                database.SaveChanges();
+            }
+            return result.ToArray();
         }
     }
 }

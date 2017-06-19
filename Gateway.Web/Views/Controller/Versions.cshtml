@@ -7,26 +7,27 @@
 }
 @{ Html.RenderPartial("_ControllerNav", (BaseControllerModel)@Model); }
 
+
 <div id="page-content-wrapper">
     <div class="hero-unit">
 
         <h3>Versions</h3>
 
-        <br />
+        <br/>
         @{
             if (Model.UpdateResults != null)
             {
                 foreach (var result in Model.UpdateResults)
                 {
-                    <strong style="color: darkblue">@result</strong><br />
+                    <strong style="color: darkblue">@result</strong><br/>
                 }
-                <br />
+                <br/>
             }
         }
-        <br />
+        <br/>
 
         <div id="list-meta">
-            @using (Html.BeginForm("UpdateVersionStatuses", "Controller", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            @using (Html.BeginForm("UpdateVersionStatuses", "Controller", FormMethod.Post, new {enctype = "multipart/form-data"}))
             {
 
                 List<SelectListItem> listItems = new List<SelectListItem>();
@@ -39,59 +40,63 @@
 
 
                 @Html.DropDownList(
-                "id",
-                listItems,
-                new { @class = "form-control", @style = "display:none" }
-            )
-                <table style="width: 100%">
+                    "id",
+                    listItems,
+                    new {@class = "form-control", @style = "display:none"}
+                    )
+                <table style="width: 100%; white-space: nowrap" class="datatable">
+                    <thead>
                     <tr>
-                        <th>Alias</th>
-                        <th>Version</th>
-                        <th>Current Status</th>
-                        <th>Update Status</th>
-                        <th>Delete</th>
+                        <td>Version</td>
+                        <td>Alias</td>
+                        <td>Status</td>
+                        <td>Delete
+                            @*<input type="checkbox" name="select-all" id="select-all" />*@
+                            @*<small><a href="" style="color: white">(select all)</a></small>*@
+                        </td>
                     </tr>
+                    </thead>
 
                     @foreach (Version item in Model.Versions)
                     {
                         if (item.Status != "Deleted")
                         {
-                            <tr>
+                            <tr style="background: white">
                                 @if (item.IsActive)
                                 {
                                     <span style="color: DarkBlue">
-                                        <td>@item.Alias</td>
                                         <td>@item.Name</td>
-                                        <td>@item.Status</td>
-                                        <td>@Html.DropDownList(@item.Name + "_StatusSelection", item.ApplicableStatuses, new { @class = "form-control", @style = "width:80%" })</td>
+                                        <td>@Html.TextBox(@item.Name + "_Alias", item.Alias, new { @class = "form-control" })</td>
+                                        <td>@Html.DropDownList(@item.Name + "_StatusSelection", item.ApplicableStatuses, new {@class = "form-control"})</td>
+                                        <td></td>
                                     </span>
                                 }
                                 else if (item.Status == "Disabled")
                                 {
                                     <span style="color: indianred">
-                                        <td>@item.Alias</td>
                                         <td>@item.Name</td>
-                                        <td>@item.Status</td>
-                                        <td>@Html.DropDownList(@item.Name + "_StatusSelection", item.ApplicableStatuses, new { @class = "form-control", @style = "width:80%" })</td>
+                                        <td>@Html.TextBox(@item.Name + "_Alias", item.Alias, new { @class = "form-control" })</td>
+                                        <td>@Html.DropDownList(@item.Name + "_StatusSelection", item.ApplicableStatuses, new {@class = "form-control"})</td>
                                         <td>@Html.CheckBox(@item.Name + "_Delete")</td>
                                     </span>
                                 }
                                 else
                                 {
                                     <span style="color: gray">
-                                        <td>@item.Alias</td>
                                         <td>@item.Name</td>
-                                        <td>@item.Status</td>
-                                        <td>@Html.DropDownList(@item.Name + "_StatusSelection", item.ApplicableStatuses, new { @class = "form-control", @style = "width:80%" })</td>
+                                        <td>@Html.TextBox(@item.Name + "_Alias", item.Alias, new { @class = "form-control" })</td>
+                                        <td>@Html.DropDownList(@item.Name + "_StatusSelection", item.ApplicableStatuses, new {@class = "form-control"})</td>
+                                        <td></td>
                                     </span>
                                 }
                             </tr>
                         }
                     }
                 </table>
-                <input id="UpdateBtn" type="submit" value="Update All" />
+                <br/>
+                <input id="UpdateBtn" type="submit" value="Update All"/>
             }
         </div>
-        <br />
+        <br/>
     </div>
 </div>

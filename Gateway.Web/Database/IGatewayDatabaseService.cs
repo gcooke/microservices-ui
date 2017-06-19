@@ -18,6 +18,8 @@ namespace Gateway.Web.Database
 
         ResponseStats GetResponseStats(DateTime start);
 
+        AliasesModel GetAliases();
+
         RequestsChartModel GetControllerRequestSummary(string name, DateTime start);
 
         TimeChartModel GetControllerTimeSummary(string name, DateTime start);
@@ -36,6 +38,8 @@ namespace Gateway.Web.Database
 
         IEnumerable<Status> GetVersionStatuses();
 
-        bool HasStatusChanged(string controller, string version, string status);
+        bool HasStatusChanged(string controller, string version, string status, string alias);
+
+        string[] UpdateAliases(List<Alias> aliases);
     }
 }

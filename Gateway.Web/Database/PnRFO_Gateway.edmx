@@ -5,6 +5,13 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="GatewayModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Alias">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
         <EntityType Name="Controller">
           <Key>
             <PropertyRef Name="Id" />
@@ -174,6 +181,7 @@
           <Parameter Name="Controller" Type="nvarchar" Mode="In" />
         </Function>
         <EntityContainer Name="GatewayModelStoreContainer">
+          <EntitySet Name="Alias" EntityType="Self.Alias" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Controller" EntityType="Self.Controller" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Payload" EntityType="Self.Payload" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="QueueSizes" EntityType="Self.QueueSizes" Schema="dbo" store:Type="Tables" />
@@ -335,8 +343,9 @@
           <Parameter Name="correllationId" Mode="In" Type="Guid" />
           </FunctionImport>
           <FunctionImport Name="spGetChildRequests" ReturnType="Collection(GatewayModel.spGetChildRequests_Result)">
-            <Parameter Name="correlationId" Mode="In" Type="Guid" />
+          <Parameter Name="correlationId" Mode="In" Type="Guid" />
           </FunctionImport>
+          <EntitySet Name="Aliases" EntityType="GatewayModel.Alias" />
         </EntityContainer>
         <ComplexType Name="spGetRequestStats_Result">
           <Property Type="DateTime" Name="Date" Nullable="true" />
@@ -517,6 +526,13 @@
           <Property Type="Int32" Name="ResultCode" Nullable="true" />
           <Property Type="String" Name="ResultMessage" Nullable="true" />
         </ComplexType>
+        <EntityType Name="Alias">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -813,6 +829,14 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="Aliases">
+            <EntityTypeMapping TypeName="GatewayModel.Alias">
+              <MappingFragment StoreEntitySet="Alias">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

@@ -25,7 +25,7 @@ namespace Gateway.Web.Controllers
         }
 
         public ActionResult Dashboard(string id)
-        {            
+        {
             var stats = _dataService.GetResponseStats(DateTime.Today.AddDays(-7));
             var model = new DashboardModel(id);
             model.TotalCalls = stats.GetTotalCalls(id);
@@ -50,15 +50,17 @@ namespace Gateway.Web.Controllers
             var model = _gateway.GetControllerVersions(id);
             model.UpdateResults = updateResults;
 
+            var versionStatuses = _dataService.GetVersionStatuses().ToArray();
+
             foreach (var version in model.Versions)
             {
-                version.ApplicableStatuses = from status in _dataService.GetVersionStatuses()
-                                             select new SelectListItem
-                                             {
-                                                 Text = status.Name,
-                                                 Value = status.Name,
-                                                 Selected = version.Status == status.Name
-                                             };
+                version.ApplicableStatuses.AddRange(versionStatuses.Select(status =>
+                    new SelectListItem
+                    {
+                        Text = status.Name,
+                        Value = status.Name,
+                        Selected = version.Status == status.Name
+                    }));
             }
             return View("Versions", model);
         }
@@ -69,6 +71,7 @@ namespace Gateway.Web.Controllers
             var controllerName = collection["id"];
             var statusUpdates = new List<VersionUpdate>();
             var versionsMarkedForDelete = new List<string>();
+            var usedAliases = new List<string>();
 
             foreach (var key in collection.Keys)
             {
@@ -79,21 +82,33 @@ namespace Gateway.Web.Controllers
                     {
                         var markedForDelete = bool.Parse(collection[key.ToString()].Split(',')[0]);
                         if (markedForDelete)
-                            statusUpdates.Add(new VersionUpdate(controllerName, versionName, "Deleted"));
+                            statusUpdates.Add(new VersionUpdate(controllerName, versionName, "Deleted", ""));
                     }
-                    else
+                    else if (key.ToString().Contains("_StatusSelection"))
                     {
                         var newStatus = collection[key.ToString()];
+                        var alias = collection[versionName + "_Alias"];
+                        if (!string.IsNullOrEmpty(alias))
+                            usedAliases.AddRange(alias.ToUpper().Split(','));
+
                         // Only add to collection if the status has changed.
-                        if (_dataService.HasStatusChanged(controllerName, versionName, newStatus))
+                        if (_dataService.HasStatusChanged(controllerName, versionName, newStatus, alias))
                         {
-                            statusUpdates.Add(new VersionUpdate(controllerName, versionName, newStatus));
+                            statusUpdates.Add(new VersionUpdate(controllerName, versionName, newStatus, alias));
                         }
                     }
                 }
             }
 
-            var results = _gateway.UpdateControllerVersionStatuses(statusUpdates);
+            string[] results;
+            if (usedAliases.Count != usedAliases.Distinct().Count())
+            {
+                results = new[] { "Only a single version can use a specific alias" };
+            }
+            else
+            {
+                results = _gateway.UpdateControllerVersionStatuses(statusUpdates);
+            }
 
             //Setup next view
             return Versions(controllerName, results);
