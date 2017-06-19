@@ -6,25 +6,81 @@
 
     <h3>How To</h3>
 
+    <hr />
     <br />
-    under construction - this page will show information on how to create a controller (for developers).
 
-    e.g.
+    <h4>Create a controller</h4>
+    <p>
+        The instructions below should be used by developers to create a new controller for deployment into
+        the Redstone infrastructure.
+    </p>
+    <br />
 
+    <strong>Step 1: Install the Visual Studio Templates</strong>
+    <p>Download the latest templates using these links:</p>
+    <a href="http://abcap-teamcity/repository/download/PricingRisk_AbCapMicroservicesFramework_Package/.lastSuccessful/Redstone.Controller.zip">Redstone.Controller.zip</a>
+    <br />
+    <a href="http://abcap-teamcity/repository/download/PricingRisk_AbCapMicroservicesFramework_Package/.lastSuccessful/Redstone.TestHarness.zip">Redstone.TestHarness.zip</a>
+    <br />
+    <br />
+    <p>
+        Place the downloaded zip files in your Visual Studio 2015 project templates location.
+        <br />This location can be found in Visual Studio 2015 under Tools --> Options --> Projects
+        and Solutions --> General --> User project templates location.
+    </p>
+    <br />
+
+    <strong>Step 2: Agree on a controller name</strong>
+    <p>
+        Some discussion over the choice of controller name is advisable because once taken the name is
+        forever used. This can create problems if one team decides to use a generic name like 'Holidays' or
+        'MarketData'. Unless the team takes full responsibility for providing ALL holiday or market data then
+        it would be best to choose a controller name that is more descriptive.
+    </p>
+    <br />
+
+    <strong>Step 3: Create GIT repository</strong>
+    <p>
+        Create a repository on Bitbucket (https://stash.barcapint.com:8443). Many controllers reside in
+        the PnR repository <a href="https://stash.barcapint.com:8443/projects/ABSA_PNR/repos/microservices/browse">here</a>.
+    </p>
+    <br />
+
+    <strong>Step 4: Create a solution using the Project Templates</strong>
     <ol>
-        <li>Step 1</li>
-        <li>Step 2: Install Visual Studio Templates</li>
-        <li>Step 3: ...</li>
+        <li>Create an empty Visual Studio solution</li>
+        <li>Add new Redstone.Controller project using a suitable name (e.g. MarketDataController)</li>
+        <li>Rebuild solution</li>
+        <li>Add new Redstone.TestHarness project called TestHarness</li>
+        <li>Add project reference in test harness to the controller project</li>
+        <li>
+            Update the following libraries to latest version in NuGet:<br />
+            - Bagl.Cib.MSF.ClientAPI<br />
+            - Bagl.Cib.MSF.ControllerTestHarness
+        </li>
+        <li>Rebuild solution</li>
+        <li>Set TestHarness as startup project</li>
+        <li>Run</li>
     </ol>
+    <br />
 
-    <p>Once you've done all that then:</p>
+    <strong>Step 5: Create Teamcity build and package controller</strong>
+    <p>See example of build and package configurations of Example Controller in TeamCity</p>
+    <br />
 
-    <ul>
-        <li>Stage your binaries to the controller repository.</li>
-        <li>Send us an <a href="mailto:CIBAfricaPricingand@barclayscapital.com">email</a>.</li>
-    </ul>
+
+    <strong>Step 6: Stage controller</strong>
+    <p>See example of stage configuration of Example Controller in TeamCity</p>
+    <br />
+
+    <strong>Step 7: Activate controller</strong>
+    <p>Visit the controller versions page to activate your new version.</p>
+    <br />
+
+    <p>Send us an <a href="mailto:CIBAfricaPricingand@barclayscapital.com">email</a> if you have any questions.</p>
 
     <p>Have fun! :-)</p>
 
     <h3>- Team Redstone</h3>
+
 </div>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using Gateway.Web.Database;
 using Gateway.Web.Models;
@@ -22,12 +23,13 @@ namespace Gateway.Web.Controllers
 
         public ActionResult Index()
         {
+            Session.RegisterLastHistoryLocation(Request.Url);
+
+            var items = _dataService.GetRecentRequests(DateTime.Today.AddDays(-1));
+
             var model = new IndexModel();
-            model.Queues = _dataService.GetControllerQueueSummary(model.HistoryStartTime);
-            foreach (var item in _gateway.GetCurrentQueues())
-            {
-                model.Current.Add(item);
-            }
+            model.Requests.AddRange(items.Take(10));
+            model.Requests.SetRelativePercentages();
             return View(model);
         }
 
