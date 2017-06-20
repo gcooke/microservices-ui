@@ -39,9 +39,9 @@
 
         <div class="row">
             <div class="container-fluid">
-                <div class="row sm">Summary</div>
-                <div class="row">Wall Clock: @Model.First().TotalTimeMs</div>
-                <div class="row">Total Time: @Model.First().TotalTimeMs</div>
+                <div class="row h4">Summary</div>
+                <div class="row h6">Wall Clock: @Model.First().TotalTimeMs</div>
+                <div class="row h6">Total Time: @Model.First().TotalTimeMs</div>
             </div>
         </div>
         <div class="row">
@@ -53,7 +53,7 @@
                     <b>Unit</b>
                 </div>
                 <div class="col-md-7 text-center">
-                    <b>Timings</b>
+                    <b>Timing</b>
                 </div>
             </div>
             @{ var i = "odd";}
@@ -79,17 +79,15 @@
                         i = "odd";
                     }
                 }
-                <div class="row @i" style="vertical-align:middle">
+                <div class="row @i" style="vertical-align:text-top">
                     <div class="col-md-2">@item.Controller</div>
                     <div class="col-md-2">@item.Size&nbsp;@item.SizeUnit</div>
-                    <div class="col-md-8 progress" style="height: 12px; margin-bottom: 0; border-radius: 0; box-shadow: none; -webkit-box-shadow:none; background-color: inherit;">
+                    <div class="col-md-8 progress" style="height: 14px; margin-bottom: 0; border-radius: 0; box-shadow: none; -webkit-box-shadow:none; background-color: inherit;">
                         <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="(@item.QueueTimeMs)" aria-valuemin="0" aria-valuemax="(@tTime)" style="width:@(queueTime)%">
-                            <span class="small">@item.QueueTimeMs</span>
-                            <span class="small">ms</span>
+                            <small>@(item.QueueTimeMs)ms</small>
                         </div>
-                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="(@item.ProcessingTimeMs)" aria-valuemin="0" aria-valuemax="(@tTime)" style="width:@(pTime)%">
-                            <span class="small">@item.ProcessingTimeMs</span>
-                            <span class="small">ms</span>
+                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="(@item.ProcessingTimeMs)" aria-valuemin="0" aria-valuemax="(@tTime)" style="width: @(pTime)%">
+                            <small>@(item.ProcessingTimeMs)ms</small>
                         </div>
                     </div>
                 </div>
