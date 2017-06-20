@@ -321,16 +321,13 @@ namespace Gateway.Web.Services
 
         public RequestPayload GetRequestTree(Guid correlationId)
         {
-            var responses = Fetch("api/Catalogue/latest/tree/{0}?includepayloads=false", correlationId.ToString());
-
-            if (!responses.Any())
-                return null;// new RequestPayload() { CorrelationId = correlationId };
-
-            var response = responses.First();
+            var response = Fetch("api/Catalogue/latest/tree/{0}?includepayloads=false", correlationId.ToString()).FirstOrDefault();
+            if (response == null)
+                return null;
 
             var namespaceManager = new XmlNamespaceManager(new NameTable());
-            namespaceManager.AddNamespace("empty", "http://schemas.datacontract.org/2004/07/Bagl.Cib.MSF.Contracts.Model.TypedResponse");
-            var xml = response.Document.XPathSelectElement("/empty:Response/empty:Payload/Request", namespaceManager).ToString();
+            namespaceManager.AddNamespace("namespace", Constants.RequestPayloadNamespace);
+            var xml = response.Document.XPathSelectElement("/namespace:Response/namespace:Payload/Request", namespaceManager).ToString();
 
             var serializer = new DataContractSerializer(typeof(RequestPayload));
 
@@ -349,6 +346,7 @@ namespace Gateway.Web.Services
             }
 
             public string Server { get; set; }
+
             public XDocument Document { get; set; }
         }
     }

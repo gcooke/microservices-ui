@@ -323,6 +323,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\Calculations.cs" />
     <Compile Include="Utils\Compression.cs" />
+    <Compile Include="Utils\Constants.cs" />
     <Compile Include="Utils\SerializationEx.cs" />
     <Compile Include="Utils\SessionEx.cs" />
     <Compile Include="Utils\XmlExtensions.cs" />
