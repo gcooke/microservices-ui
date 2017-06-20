@@ -1,34 +1,66 @@
-﻿@using Gateway.Web.Database
-@using Gateway.Web.Models
-@using Gateway.Web.Models.Controller
+﻿@using Gateway.Web.Helpers
 @using Gateway.Web.Models.Request
-@using Gateway.Web.Utils
-@using Newtonsoft.Json
-@using Version = Gateway.Web.Models.Controller.Version
+
+@model List<RequestPayload>
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
     ViewBag.Title = "Request";
     ViewBag.Current = "Timings";
+    
 }
-@{ Html.RenderPartial("_RequestNav", (RequestPayload)Model); }
+@{ Html.RenderPartial("_RequestNav", (RequestPayload)@Model.First()); }
 
-<div id="page-content-wrapper" ng-controller="requestTimingsController">
+<div id="page-content-wrapper">
     <div class="hero-unit">
+
         <h3>Timings</h3>
-        <div class="row" align="center">
-            <img ng-show="dataLoading === true" alt="Loading  Content" src="~/Content/img/ajax-loader.gif" />
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div ui-grid="gridOptions"
-                     ui-grid-tree-view class="grid"
-                     ui-grid-auto-resize></div>
+        <style>
+            .progress-timeline {
+                height: 20px;
+                margin-bottom: 20px;
+                overflow: hidden;
+                background-color: white;
+                border-radius: 0px;
+            }
+
+
+
+            ul {
+                list-style-type: none;
+            }
+
+            li {
+                list-style-type: none;
+            }
+
+            #tree .subItem:nth-child(odd) {
+                background-color: #a9a9a9;
+            }
+
+            #tree .subItem:nth-child(even) {
+                background-color: whitesmoke;
+            }
+        </style>
+
+    @(Html.TreeView(Model)
+    .EmptyContent("No requests returned!")
+    .Children(m => m.ChildRequests)
+    .HtmlAttributes(new { id = "tree"})
+    .ChildrenHtmlAttributes(new { @class = "subItem" })
+    .ItemText(m => m.Controller)
+    .ItemTemplate(
+    @<text>
+        <div class="container-fluid">
+            <div class="col-md-2">@item.Controller</div>
+            <div class="col-md-3">@item.Size &nbsp; @item.SizeUnit</div>
+            <div class="col-md-7 progress-timeline">
+                <div class="progress-bar progress-bar-success" role="progressbar" style="width: 70%">
+                    &nbsp;
+                </div>
+                <div class="progress-bar progress-bar-danger" role="progressbar" style="width: 30%">
+                    &nbsp;
+                </div>
             </div>
         </div>
-    </div>
-</div>
-@section scripts{
-    <script src="~/app/modules/app.js"></script>
-    <script src="~/app/services/requestTimingsService.js"></script>
-    <script src="~/app/controllers/requestTimingsController.js"></script>
-}
+    </text>)
+        )
