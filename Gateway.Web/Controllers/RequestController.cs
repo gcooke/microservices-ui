@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Gateway.Web.Database;
@@ -66,25 +67,15 @@ namespace Gateway.Web.Controllers
 
         public ActionResult Timings(string correlationId)
         {
-            //TODO: Implement Angular Routing/Implement in one request
-            TempData.Remove(CurrentRequestCorrelationId);
-            TempData.Add(CurrentRequestCorrelationId, correlationId);
-            return View(new RequestPayload { CorrelationId = Guid.Parse(correlationId) });
-        }
+            var list = new List<RequestPayload>();
 
-        public JsonResult GetRequestTree()
-        {
-            //TODO: Implement Angular Routing
-            object id;
-            if (!TempData.TryGetValue(CurrentRequestCorrelationId, out id))
-                return Json(null, JsonRequestBehavior.AllowGet);
+            Guid id;
+            if (!Guid.TryParse(Convert.ToString(correlationId), out id))
+                return View(list);
 
-            Guid correlationId;
-            if (!Guid.TryParse(Convert.ToString(id), out correlationId))
-                return Json(null, JsonRequestBehavior.AllowGet);
-
-            var data = _gateway.GetRequestTree(correlationId);
-            return Json(data, JsonRequestBehavior.AllowGet);
+            var payload = _gateway.GetRequestTree(id);
+            list.Add(payload);
+            return View(list);
         }
     }
 }
