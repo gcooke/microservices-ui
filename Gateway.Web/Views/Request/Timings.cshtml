@@ -6,61 +6,94 @@
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
     ViewBag.Title = "Request";
     ViewBag.Current = "Timings";
-    
 }
 @{ Html.RenderPartial("_RequestNav", (RequestPayload)@Model.First()); }
+<style>
+    ul {
+        list-style-type: none;
+        padding-left: 0.3em;
+    }
+
+    li {
+        list-style-type: none;
+        padding-left: 0.3em;
+    }
+
+    .odd {
+        background-color: whitesmoke;
+    }
+
+    .even {
+        background-color: white;
+    }
+</style>
 
 <div id="page-content-wrapper">
     <div class="hero-unit">
 
-        <h3>Timings</h3>
-        <style>
-            .progress-timeline {
-                height: 20px;
-                margin-bottom: 20px;
-                overflow: hidden;
-                background-color: white;
-                border-radius: 0px;
-            }
+        <div class="row"><h3>Timings</h3></div>
 
+        <div class="row">
+            <h6>All timings relating to original request {@Model.First().CorrelationId}</h6>
+        </div>
 
-
-            ul {
-                list-style-type: none;
-            }
-
-            li {
-                list-style-type: none;
-            }
-
-            #tree .subItem:nth-child(odd) {
-                background-color: #a9a9a9;
-            }
-
-            #tree .subItem:nth-child(even) {
-                background-color: whitesmoke;
-            }
-        </style>
-
-    @(Html.TreeView(Model)
-    .EmptyContent("No requests returned!")
-    .Children(m => m.ChildRequests)
-    .HtmlAttributes(new { id = "tree"})
-    .ChildrenHtmlAttributes(new { @class = "subItem" })
-    .ItemText(m => m.Controller)
-    .ItemTemplate(
-    @<text>
-        <div class="container-fluid">
-            <div class="col-md-2">@item.Controller</div>
-            <div class="col-md-3">@item.Size &nbsp; @item.SizeUnit</div>
-            <div class="col-md-7 progress-timeline">
-                <div class="progress-bar progress-bar-success" role="progressbar" style="width: 70%">
-                    &nbsp;
-                </div>
-                <div class="progress-bar progress-bar-danger" role="progressbar" style="width: 30%">
-                    &nbsp;
-                </div>
+        <div class="row">
+            <div class="container-fluid">
+                <div class="row h4">Summary</div>
+                <div class="row h6">Wall Clock: @Model.First().TotalTimeMs</div>
+                <div class="row h6">Total Time: @Model.First().TotalTimeMs</div>
             </div>
         </div>
-    </text>)
-        )
+        <div class="row">
+            <div class="row" style="background-color: whitesmoke;">
+                <div class="col-md-2 text-left">
+                    <b>Controller</b>
+                </div>
+                <div class="col-md-3 text-center">
+                    <b>Unit</b>
+                </div>
+                <div class="col-md-7 text-center">
+                    <b>Timing</b>
+                </div>
+            </div>
+            @{ var i = "odd";}
+            @(Html.TreeView(Model)
+                  .EmptyContent("No requests returned!")
+                  .Children(m => m.ChildRequests)
+                  .HtmlAttributes(new { id = "tree" })
+                  .ChildrenHtmlAttributes(new { @class = "subItem" })
+                  .ItemText(m => m.Controller)
+                  .ItemTemplate(
+            @<text>
+                @{
+                    var tTime = Convert.ToDecimal(@Model.First().TotalTimeMs);
+                    if (tTime == 0m) { tTime = 1m; }
+                    var queueTime = decimal.Round(decimal.Divide((item.QueueTimeMs * 100), tTime));
+                    var pTime = decimal.Round(decimal.Divide((item.ProcessingTimeMs * 100), tTime));
+                    if (i == "odd")
+                    {
+                        i = "even";
+                    }
+                    else
+                    {
+                        i = "odd";
+                    }
+                }
+                <div class="row @i" style="vertical-align:text-top">
+                    <div class="col-md-2">@item.Controller</div>
+                    <div class="col-md-2">@item.Size&nbsp;@item.SizeUnit</div>
+                    <div class="col-md-8 progress" style="height: 14px; margin-bottom: 0; border-radius: 0; box-shadow: none; -webkit-box-shadow:none; background-color: inherit;">
+                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="(@item.QueueTimeMs)" aria-valuemin="0" aria-valuemax="(@tTime)" style="width:@(queueTime)%">
+                            <small>@(item.QueueTimeMs)ms</small>
+                        </div>
+                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="(@item.ProcessingTimeMs)" aria-valuemin="0" aria-valuemax="(@tTime)" style="width: @(pTime)%">
+                            <small>@(item.ProcessingTimeMs)ms</small>
+                        </div>
+                    </div>
+                </div>
+            </text>)
+            )
+        </div>
+
+    </div>
+</div>

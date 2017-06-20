@@ -67,15 +67,13 @@ namespace Gateway.Web.Controllers
 
         public ActionResult Timings(string correlationId)
         {
-            var list = new List<RequestPayload>();
-
+            //correlationId = "918f81cf-edf4-4f74-8ce2-d37d37abfa46";
             Guid id;
             if (!Guid.TryParse(Convert.ToString(correlationId), out id))
-                return View(list);
+                return View();
 
             var payload = _gateway.GetRequestTree(id);
-            list.Add(payload);
-            return View(list);
+            return View(new List<RequestPayload> { payload });
         }
     }
 }
