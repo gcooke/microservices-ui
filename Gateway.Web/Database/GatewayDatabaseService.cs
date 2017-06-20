@@ -23,11 +23,24 @@ namespace Gateway.Web.Database
                 // Get stats
                 var stats = new ResponseStats(database.spGetResponseStatsAll(start));
 
-                foreach (var controller in database.Controllers)
+                foreach (var controller in database.Controllers.OrderBy(c => c.Name))
                 {
                     var model = controller.ToModel(stats);
                     result.Add(model);
                 }
+            }
+
+            // Insert alphabet
+            var previous = ' ';
+            for (int index = 0; index < result.Count; index++)
+            {
+                var current = result[index].Name[0];
+                if (current != previous)
+                {
+                    result.Insert(index, new ControllerStats() { Name = current.ToString(), IsSeperator = true });
+                    index++;
+                }
+                previous = current;
             }
 
             return result;
@@ -338,7 +351,7 @@ namespace Gateway.Web.Database
                         item.Name = updated.Name;
                     }
                 }
-                
+
                 // Check for inserts
                 var add = aliases.FirstOrDefault(a => a.Id == 0);
                 if (add != null && !string.IsNullOrEmpty(add.Name))

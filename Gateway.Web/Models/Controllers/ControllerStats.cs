@@ -13,6 +13,7 @@ namespace Gateway.Web.Models.Controllers
         public int TotalCalls { get; set; }
         public int TotalErrors { get; set; }
         public string AverageResponse { get; set; }
+        public bool IsSeperator { get; set; }
 
         public List<InfoItem> VersionSummary { get; private set; }
     }
