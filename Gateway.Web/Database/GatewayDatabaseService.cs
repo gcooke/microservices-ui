@@ -101,9 +101,24 @@ namespace Gateway.Web.Database
             var result = new AliasesModel();
             using (var database = new GatewayEntities())
             {
-                foreach (var item in database.Aliases)
+                var versions = database.Versions.Where(v => v.Status.Name != "Deleted").ToArray();
+                foreach (var version in versions)
                 {
-                    result.Items.Add(item);
+                    if (string.IsNullOrEmpty(version.Alias)) continue;
+
+                    foreach (var aliasName in version.Alias.Split(','))
+                    {
+                        var alias = result.GetOrAdd(aliasName);
+                        alias.Controllers.Add(new ControllerVersion(version.Controller.Name, version.Version1, version.Status.Name, version.Status.IsActive));
+                    }
+                }
+
+                var latestGroups = versions.Where(v => v.StatusId == 2).GroupBy(v => v.ControllerId);
+                var latest = result.GetOrAdd(" Latest");
+                foreach (var group in latestGroups)
+                {
+                    var version = group.OrderBy(v => System.Version.Parse(v.Version1)).Last();
+                    latest.Controllers.Add(new ControllerVersion(version.Controller.Name, version.Version1, version.Status.Name, version.Status.IsActive));
                 }
             }
             return result;

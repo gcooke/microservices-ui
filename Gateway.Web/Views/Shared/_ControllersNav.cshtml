@@ -29,17 +29,17 @@
             </a>
         </li>   
         <li>
+            <a href="~/Controllers/Aliases/"
+               class="@(ViewBag.Current == "Aliases" ? "active" : "")">
+                <span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;Aliases
+            </a>
+        </li>
+        <li>
             <a href="~/Controllers/Workers/"
                class="@(ViewBag.Current == "Workers" ? "active" : "")">
                 <span class="glyphicon glyphicon-cloud"></span>&nbsp;&nbsp;Workers
             </a>
-        </li>
-        @*<li>
-            <a href="~/Controllers/Aliases/"
-               class="@(ViewBag.Current == "Aliases" ? "active" : "")">
-                <span class="glyphicon glyphicon-th-list"></span>&nbsp;&nbsp;Aliases
-            </a>
-        </li>*@
+        </li>       
         <li>
             <a href="~/Controllers/Queues/"
                class="@(ViewBag.Current == "Queues" ? "active" : "")">
