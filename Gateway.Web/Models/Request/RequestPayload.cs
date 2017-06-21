@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Xml.Serialization;
+
 
 namespace Gateway.Web.Models.Request
 {
     [DataContract(Name = "Request", Namespace = "")]
+    [XmlType("Request")]
     public class RequestPayload
     {
         [DataMember(Order = 1)]
@@ -39,6 +42,8 @@ namespace Gateway.Web.Models.Request
 
         [DataMember(Name = "ChildRequests", Order = 11)]
         public ChildRequests ChildRequests { get; set; }
+
+        public int StartTimeMs { get; set; }
     }
 
     [CollectionDataContract(Name = "ChildRequests", ItemName = "Request", Namespace = "")]

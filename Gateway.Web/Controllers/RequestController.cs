@@ -73,7 +73,8 @@ namespace Gateway.Web.Controllers
                 return View();
 
             var payload = _gateway.GetRequestTree(id);
-            return View(new List<RequestPayload> { payload });
+            var model = new Timings(payload);
+            return View(model);
         }
     }
 }

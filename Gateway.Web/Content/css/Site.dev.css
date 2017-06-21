@@ -153,10 +153,25 @@ pre {
     color: #000;
 }
 
+.pre-progress-bar {
+    float: right;
+    margin-right: 5px;
+    font-size: 10px;
+    line-height: 10px;
+    color: #000;
+}
+
 .post-progress-bar {
     float: left;
     margin-left: 5px;
     font-size: 10px;
     line-height: 10px;
     color: #000;
+}
+
+.progress-bar-none {
+  background-color: transparent;
+  -webkit-box-shadow: none;
+  text-align: right;
+  box-shadow: none;
 }

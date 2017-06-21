@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Runtime.Serialization;
 using System.Xml.Linq;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Controllers;
 using Gateway.Web.Utils;
 using System.Threading.Tasks;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 using Bagl.Cib.MIT.IoC;
@@ -327,14 +324,10 @@ namespace Gateway.Web.Services
 
             var namespaceManager = new XmlNamespaceManager(new NameTable());
             namespaceManager.AddNamespace("namespace", Constants.RequestPayloadNamespace);
-            var xml = response.Document.XPathSelectElement("/namespace:Response/namespace:Payload/Request", namespaceManager).ToString();
+            var xml = response.Document.XPathSelectElement("/namespace:Response/namespace:Payload/Request", namespaceManager);
 
-            var serializer = new DataContractSerializer(typeof(RequestPayload));
-
-            using (var ms = new MemoryStream(Encoding.UTF8.GetBytes(xml)))
-            {
-                return (RequestPayload)serializer.ReadObject(ms);
-            }
+            if (xml == null) return new RequestPayload() { ChildRequests = new ChildRequests() };
+            return xml.DeserializeUsingDataContract<RequestPayload>();
         }
 
         private class ServerResponse

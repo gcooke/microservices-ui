@@ -19,6 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PROD", "PROD", "{000A16F4-8
 		Configuration\PROD\connectionstrings.config = Configuration\PROD\connectionstrings.config
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gateway.Web.Tests", "Gateway.Web.Tests\Gateway.Web.Tests.csproj", "{089E91A5-ABEB-4DD6-B36F-1AAF8B4C5B4E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,10 @@ Global
 		{0320F0B5-EF96-4D8C-8F7E-32460EC5ED62}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0320F0B5-EF96-4D8C-8F7E-32460EC5ED62}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0320F0B5-EF96-4D8C-8F7E-32460EC5ED62}.Release|Any CPU.Build.0 = Release|Any CPU
+		{089E91A5-ABEB-4DD6-B36F-1AAF8B4C5B4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{089E91A5-ABEB-4DD6-B36F-1AAF8B4C5B4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{089E91A5-ABEB-4DD6-B36F-1AAF8B4C5B4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{089E91A5-ABEB-4DD6-B36F-1AAF8B4C5B4E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
