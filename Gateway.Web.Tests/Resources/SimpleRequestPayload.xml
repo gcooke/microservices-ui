@@ -1,0 +1,13 @@
+﻿<Request>
+  <CorrelationId>9122d450-5908-497a-8696-875fba7b92c7</CorrelationId>
+  <ParentCorrelationId>00000000-0000-0000-0000-000000000000</ParentCorrelationId>
+  <Controller>riskbatch</Controller>
+  <Version>1.1.533</Version>
+  <StartUtc>2017-06-20T18:00:06.033</StartUtc>
+  <EndUtc>2017-06-20T18:00:44.617</EndUtc>
+  <Succesfull>true</Succesfull>
+  <Size p2:nil="true" xmlns:p2="http://www.w3.org/2001/XMLSchema-instance" />
+  <QueueTimeMs>11121</QueueTimeMs>
+  <ProcessingTimeMs>27461</ProcessingTimeMs>
+  <TotalTimeMs>38582</TotalTimeMs>
+</Request>
