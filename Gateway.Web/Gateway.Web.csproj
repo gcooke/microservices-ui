@@ -305,6 +305,7 @@
     </Compile>
     <Compile Include="Models\Controller\Version.cs" />
     <Compile Include="Models\Home\IndexModel.cs" />
+    <Compile Include="Models\Request\Timings.cs" />
     <Compile Include="Models\User\HistoryModel.cs" />
     <Compile Include="Registrations.cs" />
     <Compile Include="Services\ControllerInformation.cs" />
@@ -324,6 +325,7 @@
     <Compile Include="Utils\Calculations.cs" />
     <Compile Include="Utils\Compression.cs" />
     <Compile Include="Utils\Constants.cs" />
+    <Compile Include="Utils\DataContractSerializationEx.cs" />
     <Compile Include="Utils\SerializationEx.cs" />
     <Compile Include="Utils\SessionEx.cs" />
     <Compile Include="Utils\XmlExtensions.cs" />
