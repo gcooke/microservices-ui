@@ -9,110 +9,104 @@
 }
 @{ Html.RenderPartial("_RequestNav", (RequestPayload)@Model.Root); }
 <style>
-    ul {
-        list-style-type: none;
-        padding-left: 0.3em;
-    }
-
-    li {
-        list-style-type: none;
-        padding-left: 0.3em;
-    }
-
-    .odd {
+    .row-grey {
         background-color: whitesmoke;
     }
 
-    .even {
+    .row-white {
         background-color: white;
+    }
+
+
+    treeview li, ul {
+        list-style: none;
+        padding-left: 0.3em;
     }
 </style>
 
 <div id="page-content-wrapper">
     <div class="hero-unit">
-
-        <div class="row"><h3>Timings</h3></div>
-
-        <div class="row">
-            <h6>All timings relating to original request {@Model.Root.CorrelationId}</h6>
-        </div>
-
-        <div class="row">
-            <div class="container-fluid">
-                <div class="row h4">Summary</div>
-                <div class="row h6">Wall Clock: @Model.Root.TotalTimeMs</div>
-                <div class="row h6">Total Time: @Model.Root.TotalTimeMs</div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="row" style="background-color: whitesmoke;">
-                <div class="col-md-2 text-left">
-                    <b>Controller</b>
-                </div>
-                <div class="col-md-3 text-center">
-                    <b>Unit</b>
-                </div>
-                <div class="col-md-7 text-center">
-                    <b>Timing</b>
-                </div>
-            </div>
-            @{ var i = "odd";}
-            @(Html.TreeView(Model.Items)
-                  .EmptyContent("No requests returned!")
-                  .Children(m => m.ChildRequests)
-                  .HtmlAttributes(new { id = "tree" })
-                  .ChildrenHtmlAttributes(new { @class = "subItem" })
-                  .ItemText(m => m.Controller)
-                  .ItemTemplate(
-            @<text>
-                @{
-                    var tTime = Model.TotalTimeMs;
-                    if (tTime == 0m) { tTime = 1m; }
-                    var startTime = decimal.Round(decimal.Divide((item.StartTimeMs * 100), tTime));
-                    var queueTime = decimal.Round(decimal.Divide((item.QueueTimeMs * 100), tTime));
-                    var pTime = Math.Max(1, decimal.Round(decimal.Divide((item.ProcessingTimeMs * 100), tTime)));
-                    var showLabelsBefore = (queueTime < 10 || pTime < 10) && startTime > 50;
-                    var showLabelsAfter = (queueTime < 10 || pTime < 10) && !showLabelsBefore;
-                    if (i == "odd")
-                    {
-                        i = "even";
-                    }
-                    else
-                    {
-                        i = "odd";
-                    }
+        <div class="container-fluid">
+            <div class="row h3">Timings</div>
+            <div class="row h6">All timings relating to original request (@Model.Root.CorrelationId)</div>
+            <div class="row">&nbsp;</div>
+            @*<div class="row h4 row-grey" data-toggle="collapse" data-target="#summary"><a>Summary</a></div>*@
+            <div class="row h4 row-grey">Summary</div>
+            <div id="summary" @*class="collapse"*@>
+                <div class="row h6">Wall Clock: @Model.WallClock</div>
+                <div class="row h6">Total Time: @Model.TotalTime</div>
+                <div class="row h6">&nbsp;</div>
+                @foreach (var summary in Model.ControllerSummaries)
+                {
+                    <div class="row h6">@summary.Controller: @summary.PrettyTotalTimeMs (@summary.PrettyAverageTimeMs)</div>
                 }
-                <div class="row @i" style="vertical-align:text-top">
-                    <div class="col-md-2">@item.Controller</div>
-                    <div class="col-md-2">@item.Size&nbsp;@item.SizeUnit</div>
-                    <div class="col-md-8 progress" style="height: 14px; margin-bottom: 0; border-radius: 0; box-shadow: none; -webkit-box-shadow: none; background-color: inherit;">
-                        <div class="progress-bar progress-bar-none" role="progressbar" aria-valuenow="(@item.StartTimeMs)" aria-valuemin="0" aria-valuemax="(@tTime)" style="width: @(startTime)%">
-                            @if (showLabelsBefore)
-                            {
-                                <small class="pre-progress-bar">@(item.QueueTimeMs)ms / @(item.ProcessingTimeMs)ms</small>
-                            }
-                        </div>
-                        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="(@item.QueueTimeMs)" aria-valuemin="0" aria-valuemax="(@tTime)" style="width: @(queueTime)%">
-                            @if (!showLabelsAfter && !showLabelsBefore)
-                            {
-                                <small>@(item.QueueTimeMs)ms</small>
-                            }
-                        </div>
-                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="(@item.ProcessingTimeMs)" aria-valuemin="0" aria-valuemax="(@tTime)" style="width: @(pTime)%">
-                            @if (!showLabelsAfter && !showLabelsBefore)
-                            {
-                                <small>@(item.ProcessingTimeMs)ms</small>
-                            }
-                        </div>
-                        @if (showLabelsAfter)
-                        {
-                            <small class="post-progress-bar">@(item.QueueTimeMs)ms / @(item.ProcessingTimeMs)ms</small>
-                        }
+            </div>
+            <div class="row h6">&nbsp;</div>
+            <div class="row h4 row-grey">Details</div>
+            <div class="treeview">
+                @{
+                    var rowBackgroundStyle = "row-grey";
+                }
+
+                <div class="row row-grey">
+                    <div class="col-md-2 text-left">
+                        <b>Controller</b>
+                    </div>
+                    <div class="col-md-3 text-left">
+                        <b>Unit</b>
+                    </div>
+                    <div class="col-md-7 text-center">
+                        <b>Timing</b>
                     </div>
                 </div>
-            </text>)
-            )
-        </div>
 
+                @(Html.TreeView(Model.Items)
+                      .EmptyContent("No requests returned!")
+                      .Children(m => m.ChildRequests)
+                      .ChildrenHtmlAttributes(new { @class = "subItem" })
+                      .ItemText(m => m.Controller)
+                      .ItemTemplate(
+                @<text>
+                    @{
+                        var showLabelsBefore = (item.QueueTime < 10 || item.ProcessingTime < 10) && item.StartTime > 50;
+                        var showLabelsAfter = (item.QueueTime < 10 || item.ProcessingTime < 10) && !showLabelsBefore;
+                        rowBackgroundStyle = rowBackgroundStyle == "row-grey" ? "row-white" : "row-grey";
+                    }
+                    <div class="row @rowBackgroundStyle payloadExpand" style="vertical-align: text-top">
+                        <div class="col-md-2">@item.Controller</div>
+                        <div class="col-md-2">@item.Size&nbsp;@item.SizeUnit</div>
+                        <div class="col-md-7 progress" style="height: 14px; margin-bottom: 0; border-radius: 0; box-shadow: none; -webkit-box-shadow: none; background-color: inherit;">
+
+                            <div class="progress-bar progress-bar-none" role="progressbar" aria-valuenow="(@item.StartTimeMs)" aria-valuemin="0" aria-valuemax="(@Model.TotalTimeMs)" style="width: @(item.StartTime)%">
+                                @if (showLabelsBefore)
+                                {
+                                    <small class="pre-progress-bar">@(item.QueueTimeMs)ms / @(item.ProcessingTimeMs)ms</small>
+                                }
+                            </div>
+
+                            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="(@item.QueueTimeMs)" aria-valuemin="0" aria-valuemax="(@Model.TotalTimeMs)" style="width: @(item.QueueTime)%">
+                                @if (!showLabelsAfter && !showLabelsBefore)
+                                {
+                                    <small>@(item.QueueTimeMs)ms</small>
+                                }
+                            </div>
+
+                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="(@item.ProcessingTimeMs)" aria-valuemin="0" aria-valuemax="(@Model.TotalTimeMs)" style="width: @(item.ProcessingTime)%">
+                                @if (!showLabelsAfter && !showLabelsBefore)
+                                {
+                                    <small>@(item.ProcessingTimeMs)ms</small>
+                                }
+                            </div>
+
+                            @if (showLabelsAfter)
+                            {
+                                <small class="post-progress-bar">@(item.QueueTimeMs)ms / @(item.ProcessingTimeMs)ms</small>
+                            }
+                        </div>
+                    </div>
+                </text>)
+                )
+            </div>
+        </div>
     </div>
 </div>
