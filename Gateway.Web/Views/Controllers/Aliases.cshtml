@@ -1,5 +1,4 @@
 ﻿@using System.Xml.Schema
-@using Gateway.Web.Database
 @using Gateway.Web.Models
 @using Gateway.Web.Models.Controllers
 @{
@@ -13,51 +12,35 @@
     <div class="hero-unit">
 
         <h3>Aliases</h3>
-
-        @{
-            if (Model.UpdateResults != null)
-            {
-                foreach (var result in Model.UpdateResults)
-                {
-                    <strong style="color: darkblue">@result</strong><br />
-                }
-                <br />
-            }
-        }
         <br />
 
         <div id="containerx bulk">
-            @using (Html.BeginForm("UpdateAliases", "Controllers", FormMethod.Post, new { enctype = "multipart/form-data" }))
+
+            @foreach (Alias group in Model.Items)
             {
+                <h4>@group.Name</h4>
 
                 <table style="width: 100%; white-space: nowrap" class="datatable">
                     <thead>
                         <tr>
-                            <td>Id</td>
-                            <td>Alias</td>
-                            <td>Delete</td>
+                            <td style="width: 30%">Controller</td>
+                            <td style="width: 40%">Version</td>
+                            <td>Status</td>
                         </tr>
                     </thead>
 
-                    @foreach (Alias item in Model.Items)
+                    @foreach (ControllerVersion version in group.Controllers)
                     {
-                        <tr>
-                            <td>@item.Id</td>
-                            <td>@Html.TextBox(@item.Id + "_Name", item.Name, new { @class = "form-control", })</td>
-                            <td>@Html.CheckBox(@item.Id + "_Delete")</td>
+                        <tr style="background: @(version.IsActive ? "transparent" : "yellow")">
+                            <td><a href="~/Controller/Dashboard/@version.Name" class="hoverlink">@version.Name</a></td>
+                            <td><a href="~/Controller/Versions/@version.Name" class="hoverlink">@version.Version</a></td>
+                            <td>@version.Status</td>
                         </tr>
                     }
-
-                    <tr>
-                        <td><i>new</i></td>
-                        <td>@Html.TextBox("0_Name", "", new { @class = "form-control", })</td>
-                        <td></td>
-                    </tr>
                 </table>
-
                 <br />
-                <input id="UpdateBtn" type="submit" value="Update All" />
             }
+
         </div>
         <br />
     </div>
