@@ -70,6 +70,7 @@
                     if (tTime == 0m) { tTime = 1m; }
                     var queueTime = decimal.Round(decimal.Divide((item.QueueTimeMs * 100), tTime));
                     var pTime = decimal.Round(decimal.Divide((item.ProcessingTimeMs * 100), tTime));
+                    var showLabelsAfter = queueTime < 20 || pTime < 20; 
                     if (i == "odd")
                     {
                         i = "even";
@@ -83,12 +84,22 @@
                     <div class="col-md-2">@item.Controller</div>
                     <div class="col-md-2">@item.Size&nbsp;@item.SizeUnit</div>
                     <div class="col-md-8 progress" style="height: 14px; margin-bottom: 0; border-radius: 0; box-shadow: none; -webkit-box-shadow:none; background-color: inherit;">
-                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="(@item.QueueTimeMs)" aria-valuemin="0" aria-valuemax="(@tTime)" style="width:@(queueTime)%">
-                            <small>@(item.QueueTimeMs)ms</small>
+                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="(@item.QueueTimeMs)" aria-valuemin="0" aria-valuemax="(@tTime)" style="width: @(queueTime)%">
+                            @if (!showLabelsAfter)
+                            {
+                                <small>@(item.QueueTimeMs)ms</small>
+                            }
                         </div>
                         <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="(@item.ProcessingTimeMs)" aria-valuemin="0" aria-valuemax="(@tTime)" style="width: @(pTime)%">
-                            <small>@(item.ProcessingTimeMs)ms</small>
+                            @if (!showLabelsAfter)
+                            {
+                                <small>@(item.ProcessingTimeMs)ms</small>
+                            }
                         </div>
+                        @if (showLabelsAfter)
+                        {
+                            <small class="post-progress-bar">@(item.QueueTimeMs)ms / @(item.ProcessingTimeMs)ms</small>
+                        }
                     </div>
                 </div>
             </text>)
