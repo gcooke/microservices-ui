@@ -118,6 +118,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -129,6 +130,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\LargeRequestPayload.xml" />
     <EmbeddedResource Include="Resources\SmallRequestPayload.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SimpleRequestPayload.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

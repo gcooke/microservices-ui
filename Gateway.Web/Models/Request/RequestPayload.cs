@@ -44,6 +44,12 @@ namespace Gateway.Web.Models.Request
         public ChildRequests ChildRequests { get; set; }
 
         public int StartTimeMs { get; set; }
+
+        public decimal QueueTime { get; set; }
+
+        public decimal ProcessingTime { get; set; }
+
+        public decimal StartTime { get; set; }
     }
 
     [CollectionDataContract(Name = "ChildRequests", ItemName = "Request", Namespace = "")]
