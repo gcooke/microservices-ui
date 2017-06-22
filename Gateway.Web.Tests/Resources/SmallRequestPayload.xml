@@ -41,5 +41,19 @@
       <SizeUnit>Trades</SizeUnit>
       <ChildRequests />
     </Request>
+    <Request>
+      <CorrelationId>dd86c9b8-68a0-4118-ab48-27a3b09d47c4</CorrelationId>
+      <ParentCorrelationId>9122d450-5908-497a-8696-875fba7b92c7</ParentCorrelationId>
+      <Controller>tradestore</Controller>
+      <Version>1.0.46</Version>
+      <StartUtc>2017-06-20T18:00:25.75</StartUtc>
+      <Succesfull>true</Succesfull>
+      <Size>63</Size>
+      <QueueTimeMs>1357</QueueTimeMs>
+      <ProcessingTimeMs>5929</ProcessingTimeMs>
+      <TotalTimeMs>7286</TotalTimeMs>
+      <SizeUnit>Trades</SizeUnit>
+      <ChildRequests />
+    </Request>
   </ChildRequests>
 </Request>

@@ -18,16 +18,16 @@ namespace Gateway.Web.Models.Request
         public RequestPayload Root { get; private set; }
 
         public List<RequestPayload> Items { get; private set; }
-        public IEnumerable<RequestPayload> EntireTree { get; private set; }
+
+        private IEnumerable<RequestPayload> EntireTree { get;  set; }
 
         public IEnumerable<ControllerSummary> ControllerSummaries { get; private set; }
 
         public decimal TotalTimeMs { get; private set; }
 
-        //Include Parent total?? Or is that the all the child requests summed?
-        public string TotalTime { get { return TimeSpan.FromMilliseconds(EntireTree.Sum(t => (DateTime.Parse(t.EndUtc) - DateTime.Parse(t.StartUtc)).TotalMilliseconds)).Humanize(2); } }
+        public string TotalTime { get { return TimeSpan.FromMilliseconds(EntireTree.Where(t => !string.IsNullOrEmpty(t.EndUtc)).Sum(t => (DateTime.Parse(t.EndUtc) - DateTime.Parse(t.StartUtc)).TotalMilliseconds)).Humanize(); } }
 
-        public string WallClock { get { return TimeSpan.FromMilliseconds((double)TotalTimeMs).Humanize(2); } }
+        public string WallClock { get { return TimeSpan.FromMilliseconds((double)TotalTimeMs).Humanize(); } }
 
         private void CalculateTotals()
         {
@@ -59,7 +59,7 @@ namespace Gateway.Web.Models.Request
             ControllerSummaries = EntireTree.GroupBy(p => p.Controller).Select(p =>
             {
                 var totalTimeMs = p.Sum(x => x.ProcessingTimeMs + x.QueueTimeMs);
-                var averageTimeMs = decimal.Divide(totalTimeMs, Math.Max(1, p.Count())); //sum(x => x.Size.HasValue? Size.Value:0) or count??
+                var averageTimeMs = decimal.Divide(totalTimeMs, Math.Max(1, p.Count()));
 
                 return new ControllerSummary(p.Key, totalTimeMs, (double)averageTimeMs);
             });
@@ -95,11 +95,11 @@ namespace Gateway.Web.Models.Request
 
             public double AverageTimeMs { get; private set; }
 
-            public string PrettyTotalTimeMs { get { return TimeSpan.FromMilliseconds(TotalTimeMs).Humanize(2); } }
+            public string PrettyTotalTimeMs { get { return TimeSpan.FromMilliseconds(TotalTimeMs).Humanize(); } }
 
             public string PrettyAverageTimeMs
             {
-                get { return TimeSpan.FromMilliseconds(AverageTimeMs).Humanize(2); }
+                get { return TimeSpan.FromMilliseconds(AverageTimeMs).Humanize(); }
             }
         }
     }
