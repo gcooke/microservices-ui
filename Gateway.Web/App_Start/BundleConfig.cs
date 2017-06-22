@@ -22,14 +22,11 @@ namespace Gateway.Web
                 "~/Content/js/bootstrap.js",
                 "~/Content/js/respond.js"));
 
-            var dataTableCss = string.Format("~/Content/css/datatable.{0}.css", environment);
-            var siteCss = string.Format("~/Content/css/Site.{0}.css", environment);
-
             bundles.Add(new StyleBundle("~/styles/css").Include(
                 "~/Content/css/bootstrap.css",
                 "~/Content/css/simple-sidebar.css",
-                dataTableCss,
-                siteCss
+                "~/Content/css/datatable.css",
+                "~/Content/css/Site.css"
                 ));
         }
     }

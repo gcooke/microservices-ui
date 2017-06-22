@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using Gateway.Web.Models.Request;
 using Gateway.Web.Utils;
@@ -24,7 +23,7 @@ namespace Gateway.Web.Tests.Models.Request
             var large = GetLargePayload();
             var simple = GetSimplePayload();
 
-            Assert.AreEqual(2, small.Root.ChildRequests.Count);
+            Assert.AreEqual(3, small.Root.ChildRequests.Count);
             Assert.AreEqual(144, large.Root.ChildRequests.Count);
             Assert.AreEqual(1, simple.Items.Count);
         }
@@ -50,34 +49,29 @@ namespace Gateway.Web.Tests.Models.Request
         {
             var simple = GetSimplePayload();
 
-            //var start = new DateTime(2017, 06, 20, 18, 00, 06).AddMilliseconds(033);
-
-            //var end = new DateTime(2017, 06, 20, 18, 00, 44).AddMilliseconds(617);
-
-            //var ms = (start - end).TotalMilliseconds;
             Assert.AreEqual(38584, simple.TotalTimeMs);
         }
 
         [Test]
-        public void Summary_total_are_calculated_on_small_payload()
+        public void Summary_total_is_calculated_on_small_payload()
         {
             var small = GetSmallPayload();
 
             var tradeStoreSummary = small.ControllerSummaries.First(f => f.Controller == "tradestore");
-            Assert.AreEqual(15490, tradeStoreSummary.TotalTimeMs);
+            Assert.AreEqual(22776, tradeStoreSummary.TotalTimeMs);
         }
 
         [Test]
-        public void Summary_average_are_calculated_on_small_payload()
+        public void Summary_average_is_calculated_on_small_payload()
         {
             var small = GetSmallPayload();
 
             var summary = small.ControllerSummaries.First(f => f.Controller == "tradestore");
-            Assert.AreEqual(7745, summary.AverageTimeMs);
+            Assert.AreEqual(7592d, summary.AverageTimeMs);
         }
 
         [Test]
-        public void Summary_average_with_no_size_are_calculated_on_small_payload()
+        public void Summary_average_with_no_size_is_calculated_on_small_payload()
         {
             var small = GetSmallPayload();
 
@@ -86,54 +80,66 @@ namespace Gateway.Web.Tests.Models.Request
         }
 
         [Test]
-        public void Wallclock_is_total_time_on_small_payload()
+        public void Wallclock_is_difference_between_start_and_end_times_on_small_payload()
         {
             var small = GetSmallPayload();
 
-            Assert.AreEqual("38 seconds, 584 milliseconds", small.WallClock);
+            Assert.AreEqual("38s 584ms", small.WallClock);
         }
 
         [Test]
-        public void Total_time_is_serial_time_lapsed_on_small_payload()
+        public void Total_time_is_sequential_time_lapsed_on_small_payload()
         {
             var small = GetSmallPayload();
 
-            Assert.AreEqual("54 seconds, 80 milliseconds", small.TotalTime);
+            Assert.AreEqual("54s 80ms", small.TotalTime);
+        }
+
+        [Test]
+        public void Child_request_queue_time_is_valid_percentage_total_time_taken()
+        {
+            var small = GetSmallPayload();
+            
+            Assert.AreEqual(16m, small.Root.ChildRequests[0].QueueTime);
+        }
+
+        [Test]
+        public void Child_request_processing_time_is_valid_percentage_total_time_taken()
+        {
+            var small = GetSmallPayload();
+
+            Assert.AreEqual(5m, small.Root.ChildRequests[0].ProcessingTime);
+        }
+
+        [Test]
+        public void Child_request_start_time_ms_is_difference_between_parent_start_and_child_start()
+        {
+            var small = GetSmallPayload();
+
+            Assert.AreEqual(11324, small.Root.ChildRequests[0].StartTimeMs);
         }
 
         private Timings GetSmallPayload()
         {
-            var assembly = this.GetType().Assembly;
-            var resourceName = "Gateway.Web.Tests.Resources.SmallRequestPayload.xml";
-
-            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
-            using (StreamReader reader = new StreamReader(stream))
-            {
-                var payload = reader.ReadToEnd().DeserializeUsingDataContract<RequestPayload>();
-                return new Timings(payload);
-            }
+            return GetPayload("Gateway.Web.Tests.Resources.SmallRequestPayload.xml");
         }
 
         private Timings GetSimplePayload()
         {
-            var assembly = this.GetType().Assembly;
-            var resourceName = "Gateway.Web.Tests.Resources.SimpleRequestPayload.xml";
-
-            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
-            using (StreamReader reader = new StreamReader(stream))
-            {
-                var payload = reader.ReadToEnd().DeserializeUsingDataContract<RequestPayload>();
-                return new Timings(payload);
-            }
+            return GetPayload("Gateway.Web.Tests.Resources.SimpleRequestPayload.xml");
         }
 
         private Timings GetLargePayload()
         {
-            var assembly = this.GetType().Assembly;
-            var resourceName = "Gateway.Web.Tests.Resources.LargeRequestPayload.xml";
+            return GetPayload("Gateway.Web.Tests.Resources.LargeRequestPayload.xml");
+        }
 
-            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
-            using (StreamReader reader = new StreamReader(stream))
+        private Timings GetPayload(string resourceName)
+        {
+            var assembly = this.GetType().Assembly;
+
+            using (var stream = assembly.GetManifestResourceStream(resourceName))
+            using (var reader = new StreamReader(stream))
             {
                 var payload = reader.ReadToEnd().DeserializeUsingDataContract<RequestPayload>();
                 return new Timings(payload);
