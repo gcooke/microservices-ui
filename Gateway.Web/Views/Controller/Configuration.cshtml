@@ -4,21 +4,112 @@
 @using Gateway.Web.Utils
 @using Newtonsoft.Json
 @using Version = Gateway.Web.Models.Controller.Version
+
+@model ConfigurationModel
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
-    ViewBag.Title = "Controller";
+    ViewBag.Title = "Configuration";
     ViewBag.Current = "Configuration";
 }
-@{ Html.RenderPartial("_ControllerNav", (BaseControllerModel)@Model); }
+@{ Html.RenderPartial("_ControllerNav", @Model); }
 
 <div id="page-content-wrapper">
     <div class="hero-unit">
+        <h3>@ViewBag.Title</h3>
+        <hr />
+        @using (Html.BeginForm("Configuration", "Controller", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        { 
+            <div class="form-group">
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-3">
+                            @Html.LabelFor(m => m.TimeToLiveSec, new { @class = "control-label" })
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-group spinner">
+                                <div class="input-group">
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-spinner btn-number" data-type="minus" data-field="TimeToLiveSec">
+                                            <span class="glyphicon glyphicon-minus"></span>
+                                        </button>
+                                    </span>
 
-        <h3>Configuration</h3>
+                                    @Html.TextBoxFor(m => m.TimeToLiveSec, new { @name = "TimeToLiveSec", @class = "form-control input-number", @min = "1", @max = "100000" })
 
-        <br />
-        under construction - this page will allow modification of scaling strategy, time 
-        to live and throttling configuration.
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-spinner btn-number" data-type="plus" data-field="TimeToLiveSec">
+                                            <span class="glyphicon glyphicon-plus"></span>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            @Html.HiddenFor(m => m.Name)
+                        </div>
+                    </div>
 
+                    <div class="row">
+                        <div class="col-md-3">
+                            @Html.LabelFor(m => m.ScalingStrategy, new { @class = "control-label" })
+                        </div>
+                        <div class="col-md-4">
+                            @Html.EnumDropDownListFor(model => model.ScalingStrategy, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-3">
+                            @Html.LabelFor(m => m.Weighting, new { @class = "control-label" })
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-spinner btn-number" data-type="minus" data-field="Weighting">
+                                        <span class="glyphicon glyphicon-minus"></span>
+                                    </button>
+                                </span>
+
+                                @Html.TextBoxFor(m => m.Weighting, new { @name = "Weighting", @class = "form-control input-number", @min = "1", @max = "10000" })
+
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-spinner btn-number" data-type="plus" data-field="Weighting">
+                                        <span class="glyphicon glyphicon-plus"></span>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-3">
+                            @Html.LabelFor(m => m.MaxInstances, new { @class = "control-label" })
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-spinner btn-number" data-type="minus" data-field="MaxInstances">
+                                        <span class="glyphicon glyphicon-minus"></span>
+                                    </button>
+                                </span>
+
+                                @Html.TextBoxFor(m => m.MaxInstances, new { @name = "MaxInstances", @class = "form-control input-number", @min = "1", @max = "10000" })
+
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-spinner btn-number" data-type="plus" data-field="MaxInstances">
+                                        <span class="glyphicon glyphicon-plus"></span>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-offset-3 col-md-4">
+                        <input type="submit" class="btn btn-default" value="Save" />
+                    </div>
+                </div>
+            </div>
+        }
     </div>
 </div>

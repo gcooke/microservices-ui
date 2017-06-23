@@ -8,6 +8,7 @@ using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Controllers;
 using Gateway.Web.Utils;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 using System.Xml;
 using System.Xml.XPath;
 using Bagl.Cib.MIT.IoC;
@@ -328,6 +329,28 @@ namespace Gateway.Web.Services
 
             if (xml == null) return new RequestPayload() { ChildRequests = new ChildRequests() };
             return xml.DeserializeUsingDataContract<RequestPayload>();
+        }
+
+        public ConfigurationModel GetControllerConfiguration(string name)
+        {
+            var response = Fetch("api/Catalogue/latest/configuration/{0}", name).FirstOrDefault();
+            if (response == null)
+                return null;
+
+            var namespaceManager = new XmlNamespaceManager(new NameTable());
+            namespaceManager.AddNamespace("namespace", Constants.RequestPayloadNamespace);
+            var xml = response.Document.XPathSelectElement("/namespace:Response/namespace:Payload/Controller", namespaceManager);
+
+            return (xml == null)
+                ? null
+                : xml.Deserialize<ConfigurationModel>();// new ConfigurationModel {Root = xml.Deserialize<ConfigurationModel>()};
+        }
+
+        public RestResponse UpdateControllerConfiguration(ConfigurationModel model)
+        {
+
+            var query = string.Format("/controllers/{0}/configuration", model.Name);
+            return _restService.Put("Catalogue", "latest", query, model.Serialize());
         }
 
         private class ServerResponse

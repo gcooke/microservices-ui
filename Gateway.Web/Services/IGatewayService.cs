@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Bagl.Cib.MSF.ClientAPI.Gateway;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Controllers;
 using Gateway.Web.Models.Request;
@@ -31,5 +32,9 @@ namespace Gateway.Web.Services
         string[] UpdateControllerVersionStatuses(List<VersionUpdate> versionStatusUpdates);
 
         RequestPayload GetRequestTree(Guid correlationId);
+
+        ConfigurationModel GetControllerConfiguration(string name);
+
+        RestResponse UpdateControllerConfiguration(ConfigurationModel model);
     }
 }
