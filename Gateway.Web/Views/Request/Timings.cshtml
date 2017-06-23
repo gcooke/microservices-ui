@@ -5,59 +5,60 @@
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
     ViewBag.Title = "Request";
-    ViewBag.Current = "Timings";
+    ViewBag.Current = "Timing";
 }
 @{ Html.RenderPartial("_RequestNav", (RequestPayload)@Model.Root); }
-<style>
-    .row-grey {
-        background-color: whitesmoke;
-    }
-
-    .row-white {
-        background-color: white;
-    }
-
-
-    treeview li, ul {
-        list-style: none;
-        padding-left: 0.3em;
-    }
-</style>
-
 <div id="page-content-wrapper">
     <div class="hero-unit">
         <div class="container-fluid">
-            <div class="row h3">Timings</div>
-            <div class="row h6">All timings relating to original request (@Model.Root.CorrelationId)</div>
-            <div class="row">&nbsp;</div>
-            @*<div class="row h4 row-grey" data-toggle="collapse" data-target="#summary"><a>Summary</a></div>*@
-            <div class="row h4 row-grey">Summary</div>
-            <div id="summary" @*class="collapse"*@>
-                <div class="row h6">Wall Clock: @Model.WallClock</div>
-                <div class="row h6">Total Time: @Model.TotalTime</div>
-                <div class="row h6">&nbsp;</div>
+
+            <h3 class="row">Timing</h3>
+            <div class="row h5">All timings relating to original request (@Model.Root.CorrelationId)</div>
+            <br />
+            <h3 class="row">Summary</h3>
+            <table style="width: 50%; white-space: nowrap" class="row datatable">
+                <tr>
+                    <td class="columnheader">Wall Clock</td>
+                    <td>@Model.WallClock</td>
+                </tr>
+                <tr>
+                    <td class="columnheader">Total Time:</td>
+                    <td>@Model.TotalTime</td>
+                </tr>
+            </table>
+            <br />
+            <h3 class="row">Controller Summaries</h3>
+            <table style="width: 100%; white-space: nowrap" class="row datatable">
+                <thead>
+                    <tr>
+                        <td class="">Controller</td>
+                        <td class="">Total Time</td>
+                        <td class="">Average Time</td>
+                    </tr>
+                </thead>
                 @foreach (var summary in Model.ControllerSummaries)
                 {
-                    <div class="row h6">@summary.Controller: @summary.PrettyTotalTimeMs (@summary.PrettyAverageTimeMs)</div>
+                    <tr>
+                        <td>@summary.Controller</td>
+                        <td>@summary.PrettyTotalTimeMs</td>
+                        <td>@summary.PrettyAverageTimeMs</td>
+                    </tr>
                 }
-            </div>
-            <div class="row h6">&nbsp;</div>
-            <div class="row h4 row-grey">Details</div>
-            <div class="treeview">
-                @{
-                    var rowBackgroundStyle = "row-grey";
-                }
+            </table>
 
-                <div class="row row-grey">
-                    <div class="col-md-2 text-left">
-                        <b>Controller</b>
-                    </div>
-                    <div class="col-md-3 text-left">
-                        <b>Unit</b>
-                    </div>
-                    <div class="col-md-7 text-center">
-                        <b>Timing</b>
-                    </div>
+            <br />
+
+            @{
+                var rowBackgroundStyle = "div_row_white";
+            }
+            <div class="treeview">
+
+                <h3 class="row">Requests</h3>
+
+                <div class="row div_row_head">
+                    <div class="col-md-3">Controller</div>
+                    <div class="col-md-3">Unit</div>
+                    <div class="col-md-6">Timing</div>
                 </div>
 
                 @(Html.TreeView(Model.Items)
@@ -70,12 +71,19 @@
                     @{
                         var showLabelsBefore = (item.QueueTime < 10 || item.ProcessingTime < 10) && item.StartTime > 50;
                         var showLabelsAfter = (item.QueueTime < 10 || item.ProcessingTime < 10) && !showLabelsBefore;
-                        rowBackgroundStyle = rowBackgroundStyle == "row-grey" ? "row-white" : "row-grey";
+                        rowBackgroundStyle = rowBackgroundStyle == "div_row_grey" ? "div_row_white" : "div_row_grey";
+                        var successful = item.Successful == "true" ? "glyphicon glyphicon-ok text-success" : "glyphicon glyphicon-remove text-danger";
                     }
-                    <div class="row @rowBackgroundStyle payloadExpand" style="vertical-align: text-top">
-                        <div class="col-md-2">@item.Controller</div>
+                    <div class="row @rowBackgroundStyle" style="vertical-align: text-top">
+
+                        <div class="col-md-1 @successful"></div>
+                        <div class="col-md-2">
+                            <a href="~/Request/Timings/@item.CorrelationId" class="hoverlink">@item.Controller</a>
+                        </div>
+
                         <div class="col-md-2">@item.Size&nbsp;@item.SizeUnit</div>
-                        <div class="col-md-7 progress" style="height: 14px; margin-bottom: 0; border-radius: 0; box-shadow: none; -webkit-box-shadow: none; background-color: inherit;">
+
+                        <div class="col-md-6 progress" style="height: 14px; margin-bottom: 0; border-radius: 0; box-shadow: none; -webkit-box-shadow: none; background-color: inherit;">
 
                             <div class="progress-bar progress-bar-none" role="progressbar" aria-valuenow="(@item.StartTimeMs)" aria-valuemin="0" aria-valuemax="(@Model.TotalTimeMs)" style="width: @(item.StartTime)%">
                                 @if (showLabelsBefore)
@@ -103,10 +111,13 @@
                                 <small class="post-progress-bar">@(item.QueueTimeMs)ms / @(item.ProcessingTimeMs)ms</small>
                             }
                         </div>
+
                     </div>
                 </text>)
                 )
             </div>
+
         </div>
     </div>
+
 </div>

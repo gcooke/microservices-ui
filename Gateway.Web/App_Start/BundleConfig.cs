@@ -26,6 +26,7 @@ namespace Gateway.Web
                 "~/Content/css/bootstrap.css",
                 "~/Content/css/simple-sidebar.css",
                 "~/Content/css/datatable.css",
+                "~/Content/css/treeview.css",
                 "~/Content/css/Site.css"
                 ));
         }

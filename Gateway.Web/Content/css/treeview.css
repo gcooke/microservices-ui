@@ -1,0 +1,19 @@
+﻿.div_row_grey {
+    background-color: #E9E9E9;
+}
+
+.div_row_white {
+    background-color: white;
+}
+
+.div_row_head {
+    background-color: #990505;
+    color: #FFF;
+    padding-top: 0.2em;
+    padding-bottom: 0.2em;
+}
+
+.treeview li, ul {
+    list-style: none;
+    padding-left: 0.4em;
+}

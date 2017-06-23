@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
-
 namespace Gateway.Web.Models.Request
 {
     [DataContract(Name = "Request", Namespace = "")]
@@ -25,22 +24,25 @@ namespace Gateway.Web.Models.Request
         [DataMember(Order = 5)]
         public string EndUtc { get; set; }
 
-        [DataMember(Order = 6)]
-        public int? Size { get; set; }
+        [DataMember(Order = 6, Name = "Succesfull")]
+        public string Successful { get; set; }
 
         [DataMember(Order = 7)]
-        public int QueueTimeMs { get; set; }
+        public int? Size { get; set; }
 
         [DataMember(Order = 8)]
-        public int ProcessingTimeMs{ get; set; }
+        public int QueueTimeMs { get; set; }
 
         [DataMember(Order = 9)]
-        public int TotalTimeMs { get; set; }
+        public int ProcessingTimeMs{ get; set; }
 
         [DataMember(Order = 10)]
+        public int TotalTimeMs { get; set; }
+
+        [DataMember(Order = 11)]
         public string SizeUnit { get; set; }
 
-        [DataMember(Name = "ChildRequests", Order = 11)]
+        [DataMember(Name = "ChildRequests", Order = 12)]
         public ChildRequests ChildRequests { get; set; }
 
         public int StartTimeMs { get; set; }
