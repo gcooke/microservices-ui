@@ -65,14 +65,13 @@ namespace Gateway.Web.Controllers
             return File(data.GetBytes(), "text/plain", string.Format("Payload_{0}.txt", payloadId));
         }
 
-        public ActionResult Timings(string correlationId)
+        public ActionResult Timings(string id)
         {
-            //correlationId = "918f81cf-edf4-4f74-8ce2-d37d37abfa46";
-            Guid id;
-            if (!Guid.TryParse(Convert.ToString(correlationId), out id))
+            Guid correlationId;
+            if (!Guid.TryParse(Convert.ToString(id), out correlationId))
                 return View();
 
-            var payload = _gateway.GetRequestTree(id);
+            var payload = _gateway.GetRequestTree(correlationId);
             var model = new Timings(payload);
             return View(model);
         }

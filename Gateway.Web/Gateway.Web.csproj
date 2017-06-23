@@ -337,6 +337,7 @@
     <Content Include="Content\css\bootstrap.min.css" />
     <Content Include="Content\css\datatable.css" />
     <Content Include="Content\css\simple-sidebar.css" />
+    <Content Include="Content\css\treeview.css" />
     <Content Include="Content\img\ajax-loader.gif" />
     <Content Include="Content\css\Site.css" />
     <Content Include="Content\img\bg.jpg" />
