@@ -1,0 +1,14 @@
+﻿<Request xmlns="">
+  <CorrelationId>b3062604-5eed-4888-9512-b349e17b4767</CorrelationId>
+  <ParentCorrelationId>00000000-0000-0000-0000-000000000000</ParentCorrelationId>
+  <Controller>catalogue</Controller>
+  <Version>1.1.23</Version>
+  <StartUtc>2017-06-26T07:40:20.53</StartUtc>
+  <EndUtc p2:nil="true" xmlns:p2="http://www.w3.org/2001/XMLSchema-instance" />
+  <Succesfull>false</Succesfull>
+  <Size p2:nil="true" xmlns:p2="http://www.w3.org/2001/XMLSchema-instance" />
+  <QueueTimeMs p2:nil="true" xmlns:p2="http://www.w3.org/2001/XMLSchema-instance" />
+  <ProcessingTimeMs p2:nil="true" xmlns:p2="http://www.w3.org/2001/XMLSchema-instance" />
+  <TotalTimeMs p2:nil="true" xmlns:p2="http://www.w3.org/2001/XMLSchema-instance" />
+  <ChildRequests />
+</Request>

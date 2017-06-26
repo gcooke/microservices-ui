@@ -13,7 +13,9 @@ namespace Gateway.Web.Tests.Models.Request
         public void Can_load_payload()
         {
             Assert.DoesNotThrow(() => GetSmallPayload());
+            Assert.DoesNotThrow(() => GetLargePayload());
             Assert.DoesNotThrow(() => GetSimplePayload());
+            Assert.DoesNotThrow(() => GetEmptyPayload());
         }
 
         [Test]
@@ -22,10 +24,12 @@ namespace Gateway.Web.Tests.Models.Request
             var small = GetSmallPayload();
             var large = GetLargePayload();
             var simple = GetSimplePayload();
+            var empty = GetEmptyPayload();
 
             Assert.AreEqual(3, small.Root.ChildRequests.Count);
             Assert.AreEqual(144, large.Root.ChildRequests.Count);
             Assert.AreEqual(1, simple.Items.Count);
+            Assert.AreEqual(1, empty.Items.Count);
         }
 
         [Test]
@@ -132,6 +136,11 @@ namespace Gateway.Web.Tests.Models.Request
         private Timings GetLargePayload()
         {
             return GetPayload("Gateway.Web.Tests.Resources.LargeRequestPayload.xml");
+        }
+
+        private Timings GetEmptyPayload()
+        {
+            return GetPayload("Gateway.Web.Tests.Resources.EmptyRequestPayload.xml");
         }
 
         private Timings GetPayload(string resourceName)

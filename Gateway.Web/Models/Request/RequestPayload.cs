@@ -31,13 +31,13 @@ namespace Gateway.Web.Models.Request
         public int? Size { get; set; }
 
         [DataMember(Order = 8)]
-        public int QueueTimeMs { get; set; }
+        public int? QueueTimeMs { get; set; }
 
         [DataMember(Order = 9)]
-        public int ProcessingTimeMs{ get; set; }
+        public int? ProcessingTimeMs{ get; set; }
 
         [DataMember(Order = 10)]
-        public int TotalTimeMs { get; set; }
+        public int? TotalTimeMs { get; set; }
 
         [DataMember(Order = 11)]
         public string SizeUnit { get; set; }
