@@ -9,14 +9,22 @@
 }
 @{ Html.RenderPartial("_RequestNav", (RequestPayload)@Model.Root); }
 <div id="page-content-wrapper">
+
+    @{
+        var rowBackgroundStyle = "div_row_white";
+        var requestIsSuccessful = Model.Root.Successful == "true" ? "" : "none";
+        var showError = Model.Root.Successful == "true" ? "none" : "";
+    }
     <div class="hero-unit">
         <div class="container-fluid">
 
             <h3 class="row">Timing</h3>
             <div class="row h5">All timings relating to original request (@Model.Root.CorrelationId)</div>
             <br />
-            <h3 class="row">Summary</h3>
-            <table style="width: 50%; white-space: nowrap" class="row datatable">
+            <div class="row alert alert-danger" style="display: @showError">The request was unsuccessful</div>
+            <br />
+            <h3 class="row" style="display: @requestIsSuccessful">Summary</h3>
+            <table style="width: 50%; white-space: nowrap; display:  @requestIsSuccessful" class="row datatable">
                 <tr>
                     <td class="columnheader">Wall Clock</td>
                     <td>@Model.WallClock</td>
@@ -27,8 +35,8 @@
                 </tr>
             </table>
             <br />
-            <h3 class="row">Controller Summaries</h3>
-            <table style="width: 100%; white-space: nowrap" class="row datatable">
+            <h3 class="row" style="display: @requestIsSuccessful">Controller Summaries</h3>
+            <table style="width: 100%; white-space: nowrap; display: @requestIsSuccessful" class="row datatable">
                 <thead>
                     <tr>
                         <td class="">Controller</td>
@@ -48,10 +56,7 @@
 
             <br />
 
-            @{
-                var rowBackgroundStyle = "div_row_white";
-            }
-            <div class="treeview">
+            <div class="treeview" style="display: @requestIsSuccessful">
 
                 <h3 class="row">Requests</h3>
 
@@ -85,21 +90,21 @@
 
                         <div class="col-md-6 progress" style="height: 14px; margin-bottom: 0; border-radius: 0; box-shadow: none; -webkit-box-shadow: none; background-color: inherit;">
 
-                            <div class="progress-bar progress-bar-none" role="progressbar" aria-valuenow="(@item.StartTimeMs)" aria-valuemin="0" aria-valuemax="(@Model.TotalTimeMs)" style="width: @(item.StartTime)%">
+                            <div class="progress-bar progress-bar-none" role="progressbar" aria-valnow="(@item.StartTimeMs)" aria-valmin="0" aria-valmax="(@Model.TotalTimeMs)" style="width: @(item.StartTime)%">
                                 @if (showLabelsBefore)
                                 {
                                     <small class="pre-progress-bar">@(item.QueueTimeMs)ms / @(item.ProcessingTimeMs)ms</small>
                                 }
                             </div>
 
-                            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="(@item.QueueTimeMs)" aria-valuemin="0" aria-valuemax="(@Model.TotalTimeMs)" style="width: @(item.QueueTime)%">
+                            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valnow="(@item.QueueTimeMs)" aria-valmin="0" aria-valmax="(@Model.TotalTimeMs)" style="width: @(item.QueueTime)%">
                                 @if (!showLabelsAfter && !showLabelsBefore)
                                 {
                                     <small>@(item.QueueTimeMs)ms</small>
                                 }
                             </div>
 
-                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="(@item.ProcessingTimeMs)" aria-valuemin="0" aria-valuemax="(@Model.TotalTimeMs)" style="width: @(item.ProcessingTime)%">
+                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valnow="(@item.ProcessingTimeMs)" aria-valmin="0" aria-valmax="(@Model.TotalTimeMs)" style="width: @(item.ProcessingTime)%">
                                 @if (!showLabelsAfter && !showLabelsBefore)
                                 {
                                     <small>@(item.ProcessingTimeMs)ms</small>
