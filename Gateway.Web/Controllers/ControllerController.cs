@@ -8,6 +8,7 @@ using Gateway.Web.Utils;
 using Controller = System.Web.Mvc.Controller;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web.DynamicData;
 
@@ -134,7 +135,30 @@ namespace Gateway.Web.Controllers
 
         public ActionResult Configuration(string id)
         {
-            var model = new ConfigurationModel(id);
+            var model = _gateway.GetControllerConfiguration(id);
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult Configuration(ConfigurationModel model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var response = _gateway.UpdateControllerConfiguration(model);
+
+                    if (response.Successfull)
+                        return Dashboard(model.Name);
+
+                    ModelState.AddModelError(string.Empty, response.Message);
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+            }
+
             return View(model);
         }
 

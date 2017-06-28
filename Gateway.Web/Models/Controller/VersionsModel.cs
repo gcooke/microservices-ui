@@ -12,7 +12,7 @@ namespace Gateway.Web.Models.Controller
         }
 
         public string[] UpdateResults { get; set; }
-        public List<Version> Versions { get; private set; }
 
+        public List<Version> Versions { get; private set; }
     }
 }

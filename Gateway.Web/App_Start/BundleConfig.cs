@@ -22,6 +22,9 @@ namespace Gateway.Web
                 "~/Content/js/bootstrap.js",
                 "~/Content/js/respond.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/spinner").Include(
+                "~/Content/js/spinner.js"));
+
             bundles.Add(new StyleBundle("~/styles/css").Include(
                 "~/Content/css/bootstrap.css",
                 "~/Content/css/simple-sidebar.css",
