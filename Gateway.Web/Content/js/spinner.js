@@ -29,11 +29,12 @@
         input.val(0);
     }
 });
+
 $('.input-number').focusin(function () {
     $(this).data('oldValue', $(this).val());
 });
-$('.input-number').change(function () {
 
+$('.input-number').change(function () {
     minValue = parseInt($(this).attr('min'));
     maxValue = parseInt($(this).attr('max'));
     valueCurrent = parseInt($(this).val());
@@ -51,9 +52,8 @@ $('.input-number').change(function () {
         alert('Sorry, the maximum value was reached');
         $(this).val($(this).data('oldValue'));
     }
-
-
 });
+
 $(".input-number").keydown(function (e) {
     // Allow: backspace, delete, tab, escape, enter and .
     if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 190]) !== -1 ||

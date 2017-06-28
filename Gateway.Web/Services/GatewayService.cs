@@ -348,7 +348,6 @@ namespace Gateway.Web.Services
 
         public RestResponse UpdateControllerConfiguration(ConfigurationModel model)
         {
-
             var query = string.Format("/controllers/{0}/configuration", model.Name);
             return _restService.Put("Catalogue", "latest", query, model.Serialize());
         }
