@@ -31,20 +31,20 @@ namespace Gateway.Web.Models.Request
             {
                 return
                     TimeSpan.FromMilliseconds(
-                            EntireTree.Where(t => !string.IsNullOrEmpty(t.EndUtc))
-                        .DefaultIfEmpty(
+                        EntireTree.Where(t => !string.IsNullOrEmpty(t.EndUtc))
+                            .DefaultIfEmpty(
                                 new RequestPayload
                                 {
                                     EndUtc = DateTime.MinValue.ToString(),
                                     StartUtc = DateTime.MinValue.ToString()
                                 })
-                        .Sum(t => (DateTime.Parse(t.EndUtc) - DateTime.Parse(t.StartUtc)).TotalMilliseconds)
+                            .Sum(t => (DateTime.Parse(t.EndUtc) - DateTime.Parse(t.StartUtc)).TotalMilliseconds)
                         )
                         .Humanize();
             }
         }
 
-        public string WallClock { get { return TimeSpan.FromMilliseconds((double)TotalTimeMs).Humanize(); } }
+        public string WallClock { get; private set; }
 
         private void CalculateTotals()
         {
@@ -60,24 +60,22 @@ namespace Gateway.Web.Models.Request
                                     EndUtc = DateTime.MinValue.ToString(),
                                     StartUtc = DateTime.MinValue.ToString()
                                 })
-                .Min(t => DateTime.Parse(t.EndUtc));
-            TotalTimeMs = Root.TotalTimeMs.GetValueOrDefault();
+                .Max(t => DateTime.Parse(t.EndUtc));
             if (TotalTimeMs <= 0) return;
 
-            Root.StartTimeMs = (int)(DateTime.Parse(Root.StartUtc) - start).TotalMilliseconds;
-            Root.QueueTime = decimal.Round(decimal.Divide((Root.QueueTimeMs.GetValueOrDefault() * 100), TotalTimeMs), 2);
-            Root.ProcessingTime = Math.Max(1, decimal.Round(decimal.Divide((Root.ProcessingTimeMs.GetValueOrDefault() * 100), TotalTimeMs), 2));
-            Root.StartTime = decimal.Round(decimal.Divide((Root.StartTimeMs * 100), TotalTimeMs));
+            var totalTime = (end - start);
+            WallClock = totalTime.Humanize();
+            TotalTimeMs = Math.Max(1, (decimal)totalTime.TotalMilliseconds);
 
             // Calculate start times offsets
             foreach (var payload in EntireTree)
             {
                 var requestStart = DateTime.Parse(payload.StartUtc);
                 payload.StartTimeMs = (int)(requestStart - start).TotalMilliseconds;
-                payload.QueueTime = decimal.Round(decimal.Divide((payload.QueueTimeMs.GetValueOrDefault() * 100), TotalTimeMs), 2);
-                payload.ProcessingTime = Math.Max(1,
-                    decimal.Round(decimal.Divide((payload.ProcessingTimeMs.GetValueOrDefault() * 100), TotalTimeMs), 2));
-                payload.StartTime = decimal.Round(decimal.Divide((payload.StartTimeMs * 100), TotalTimeMs), 2);
+                payload.QueueTime = decimal.Round(decimal.Divide((payload.QueueTimeMs.GetValueOrDefault() * 100), TotalTimeMs));
+                payload.ProcessingTime = decimal.Round(Math.Max(1,
+                    decimal.Round(decimal.Divide((payload.ProcessingTimeMs.GetValueOrDefault() * 100), TotalTimeMs))));
+                payload.StartTime = decimal.Round(decimal.Divide((payload.StartTimeMs * 100), TotalTimeMs));
             }
         }
 

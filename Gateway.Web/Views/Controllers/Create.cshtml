@@ -1,0 +1,21 @@
+﻿@using Gateway.Web.Models.Controller
+
+@model ConfigurationModel
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "Create";
+    ViewBag.Current = "Create";
+}
+
+@{ Html.RenderPartial("_ControllersNav"); }
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+        <h3>@ViewBag.Title</h3>
+        <hr />
+
+        @using (Html.BeginForm("Create", "Controllers", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.Partial("_ControllerConfiguration", @Model);
+        }
+    </div>
+</div>

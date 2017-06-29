@@ -240,7 +240,8 @@ input, textarea {
     color: #000000;
     background-color: #cccccc;
     border-color: #cccccc;
-    margin-top: 5px;
+    margin-top: 0px;
+    height:2.5em
 }
 
 .form-control {
@@ -251,3 +252,11 @@ input, textarea {
     font-size: 1.0em;
     font-weight: normal;
 }
+
+.number-spinner {
+    border: 1px solid #e2e2e2;
+    background: #fff;
+    width: 150px;
+    margin-top: 5px;
+    height:2em
+} 

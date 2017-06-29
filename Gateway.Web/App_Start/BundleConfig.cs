@@ -23,13 +23,16 @@ namespace Gateway.Web
                 "~/Content/js/respond.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/spinner").Include(
-                "~/Content/js/spinner.js"));
+                "~/Content/js/spinner.js",
+                "~/Content/js/loading.js"
+                ));
 
             bundles.Add(new StyleBundle("~/styles/css").Include(
                 "~/Content/css/bootstrap.css",
                 "~/Content/css/simple-sidebar.css",
                 "~/Content/css/datatable.css",
                 "~/Content/css/treeview.css",
+                "~/Content/css/font-awesome.min.css",
                 "~/Content/css/Site.css"
                 ));
         }
