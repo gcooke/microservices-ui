@@ -135,7 +135,7 @@ namespace Gateway.Web.Controllers
 
         public ActionResult Configuration(string id)
         {
-            var model =_gateway.GetControllerConfiguration(id);
+            var model = _gateway.GetControllerConfiguration(id);
             return View(model);
         }
 
