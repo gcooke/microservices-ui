@@ -37,7 +37,7 @@ namespace Gateway.Web.Tests.Models.Request
         {
             var small = GetSmallPayload();
 
-            Assert.AreEqual(38584, small.TotalTimeMs);
+            Assert.AreEqual(38582, small.TotalTimeMs);
         }
 
         [Test]
@@ -45,7 +45,7 @@ namespace Gateway.Web.Tests.Models.Request
         {
             var large = GetLargePayload();
 
-            Assert.AreEqual(472877, large.TotalTimeMs);
+            Assert.AreEqual(44845, large.TotalTimeMs);
         }
 
         [Test]
@@ -53,7 +53,7 @@ namespace Gateway.Web.Tests.Models.Request
         {
             var simple = GetSimplePayload();
 
-            Assert.AreEqual(38584, simple.TotalTimeMs);
+            Assert.AreEqual(38582, simple.TotalTimeMs);
         }
 
         [Test]
@@ -88,7 +88,7 @@ namespace Gateway.Web.Tests.Models.Request
         {
             var small = GetSmallPayload();
 
-            Assert.AreEqual("38s 584ms", small.WallClock);
+            Assert.AreEqual("38s 582ms", small.WallClock);
         }
 
         [Test]
@@ -104,7 +104,7 @@ namespace Gateway.Web.Tests.Models.Request
         {
             var small = GetSmallPayload();
             
-            Assert.AreEqual(16m, small.Root.ChildRequests[0].QueueTime);
+            Assert.AreEqual(16.43m, small.Root.ChildRequests[0].QueueTime);
         }
 
         [Test]
@@ -112,7 +112,7 @@ namespace Gateway.Web.Tests.Models.Request
         {
             var small = GetSmallPayload();
 
-            Assert.AreEqual(5m, small.Root.ChildRequests[0].ProcessingTime);
+            Assert.AreEqual(4.83m, small.Root.ChildRequests[0].ProcessingTime);
         }
 
         [Test]

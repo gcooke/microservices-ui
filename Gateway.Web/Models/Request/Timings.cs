@@ -62,6 +62,7 @@ namespace Gateway.Web.Models.Request
                                 })
                 .Min(t => DateTime.Parse(t.EndUtc));
             TotalTimeMs = Root.TotalTimeMs.GetValueOrDefault();
+            if (TotalTimeMs <= 0) return;
 
             Root.StartTimeMs = (int)(DateTime.Parse(Root.StartUtc) - start).TotalMilliseconds;
             Root.QueueTime = decimal.Round(decimal.Divide((Root.QueueTimeMs.GetValueOrDefault() * 100), TotalTimeMs), 2);
