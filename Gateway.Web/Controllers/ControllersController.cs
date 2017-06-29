@@ -1,14 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
 using Gateway.Web.Database;
-using Gateway.Web.Models;
-using Gateway.Web.Models.Controllers;
+using Gateway.Web.Models.Controller;
 using Gateway.Web.Services;
 using Gateway.Web.Utils;
 using Controller = System.Web.Mvc.Controller;
+using DashboardModel = Gateway.Web.Models.Controllers.DashboardModel;
+using HistoryModel = Gateway.Web.Models.Controllers.HistoryModel;
+using QueuesModel = Gateway.Web.Models.Controllers.QueuesModel;
 
 namespace Gateway.Web.Controllers
 {
@@ -80,6 +81,34 @@ namespace Gateway.Web.Controllers
 
             var model = _dataService.GetControllerQueueSummary(start);
             return View(model);
-        }        
+        }
+
+        public ActionResult Create()
+        {
+            return View(new ConfigurationModel());
+        }
+
+        [HttpPost]
+        public ActionResult Create(ConfigurationModel model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var response = _gateway.UpdateControllerConfiguration(model);
+
+                    if (response.Successfull)
+                        return Dashboard();
+
+                    ModelState.AddModelError(string.Empty, response.Message);
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+            }
+
+            return View(model);
+        }
     }
 }

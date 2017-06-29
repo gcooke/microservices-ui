@@ -227,8 +227,8 @@ namespace Gateway.Web.Services
             }
             catch (Exception)
             {
-                // Should somehow output this
-                return null;
+                //TODO: Should somehow output this -fails badly if Gateway is down
+                throw;
             }
         }
 
@@ -333,22 +333,20 @@ namespace Gateway.Web.Services
 
         public ConfigurationModel GetControllerConfiguration(string name)
         {
-            var response = Fetch("api/Catalogue/latest/configuration/{0}", name).FirstOrDefault();
+            var response = Fetch("api/Catalogue/latest/controllers/{0}", name).FirstOrDefault();
             if (response == null)
                 return null;
 
             var namespaceManager = new XmlNamespaceManager(new NameTable());
             namespaceManager.AddNamespace("namespace", Constants.RequestPayloadNamespace);
-            var xml = response.Document.XPathSelectElement("/namespace:Response/namespace:Payload/Controller", namespaceManager);
+            var xml = response.Document.XPathSelectElement("/namespace:Response/namespace:Payload/Catalogue/Controllers/Controller", namespaceManager);
 
-            return (xml == null)
-                ? null
-                : xml.Deserialize<ConfigurationModel>();// new ConfigurationModel {Root = xml.Deserialize<ConfigurationModel>()};
+            return (xml == null) ? null : xml.Deserialize<ConfigurationModel>();
         }
 
         public RestResponse UpdateControllerConfiguration(ConfigurationModel model)
         {
-            var query = string.Format("/controllers/{0}/configuration", model.Name);
+            var query = "/controllers/configuration";
             return _restService.Put("Catalogue", "latest", query, model.Serialize());
         }
 

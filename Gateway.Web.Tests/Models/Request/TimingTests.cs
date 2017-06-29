@@ -26,7 +26,7 @@ namespace Gateway.Web.Tests.Models.Request
             var simple = GetSimplePayload();
             var empty = GetEmptyPayload();
 
-            Assert.AreEqual(3, small.Root.ChildRequests.Count);
+            Assert.AreEqual(4, small.Root.ChildRequests.Count);
             Assert.AreEqual(144, large.Root.ChildRequests.Count);
             Assert.AreEqual(1, simple.Items.Count);
             Assert.AreEqual(1, empty.Items.Count);

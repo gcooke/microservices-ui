@@ -6,26 +6,26 @@ namespace Gateway.Web.Models.Controller
     [XmlRoot(ElementName = "Controller")]
     public class ConfigurationModel
     {
-        public ConfigurationModel(string name)
-        {
-            Name = name;
-        }
-
-        public ConfigurationModel() : this("") { }
-
         public enum ScalingStrategies
         {
-            Local = 1,
-            Remote = 2
+            Local,
+            Remote
         }
+
+        public bool IsUpdate { get { return ControllerId != 0; } }
+
+        [XmlAttribute(AttributeName="Id")]
+        public long ControllerId { get; set; }
 
         [XmlAttribute]
         [Required]
         [Display(Name = "Name")]
+        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "The controller name must contain alphabets only.")]
         public string Name { get; set; }
 
         [XmlElement]
         [Display(Name = "Time to Live")]
+        [Range(1, int.MaxValue, ErrorMessage = "Please enter the time to live.")]
         public int? TimeToLiveSec { get; set; }
 
         [XmlElement]
@@ -36,11 +36,23 @@ namespace Gateway.Web.Models.Controller
         [XmlElement]
         [Required]
         [Display(Name = "Weighting")]
+        [Range(1, int.MaxValue, ErrorMessage = "Please enter the weighting.")]
         public int Weighting { get; set; }
 
         [XmlElement]
         [Required]
         [Display(Name = "Maximum Instances")]
+        [Range(1, int.MaxValue, ErrorMessage = "Please enter the number of instances.")]
         public int MaxInstances { get; set; }
+
+        [XmlElement]
+        public string Type { get; set; }
+
+        [XmlElement]
+        public string Configuration { get; set; }
+
+        [XmlElement]
+        [Display(Name = "User Call Limit Per Sec")]
+        public int UserCallLimit { get; set; }
     }
 }
