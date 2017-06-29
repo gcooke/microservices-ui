@@ -37,7 +37,7 @@ namespace Gateway.Web.Tests.Models.Request
         {
             var small = GetSmallPayload();
 
-            Assert.AreEqual(38582, small.TotalTimeMs);
+            Assert.AreEqual(38584m, small.TotalTimeMs);
         }
 
         [Test]
@@ -45,7 +45,7 @@ namespace Gateway.Web.Tests.Models.Request
         {
             var large = GetLargePayload();
 
-            Assert.AreEqual(44845, large.TotalTimeMs);
+            Assert.AreEqual(472877m, large.TotalTimeMs);
         }
 
         [Test]
@@ -53,7 +53,7 @@ namespace Gateway.Web.Tests.Models.Request
         {
             var simple = GetSimplePayload();
 
-            Assert.AreEqual(38582, simple.TotalTimeMs);
+            Assert.AreEqual(38584m, simple.TotalTimeMs);
         }
 
         [Test]
@@ -62,7 +62,7 @@ namespace Gateway.Web.Tests.Models.Request
             var small = GetSmallPayload();
 
             var tradeStoreSummary = small.ControllerSummaries.First(f => f.Controller == "tradestore");
-            Assert.AreEqual(22776, tradeStoreSummary.TotalTimeMs);
+            Assert.AreEqual(22776m, tradeStoreSummary.TotalTimeMs);
         }
 
         [Test]
@@ -88,7 +88,7 @@ namespace Gateway.Web.Tests.Models.Request
         {
             var small = GetSmallPayload();
 
-            Assert.AreEqual("38s 582ms", small.WallClock);
+            Assert.AreEqual("38s 584ms", small.WallClock);
         }
 
         [Test]
@@ -103,16 +103,14 @@ namespace Gateway.Web.Tests.Models.Request
         public void Child_request_queue_time_is_valid_percentage_total_time_taken()
         {
             var small = GetSmallPayload();
-            
-            Assert.AreEqual(16.43m, small.Root.ChildRequests[0].QueueTime);
+            Assert.AreEqual(16m, small.Root.ChildRequests[0].QueueTime);
         }
 
         [Test]
         public void Child_request_processing_time_is_valid_percentage_total_time_taken()
         {
             var small = GetSmallPayload();
-
-            Assert.AreEqual(4.83m, small.Root.ChildRequests[0].ProcessingTime);
+            Assert.AreEqual(5m, small.Root.ChildRequests[0].ProcessingTime);
         }
 
         [Test]

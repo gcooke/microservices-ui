@@ -61,7 +61,6 @@ namespace Gateway.Web.Models.Request
                                     StartUtc = DateTime.MinValue.ToString()
                                 })
                 .Max(t => DateTime.Parse(t.EndUtc));
-            if (TotalTimeMs <= 0) return;
 
             var totalTime = (end - start);
             WallClock = totalTime.Humanize();
