@@ -443,7 +443,6 @@
     <Content Include="Views\Request\Children.cshtml" />
     <Content Include="Views\Controllers\Aliases.cshtml" />
     <Content Include="Views\Shared\_ControllerConfiguration.cshtml" />
-    <Content Include="Views\Shared\_Loading.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
