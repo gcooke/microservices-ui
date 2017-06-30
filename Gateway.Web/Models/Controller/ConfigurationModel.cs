@@ -14,13 +14,14 @@ namespace Gateway.Web.Models.Controller
 
         public bool IsUpdate { get { return ControllerId != 0; } }
 
-        [XmlAttribute(AttributeName="Id")]
+        [XmlAttribute(AttributeName = "Id")]
         public long ControllerId { get; set; }
 
         [XmlAttribute]
         [Required]
         [Display(Name = "Name")]
-        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "The controller name must contain alphabets only.")]
+        [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "The controller name must contain alphabets only.")]
+        [StringLength(100, ErrorMessage = "Name cannot be longer than 100 characters.")]
         public string Name { get; set; }
 
         [XmlElement]
@@ -46,9 +47,11 @@ namespace Gateway.Web.Models.Controller
         public int MaxInstances { get; set; }
 
         [XmlElement]
+        [StringLength(10, ErrorMessage = "Name cannot be longer than 10 characters.")]
         public string Type { get; set; }
 
         [XmlElement]
+        [StringLength(100, ErrorMessage = "Name cannot be longer than 100 characters.")]
         public string Configuration { get; set; }
 
         [XmlElement]

@@ -13,7 +13,7 @@
         <h3>@ViewBag.Title</h3>
         <hr />
 
-        @using (Html.BeginForm("Create", "Controllers", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        @using (Html.BeginForm("Create", "Controllers", FormMethod.Post, new { name = "form", @class = "form-horizontal", role = "form" }))
         {
             @Html.Partial("_ControllerConfiguration", @Model);
         }

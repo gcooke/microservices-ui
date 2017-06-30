@@ -97,10 +97,10 @@ namespace Gateway.Web.Controllers
                 {
                     var response = _gateway.UpdateControllerConfiguration(model);
 
-                    if (response.Successfull)
-                        return Dashboard();
+                    if (response.Successfull) 
+                        return RedirectToAction("Dashboard");
 
-                    ModelState.AddModelError(string.Empty, response.Message);
+                    ModelState.AddModelError(string.Empty, response.Content.Message);
                 }
             }
             catch (Exception ex)
