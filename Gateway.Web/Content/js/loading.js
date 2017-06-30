@@ -1,11 +1,9 @@
 ﻿$("#loading").hide();
-$(':submit').show();
 
 $(function () {
-    // When a Button is clicked on your page, disable everything and display your loading element
-    $(':submit').click(function () {
-        // Disable everything
+    $("form").submit(function () {
+        $(this).find(':input[type=submit]').prop('disabled', 'disabled');
+        $(':submit').attr('disabled', 'disabled');
         $("#loading").show();
-        $(':submit').hide();
     });
 });

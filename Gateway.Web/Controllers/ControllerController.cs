@@ -149,9 +149,9 @@ namespace Gateway.Web.Controllers
                     var response = _gateway.UpdateControllerConfiguration(model);
 
                     if (response.Successfull)
-                        return Dashboard(model.Name);
+                        return RedirectToAction("Dashboard", new {id = model.Name});
 
-                    ModelState.AddModelError(string.Empty, response.Message);
+                    ModelState.AddModelError(string.Empty, response.Content.Message);
                 }
             }
             catch (Exception ex)

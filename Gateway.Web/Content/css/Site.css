@@ -241,7 +241,8 @@ input, textarea {
     background-color: #cccccc;
     border-color: #cccccc;
     margin-top: 0px;
-    height:2.5em
+    margin-right: 0px;
+    height: 2.5em;
 }
 
 .form-control {
@@ -258,5 +259,5 @@ input, textarea {
     background: #fff;
     width: 150px;
     margin-top: 5px;
-    height:2em
-} 
+    height: 2em;
+}

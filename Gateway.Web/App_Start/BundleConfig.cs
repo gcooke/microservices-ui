@@ -32,7 +32,6 @@ namespace Gateway.Web
                 "~/Content/css/simple-sidebar.css",
                 "~/Content/css/datatable.css",
                 "~/Content/css/treeview.css",
-                "~/Content/css/font-awesome.min.css",
                 "~/Content/css/Site.css"
                 ));
         }
