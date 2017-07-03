@@ -1,0 +1,57 @@
+﻿@using Gateway.Web.Database
+@using Gateway.Web.Models
+@using Gateway.Web.Models.Controller
+@using Gateway.Web.Models.Security
+@using Gateway.Web.Models.User
+@using Gateway.Web.Utils
+@using Newtonsoft.Json
+@using Version = Gateway.Web.Models.Controller.Version
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "Security";
+    ViewBag.Current = "Users";
+}
+@{ Html.RenderPartial("_SecurityNav", (UsersModel)@Model); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+
+        <h3>Users</h3>
+
+        <br />
+        <p><strong>Please Note:</strong> users can have access without appearing in this list through Active Directory membership to groups. To view effective permissions for a user, please click on the report links in the left hand navigation panel.</p>
+
+        <div id="containerx bulk">
+
+            <table style="width: 100%; white-space: nowrap" class="datatable">
+                <thead>
+                    <tr>
+                        <td>Full Name</td>
+                        <td>Domain</td>
+                        <td>Login</td>
+                        <td>Action</td>
+                    </tr>
+                </thead>
+                @foreach (UserModel user in Model.Items)
+                {
+                    <tr>
+                        <td>@user.FullName</td>
+                        <td>@user.Domain</td>
+                        <td>@user.Login</td>
+                        <td>
+                            @Html.ActionLink("View", "Details", "User", new { id = user.Id }, new { @class = "hoverlink" })
+                        </td>
+                    </tr>
+                }
+            </table>
+            <br />
+
+            @Html.ActionLink("Add User", "Details", "User")
+
+
+        </div>
+        <br />
+
+
+    </div>
+</div>

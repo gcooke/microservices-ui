@@ -1,0 +1,54 @@
+﻿@using Gateway.Web.Database
+@using Gateway.Web.Models
+@using Gateway.Web.Models.Controller
+@using Gateway.Web.Models.Permission
+@using Gateway.Web.Models.Security
+@using Gateway.Web.Utils
+@using Newtonsoft.Json
+@using Version = Gateway.Web.Models.Controller.Version
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "Security";
+    ViewBag.Current = "Permissions";
+}
+@{ Html.RenderPartial("_SecurityNav", (PermissionsModel)@Model); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+
+        <h3>Permissions</h3>
+
+        <br />
+        <div id="containerx bulk">
+
+            @foreach (SystemPermissions sys in Model.Items)
+            {
+                <h4>@sys.Name</h4>
+
+                <table style="width: 100%; white-space: nowrap" class="datatable">
+                    <thead>
+                        <tr>
+                            <td>Name</td>
+                            <td>Action</td>
+                        </tr>
+                    </thead>
+                    @foreach (PermissionModel item in sys.Items)
+                    {
+                        <tr>
+                            <td>@item.Name</td>
+                            <td>
+                                @Html.ActionLink("View", "Details", "Permission", new { id = item.Id }, new { @class = "hoverlink" })
+                            </td>
+                        </tr>
+                    }
+                </table>
+                <br />
+            }
+
+        </div>
+        <br />
+
+        @Html.ActionLink("Add Permission", "Details", "Permission")
+
+    </div>
+</div>

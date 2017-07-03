@@ -4,13 +4,14 @@ using Gateway.Web.Models.Controller;
 
 namespace Gateway.Web.Models.User
 {
-    public class HistoryModel : BaseControllerModel
+    public class HistoryModel : BaseControllerModel, IUserModel
     {
         public HistoryModel(string name) : base(name)
         {
             Requests = new List<HistoryItem>();
         }
 
+        public string Login { get { return base.Name; } }
         public List<HistoryItem> Requests { get; private set; }        
     }
 }

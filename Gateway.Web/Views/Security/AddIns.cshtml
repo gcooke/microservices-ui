@@ -1,0 +1,52 @@
+﻿@using Gateway.Web.Database
+@using Gateway.Web.Models
+@using Gateway.Web.Models.AddIn
+@using Gateway.Web.Models.Controller
+@using Gateway.Web.Models.Security
+@using Gateway.Web.Utils
+@using Newtonsoft.Json
+@using Version = Gateway.Web.Models.Controller.Version
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "Security";
+    ViewBag.Current = "AddIns";
+}
+@{ Html.RenderPartial("_SecurityNav", (AddInsModel)@Model); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+
+        <h3>Add-Ins</h3>
+
+        <div id="containerx bulk">
+
+            <table style="width: 100%; white-space: nowrap" class="datatable">
+                <thead>
+                    <tr>
+                        <td>Name</td>
+                        <td>Friendly Name</td>
+                        <td>Description</td>
+                        <td>Action</td>
+                    </tr>
+                </thead>
+                @foreach (AddInModel item in Model.Items)
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>@item.FriendlyName</td>
+                        <td>@item.Description</td>
+                        <td>
+                            @Html.ActionLink("View", "Details", "AddIn", new { id = item.Id }, new { @class = "hoverlink" })
+                        </td>
+                    </tr>
+                }
+            </table>
+            <br />
+
+        </div>
+        <br />
+
+        @Html.ActionLink("Add Add-In", "Details", "AddIn")
+
+    </div>
+</div>

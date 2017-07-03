@@ -8,22 +8,22 @@
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
     ViewBag.Title = "User: " + @Model.Login;
-    ViewBag.Current = "History";
+    ViewBag.Current = "AddIns";
 }
 @{ Html.RenderPartial("_UserNav", (IUserModel)@Model); }
 
 <div id="page-content-wrapper">
     <div class="hero-unit">
 
-        <h3>Last @Model.Requests.Count requests</h3>
+        <h3>Add-Ins</h3>
 
-        <br />
+        <div id="containerx bulk">
+           
 
-        <div class="containerx bulk">
-            @{ Html.RenderPartial("_HistoryItems", (List<HistoryItem>)@Model.Requests); }
         </div>
-
         <br />
+
+        @Html.ActionLink("Update User", "UpdateUser", "User")
 
     </div>
 </div>

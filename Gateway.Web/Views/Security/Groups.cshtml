@@ -1,0 +1,48 @@
+﻿@using Gateway.Web.Database
+@using Gateway.Web.Models
+@using Gateway.Web.Models.Controller
+@using Gateway.Web.Models.Group
+@using Gateway.Web.Models.Security
+@using Gateway.Web.Utils
+@using Newtonsoft.Json
+@using Version = Gateway.Web.Models.Controller.Version
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "Security";
+    ViewBag.Current = "Groups";
+}
+@{ Html.RenderPartial("_SecurityNav", (GroupsModel)@Model); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+
+        <h3>Groups</h3>
+
+        <div id="containerx bulk">
+
+            <table style="width: 100%; white-space: nowrap" class="datatable">
+                <thead>
+                    <tr>
+                        <td>Group</td>
+                        <td>Action</td>
+                    </tr>
+                </thead>
+                @foreach (GroupModel group in Model.Items)
+                {
+                    <tr>
+                        <td>@group.Name</td>
+                        <td>
+                            @Html.ActionLink("View", "Details", "Group", new { id = group.Id }, new { @class = "hoverlink" })
+                        </td>
+                    </tr>
+                }
+            </table>
+            <br />
+
+        </div>
+        <br />
+
+        @Html.ActionLink("Add Group", "Details", "Group")
+
+    </div>
+</div>

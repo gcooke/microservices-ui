@@ -1,0 +1,52 @@
+﻿@using Gateway.Web.Database
+@using Gateway.Web.Models
+@using Gateway.Web.Models.Controller
+@using Gateway.Web.Models.Group
+@using Gateway.Web.Models.Permission
+@using Gateway.Web.Utils
+@using Newtonsoft.Json
+@using Version = Gateway.Web.Models.Controller.Version
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "Group";
+    ViewBag.Current = "Permissions";
+}
+@{ Html.RenderPartial("_GroupNav", (PermissionsModel)@Model); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+
+        <h3>Permissions</h3>
+
+        <div id="containerx bulk">
+
+            <table style="width: 100%; white-space: nowrap" class="datatable">
+                <thead>
+                    <tr>
+                        <td>System Name</td>
+                        <td>Name</td>
+                        <td>Action</td>
+                    </tr>
+                </thead>
+                @foreach (PermissionModel item in Model.Items)
+                {
+                    <tr>
+                        <td>@item.SystemName</td>
+                        <td>@item.Name</td>
+                        <td>
+                            @Html.ActionLink("View", "Details", "Permission", new { id = item.Id }, new { @class = "hoverlink" })
+                            &nbsp;
+                            @Html.ActionLink("Remove", "RemovePermission", "Group", new { id = item.Id }, new { @class = "hoverlink" })
+                        </td>
+                    </tr>
+                }
+            </table>
+            <br />
+
+        </div>
+        <br />
+
+        @Html.ActionLink("Add Permission", "Details", "Group")
+
+    </div>
+</div>

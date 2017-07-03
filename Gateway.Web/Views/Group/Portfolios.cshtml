@@ -1,0 +1,49 @@
+﻿@using Gateway.Web.Database
+@using Gateway.Web.Models
+@using Gateway.Web.Models.Controller
+@using Gateway.Web.Models.Group
+@using Gateway.Web.Utils
+@using Newtonsoft.Json
+@using Version = Gateway.Web.Models.Controller.Version
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "Group";
+    ViewBag.Current = "Portfolios";
+}
+@{ Html.RenderPartial("_GroupNav", (PortfoliosModel)@Model); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+
+        <h3>Portfolios</h3>
+
+        <div id="containerx bulk">
+
+            <table style="width: 100%; white-space: nowrap" class="datatable">
+                <thead>
+                    <tr>
+                        <td>Level</td>
+                        <td>Name</td>
+                        <td>Action</td>
+                    </tr>
+                </thead>
+                @foreach (PortfolioModel item in Model.Items)
+                {
+                    <tr>
+                        <td>@item.Level</td>
+                        <td>@item.Name</td>
+                        <td>
+                            @Html.ActionLink("Remove", "RemovePortfolio", "Group", new { id = item.Id }, new { @class = "hoverlink" })
+                        </td>
+                    </tr>
+                }
+            </table>
+            <br />
+
+        </div>
+        <br />
+
+        @Html.ActionLink("Add Portfolio", "Details", "Group")
+
+    </div>
+</div>
