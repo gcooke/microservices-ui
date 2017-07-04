@@ -24,6 +24,7 @@
                 <thead>
                     <tr>
                         <td>Group</td>
+                        <td>Description</td>
                         <td>Action</td>
                     </tr>
                 </thead>
@@ -31,6 +32,7 @@
                 {
                     <tr>
                         <td>@group.Name</td>
+                        <td>@group.Description</td>
                         <td>
                             @Html.ActionLink("View", "Details", "Group", new { id = group.Id }, new { @class = "hoverlink" })
                         </td>
@@ -42,7 +44,42 @@
         </div>
         <br />
 
-        @Html.ActionLink("Add Group", "Details", "Group")
+        @using (Html.BeginForm("InsertGroup", "Security", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+            <a class="btn btn-primary" data-toggle="collapse" href="#collapsePanel" aria-expanded="false" aria-controls="collapsePanel">
+                Add New Group
+            </a>
+            <div class="@(Html.ViewData.ModelState.IsValid ? "collapse" : "collapse show")" id="collapsePanel">
+                <div class="info-block">
+                    <div>
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label class="control-label">Name</label>
+                                </div>
+                                <div class="col-md-4">
+                                    @Html.TextBox("_name", "", new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label class="control-label">Description</label>
+                                </div>
+                                <div class="col-md-4">
+                                    @Html.TextBox("_description", "", new { @class = "form-control" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-offset-2 col-md-4">
+                                <input type="submit" class="btn btn-primary" value="Add" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
     </div>
 </div>

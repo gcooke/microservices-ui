@@ -6,6 +6,7 @@
 @using Gateway.Web.Utils
 @using Newtonsoft.Json
 @using Version = Gateway.Web.Models.Controller.Version
+@model PermissionsModel
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
     ViewBag.Title = "Security";
@@ -48,7 +49,42 @@
         </div>
         <br />
 
-        @Html.ActionLink("Add Permission", "Details", "Permission")
+        @using (Html.BeginForm("InsertPermission", "Security", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            <a class="btn btn-primary" data-toggle="collapse" href="#collapsePanel" aria-expanded="false" aria-controls="collapsePanel">
+                Add New Permission
+            </a>
+            <div class="@(Html.ViewData.ModelState.IsValid ? "collapse" : "collapse show")" id="collapsePanel">
+                <div class="info-block">
+                    <div>
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label class="control-label">System</label>
+                                </div>
+                                <div class="col-md-4">
+                                    @Html.DropDownList("_system", Model.AvailableSystems, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label class="control-label">Name</label>
+                                </div>
+                                <div class="col-md-4">
+                                    @Html.TextBox("_name", "", new { @class = "form-control" })
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-offset-2 col-md-4">
+                                <input type="submit" class="btn btn-primary" value="Add" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
     </div>
 </div>

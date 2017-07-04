@@ -27,7 +27,7 @@
                class="@(ViewBag.Current == "Servers" ? "active" : "")">
                 <span class="glyphicon glyphicon-hdd"></span>&nbsp;&nbsp;Servers
             </a>
-        </li>   
+        </li>
         <li>
             <a href="~/Controllers/Aliases/"
                class="@(ViewBag.Current == "Aliases" ? "active" : "")">
@@ -39,7 +39,7 @@
                class="@(ViewBag.Current == "Workers" ? "active" : "")">
                 <span class="glyphicon glyphicon-cloud"></span>&nbsp;&nbsp;Workers
             </a>
-        </li>       
+        </li>
         <li>
             <a href="~/Controllers/Queues/"
                class="@(ViewBag.Current == "Queues" ? "active" : "")">
@@ -52,6 +52,22 @@
                 <span class="glyphicon glyphicon-search"></span>&nbsp;&nbsp;History
             </a>
         </li>        
+        <li>
+            &nbsp;
+        </li>
+    </ul>
+
+    <div class="sidebar-navheader">
+        <strong>ACTIONS</strong>
+    </div>
+
+    <ul class="sidebar-nav">
+        <li>
+            <a href="../Controllers/Create/"
+               class="@(ViewBag.Current == "Create" ? "active" : "")">
+                <span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;Create
+            </a>
+        </li>
     </ul>
 </div>
 <!-- /#sidebar-wrapper -->

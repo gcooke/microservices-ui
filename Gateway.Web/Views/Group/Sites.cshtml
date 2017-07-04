@@ -6,6 +6,7 @@
 @using Gateway.Web.Utils
 @using Newtonsoft.Json
 @using Version = Gateway.Web.Models.Controller.Version
+@model SitesModel
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
     ViewBag.Title = "Group";
@@ -32,7 +33,7 @@
                     <tr>
                         <td>@item.Name</td>
                         <td>
-                            @Html.ActionLink("Remove", "RemoveSite", "Group", new { id = item.Id }, new { @class = "hoverlink" })
+                            @Html.ActionLink("Remove", "RemoveSite", "Group", new { id = item.Id, groupId = Model.Id }, new { @class = "hoverlink" })
                         </td>
                     </tr>
                 }
@@ -42,7 +43,38 @@
         </div>
         <br />
 
-        @Html.ActionLink("Add Site", "Details", "Group")
+        @using (Html.BeginForm("InsertSite", "Group", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            <a class="btn btn-primary" data-toggle="collapse" href="#collapsePanel" aria-expanded="false" aria-controls="collapsePanel">
+                Add New Site
+            </a>
+            <div class="@(Html.ViewData.ModelState.IsValid ? "collapse" : "collapse show")" id="collapsePanel">
+                <div class="info-block">
+                    <div>
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+                        <!-- Hidden Id Field -->
+                        @Html.TextBox("id", Model.Id, new { @class = "form-control", @style = "display:none" })
+
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label class="control-label">Site</label>
+                                </div>
+                                <div class="col-md-4">
+                                    @Html.DropDownList("_site", Model.AvailableSites, new { @class = "form-control" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-offset-2 col-md-4">
+                                <input type="submit" class="btn" value="Add" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
 
     </div>
 </div>

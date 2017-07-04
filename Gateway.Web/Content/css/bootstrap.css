@@ -2986,7 +2986,7 @@ select[multiple].input-lg {
   .form-horizontal .control-label {
     text-align: right;
     margin-bottom: 0;
-    padding-top: 9px;
+    padding-top: 12px;
   }
 }
 .form-horizontal .has-feedback .form-control-feedback {

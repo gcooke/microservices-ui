@@ -8,6 +8,7 @@
 @using Gateway.Web.Utils
 @using Newtonsoft.Json
 @using Version = Gateway.Web.Models.Controller.Version
+@model AddInModel
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
     ViewBag.Title = "Add-In";
@@ -20,7 +21,9 @@
 
         <h3>Add-In</h3>
 
-        <br />
+        <br/>
+        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
         <div id="containerx bulk">
 
             <table style="width: 50%; white-space: nowrap" class="datatable">
@@ -41,8 +44,11 @@
                     <td>@Model.Description</td>
                 </tr>
             </table>
-
         </div>
+
+        <br />
+        @Html.ActionLink("Delete", "RemoveAddIn", "AddIn", new { id = Model.Id }, new { @class = "btn btn-primary" })
+
 
     </div>
 </div>

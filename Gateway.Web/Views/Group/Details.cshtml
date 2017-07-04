@@ -6,6 +6,7 @@
 @using Gateway.Web.Utils
 @using Newtonsoft.Json
 @using Version = Gateway.Web.Models.Controller.Version
+@model GroupModel
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
     ViewBag.Title = "Group";
@@ -19,6 +20,8 @@
         <h3>Group</h3>
 
         <br/>
+        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
         <div id="containerx bulk">
 
             <table style="width: 50%; white-space: nowrap" class="datatable">
@@ -37,6 +40,9 @@
             </table>
 
         </div>
+
+        <br />
+        @Html.ActionLink("Delete", "RemoveGroup", "Group", new { id = Model.Id }, new { @class = "btn btn-primary" })
 
 
     </div>

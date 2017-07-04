@@ -46,6 +46,10 @@ namespace Gateway.Web.Services
 
         Models.Group.GroupModel GetGroup(long id);
 
+        string[] Create(Models.Group.GroupModel model);
+
+        string[] DeleteGroup(long id);
+
         Models.Security.UsersModel GetUsers();
 
         Models.User.UserModel GetUser(string login);
@@ -54,11 +58,25 @@ namespace Gateway.Web.Services
 
         Models.AddIn.AddInModel GetAddIn(long id);
 
+        string[] Create(Models.AddIn.AddInModel model);
+
+        string[] DeleteAddIn(long id);
+
         Models.Security.PermissionsModel GetPermissions();
 
         Models.Permission.PermissionModel GetPermission(long id);
 
+        string[] DeletePermission(long id);
+
+        string[] Create(Models.Permission.PermissionModel model);
+
+        string[] InsertGroupPermission(long groupId, long permissionId);
+
         ADGroupsModel GetGroupADGroups(long groupId);
+
+        string[] DeleteGroupADGroup(long id, long groupId);
+
+        string[] Create(GroupActiveDirectory model);
 
         Models.Group.PermissionsModel GetGroupPermisions(long groupId);
 
@@ -66,6 +84,14 @@ namespace Gateway.Web.Services
 
         Models.Group.SitesModel GetGroupSites(long groupId);
 
+        string[] DeleteGroupSite(long id, long groupId);
+
+        string[] InsertGroupSite(long groupId, long siteId);
+
         Models.Group.AddInsModel GetGroupAddIns(long groupId);
+
+        string[] InsertGroupAddInVersion(long id, long groupId);
+
+        string[] DeleteGroupAddInVersion(long id, long groupId);
     }
 }

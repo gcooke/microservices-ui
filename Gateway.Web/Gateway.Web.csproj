@@ -275,6 +275,7 @@
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
     <Compile Include="Helpers\TreeView.cs" />
+    <Compile Include="Models\AddIn\AddInVersionModel.cs" />
     <Compile Include="Models\Controllers\AliasesModel.cs" />
     <Compile Include="Models\Controllers\HistoryModel.cs" />
     <Compile Include="Models\Controllers\QueueChartModel.cs" />
@@ -287,6 +288,7 @@
     <Compile Include="Models\Group\AddInsModel.cs" />
     <Compile Include="Models\Group\ADGroupsModel.cs" />
     <Compile Include="Models\Group\GroupActiveDirectory.cs" />
+    <Compile Include="Models\Group\GroupAddInVersionModel.cs" />
     <Compile Include="Models\Group\PermissionsModel.cs" />
     <Compile Include="Models\Group\PortfolioModel.cs" />
     <Compile Include="Models\Group\PortfoliosModel.cs" />
@@ -327,6 +329,7 @@
     <Compile Include="Models\Security\PermissionsModel.cs" />
     <Compile Include="Models\Security\ReportsModel.cs" />
     <Compile Include="Models\Permission\SystemPermissions.cs" />
+    <Compile Include="Models\Security\SystemNameModel.cs" />
     <Compile Include="Models\User\IUserModel.cs" />
     <Compile Include="Models\User\GroupsModel.cs" />
     <Compile Include="Models\User\AddInsModel.cs" />

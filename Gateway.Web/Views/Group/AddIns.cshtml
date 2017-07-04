@@ -6,6 +6,7 @@
 @using Gateway.Web.Utils
 @using Newtonsoft.Json
 @using Version = Gateway.Web.Models.Controller.Version
+@model AddInsModel
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
     ViewBag.Title = "Group";
@@ -16,7 +17,9 @@
 <div id="page-content-wrapper">
     <div class="hero-unit">
 
-        <h3>Add-Ins</h3>
+        <h3>Add-In Versions</h3>
+        <br />
+
 
         <div id="containerx bulk">
 
@@ -25,20 +28,18 @@
                     <tr>
                         <td>Name</td>
                         <td>Friendly Name</td>
-                        <td>Description</td>
+                        <td>Version</td>
                         <td>Action</td>
                     </tr>
                 </thead>
-                @foreach (AddInModel item in Model.Items)
+                @foreach (var item in Model.Items)
                 {
                     <tr>
                         <td>@item.Name</td>
                         <td>@item.FriendlyName</td>
-                        <td>@item.Description</td>
+                        <td>@item.Version</td>
                         <td>
-                            @Html.ActionLink("View", "Details", "AddIn", new { id = item.Id }, new { @class = "hoverlink" })
-                            &nbsp;
-                            @Html.ActionLink("Remove", "RemoveAddIn", "Group", new { id = item.Id }, new { @class = "hoverlink" })
+                            @Html.ActionLink("Remove", "RemoveAddInVersion", "Group", new { id = item.ExcelAddInVersionId, groupId = Model.Id }, new { @class = "hoverlink" })
                         </td>
                     </tr>
                 }
@@ -48,7 +49,38 @@
         </div>
         <br />
 
-        @Html.ActionLink("Add Add-In", "Details", "Group")
+        @using (Html.BeginForm("InsertAddInVersion", "Group", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            <a class="btn btn-primary" data-toggle="collapse" href="#collapsePanel" aria-expanded="false" aria-controls="collapsePanel">
+                Add New Version
+            </a>
+            <div class="@(Html.ViewData.ModelState.IsValid ? "collapse" : "collapse show")" id="collapsePanel">
+                <div class="info-block">
+                    <div>
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
+                        <!-- Hidden Id Field -->
+                        @Html.TextBox("_id", Model.Id, new { @class = "form-control", @style = "display:none" })
+
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label class="control-label">Version</label>
+                                </div>
+                                <div class="col-md-4">
+                                    @Html.DropDownList("_version", Model.AvailableVersions, new { @class = "form-control" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-offset-2 col-md-4">
+                                <input type="submit" class="btn btn-primary" value="Add" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
     </div>
+
 </div>

@@ -2,6 +2,7 @@
 using Gateway.Web.Database;
 using Gateway.Web.Models.Security;
 using Gateway.Web.Services;
+using Gateway.Web.Utils;
 using Controller = System.Web.Mvc.Controller;
 
 namespace Gateway.Web.Controllers
@@ -24,6 +25,32 @@ namespace Gateway.Web.Controllers
         {
             var model = _gateway.GetPermission(id);
             return View("Details", model);
-        }        
+        }
+
+        public ActionResult RemovePermission(string id)
+        {
+            ModelState.Clear();
+
+            // Validate parameters
+            if (string.IsNullOrEmpty(id))
+                ModelState.AddModelError("Id", "Id cannot be empty");
+
+            // Post instruction to security controller
+            if (ModelState.IsValid)
+            {
+                var result = _gateway.DeletePermission(id.ToLongOrDefault());
+                if (result != null)
+                    foreach (var item in result)
+                    {
+                        ModelState.AddModelError("Remote", item);
+                    }
+            }
+
+            //Setup next view
+            if (ModelState.IsValid)
+                return Redirect("~/Security/Permissions");
+
+            return Details(id.ToLongOrDefault());
+        }
     }
 }
