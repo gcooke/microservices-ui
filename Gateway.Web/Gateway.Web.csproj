@@ -192,6 +192,10 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AddInController.cs" />
+    <Compile Include="Controllers\PermissionController.cs" />
+    <Compile Include="Controllers\GroupController.cs" />
+    <Compile Include="Controllers\SecurityController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\RequestController.cs" />
     <Compile Include="Controllers\ControllersController.cs" />
@@ -271,6 +275,7 @@
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
     <Compile Include="Helpers\TreeView.cs" />
+    <Compile Include="Models\AddIn\AddInVersionModel.cs" />
     <Compile Include="Models\Controllers\AliasesModel.cs" />
     <Compile Include="Models\Controllers\HistoryModel.cs" />
     <Compile Include="Models\Controllers\QueueChartModel.cs" />
@@ -280,6 +285,15 @@
     <Compile Include="Models\Controller\HistoryModel.cs" />
     <Compile Include="Models\Controller\QueueModel.cs" />
     <Compile Include="Models\Controller\QueuesModel.cs" />
+    <Compile Include="Models\Group\AddInsModel.cs" />
+    <Compile Include="Models\Group\ADGroupsModel.cs" />
+    <Compile Include="Models\Group\GroupActiveDirectory.cs" />
+    <Compile Include="Models\Group\GroupAddInVersionModel.cs" />
+    <Compile Include="Models\Group\PermissionsModel.cs" />
+    <Compile Include="Models\Group\PortfolioModel.cs" />
+    <Compile Include="Models\Group\PortfoliosModel.cs" />
+    <Compile Include="Models\Group\SiteModel.cs" />
+    <Compile Include="Models\Group\SitesModel.cs" />
     <Compile Include="Models\Request\Children.cs" />
     <Compile Include="Models\Request\Payloads.cs" />
     <Compile Include="Models\Request\RequestPayload.cs" />
@@ -307,6 +321,22 @@
     <Compile Include="Models\Controller\Version.cs" />
     <Compile Include="Models\Home\IndexModel.cs" />
     <Compile Include="Models\Request\Timings.cs" />
+    <Compile Include="Models\AddIn\AddInModel.cs" />
+    <Compile Include="Models\Security\AddInsModel.cs" />
+    <Compile Include="Models\Group\GroupModel.cs" />
+    <Compile Include="Models\Security\GroupsModel.cs" />
+    <Compile Include="Models\Permission\PermissionModel.cs" />
+    <Compile Include="Models\Security\PermissionsModel.cs" />
+    <Compile Include="Models\Security\ReportsModel.cs" />
+    <Compile Include="Models\Permission\SystemPermissions.cs" />
+    <Compile Include="Models\Security\SystemNameModel.cs" />
+    <Compile Include="Models\User\IUserModel.cs" />
+    <Compile Include="Models\User\GroupsModel.cs" />
+    <Compile Include="Models\User\AddInsModel.cs" />
+    <Compile Include="Models\User\PortfoliosModel.cs" />
+    <Compile Include="Models\User\SitesModel.cs" />
+    <Compile Include="Models\User\UserModel.cs" />
+    <Compile Include="Models\Security\UsersModel.cs" />
     <Compile Include="Models\User\HistoryModel.cs" />
     <Compile Include="Registrations.cs" />
     <Compile Include="Services\ControllerInformation.cs" />
@@ -329,6 +359,7 @@
     <Compile Include="Utils\DataContractSerializationEx.cs" />
     <Compile Include="Utils\SerializationEx.cs" />
     <Compile Include="Utils\SessionEx.cs" />
+    <Compile Include="Utils\StringEx.cs" />
     <Compile Include="Utils\TimeSpanExtensions.cs" />
     <Compile Include="Utils\XmlExtensions.cs" />
   </ItemGroup>
@@ -415,7 +446,7 @@
     <Content Include="Views\Controller\Dashboard.cshtml" />
     <None Include="Properties\PublishProfiles\local.pubxml" />
     <None Include="Properties\PublishProfiles\remote.pubxml" />
-    <Content Include="Views\Shared\_ControllerNav.cshtml" />
+    <Content Include="Views\Controller\_ControllerNav.cshtml" />
     <Content Include="Views\Controller\Workers.cshtml" />
     <Content Include="Views\Controller\Versions.cshtml" />
     <Content Include="Views\Controller\Queues.cshtml" />
@@ -424,7 +455,7 @@
     <Content Include="Views\Shared\_Layout.NoFooter.cshtml" />
     <Content Include="Views\Utils\Glyphs.cshtml" />
     <Content Include="Views\Controller\RequestsChart.cshtml" />
-    <Content Include="Views\Shared\_ControllersNav.cshtml" />
+    <Content Include="Views\Controllers\_ControllersNav.cshtml" />
     <Content Include="Views\Controllers\Workers.cshtml" />
     <Content Include="Views\Controllers\Queues.cshtml" />
     <Content Include="Views\Controllers\History.cshtml" />
@@ -435,9 +466,9 @@
     <Content Include="Views\Controller\QueueChart.cshtml" />
     <Content Include="Views\Controllers\QueueChart.cshtml" />
     <Content Include="Views\Shared\_HistoryItems.cshtml" />
-    <Content Include="Views\Shared\_RequestNav.cshtml" />
+    <Content Include="Views\Request\_RequestNav.cshtml" />
     <Content Include="Views\User\History.cshtml" />
-    <Content Include="Views\Shared\_UserNav.cshtml" />
+    <Content Include="Views\User\_UserNav.cshtml" />
     <Content Include="Views\Shared\_NavigationBar.cshtml" />
     <Content Include="Views\Request\Timings.cshtml" />
     <Content Include="Views\Request\Payloads.cshtml" />
@@ -445,9 +476,36 @@
     <Content Include="Views\Request\Children.cshtml" />
     <Content Include="Views\Controllers\Aliases.cshtml" />
     <Content Include="Views\Shared\_ControllerConfiguration.cshtml" />
+    <Content Include="Views\Security\Groups.cshtml" />
+    <Content Include="Views\Security\_SecurityNav.cshtml" />
+    <Content Include="Views\Security\Reports.cshtml" />
+    <Content Include="Views\Security\Permissions.cshtml" />
+    <Content Include="Views\Security\Users.cshtml" />
+    <Content Include="Views\Security\AddIns.cshtml" />
+    <Content Include="Views\Group\Details.cshtml" />
+    <Content Include="Views\Group\_GroupNav.cshtml" />
+    <Content Include="Views\Permission\_PermissionNav.cshtml" />
+    <Content Include="Views\Permission\Details.cshtml" />
+    <Content Include="Views\AddIn\Details.cshtml" />
+    <Content Include="Views\AddIn\_AddInNav.cshtml" />
+    <Content Include="Views\User\Details.cshtml" />
+    <Content Include="Views\Group\Sites.cshtml" />
+    <Content Include="Views\Group\AddIns.cshtml" />
+    <Content Include="Views\Group\ADGroups.cshtml" />
+    <Content Include="Views\Group\Permissions.cshtml" />
+    <Content Include="Views\Group\Portfolios.cshtml" />
+    <Content Include="Views\User\Sites.cshtml" />
+    <Content Include="Views\User\AddIns.cshtml" />
+    <Content Include="Views\User\Portfolios.cshtml" />
+    <Content Include="Views\User\Groups.cshtml" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
+    <Folder Include="Views\Reports\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
     <Content Include="Content\js\jquery-1.10.2.min.map" />
   </ItemGroup>

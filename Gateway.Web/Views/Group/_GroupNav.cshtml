@@ -1,0 +1,69 @@
+﻿<!-- Sidebar -->
+<div id="sidebar-wrapper">
+    <br />
+    <div style="margin-left: 10px; height: 50px">
+        <div style="float: left">
+            <img class="sidebar-img" src="@Url.Content(MvcApplication.ControllerIcon)" style="height: 48px">
+        </div>
+        <div style="float: left; margin-top: 5px">
+            <span class="sidebar-title">@ViewBag.Title</span><br />
+            <span class="sidebar-subtitle">@ViewBag.Current</span>
+        </div>
+    </div>
+
+    <div class="sidebar-navheader">
+        <strong>DETAILS</strong>
+    </div>
+
+    <ul class="sidebar-nav">
+        <li>
+            <a href="~/Group/Details/@Model.Id/"
+               class="@(ViewBag.Current == "Details" ? "active" : "")">
+                <span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;Details
+            </a>
+        </li>
+        <li>
+            <a href="~/Group/ADGRoups/@Model.Id/"
+               class="@(ViewBag.Current == "ADGRoups" ? "active" : "")">
+                <span class="glyphicon glyphicon-inbox"></span>&nbsp;&nbsp;AD Groups
+            </a>
+        </li>
+        <li>
+            <a href="~/Group/Permissions/@Model.Id/"
+               class="@(ViewBag.Current == "Permissions" ? "active" : "")">
+                <span class="glyphicon glyphicon-eye-close"></span>&nbsp;&nbsp;Permissions
+            </a>
+        </li>
+        <li>
+            <a href="~/Group/Portfolios/@Model.Id/"
+               class="@(ViewBag.Current == "Portfolios" ? "active" : "")">
+                <span class="glyphicon glyphicon-tree-conifer"></span>&nbsp;&nbsp;Portfolios
+            </a>
+        </li>
+        <li>
+            <a href="~/Group/Sites/@Model.Id/"
+               class="@(ViewBag.Current == "Sites" ? "active" : "")">
+                <span class="glyphicon glyphicon-globe"></span>&nbsp;&nbsp;Sites
+            </a>
+        </li>
+        <li>
+            <a href="~/Group/AddIns/@Model.Id/"
+               class="@(ViewBag.Current == "AddIns" ? "active" : "")">
+                <span class="glyphicon glyphicon-retweet"></span>&nbsp;&nbsp;Add-Ins
+            </a>
+        </li>
+    </ul>
+
+    <div class="sidebar-navheader">
+        <strong>NAVIGATION</strong>
+    </div>
+
+    <ul class="sidebar-nav">
+        <li>
+            <a href="~/Security/Groups">
+                <span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp;&nbsp;All Groups
+            </a>
+        </li>
+    </ul>
+</div>
+<!-- /#sidebar-wrapper -->

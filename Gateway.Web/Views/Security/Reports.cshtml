@@ -1,26 +1,27 @@
 ﻿@using Gateway.Web.Database
 @using Gateway.Web.Models
 @using Gateway.Web.Models.Controller
-@using Gateway.Web.Models.User
+@using Gateway.Web.Models.Security
 @using Gateway.Web.Utils
 @using Newtonsoft.Json
 @using Version = Gateway.Web.Models.Controller.Version
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
-    ViewBag.Title = "User: " + @Model.Login;
-    ViewBag.Current = "History";
+    ViewBag.Title = "Security";
+    ViewBag.Current = "Reports";
+    ViewBag.Report = Model.Report;
 }
-@{ Html.RenderPartial("_UserNav", (IUserModel)@Model); }
+@{ Html.RenderPartial("_SecurityNav", (ReportsModel)@Model); }
 
 <div id="page-content-wrapper">
     <div class="hero-unit">
 
-        <h3>Last @Model.Requests.Count requests</h3>
+        <h3>@Model.ReportName</h3>
 
         <br />
 
         <div class="containerx bulk">
-            @{ Html.RenderPartial("_HistoryItems", (List<HistoryItem>)@Model.Requests); }
+            
         </div>
 
         <br />

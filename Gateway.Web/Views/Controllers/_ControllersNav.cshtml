@@ -14,7 +14,7 @@
     <div class="sidebar-navheader">
         <strong>DETAILS</strong>
     </div>
-
+    
     <ul class="sidebar-nav">
         <li>
             <a href="~/Controllers/Dashboard/"
@@ -51,9 +51,19 @@
                class="@(ViewBag.Current == "History" ? "active" : "")">
                 <span class="glyphicon glyphicon-search"></span>&nbsp;&nbsp;History
             </a>
-        </li>
+        </li>        
         <li>
-            <a href="~/Controllers/Create/"
+            &nbsp;
+        </li>
+    </ul>
+
+    <div class="sidebar-navheader">
+        <strong>ACTIONS</strong>
+    </div>
+
+    <ul class="sidebar-nav">
+        <li>
+            <a href="../Controllers/Create/"
                class="@(ViewBag.Current == "Create" ? "active" : "")">
                 <span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;Create
             </a>
