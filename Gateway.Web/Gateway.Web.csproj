@@ -192,6 +192,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\DownloadsController.cs" />
     <Compile Include="Controllers\AddInController.cs" />
     <Compile Include="Controllers\PermissionController.cs" />
     <Compile Include="Controllers\GroupController.cs" />

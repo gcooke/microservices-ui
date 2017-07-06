@@ -90,7 +90,7 @@ namespace Gateway.Web.Services
 
         Models.Group.AddInsModel GetGroupAddIns(long groupId);
 
-        string[] InsertGroupAddInVersion(long id, long groupId);
+        string[] InsertGroupAddInVersion(long groupId, AddInVersionModel addInVersion);
 
         string[] DeleteGroupAddInVersion(long id, long groupId);
     }
