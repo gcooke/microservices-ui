@@ -827,11 +827,10 @@ namespace Gateway.Web.Services
                 foreach (var item in element.Descendants("AddInVersion"))
                 {
                     var model = item.Deserialize<AddInVersionModel>();
-                    var addIn = target.AvailableAddIns.FirstOrDefault(a => a.Id == model.AddInId);
                     var foo = new SelectListItem
                     {
-                        Text = string.Format("{0} - {1}", addIn.FriendlyName, model.Name),
-                        Value = model.Id.ToString()
+                        Text = string.Format("{0} - {1}", model.AddIn, model.Version),
+                        Value = string.Format("{0}|{1}", model.AddIn, model.Version)
                     };
                     interim.Add(foo);
                 }
@@ -840,10 +839,10 @@ namespace Gateway.Web.Services
             }
         }
 
-        public string[] InsertGroupAddInVersion(long id, long groupId)
+        public string[] InsertGroupAddInVersion(long groupId, AddInVersionModel addInVersion)
         {
-            var query = string.Format("groups/{0}/addins/{1}", groupId, id);
-            var response = _restService.Put("Security", "latest", query, string.Empty);
+            var query = string.Format("groups/{0}/addins", groupId);
+            var response = _restService.Put("Security", "latest", query, addInVersion.Serialize());
 
             if (response.Successfull)
             {

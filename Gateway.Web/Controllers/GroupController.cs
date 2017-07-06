@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using Gateway.Web.Database;
+using Gateway.Web.Models.AddIn;
 using Gateway.Web.Models.Group;
 using Gateway.Web.Models.Permission;
 using Gateway.Web.Services;
@@ -288,15 +289,19 @@ namespace Gateway.Web.Controllers
 
             // Validate parameters
             var groupId = collection["_id"];
-            var versionId = collection["_version"];
+            var version = collection["_version"];
 
-            if (string.IsNullOrEmpty(versionId))
+            if (string.IsNullOrEmpty(version))
                 ModelState.AddModelError("Version", "Version cannot be empty");
+
+            var addInName = version.Split('|')[0];
+            var versionName = version.Split('|')[1];
 
             // Post instruction to security controller
             if (ModelState.IsValid)
             {
-                var result = _gateway.InsertGroupAddInVersion(versionId.ToLongOrDefault(), groupId.ToLongOrDefault());
+                var addInVersion = new AddInVersionModel() {AddIn = addInName, Version = versionName};
+                var result = _gateway.InsertGroupAddInVersion(groupId.ToLongOrDefault(), addInVersion);
                 if (result != null)
                     foreach (var item in result)
                     {
