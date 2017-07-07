@@ -827,6 +827,8 @@ namespace Gateway.Web.Services
                 foreach (var item in element.Descendants("AddInVersion"))
                 {
                     var model = item.Deserialize<AddInVersionModel>();
+                    if (string.Equals(model.AddIn, "ExcelTools", StringComparison.CurrentCultureIgnoreCase)) continue;
+
                     var foo = new SelectListItem
                     {
                         Text = string.Format("{0} - {1}", model.AddIn, model.Version),
