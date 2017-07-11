@@ -65,37 +65,3 @@
         <br />
     </div>
 </div>
-
-<ul id="Chats"></ul>
-@section scripts {
-
-    <script src="~/Scripts/jquery.signalR-2.2.1.min.js"></script>
-    <script src="~/signalr/Hubs"></script>
-    <script>
-        $(function () {
-
-            // Get a reference to our hub
-            var hub = $.connection.cpuInfo;
-
-            // Add a handler to receive updates from the server
-            hub.client.cpuInfoMessage = function(machineName, cpu, memUsage, memTotal) {
-                //('#Chats').set('<li><strong>' + htmlEncode(machineName) + '</strong>: ' + htmlEncode(cpu) + '</li>');
-
-                alert("dfsdfsd");
-            };
-
-            // Start the connection
-            $.connection.hub.start().done(function() {
-
-                //console.("sfdksfl;mdl");
-                alert("dfsdfsd");
-                //  ('#Chats').append('<li><strong>' + htmlEncode("stat") + '</strong>: ' + htmlEncode("uwue") + '</li>');
-            });
-
-            function htmlEncode(value) {
-                var encodedValue = $('<div />').text(value).html();
-                return encodedValue;
-            }
-        });
-    </script>
-}

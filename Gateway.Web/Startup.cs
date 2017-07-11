@@ -1,31 +1,33 @@
-﻿using System;
+﻿using System.Web.Hosting;
+using System.Web.Services.Description;
 using Gateway.Web;
 using log4net.Repository.Hierarchy;
+using Microsoft.AspNet.SignalR;
 using Microsoft.Owin;
 using Owin;
-using System.Web.Services.Description;
-using System.Web.Hosting;
 
-[assembly: OwinStartup(typeof(Startup))]
+[assembly: OwinStartup(typeof (Startup))]
 
 namespace Gateway.Web
 {
     public class Startup
     {
+        public static string Environment { get; set; }
+
         public void Configuration(IAppBuilder app)
         {
-            // Any connection or hub wire up and configuration should go here
+            var config = new HubConfiguration();
+            //TODO: Pass config to SignalR - config will contain dependencies that will be 
+            //injected into Hubs
             app.MapSignalR();
         }
+
         public void ConfigureServices(ServiceCollection services)
         {
-            // Code omitted
-            services.AddTask<FeedEngine>();
         }
+
         public void Configure(IAppBuilder app, HostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            // Code omitted
-            app.StartTask<FeedEngine>(TimeSpan.FromSeconds(15));
         }
     }
 }

@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Web.UI.WebControls.Expressions;
 
 namespace Gateway.Web.Models.Controllers
 {
@@ -20,7 +21,10 @@ namespace Gateway.Web.Models.Controllers
         {
             Servers = Root
                 .GatewayInfo
-                .Select(gatewayInfo => new Server(gatewayInfo))
+                .Select(gatewayInfo =>
+                        new Server(gatewayInfo)
+                            .BuildPerformanceCounters()
+                )
                 .ToList();
         }
     }
@@ -32,7 +36,41 @@ namespace Gateway.Web.Models.Controllers
             Node = gatewayInfo.GatewayNode.Node;
             Workers = GetWorkerCount(gatewayInfo);
             Queues = GetQueueSize(gatewayInfo);
-            Status = GetStatus(gatewayInfo);
+
+            GetStatusAndOutput(gatewayInfo);
+        }
+
+        public Server BuildPerformanceCounters()
+        {
+            Cpu = CounterValue("processor", "% Processor Time", "_Total");
+            Memory = CounterValue("Memory", "% Committed Bytes In Use");
+            Disk = "err";
+            return this;
+        }
+
+        private string CounterValue(string categoryName, string counterName, string instanceName = "")
+        {
+            PerformanceCounter counter = null;
+            try
+            {
+                counter = instanceName == string.Empty ?
+                    new PerformanceCounter(categoryName, counterName) :
+                    new PerformanceCounter(categoryName, counterName, instanceName);
+                counter.MachineName = Node;
+                return counter.NextValue().ToString("4f");
+            }
+            catch (Exception)
+            {
+                return "Err";
+            }
+            finally
+            {
+                if (counter != null)
+                {
+                    counter.Close();
+                    counter.Dispose();
+                }
+            }
         }
 
         public string Node { get; private set; }
@@ -48,6 +86,8 @@ namespace Gateway.Web.Models.Controllers
         public int Queues { get; private set; }
 
         public string Status { get; private set; }
+
+        public string Output { get; private set; }
 
         private int GetQueueSize(GatewayInfo gatewayInfo)
         {
@@ -75,16 +115,21 @@ namespace Gateway.Web.Models.Controllers
                 .Count();
         }
 
-        private string GetStatus(GatewayInfo gatewayInfo)
+        private void GetStatusAndOutput(GatewayInfo gatewayInfo)
         {
             if (gatewayInfo.GatewayNodeServices == null ||
                 gatewayInfo.GatewayNodeServices.Any(service => service.CheckID == "serfHealth") == false)
-                return string.Empty;
+                return;
 
-            return gatewayInfo
+            Status = gatewayInfo
                 .GatewayNodeServices
                 .Single(service => service.CheckID == "serfHealth")
                 .Status;
+
+            Output = gatewayInfo
+                .GatewayNodeServices
+                .Single(service => service.CheckID == "serfHealth")
+                .Output;
         }
     }
 }

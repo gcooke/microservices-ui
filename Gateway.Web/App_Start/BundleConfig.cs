@@ -27,6 +27,14 @@ namespace Gateway.Web
                 "~/Content/js/loading.js"
                 ));
 
+            bundles.Add(new ScriptBundle("~/bundles/signalR").Include(
+                "~/Scripts/jquery.signalR-{version}.js"
+                ));
+
+            bundles.Add(new ScriptBundle("~/bundles/signalRHub").Include(
+                "~/Scripts/Controllers/ServerTicker.js"
+                ));
+
             bundles.Add(new StyleBundle("~/styles/css").Include(
                 "~/Content/css/bootstrap.css",
                 "~/Content/css/simple-sidebar.css",

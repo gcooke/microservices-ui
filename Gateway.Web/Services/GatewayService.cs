@@ -37,6 +37,8 @@ namespace Gateway.Web.Services
 
         public ServersModel GetServers()
         {
+            //TODO: Requires a clean-up:
+            //TODO: What is the first gateway is not available?
             if (!_gateways.Any())
                 return null;
 

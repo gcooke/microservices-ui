@@ -237,7 +237,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Api\CpuInfoController.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -320,7 +319,7 @@
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
     <Compile Include="Helpers\TreeView.cs" />
-    <Compile Include="Hubs\CpuInfo.cs" />
+    <Compile Include="Hubs\ServerInfoHub.cs" />
     <Compile Include="Models\Controllers\AliasesModel.cs" />
     <Compile Include="Models\Controllers\CpuInfoPostData.cs" />
     <Compile Include="Models\Controllers\GatewayInfo.cs" />
@@ -366,6 +365,8 @@
     <Compile Include="Services\IGatewayService.cs" />
     <Compile Include="Services\ProcessInformation.cs" />
     <Compile Include="Services\QueueInformation.cs" />
+    <Compile Include="Services\ServerInfoTicker.cs" />
+    <Compile Include="Services\ServerInfoService.cs" />
     <Compile Include="Services\VersionUpdate.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="UnityDependencyResolver.cs" />
@@ -440,6 +441,7 @@
     <Content Include="Content\js\respond.js" />
     <Content Include="Content\js\respond.min.js" />
     <Content Include="Content\js\_references.js" />
+    <Content Include="Scripts\Controllers\ServerTicker.js" />
     <Content Include="Scripts\jquery.signalR-2.2.1.js" />
     <Content Include="Scripts\jquery.signalR-2.2.1.min.js" />
     <Content Include="Views\Controllers\Create.cshtml" />
@@ -499,8 +501,11 @@
     <Content Include="Views\Request\Children.cshtml" />
     <Content Include="Views\Controllers\Aliases.cshtml" />
     <Content Include="Views\Shared\_ControllerConfiguration.cshtml" />
+    <Content Include="Views\Controllers\ServerInfos.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Api\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
     <Content Include="Content\js\jquery-1.10.2.min.map" />

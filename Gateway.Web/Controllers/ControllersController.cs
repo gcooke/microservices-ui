@@ -94,6 +94,11 @@ namespace Gateway.Web.Controllers
             return View(new ConfigurationModel());
         }
 
+        public ActionResult ServerInfos()
+        {
+            return View();
+        }
+
         [HttpPost]
         public ActionResult Create(ConfigurationModel model)
         {
