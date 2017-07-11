@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
+using Bagl.Cib.MSF.ClientAPI.Gateway;
 using Gateway.Web.Database;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Services;
@@ -17,11 +18,16 @@ namespace Gateway.Web.Controllers
     {
         private readonly IGatewayDatabaseService _dataService;
         private readonly IGatewayService _gateway;
+        private readonly IGatewayRestService _gatewayRestService;
 
-        public ControllersController(IGatewayDatabaseService dataService, IGatewayService gateway)
+        public ControllersController(
+            IGatewayDatabaseService dataService,
+            IGatewayService gateway,
+            IGatewayRestService gatewayRestService)
         {
             _dataService = dataService;
             _gateway = gateway;
+            _gatewayRestService = gatewayRestService;
         }
 
         public ActionResult Dashboard()
@@ -88,6 +94,11 @@ namespace Gateway.Web.Controllers
             return View(new ConfigurationModel());
         }
 
+        public ActionResult ServerInfos()
+        {
+            return View();
+        }
+
         [HttpPost]
         public ActionResult Create(ConfigurationModel model)
         {
@@ -97,7 +108,7 @@ namespace Gateway.Web.Controllers
                 {
                     var response = _gateway.UpdateControllerConfiguration(model);
 
-                    if (response.Successfull) 
+                    if (response.Successfull)
                         return RedirectToAction("Dashboard");
 
                     ModelState.AddModelError(string.Empty, response.Content.Message);

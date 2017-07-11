@@ -11,6 +11,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.DynamicData;
+using Bagl.Cib.MSF.ClientAPI.Gateway;
 
 namespace Gateway.Web.Controllers
 {
@@ -18,11 +19,16 @@ namespace Gateway.Web.Controllers
     {
         private readonly IGatewayDatabaseService _dataService;
         private readonly IGatewayService _gateway;
+        private readonly IGatewayRestService _gatewayRestService;
 
-        public ControllerController(IGatewayDatabaseService dataService, IGatewayService gateway)
+        public ControllerController(
+            IGatewayDatabaseService dataService,
+            IGatewayService gateway,
+            IGatewayRestService gatewayRestService)
         {
             _dataService = dataService;
             _gateway = gateway;
+            _gatewayRestService = gatewayRestService;
         }
 
         public ActionResult Dashboard(string id)
@@ -149,7 +155,7 @@ namespace Gateway.Web.Controllers
                     var response = _gateway.UpdateControllerConfiguration(model);
 
                     if (response.Successfull)
-                        return RedirectToAction("Dashboard", new {id = model.Name});
+                        return RedirectToAction("Dashboard", new { id = model.Name });
 
                     ModelState.AddModelError(string.Empty, response.Content.Message);
                 }
