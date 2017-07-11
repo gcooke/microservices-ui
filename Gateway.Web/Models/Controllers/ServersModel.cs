@@ -12,6 +12,9 @@ namespace Gateway.Web.Models.Controllers
             Root = info;
             ConstructModel();
         }
+        public ServersModel()
+        {
+        }
 
         public ArrayOfGatewayInfo Root { get; private set; }
 

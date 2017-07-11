@@ -47,21 +47,30 @@ namespace Gateway.Web.Services
 
         public ServersModel GetServers()
         {
-            //TODO: Requires a clean-up:
-            //TODO: What is the first gateway is not available?
             if (!_gateways.Any())
                 return null;
 
-            var gateway = _gateways.First();
-            var url = string.Format("http://{0}:{1}/{2}", gateway, _port, "health/info");
-            var document = Fetch(url);
+            foreach (var gateway in _gateways)
+            {
+                //TODO: Requires a clean-up:
+                //TODO: What is the gateways are not available?
+                try
+                {
+                    var url = string.Format("http://{0}:{1}/{2}", gateway, _port, "health/info");
+                    var document = Fetch(url);
 
-            if (document == null || !document.Descendants().Any())
-                return null;
+                    if (document == null || !document.Descendants().Any())
+                        continue;
 
-            var xmlElement = document.Descendants().First();
-            var servers = xmlElement.Deserialize<ArrayOfGatewayInfo>();
-            return new ServersModel(servers);
+                    var xmlElement = document.Descendants().First();
+                    var servers = xmlElement.Deserialize<ArrayOfGatewayInfo>();
+                    return new ServersModel(servers);
+                }
+                catch
+                {
+                }
+            }
+            return new ServersModel();
         }
 
         public WorkersModel GetWorkers()
@@ -185,7 +194,7 @@ namespace Gateway.Web.Services
             var xml = response.Document.XPathSelectElement("/namespace:Response/namespace:Payload/Request",
                 namespaceManager);
 
-            if (xml == null) return new RequestPayload {ChildRequests = new ChildRequests()};
+            if (xml == null) return new RequestPayload { ChildRequests = new ChildRequests() };
             return xml.DeserializeUsingDataContract<RequestPayload>();
         }
 
@@ -435,7 +444,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] {response.Message};
+            return new[] { response.Message };
         }
 
         public string[] DeleteGroup(long id)
@@ -448,7 +457,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] {response.Message};
+            return new[] { response.Message };
         }
 
         public UsersModel GetUsers()
@@ -519,7 +528,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] {response.Message};
+            return new[] { response.Message };
         }
 
         public string[] DeleteAddIn(long id)
@@ -532,7 +541,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] {response.Message};
+            return new[] { response.Message };
         }
 
 
@@ -572,7 +581,7 @@ namespace Gateway.Web.Services
                 foreach (var item in element.Descendants("SystemName"))
                 {
                     var model = item.Deserialize<SystemNameModel>();
-                    var foo = new SelectListItem {Text = model.Name, Value = model.Id.ToString()};
+                    var foo = new SelectListItem { Text = model.Name, Value = model.Id.ToString() };
                     interim.Add(foo);
                 }
 
@@ -605,7 +614,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] {response.Message};
+            return new[] { response.Message };
         }
 
         public string[] Create(PermissionModel model)
@@ -618,7 +627,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] {response.Message};
+            return new[] { response.Message };
         }
 
         public string[] InsertGroupPermission(long groupId, long permissionId)
@@ -631,7 +640,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] {response.Message};
+            return new[] { response.Message };
         }
 
         public ADGroupsModel GetGroupADGroups(long groupId)
@@ -664,7 +673,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] {response.Message};
+            return new[] { response.Message };
         }
 
         public string[] Create(GroupActiveDirectory model)
@@ -678,7 +687,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] {response.Message};
+            return new[] { response.Message };
         }
 
         public PermissionsModel GetGroupPermisions(long groupId)
@@ -776,7 +785,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] {response.Message};
+            return new[] { response.Message };
         }
 
         public string[] InsertGroupSite(long groupId, long siteId)
@@ -789,7 +798,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] {response.Message};
+            return new[] { response.Message };
         }
 
         private void PopulateAvailableSites(SitesModel target)
@@ -803,7 +812,7 @@ namespace Gateway.Web.Services
                 foreach (var item in element.Descendants("Site"))
                 {
                     var model = item.Deserialize<SiteModel>();
-                    var foo = new SelectListItem {Text = model.Name, Value = model.Id.ToString()};
+                    var foo = new SelectListItem { Text = model.Name, Value = model.Id.ToString() };
                     interim.Add(foo);
                 }
 
@@ -883,7 +892,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] {response.Message};
+            return new[] { response.Message };
         }
 
         public string[] DeleteGroupAddInVersion(long id, long groupId)
@@ -896,7 +905,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] {response.Message};
+            return new[] { response.Message };
         }
 
         private class ServerResponse

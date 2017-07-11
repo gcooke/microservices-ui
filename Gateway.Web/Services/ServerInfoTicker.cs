@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 using System.Web.Mvc;
+using Bagl.Cib.MIT.IoC;
 using Gateway.Web.Hubs;
 using Gateway.Web.Models.Controllers;
 using Microsoft.AspNet.SignalR;
@@ -33,7 +34,7 @@ namespace Gateway.Web.Services
 
         private readonly Timer _timer;
 
-        private readonly TimeSpan _updateInterval = TimeSpan.FromSeconds(20);
+        private readonly TimeSpan _updateInterval;
 
         private readonly object _updateServerLock = new object();
 
@@ -46,10 +47,28 @@ namespace Gateway.Web.Services
             )
         {
             Clients = clients;
+
             var resolver = DependencyResolver.Current;
-            var serverInfoService = (IServerInfoService) resolver.GetService(typeof (IServerInfoService));
-            _serverInfoService = serverInfoService;
+
+            var serverInfoService = resolver.GetService(typeof(IServerInfoService));
+
+            if (serverInfoService == null)
+                throw new ArgumentException(nameof(serverInfoService));
+
+            _serverInfoService = (IServerInfoService)serverInfoService;
+
+            var information = resolver.GetService(typeof(ISystemInformation));
+            string intervalMsConfigValue =
+                (information == null) ? "1000" : ((ISystemInformation)information).GetSetting("TickerIntervalMs");
+
+            double intervalMs;
+            if (!double.TryParse(intervalMsConfigValue, out intervalMs))
+                intervalMs = 1000;
+
+            _updateInterval = TimeSpan.FromSeconds(intervalMs);
+
             _timer = new Timer(UpdateServerInfo, null, _updateInterval, _updateInterval);
+
             LoadServers();
         }
 
