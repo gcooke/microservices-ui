@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
@@ -184,7 +185,7 @@ namespace Gateway.Web.Services
             var xml = response.Document.XPathSelectElement("/namespace:Response/namespace:Payload/Request",
                 namespaceManager);
 
-            if (xml == null) return new RequestPayload { ChildRequests = new ChildRequests() };
+            if (xml == null) return new RequestPayload {ChildRequests = new ChildRequests()};
             return xml.DeserializeUsingDataContract<RequestPayload>();
         }
 
@@ -389,7 +390,6 @@ namespace Gateway.Web.Services
             }
         }
 
-        }
 
         public Models.Security.GroupsModel GetGroups()
         {
@@ -435,7 +435,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Message };
+            return new[] {response.Message};
         }
 
         public string[] DeleteGroup(long id)
@@ -448,7 +448,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Message };
+            return new[] {response.Message};
         }
 
         public UsersModel GetUsers()
@@ -519,7 +519,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Message };
+            return new[] {response.Message};
         }
 
         public string[] DeleteAddIn(long id)
@@ -532,7 +532,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Message };
+            return new[] {response.Message};
         }
 
 
@@ -572,7 +572,7 @@ namespace Gateway.Web.Services
                 foreach (var item in element.Descendants("SystemName"))
                 {
                     var model = item.Deserialize<SystemNameModel>();
-                    var foo = new SelectListItem { Text = model.Name, Value = model.Id.ToString() };
+                    var foo = new SelectListItem {Text = model.Name, Value = model.Id.ToString()};
                     interim.Add(foo);
                 }
 
@@ -605,7 +605,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Message };
+            return new[] {response.Message};
         }
 
         public string[] Create(PermissionModel model)
@@ -618,7 +618,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Message };
+            return new[] {response.Message};
         }
 
         public string[] InsertGroupPermission(long groupId, long permissionId)
@@ -631,7 +631,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Message };
+            return new[] {response.Message};
         }
 
         public ADGroupsModel GetGroupADGroups(long groupId)
@@ -664,7 +664,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Message };
+            return new[] {response.Message};
         }
 
         public string[] Create(GroupActiveDirectory model)
@@ -678,7 +678,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Message };
+            return new[] {response.Message};
         }
 
         public PermissionsModel GetGroupPermisions(long groupId)
@@ -776,7 +776,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Message };
+            return new[] {response.Message};
         }
 
         public string[] InsertGroupSite(long groupId, long siteId)
@@ -789,7 +789,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Message };
+            return new[] {response.Message};
         }
 
         private void PopulateAvailableSites(SitesModel target)
@@ -803,7 +803,7 @@ namespace Gateway.Web.Services
                 foreach (var item in element.Descendants("Site"))
                 {
                     var model = item.Deserialize<SiteModel>();
-                    var foo = new SelectListItem { Text = model.Name, Value = model.Id.ToString() };
+                    var foo = new SelectListItem {Text = model.Name, Value = model.Id.ToString()};
                     interim.Add(foo);
                 }
 
@@ -883,7 +883,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Message };
+            return new[] {response.Message};
         }
 
         public string[] DeleteGroupAddInVersion(long id, long groupId)
@@ -896,7 +896,9 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Message };
+            return new[] {response.Message};
+        }
+
         private class ServerResponse
         {
             public ServerResponse(string server, XDocument document)

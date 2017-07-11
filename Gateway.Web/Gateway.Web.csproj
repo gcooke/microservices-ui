@@ -324,8 +324,9 @@
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
     <Compile Include="Helpers\TreeView.cs" />
+    <Compile Include="Hubs\ServerInfoHub.cs" />
     <Compile Include="Models\AddIn\AddInVersionModel.cs" />
-    <Compile Include="Models\Controllers\AliasesModel.cs" /> 
+    <Compile Include="Models\Controllers\AliasesModel.cs" />
     <Compile Include="Models\Controllers\GatewayInfo.cs" />
     <Compile Include="Models\Controllers\HistoryModel.cs" />
     <Compile Include="Models\Controllers\QueueChartModel.cs" />
@@ -534,7 +535,6 @@
     <Content Include="Views\Controllers\ServerInfos.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Api\" />
     <Content Include="Views\Security\Users.cshtml" />
     <Content Include="Views\Security\AddIns.cshtml" />
     <Content Include="Views\Group\Details.cshtml" />
@@ -555,6 +555,7 @@
     <Content Include="Views\User\Groups.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Api\" />
     <Folder Include="Views\Reports\" />
   </ItemGroup>
   <ItemGroup>
