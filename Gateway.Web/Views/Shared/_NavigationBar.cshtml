@@ -14,8 +14,29 @@
             <ul class="nav navbar-nav">
                 <li>@Html.ActionLink("Home", "Index", "Home")</li>
                 <li>@Html.ActionLink("Controllers", "Dashboard", "Controllers")</li>
+                <li>@Html.ActionLink("Security", "Index", "Security")</li>
                 <li>@Html.ActionLink("How To", "HowTo", "Home")</li>
             </ul>
-        </div>
+
+            <div class="navbar-right user-info">
+                <small>
+                    @{
+
+                        var identity = User.Identity;
+                        if (identity != null && identity.IsAuthenticated)
+                        {
+                            string loggedinuser = identity.Name;
+                            <b>@loggedinuser</b>
+                        }
+                        else
+                        {
+                            <b>Unknown User</b>
+                        }
+                    }
+                </small>
+                <br />
+                <small style="font-size: 75%;">@DateTime.Now</small>
+            </div>
+        </div>        
     </div>
 </div>

@@ -19,6 +19,27 @@ namespace Gateway.Web.Controllers
             _gateway = gateway;
         }
 
+        public ActionResult Index()
+        {
+            return Details(string.Empty);
+        }
+
+        public ActionResult Details(string id)
+        {
+            UserModel model;
+            if (string.IsNullOrEmpty(id))
+                model = new UserModel()
+                {
+                    Domain = "INTRANET",
+                    Login = string.Empty,
+                    FullName = string.Empty
+                };
+            else
+                model = _gateway.GetUser(id);
+
+            return View("Details", model);
+        }
+
         public ActionResult History(string id)
         {
             Session.RegisterLastHistoryLocation(Request.Url);
@@ -28,6 +49,30 @@ namespace Gateway.Web.Controllers
             var model = new HistoryModel(id);
             model.Requests.AddRange(items);
             model.Requests.SetRelativePercentages();
+            return View(model);
+        }
+
+        public ActionResult Groups(string id)
+        {
+            var model = new GroupsModel(id.ToLongOrDefault());
+            return View(model);
+        }
+
+        public ActionResult Portfolios(string id)
+        {
+            var model = new PortfoliosModel(id.ToLongOrDefault());
+            return View(model);
+        }
+
+        public ActionResult Sites(string id)
+        {
+            var model = new SitesModel(id.ToLongOrDefault());
+            return View(model);
+        }
+
+        public ActionResult AddIns(string id)
+        {
+            var model = new AddInsModel(id.ToLongOrDefault());
             return View(model);
         }
     }

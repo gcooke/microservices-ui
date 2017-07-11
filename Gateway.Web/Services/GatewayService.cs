@@ -12,9 +12,18 @@ using Bagl.Cib.MIT.Logging;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Controllers;
+using Gateway.Web.Models.AddIn;
+using Gateway.Web.Models.Group;
+using Gateway.Web.Models.Permission;
 using Gateway.Web.Models.Request;
 using Gateway.Web.Utils;
+using Gateway.Web.Models.Security;
+using Gateway.Web.Models.User;
 using Newtonsoft.Json;
+using AddInsModel = Gateway.Web.Models.Group.AddInsModel;
+using PermissionsModel = Gateway.Web.Models.Group.PermissionsModel;
+using PortfoliosModel = Gateway.Web.Models.Group.PortfoliosModel;
+using SitesModel = Gateway.Web.Models.Group.SitesModel;
 using Version = Gateway.Web.Models.Controller.Version;
 
 namespace Gateway.Web.Services
@@ -380,6 +389,514 @@ namespace Gateway.Web.Services
             }
         }
 
+        }
+
+        public Models.Security.GroupsModel GetGroups()
+        {
+            var response = _restService.Get("Security", "latest", "groups");
+
+            var result = new Models.Security.GroupsModel();
+            if (response.Successfull)
+            {
+                var element = response.Content.GetPayloadAsXElement();
+                var interim = new List<GroupModel>();
+                foreach (var item in element.Descendants("Group"))
+                {
+                    interim.Add(item.Deserialize<GroupModel>());
+                }
+                result.Items.AddRange(interim.OrderBy(v => v.Name));
+            }
+
+            return result;
+        }
+
+        public GroupModel GetGroup(long id)
+        {
+            var query = string.Format("groups/{0}", id);
+            var response = _restService.Get("Security", "latest", query);
+
+            var result = new GroupModel();
+            if (response.Successfull)
+            {
+                var element = response.Content.GetPayloadAsXElement();
+                result = element.Deserialize<GroupModel>();
+            }
+
+            return result;
+        }
+
+        public string[] Create(GroupModel model)
+        {
+            var query = string.Format("groups");
+            var response = _restService.Put("Security", "latest", query, model.Serialize());
+
+            if (response.Successfull)
+            {
+                return null;
+            }
+
+            return new[] { response.Message };
+        }
+
+        public string[] DeleteGroup(long id)
+        {
+            var query = string.Format("groups/{0}", id);
+            var response = _restService.Delete("Security", "latest", query, string.Empty);
+
+            if (response.Successfull)
+            {
+                return null;
+            }
+
+            return new[] { response.Message };
+        }
+
+        public UsersModel GetUsers()
+        {
+            var response = _restService.Get("Security", "latest", "users");
+
+            var result = new UsersModel();
+            if (response.Successfull)
+            {
+                var element = response.Content.GetPayloadAsXElement();
+                var interim = new List<UserModel>();
+                foreach (var item in element.Descendants("User"))
+                {
+                    interim.Add(item.Deserialize<UserModel>());
+                }
+                result.Items.AddRange(interim.OrderBy(v => v.FullName));
+            }
+
+            return result;
+        }
+
+        public UserModel GetUser(string login)
+        {
+            return new UserModel();
+        }
+
+        public Models.Security.AddInsModel GetAddIns()
+        {
+            var response = _restService.Get("Security", "latest", "addins");
+
+            var result = new Models.Security.AddInsModel();
+            if (response.Successfull)
+            {
+                var element = response.Content.GetPayloadAsXElement();
+                var interim = new List<AddInModel>();
+                foreach (var item in element.Descendants("AddIn"))
+                {
+                    interim.Add(item.Deserialize<AddInModel>());
+                }
+                result.Items.AddRange(interim.OrderBy(v => v.Name));
+            }
+
+            return result;
+        }
+
+        public AddInModel GetAddIn(long id)
+        {
+            var query = string.Format("addins/{0}", id);
+            var response = _restService.Get("Security", "latest", query);
+
+            var result = new AddInModel();
+            if (response.Successfull)
+            {
+                var element = response.Content.GetPayloadAsXElement();
+                result = element.Deserialize<AddInModel>();
+            }
+
+            return result;
+        }
+
+        public string[] Create(AddInModel model)
+        {
+            var query = string.Format("addins");
+            var response = _restService.Put("Security", "latest", query, model.Serialize());
+
+            if (response.Successfull)
+            {
+                return null;
+            }
+
+            return new[] { response.Message };
+        }
+
+        public string[] DeleteAddIn(long id)
+        {
+            var query = string.Format("addins/{0}", id);
+            var response = _restService.Delete("Security", "latest", query, string.Empty);
+
+            if (response.Successfull)
+            {
+                return null;
+            }
+
+            return new[] { response.Message };
+        }
+
+
+        public Models.Security.PermissionsModel GetPermissions()
+        {
+            var response = _restService.Get("Security", "latest", "permissions");
+
+            var result = new Models.Security.PermissionsModel();
+            if (response.Successfull)
+            {
+                var element = response.Content.GetPayloadAsXElement();
+                var interim = new List<PermissionModel>();
+                foreach (var item in element.Descendants("Permission"))
+                {
+                    interim.Add(item.Deserialize<PermissionModel>());
+                }
+                foreach (var system in interim.GroupBy(v => v.SystemName).OrderBy(v => v.Key))
+                {
+                    var sys = new SystemPermissions(system.Key);
+                    sys.Items.AddRange(system.OrderBy(v => v.Name));
+                    result.Items.Add(sys);
+                }
+            }
+
+            PopulateAvailableSystems(result);
+            return result;
+        }
+
+        private void PopulateAvailableSystems(Models.Security.PermissionsModel target)
+        {
+            var response = _restService.Get("Security", "latest", "systems");
+
+            if (response.Successfull)
+            {
+                var element = response.Content.GetPayloadAsXElement();
+                var interim = new List<SelectListItem>();
+                foreach (var item in element.Descendants("SystemName"))
+                {
+                    var model = item.Deserialize<SystemNameModel>();
+                    var foo = new SelectListItem { Text = model.Name, Value = model.Id.ToString() };
+                    interim.Add(foo);
+                }
+
+                target.AvailableSystems.AddRange(interim.OrderBy(v => v.Text));
+            }
+        }
+
+        public PermissionModel GetPermission(long id)
+        {
+            var query = string.Format("permissions/{0}", id);
+            var response = _restService.Get("Security", "latest", query);
+
+            var result = new PermissionModel();
+            if (response.Successfull)
+            {
+                var element = response.Content.GetPayloadAsXElement();
+                result = element.Deserialize<PermissionModel>();
+            }
+
+            return result;
+        }
+
+        public string[] DeletePermission(long id)
+        {
+            var query = string.Format("permissions/{0}", id);
+            var response = _restService.Delete("Security", "latest", query, string.Empty);
+
+            if (response.Successfull)
+            {
+                return null;
+            }
+
+            return new[] { response.Message };
+        }
+
+        public string[] Create(PermissionModel model)
+        {
+            var query = string.Format("permissions");
+            var response = _restService.Put("Security", "latest", query, model.Serialize());
+
+            if (response.Successfull)
+            {
+                return null;
+            }
+
+            return new[] { response.Message };
+        }
+
+        public string[] InsertGroupPermission(long groupId, long permissionId)
+        {
+            var query = string.Format("groups/{0}/permissions/{1}", groupId, permissionId);
+            var response = _restService.Put("Security", "latest", query, string.Empty);
+
+            if (response.Successfull)
+            {
+                return null;
+            }
+
+            return new[] { response.Message };
+        }
+
+        public ADGroupsModel GetGroupADGroups(long groupId)
+        {
+            var query = string.Format("groups/{0}/adgroups", groupId);
+            var response = _restService.Get("Security", "latest", query);
+
+            var result = new ADGroupsModel(groupId);
+            if (response.Successfull)
+            {
+                var element = response.Content.GetPayloadAsXElement();
+                var interim = new List<GroupActiveDirectory>();
+                foreach (var item in element.Descendants("GroupAD"))
+                {
+                    interim.Add(item.Deserialize<GroupActiveDirectory>());
+                }
+                result.Items.AddRange(interim.OrderBy(v => v.Name));
+            }
+
+            return result;
+        }
+
+        public string[] DeleteGroupADGroup(long id, long groupId)
+        {
+            var query = string.Format("groups/{0}/adgroups/{1}", groupId, id);
+            var response = _restService.Delete("Security", "latest", query, string.Empty);
+
+            if (response.Successfull)
+            {
+                return null;
+            }
+
+            return new[] { response.Message };
+        }
+
+        public string[] Create(GroupActiveDirectory model)
+        {
+            var query = string.Format("groups/{0}/adgroups", model.GroupId);
+            var payload = model.Serialize();
+            var response = _restService.Put("Security", "latest", query, payload);
+
+            if (response.Successfull)
+            {
+                return null;
+            }
+
+            return new[] { response.Message };
+        }
+
+        public PermissionsModel GetGroupPermisions(long groupId)
+        {
+            var query = string.Format("groups/{0}/permissions", groupId);
+            var response = _restService.Get("Security", "latest", query);
+
+            var result = new PermissionsModel(groupId);
+            if (response.Successfull)
+            {
+                var element = response.Content.GetPayloadAsXElement();
+                var interim = new List<PermissionModel>();
+                foreach (var item in element.Descendants("Permission"))
+                {
+                    interim.Add(item.Deserialize<PermissionModel>());
+                }
+                result.Items.AddRange(interim.OrderBy(v => v.SystemName).ThenBy(v => v.Name));
+            }
+
+            PopulateAvailablePermissions(result);
+            return result;
+        }
+
+        private void PopulateAvailablePermissions(PermissionsModel target)
+        {
+            var response = _restService.Get("Security", "latest", "permissions");
+
+            if (response.Successfull)
+            {
+                var element = response.Content.GetPayloadAsXElement();
+                var interim = new List<SelectListItem>();
+                foreach (var item in element.Descendants("Permission"))
+                {
+                    var model = item.Deserialize<PermissionModel>();
+                    var foo = new SelectListItem
+                    {
+                        Text = string.Format("{0} - {1}", model.SystemName, model.Name),
+                        Value = model.Id.ToString()
+                    };
+                    interim.Add(foo);
+                }
+
+                target.AvailablePermissions.AddRange(interim.OrderBy(v => v.Text));
+            }
+        }
+
+        public PortfoliosModel GetGroupPortfolios(long groupId)
+        {
+            var query = string.Format("groups/{0}/portfolios", groupId);
+            var response = _restService.Get("Security", "latest", query);
+
+            var result = new PortfoliosModel(groupId);
+            if (response.Successfull)
+            {
+                var element = response.Content.GetPayloadAsXElement();
+                var interim = new List<PortfolioModel>();
+                foreach (var item in element.Descendants("Portfolio"))
+                {
+                    interim.Add(item.Deserialize<PortfolioModel>());
+                }
+                result.Items.AddRange(interim.OrderBy(v => v.Level).ThenBy(v => v.Name));
+            }
+
+            return result;
+        }
+
+        public SitesModel GetGroupSites(long groupId)
+        {
+            var query = string.Format("groups/{0}/sites", groupId);
+            var response = _restService.Get("Security", "latest", query);
+
+            var result = new SitesModel(groupId);
+            if (response.Successfull)
+            {
+                var element = response.Content.GetPayloadAsXElement();
+                var interim = new List<SiteModel>();
+                foreach (var item in element.Descendants("Site"))
+                {
+                    interim.Add(item.Deserialize<SiteModel>());
+                }
+                result.Items.AddRange(interim.OrderBy(v => v.Name));
+            }
+
+            PopulateAvailableSites(result);
+            return result;
+        }
+
+        public string[] DeleteGroupSite(long id, long groupId)
+        {
+            var query = string.Format("groups/{0}/sites/{1}", groupId, id);
+            var response = _restService.Delete("Security", "latest", query, string.Empty);
+
+            if (response.Successfull)
+            {
+                return null;
+            }
+
+            return new[] { response.Message };
+        }
+
+        public string[] InsertGroupSite(long groupId, long siteId)
+        {
+            var query = string.Format("groups/{0}/sites/{1}", groupId, siteId);
+            var response = _restService.Put("Security", "latest", query, string.Empty);
+
+            if (response.Successfull)
+            {
+                return null;
+            }
+
+            return new[] { response.Message };
+        }
+
+        private void PopulateAvailableSites(SitesModel target)
+        {
+            var response = _restService.Get("Security", "latest", "sites");
+
+            if (response.Successfull)
+            {
+                var element = response.Content.GetPayloadAsXElement();
+                var interim = new List<SelectListItem>();
+                foreach (var item in element.Descendants("Site"))
+                {
+                    var model = item.Deserialize<SiteModel>();
+                    var foo = new SelectListItem { Text = model.Name, Value = model.Id.ToString() };
+                    interim.Add(foo);
+                }
+
+                target.AvailableSites.AddRange(interim.OrderBy(v => v.Text));
+            }
+        }
+
+        public AddInsModel GetGroupAddIns(long groupId)
+        {
+            var query = string.Format("groups/{0}/addins", groupId);
+            var response = _restService.Get("Security", "latest", query);
+
+            var result = new AddInsModel(groupId);
+            if (response.Successfull)
+            {
+                var element = response.Content.GetPayloadAsXElement();
+                var interim = new List<GroupAddInVersionModel>();
+                foreach (var item in element.Descendants("GroupAddInVersion"))
+                {
+                    interim.Add(item.Deserialize<GroupAddInVersionModel>());
+                }
+                result.Items.AddRange(interim.OrderBy(v => v.Name));
+            }
+
+            PopulateAvailableAddIns(result);
+            PopulateAvailableVersions(result);
+            return result;
+        }
+
+        private void PopulateAvailableAddIns(Models.Group.AddInsModel target)
+        {
+            var response = _restService.Get("Security", "latest", "addins");
+
+            if (response.Successfull)
+            {
+                var element = response.Content.GetPayloadAsXElement();
+                foreach (var item in element.Descendants("AddIn"))
+                {
+                    var model = item.Deserialize<AddInModel>();
+                    target.AvailableAddIns.Add(model);
+                }
+            }
+        }
+
+        private void PopulateAvailableVersions(Models.Group.AddInsModel target)
+        {
+            var response = _restService.Get("Security", "latest", "addins/versions");
+
+            if (response.Successfull)
+            {
+                var element = response.Content.GetPayloadAsXElement();
+                var interim = new List<SelectListItem>();
+                foreach (var item in element.Descendants("AddInVersion"))
+                {
+                    var model = item.Deserialize<AddInVersionModel>();
+                    if (string.Equals(model.AddIn, "ExcelTools", StringComparison.CurrentCultureIgnoreCase)) continue;
+
+                    var foo = new SelectListItem
+                    {
+                        Text = string.Format("{0} - {1}", model.AddIn, model.Version),
+                        Value = string.Format("{0}|{1}", model.AddIn, model.Version)
+                    };
+                    interim.Add(foo);
+                }
+
+                target.AvailableVersions.AddRange(interim.OrderBy(v => v.Text));
+            }
+        }
+
+        public string[] InsertGroupAddInVersion(long groupId, AddInVersionModel addInVersion)
+        {
+            var query = string.Format("groups/{0}/addins", groupId);
+            var response = _restService.Put("Security", "latest", query, addInVersion.Serialize());
+
+            if (response.Successfull)
+            {
+                return null;
+            }
+
+            return new[] { response.Message };
+        }
+
+        public string[] DeleteGroupAddInVersion(long id, long groupId)
+        {
+            var query = string.Format("groups/{0}/addins/{1}", groupId, id);
+            var response = _restService.Delete("Security", "latest", query, string.Empty);
+
+            if (response.Successfull)
+            {
+                return null;
+            }
+
+            return new[] { response.Message };
         private class ServerResponse
         {
             public ServerResponse(string server, XDocument document)

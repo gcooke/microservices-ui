@@ -1,0 +1,95 @@
+﻿@using Gateway.Web.Database
+@using Gateway.Web.Models
+@using Gateway.Web.Models.AddIn
+@using Gateway.Web.Models.Controller
+@using Gateway.Web.Models.Security
+@using Gateway.Web.Utils
+@using Newtonsoft.Json
+@using Version = Gateway.Web.Models.Controller.Version
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "Security";
+    ViewBag.Current = "AddIns";
+}
+@{ Html.RenderPartial("_SecurityNav", (AddInsModel)@Model); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+
+        <h3>Add-Ins</h3>
+
+        <div id="containerx bulk">
+
+            <table style="width: 100%; white-space: nowrap" class="datatable">
+                <thead>
+                    <tr>
+                        <td>Name</td>
+                        <td>Friendly Name</td>
+                        <td>Description</td>
+                        <td>Action</td>
+                    </tr>
+                </thead>
+                @foreach (AddInModel item in Model.Items)
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>@item.FriendlyName</td>
+                        <td>@item.Description</td>
+                        <td>
+                            @Html.ActionLink("View", "Details", "AddIn", new { id = item.Id }, new { @class = "hoverlink" })
+                        </td>
+                    </tr>
+                }
+            </table>
+            <br />
+
+        </div>
+        <br />
+
+        @using (Html.BeginForm("InsertAddIn", "Security", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            <a class="btn btn-primary" data-toggle="collapse" href="#collapsePanel" aria-expanded="false" aria-controls="collapsePanel">
+                Add New Add-In
+            </a>
+            <div class="@(Html.ViewData.ModelState.IsValid ? "collapse" : "collapse show")" id="collapsePanel">
+                <div class="info-block">
+                    <div>
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label class="control-label">Name</label>
+                                </div>
+                                <div class="col-md-4">
+                                    @Html.TextBox("_name", "", new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label class="control-label">Friendly Name</label>
+                                </div>
+                                <div class="col-md-4">
+                                    @Html.TextBox("_friendly", "", new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label class="control-label">Description</label>
+                                </div>
+                                <div class="col-md-4">
+                                    @Html.TextBox("_description", "", new { @class = "form-control" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-offset-2 col-md-4">
+                                <input type="submit" class="btn btn-primary" value="Add" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

@@ -261,3 +261,19 @@ input, textarea {
     margin-top: 5px;
     height: 2em;
 }
+
+.info-block {
+    border: 1px solid #AAB8C6;
+    border-radius: 5px;
+    margin: 5px 5px;
+    background: #FCFCFC;
+    padding: 10px 10px 10px 36px;
+    color: #333;
+}
+
+.user-info {
+    text-align: right; 
+    margin-top: 9px; 
+    color: #CCCCCC; 
+    line-height: 1.2
+}
