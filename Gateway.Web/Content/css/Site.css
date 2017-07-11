@@ -270,3 +270,10 @@ input, textarea {
     padding: 10px 10px 10px 36px;
     color: #333;
 }
+
+.user-info {
+    text-align: right; 
+    margin-top: 9px; 
+    color: #CCCCCC; 
+    line-height: 1.2
+}
