@@ -21,7 +21,7 @@ $(function () {
                             "</span>" +
                         "</div>" +
                         "<div class='content'style='margin-bottom: 20px; margin-top: 20px;'>" + 
-                           "<div class='glyphicon glyphicon-list-alt'>&nbsp;Workers:&nbsp;3{Workers}&nbsp;</div>" +
+                           "<div class='glyphicon glyphicon-list-alt'>&nbsp;Workers:&nbsp;{Workers}&nbsp;</div>" +
                            "<div class='glyphicon glyphicon-dashboard'>&nbsp;Queues:&nbsp;{Queues}&nbsp;</div>" +
                            "<div class='glyphicon glyphicon-th'>&nbsp;CPU:&nbsp;{Cpu}&nbsp;</div>" +
                            "<div class='glyphicon glyphicon-tasks'>&nbsp;Memory:&nbsp;{Memory}&nbsp;</div>" +
