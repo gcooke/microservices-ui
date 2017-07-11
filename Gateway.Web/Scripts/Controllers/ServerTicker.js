@@ -20,7 +20,7 @@ $(function () {
                                 "<span class='h3 text-uppercase'>{Node}</span>" +
                             "</span>" +
                         "</div>" +
-                        "<div class='content'style='margin-bottom: 20px; margin-top: 20px;'>" + 
+                        "<div class='content'style='margin-bottom: 20px; margin-top: 20px;'>" +
                            "<div class='glyphicon glyphicon-list-alt'>&nbsp;Workers:&nbsp;{Workers}&nbsp;</div>" +
                            "<div class='glyphicon glyphicon-dashboard'>&nbsp;Queues:&nbsp;{Queues}&nbsp;</div>" +
                            "<div class='glyphicon glyphicon-th'>&nbsp;CPU:&nbsp;{Cpu}&nbsp;</div>" +
@@ -32,7 +32,10 @@ $(function () {
                     "</div></center>";
 
     function formatServer(server) {
-        server.Status = server.Status.toLowerCase() === "passing" ? "success" : "warning";
+        server.Status =
+            server.Status !== null &&
+            server.Status.toLowerCase() === "passing" ?
+            "success" : "warning";
         return server;
     }
 
