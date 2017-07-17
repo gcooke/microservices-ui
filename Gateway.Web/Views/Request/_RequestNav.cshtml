@@ -23,6 +23,12 @@
             </a>
         </li>
         <li>
+            <a href="~/Request/Transitions?correlationId=@Model.CorrelationId"
+               class="@(ViewBag.Current == "Transitions" ? "active" : "")">
+                <span class="glyphicon glyphicon-transfer"></span>&nbsp;&nbsp;Transitions
+            </a>
+        </li>
+        <li>
             <a href="~/Request/Payloads?correlationId=@Model.CorrelationId"
                class="@(ViewBag.Current == "Payloads" ? "active" : "")">
                 <span class="glyphicon glyphicon-transfer"></span>&nbsp;&nbsp;Payloads

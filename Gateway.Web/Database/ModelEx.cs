@@ -122,6 +122,15 @@ namespace Gateway.Web.Database
 
             return result;
         }
+
+        public static Models.Request.RequestChangeModel ToModel(this RequestChange item)
+        {
+            var result = new Models.Request.RequestChangeModel();
+            result.Id = item.Id;
+            result.Time = item.UpdateTimeUtc.ToLocalTime();
+            result.Message = item.Status;
+            return result;
+        }
     }
 
 }

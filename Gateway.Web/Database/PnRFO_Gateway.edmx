@@ -5,13 +5,6 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="GatewayModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <EntityType Name="Alias">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
-        </EntityType>
         <EntityType Name="Controller">
           <Key>
             <PropertyRef Name="Id" />
@@ -69,6 +62,15 @@
           <Property Name="IsAsync" Type="bit" Nullable="false" />
           <Property Name="StartUtc" Type="datetime" Nullable="false" />
           <Property Name="UpdateTime" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RequestChange">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CorrelationId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Status" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="UpdateTimeUtc" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="Response">
           <Key>
@@ -181,11 +183,11 @@
           <Parameter Name="Controller" Type="nvarchar" Mode="In" />
         </Function>
         <EntityContainer Name="GatewayModelStoreContainer">
-          <EntitySet Name="Alias" EntityType="Self.Alias" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Controller" EntityType="Self.Controller" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Payload" EntityType="Self.Payload" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="QueueSizes" EntityType="Self.QueueSizes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Request" EntityType="Self.Request" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RequestChange" EntityType="Self.RequestChange" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Response" EntityType="Self.Response" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Status" EntityType="Self.Status" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="StatusChange" EntityType="Self.StatusChange" Schema="dbo" store:Type="Tables" />
@@ -345,7 +347,7 @@
           <FunctionImport Name="spGetChildRequests" ReturnType="Collection(GatewayModel.spGetChildRequests_Result)">
           <Parameter Name="correlationId" Mode="In" Type="Guid" />
           </FunctionImport>
-          <EntitySet Name="Aliases" EntityType="GatewayModel.Alias" />
+          <EntitySet Name="RequestChanges" EntityType="GatewayModel.RequestChange" />
         </EntityContainer>
         <ComplexType Name="spGetRequestStats_Result">
           <Property Type="DateTime" Name="Date" Nullable="true" />
@@ -526,12 +528,14 @@
           <Property Type="Int32" Name="ResultCode" Nullable="true" />
           <Property Type="String" Name="ResultMessage" Nullable="true" />
         </ComplexType>
-        <EntityType Name="Alias">
+        <EntityType Name="RequestChange">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CorrelationId" Type="Guid" Nullable="false" />
+          <Property Name="Status" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="UpdateTimeUtc" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -829,10 +833,12 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <EntitySetMapping Name="Aliases">
-            <EntityTypeMapping TypeName="GatewayModel.Alias">
-              <MappingFragment StoreEntitySet="Alias">
-                <ScalarProperty Name="Name" ColumnName="Name" />
+          <EntitySetMapping Name="RequestChanges">
+            <EntityTypeMapping TypeName="GatewayModel.RequestChange">
+              <MappingFragment StoreEntitySet="RequestChange">
+                <ScalarProperty Name="UpdateTimeUtc" ColumnName="UpdateTimeUtc" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="CorrelationId" ColumnName="CorrelationId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

@@ -1,0 +1,42 @@
+﻿@using Gateway.Web.Database
+@using Gateway.Web.Models
+@using Gateway.Web.Models.Controller
+@using Gateway.Web.Models.Request
+@using Gateway.Web.Utils
+@using Newtonsoft.Json
+@using Version = Gateway.Web.Models.Controller.Version
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "Request";
+    ViewBag.Current = "Transitions";
+}
+@{ Html.RenderPartial("_RequestNav", (Transitions)@Model); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+
+        <h3>Transitions</h3>
+
+        <table style="width: 100%; white-space: nowrap" class="datatable">
+            <thead>
+                <tr>
+                    <td><b>Time</b></td>
+                    <td><b>Value</b></td>
+                </tr>
+            </thead>
+
+            @foreach (var history in @Model.Items)
+            {
+                <tr>
+                    <td>
+                        @history.TimeFormatted
+                    </td>
+                    <td>
+                        @history.Message
+                    </td>                    
+                </tr>
+            }
+
+        </table>
+    </div>
+</div>

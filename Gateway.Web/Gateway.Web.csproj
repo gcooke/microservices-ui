@@ -252,9 +252,6 @@
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\UtilsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Database\Alias.cs">
-      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
-    </Compile>
     <Compile Include="Database\GatewayDatabaseService.cs" />
     <Compile Include="Database\IGatewayDatabaseService.cs" />
     <Compile Include="Database\Payload.cs">
@@ -262,6 +259,9 @@
     </Compile>
     <Compile Include="Database\PayloadData.cs" />
     <Compile Include="Database\QueueSize.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\RequestChange.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\ResponseStats.cs" />
@@ -346,6 +346,7 @@
     <Compile Include="Models\Group\SiteModel.cs" />
     <Compile Include="Models\Group\SitesModel.cs" />
     <Compile Include="Models\Request\Children.cs" />
+    <Compile Include="Models\Request\Transitions.cs" />
     <Compile Include="Models\Request\Payloads.cs" />
     <Compile Include="Models\Request\RequestPayload.cs" />
     <Compile Include="Models\Request\Summary.cs" />
@@ -533,6 +534,7 @@
     <Content Include="Views\Controllers\Aliases.cshtml" />
     <Content Include="Views\Shared\_ControllerConfiguration.cshtml" />
     <Content Include="Views\Controllers\ServerInfos.cshtml" />
+    <Content Include="Views\Request\Transitions.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />

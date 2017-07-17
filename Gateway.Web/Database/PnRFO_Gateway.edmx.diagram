@@ -15,7 +15,7 @@
         <EntityTypeShape EntityType="GatewayModel.Payload" Width="1.5" PointX="8.375" PointY="0.75" />
         <EntityTypeShape EntityType="GatewayModel.Status" Width="1.5" PointX="0.75" PointY="4.875" />
         <AssociationConnector Association="GatewayModel.FK_Version_Status" />
-        <EntityTypeShape EntityType="GatewayModel.Alias" Width="1.5" PointX="0.75" PointY="7.75" />
+        <EntityTypeShape EntityType="GatewayModel.RequestChange" Width="1.5" PointX="0.75" PointY="7.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

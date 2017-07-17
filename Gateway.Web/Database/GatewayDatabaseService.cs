@@ -230,6 +230,22 @@ namespace Gateway.Web.Database
             return result;
         }
 
+        public Transitions GetRequestTransitions(string correlationId)
+        {
+            var result = new Transitions();
+            var id = Guid.Parse(correlationId);
+            result.CorrelationId = id;
+            using (var database = new GatewayEntities())
+            {
+                var items = database.RequestChanges.Where(r => r.CorrelationId == id).ToArray();
+                foreach (var item in items)
+                {
+                    result.Items.Add(item.ToModel());
+                }
+            }
+            return result;
+        }
+
         public PayloadData GetPayload(long id)
         {
             using (var database = new GatewayEntities())
@@ -342,44 +358,6 @@ namespace Gateway.Web.Database
                 }
                 return false;
             }
-        }
-
-        public string[] UpdateAliases(List<Alias> aliases)
-        {
-            var result = new List<string>();
-            using (var database = new GatewayEntities())
-            {
-                foreach (var item in database.Aliases.ToArray())
-                {
-                    var updated = aliases.FirstOrDefault(a => a.Id == item.Id);
-
-                    // check for deletes.
-                    if (updated == null)
-                    {
-                        result.Add(string.Format("Deleted alias '{0}'", item.Name));
-                        database.Aliases.Remove(item);
-                    }
-                    // check for updates.
-                    else if (updated.Name != item.Name)
-                    {
-                        result.Add(string.Format("Updated alias '{0}' to '{1}'", item.Name, updated.Name));
-                        item.Name = updated.Name;
-                    }
-                }
-
-                // Check for inserts
-                var add = aliases.FirstOrDefault(a => a.Id == 0);
-                if (add != null && !string.IsNullOrEmpty(add.Name))
-                {
-                    var alias = database.Aliases.Create();
-                    alias.Name = add.Name;
-                    database.Aliases.Add(alias);
-                    result.Add(string.Format("Added new alias '{0}'", add.Name));
-                }
-
-                database.SaveChanges();
-            }
-            return result.ToArray();
-        }
+        }        
     }
 }
