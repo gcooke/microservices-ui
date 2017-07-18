@@ -29,6 +29,8 @@ namespace Gateway.Web.Models.Controllers
                             .BuildPerformanceCounters()
                 )
                 .ToList();
+
+            PerformanceCounter.CloseSharedResources();
         }
     }
 
@@ -56,10 +58,10 @@ namespace Gateway.Web.Models.Controllers
             PerformanceCounter counter = null;
             try
             {
+
                 counter = instanceName == string.Empty ?
-                    new PerformanceCounter(categoryName, counterName) :
-                    new PerformanceCounter(categoryName, counterName, instanceName);
-                counter.MachineName = Node;
+                    new PerformanceCounter(categoryName, counterName, null, Node) :
+                    new PerformanceCounter(categoryName, counterName, instanceName, Node);
                 return counter.NextValue().ToString("4f");
             }
             catch (Exception)

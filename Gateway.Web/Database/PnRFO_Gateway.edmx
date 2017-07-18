@@ -309,10 +309,6 @@
             <Parameter Name="Start" Mode="In" Type="DateTime" />
             <Parameter Name="Controller" Mode="In" Type="String" />
           </FunctionImport>
-          <FunctionImport Name="spGetRecentRequests" ReturnType="Collection(GatewayModel.spGetRecentRequests_Result)">
-            <Parameter Name="Start" Mode="In" Type="DateTime" />
-            <Parameter Name="Controller" Mode="In" Type="String" />
-          </FunctionImport>
           <FunctionImport Name="spGetQueueCounts" ReturnType="Collection(GatewayModel.spGetQueueCounts_Result)">
             <Parameter Name="Start" Mode="In" Type="DateTime" />
             <Parameter Name="Controller" Mode="In" Type="String" />
@@ -320,16 +316,8 @@
           <FunctionImport Name="spGetQueueCountsAll" ReturnType="Collection(GatewayModel.spGetQueueCountsAll_Result)">
           <Parameter Name="Start" Mode="In" Type="DateTime" />
           </FunctionImport>
-          <FunctionImport Name="spGetRecentRequestsAll" ReturnType="Collection(GatewayModel.spGetRecentRequestsAll_Result)">
-            <Parameter Name="Start" Mode="In" Type="DateTime" />
-            <Parameter Name="Controller" Mode="In" Type="String" />
-          </FunctionImport>
           <EntitySet Name="QueueSizes" EntityType="GatewayModel.QueueSize" />
           <EntitySet Name="Payloads" EntityType="GatewayModel.Payload" />
-          <FunctionImport Name="spGetRecentUserRequests" ReturnType="Collection(GatewayModel.spGetRecentUserRequests_Result)">
-            <Parameter Name="Start" Mode="In" Type="DateTime" />
-            <Parameter Name="User" Mode="In" Type="String" />
-          </FunctionImport>
           <FunctionImport Name="spGetResponseStatsAll" ReturnType="Collection(GatewayModel.spGetResponseStatsAll_Result)">
           <Parameter Name="Start" Mode="In" Type="DateTime" />
           </FunctionImport>
@@ -344,10 +332,22 @@
           <FunctionImport Name="spGetRequestChildSummary" ReturnType="Collection(GatewayModel.spGetRequestChildSummary_Result)">
           <Parameter Name="correllationId" Mode="In" Type="Guid" />
           </FunctionImport>
-          <FunctionImport Name="spGetChildRequests" ReturnType="Collection(GatewayModel.spGetChildRequests_Result)">
-          <Parameter Name="correlationId" Mode="In" Type="Guid" />
-          </FunctionImport>
           <EntitySet Name="RequestChanges" EntityType="GatewayModel.RequestChange" />
+          <FunctionImport Name="spGetChildRequests" ReturnType="Collection(GatewayModel.spGetChildRequests_Result)">
+            <Parameter Name="correlationId" Mode="In" Type="Guid" />
+          </FunctionImport>
+          <FunctionImport Name="spGetRecentRequests" ReturnType="Collection(GatewayModel.spGetRecentRequests_Result)">
+            <Parameter Name="Start" Mode="In" Type="DateTime" />
+            <Parameter Name="Controller" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="spGetRecentRequestsAll" ReturnType="Collection(GatewayModel.spGetRecentRequestsAll_Result)">
+            <Parameter Name="Start" Mode="In" Type="DateTime" />
+            <Parameter Name="Controller" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="spGetRecentUserRequests" ReturnType="Collection(GatewayModel.spGetRecentUserRequests_Result)">
+            <Parameter Name="Start" Mode="In" Type="DateTime" />
+            <Parameter Name="User" Mode="In" Type="String" />
+          </FunctionImport>
         </EntityContainer>
         <ComplexType Name="spGetRequestStats_Result">
           <Property Type="DateTime" Name="Date" Nullable="true" />
@@ -365,23 +365,6 @@
           <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
           <Property Type="Int32" Name="AvgTime" Nullable="true" />
           <Property Type="Int32" Name="MaxTime" Nullable="true" />
-        </ComplexType>
-        <ComplexType Name="spGetRecentRequests_Result">
-          <Property Type="Guid" Name="CorrelationId" Nullable="false" />
-          <Property Type="String" Name="User" Nullable="false" MaxLength="100" />
-          <Property Type="String" Name="IpAddress" Nullable="false" MaxLength="100" />
-          <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
-          <Property Type="String" Name="Version" Nullable="false" MaxLength="100" />
-          <Property Type="String" Name="Resource" Nullable="false" MaxLength="255" />
-          <Property Type="String" Name="RequestType" Nullable="false" MaxLength="10" />
-          <Property Type="Int32" Name="Priority" Nullable="false" />
-          <Property Type="Boolean" Name="IsAsync" Nullable="false" />
-          <Property Type="DateTime" Name="StartUtc" Nullable="false" Precision="23" />
-          <Property Type="DateTime" Name="EndUtc" Nullable="true" Precision="23" />
-          <Property Type="Int32" Name="QueueTimeMs" Nullable="true" />
-          <Property Type="Int32" Name="TimeTakeMs" Nullable="true" />
-          <Property Type="Int32" Name="ResultCode" Nullable="true" />
-          <Property Type="String" Name="ResultMessage" Nullable="true" />
         </ComplexType>
         <ComplexType Name="spGetQueueCounts_Result">
           <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
@@ -402,23 +385,6 @@
           <Property Type="DateTime" Name="LastEnqueue" Nullable="true" Precision="23" />
           <Property Type="DateTime" Name="LastDequeue" Nullable="true" Precision="23" />
           <Property Type="String" Name="Server" Nullable="true" MaxLength="100" />
-        </ComplexType>
-        <ComplexType Name="spGetRecentRequestsAll_Result">
-          <Property Type="Guid" Name="CorrelationId" Nullable="false" />
-          <Property Type="String" Name="User" Nullable="false" MaxLength="100" />
-          <Property Type="String" Name="IpAddress" Nullable="false" MaxLength="100" />
-          <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
-          <Property Type="String" Name="Version" Nullable="false" MaxLength="100" />
-          <Property Type="String" Name="Resource" Nullable="false" MaxLength="255" />
-          <Property Type="String" Name="RequestType" Nullable="false" MaxLength="10" />
-          <Property Type="Int32" Name="Priority" Nullable="false" />
-          <Property Type="Boolean" Name="IsAsync" Nullable="false" />
-          <Property Type="DateTime" Name="StartUtc" Nullable="false" Precision="23" />
-          <Property Type="DateTime" Name="EndUtc" Nullable="true" Precision="23" />
-          <Property Type="Int32" Name="QueueTimeMs" Nullable="true" />
-          <Property Type="Int32" Name="TimeTakeMs" Nullable="true" />
-          <Property Type="Int32" Name="ResultCode" Nullable="true" />
-          <Property Type="String" Name="ResultMessage" Nullable="true" />
         </ComplexType>
         <EntityType Name="QueueSize">
           <Key>
@@ -446,23 +412,6 @@
           <Property Name="CompressionType" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="DataLengthBytes" Type="Int64" />
         </EntityType>
-        <ComplexType Name="spGetRecentUserRequests_Result">
-          <Property Type="Guid" Name="CorrelationId" Nullable="false" />
-          <Property Type="String" Name="User" Nullable="false" MaxLength="100" />
-          <Property Type="String" Name="IpAddress" Nullable="false" MaxLength="100" />
-          <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
-          <Property Type="String" Name="Version" Nullable="false" MaxLength="100" />
-          <Property Type="String" Name="Resource" Nullable="false" MaxLength="255" />
-          <Property Type="String" Name="RequestType" Nullable="false" MaxLength="10" />
-          <Property Type="Int32" Name="Priority" Nullable="false" />
-          <Property Type="Boolean" Name="IsAsync" Nullable="false" />
-          <Property Type="DateTime" Name="StartUtc" Nullable="false" Precision="23" />
-          <Property Type="DateTime" Name="EndUtc" Nullable="true" Precision="23" />
-          <Property Type="Int32" Name="QueueTimeMs" Nullable="true" />
-          <Property Type="Int32" Name="TimeTakeMs" Nullable="true" />
-          <Property Type="Int32" Name="ResultCode" Nullable="true" />
-          <Property Type="String" Name="ResultMessage" Nullable="true" />
-        </ComplexType>
         <ComplexType Name="spGetResponseStatsAll_Result">
           <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
           <Property Type="Int32" Name="ResultCode" Nullable="true" />
@@ -511,6 +460,15 @@
           <Property Type="DateTime" Name="MinStartUtc" Nullable="true" Precision="23" />
           <Property Type="DateTime" Name="MaxEndUtc" Nullable="true" Precision="23" />
         </ComplexType>
+        <EntityType Name="RequestChange">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CorrelationId" Type="Guid" Nullable="false" />
+          <Property Name="Status" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="UpdateTimeUtc" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
         <ComplexType Name="spGetChildRequests_Result">
           <Property Type="Guid" Name="CorrelationId" Nullable="false" />
           <Property Type="String" Name="User" Nullable="false" MaxLength="100" />
@@ -527,16 +485,66 @@
           <Property Type="Int32" Name="TimeTakeMs" Nullable="true" />
           <Property Type="Int32" Name="ResultCode" Nullable="true" />
           <Property Type="String" Name="ResultMessage" Nullable="true" />
+          <Property Type="DateTime" Name="UpdateTimeUtc" Nullable="false" Precision="23" />
+          <Property Type="String" Name="Status" Nullable="false" MaxLength="100" />
         </ComplexType>
-        <EntityType Name="RequestChange">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CorrelationId" Type="Guid" Nullable="false" />
-          <Property Name="Status" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="UpdateTimeUtc" Type="DateTime" Nullable="false" Precision="3" />
-        </EntityType>
+        <ComplexType Name="spGetRecentRequests_Result">
+          <Property Type="Guid" Name="CorrelationId" Nullable="false" />
+          <Property Type="String" Name="User" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="IpAddress" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Version" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Resource" Nullable="false" MaxLength="255" />
+          <Property Type="String" Name="RequestType" Nullable="false" MaxLength="10" />
+          <Property Type="Int32" Name="Priority" Nullable="false" />
+          <Property Type="Boolean" Name="IsAsync" Nullable="false" />
+          <Property Type="DateTime" Name="StartUtc" Nullable="false" Precision="23" />
+          <Property Type="DateTime" Name="EndUtc" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="QueueTimeMs" Nullable="true" />
+          <Property Type="Int32" Name="TimeTakeMs" Nullable="true" />
+          <Property Type="Int32" Name="ResultCode" Nullable="true" />
+          <Property Type="String" Name="ResultMessage" Nullable="true" />
+          <Property Type="DateTime" Name="UpdateTimeUtc" Nullable="false" Precision="23" />
+          <Property Type="String" Name="Status" Nullable="false" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="spGetRecentRequestsAll_Result">
+          <Property Type="Guid" Name="CorrelationId" Nullable="false" />
+          <Property Type="String" Name="User" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="IpAddress" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Version" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Resource" Nullable="false" MaxLength="255" />
+          <Property Type="String" Name="RequestType" Nullable="false" MaxLength="10" />
+          <Property Type="Int32" Name="Priority" Nullable="false" />
+          <Property Type="Boolean" Name="IsAsync" Nullable="false" />
+          <Property Type="DateTime" Name="StartUtc" Nullable="false" Precision="23" />
+          <Property Type="DateTime" Name="EndUtc" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="QueueTimeMs" Nullable="true" />
+          <Property Type="Int32" Name="TimeTakeMs" Nullable="true" />
+          <Property Type="Int32" Name="ResultCode" Nullable="true" />
+          <Property Type="String" Name="ResultMessage" Nullable="true" />
+          <Property Type="DateTime" Name="UpdateTimeUtc" Nullable="false" Precision="23" />
+          <Property Type="String" Name="Status" Nullable="false" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="spGetRecentUserRequests_Result">
+          <Property Type="Guid" Name="CorrelationId" Nullable="false" />
+          <Property Type="String" Name="User" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="IpAddress" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Version" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Resource" Nullable="false" MaxLength="255" />
+          <Property Type="String" Name="RequestType" Nullable="false" MaxLength="10" />
+          <Property Type="Int32" Name="Priority" Nullable="false" />
+          <Property Type="Boolean" Name="IsAsync" Nullable="false" />
+          <Property Type="DateTime" Name="StartUtc" Nullable="false" Precision="23" />
+          <Property Type="DateTime" Name="EndUtc" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="QueueTimeMs" Nullable="true" />
+          <Property Type="Int32" Name="TimeTakeMs" Nullable="true" />
+          <Property Type="Int32" Name="ResultCode" Nullable="true" />
+          <Property Type="String" Name="ResultMessage" Nullable="true" />
+          <Property Type="DateTime" Name="UpdateTimeUtc" Nullable="false" Precision="23" />
+          <Property Type="String" Name="Status" Nullable="false" MaxLength="100" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -645,27 +653,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="spGetRecentRequests" FunctionName="GatewayModel.Store.spGetRecentRequests">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="GatewayModel.spGetRecentRequests_Result">
-                <ScalarProperty Name="CorrelationId" ColumnName="CorrelationId" />
-                <ScalarProperty Name="User" ColumnName="User" />
-                <ScalarProperty Name="IpAddress" ColumnName="IpAddress" />
-                <ScalarProperty Name="Controller" ColumnName="Controller" />
-                <ScalarProperty Name="Version" ColumnName="Version" />
-                <ScalarProperty Name="Resource" ColumnName="Resource" />
-                <ScalarProperty Name="RequestType" ColumnName="RequestType" />
-                <ScalarProperty Name="Priority" ColumnName="Priority" />
-                <ScalarProperty Name="IsAsync" ColumnName="IsAsync" />
-                <ScalarProperty Name="StartUtc" ColumnName="StartUtc" />
-                <ScalarProperty Name="EndUtc" ColumnName="EndUtc" />
-                <ScalarProperty Name="QueueTimeMs" ColumnName="QueueTimeMs" />
-                <ScalarProperty Name="TimeTakeMs" ColumnName="TimeTakeMs" />
-                <ScalarProperty Name="ResultCode" ColumnName="ResultCode" />
-                <ScalarProperty Name="ResultMessage" ColumnName="ResultMessage" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="spGetQueueCounts" FunctionName="GatewayModel.Store.spGetQueueCounts">
             <ResultMapping>
               <ComplexTypeMapping TypeName="GatewayModel.spGetQueueCounts_Result">
@@ -691,27 +678,6 @@
                 <ScalarProperty Name="LastEnqueue" ColumnName="LastEnqueue" />
                 <ScalarProperty Name="LastDequeue" ColumnName="LastDequeue" />
                 <ScalarProperty Name="Server" ColumnName="Server" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="spGetRecentRequestsAll" FunctionName="GatewayModel.Store.spGetRecentRequestsAll">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="GatewayModel.spGetRecentRequestsAll_Result">
-                <ScalarProperty Name="CorrelationId" ColumnName="CorrelationId" />
-                <ScalarProperty Name="User" ColumnName="User" />
-                <ScalarProperty Name="IpAddress" ColumnName="IpAddress" />
-                <ScalarProperty Name="Controller" ColumnName="Controller" />
-                <ScalarProperty Name="Version" ColumnName="Version" />
-                <ScalarProperty Name="Resource" ColumnName="Resource" />
-                <ScalarProperty Name="RequestType" ColumnName="RequestType" />
-                <ScalarProperty Name="Priority" ColumnName="Priority" />
-                <ScalarProperty Name="IsAsync" ColumnName="IsAsync" />
-                <ScalarProperty Name="StartUtc" ColumnName="StartUtc" />
-                <ScalarProperty Name="EndUtc" ColumnName="EndUtc" />
-                <ScalarProperty Name="QueueTimeMs" ColumnName="QueueTimeMs" />
-                <ScalarProperty Name="TimeTakeMs" ColumnName="TimeTakeMs" />
-                <ScalarProperty Name="ResultCode" ColumnName="ResultCode" />
-                <ScalarProperty Name="ResultMessage" ColumnName="ResultMessage" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -743,27 +709,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="spGetRecentUserRequests" FunctionName="GatewayModel.Store.spGetRecentUserRequests">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="GatewayModel.spGetRecentUserRequests_Result">
-                <ScalarProperty Name="CorrelationId" ColumnName="CorrelationId" />
-                <ScalarProperty Name="User" ColumnName="User" />
-                <ScalarProperty Name="IpAddress" ColumnName="IpAddress" />
-                <ScalarProperty Name="Controller" ColumnName="Controller" />
-                <ScalarProperty Name="Version" ColumnName="Version" />
-                <ScalarProperty Name="Resource" ColumnName="Resource" />
-                <ScalarProperty Name="RequestType" ColumnName="RequestType" />
-                <ScalarProperty Name="Priority" ColumnName="Priority" />
-                <ScalarProperty Name="IsAsync" ColumnName="IsAsync" />
-                <ScalarProperty Name="StartUtc" ColumnName="StartUtc" />
-                <ScalarProperty Name="EndUtc" ColumnName="EndUtc" />
-                <ScalarProperty Name="QueueTimeMs" ColumnName="QueueTimeMs" />
-                <ScalarProperty Name="TimeTakeMs" ColumnName="TimeTakeMs" />
-                <ScalarProperty Name="ResultCode" ColumnName="ResultCode" />
-                <ScalarProperty Name="ResultMessage" ColumnName="ResultMessage" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="spGetResponseStatsAll" FunctionName="GatewayModel.Store.spGetResponseStatsAll">
             <ResultMapping>
               <ComplexTypeMapping TypeName="GatewayModel.spGetResponseStatsAll_Result">
@@ -812,6 +757,16 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="RequestChanges">
+            <EntityTypeMapping TypeName="GatewayModel.RequestChange">
+              <MappingFragment StoreEntitySet="RequestChange">
+                <ScalarProperty Name="UpdateTimeUtc" ColumnName="UpdateTimeUtc" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="CorrelationId" ColumnName="CorrelationId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="spGetChildRequests" FunctionName="GatewayModel.Store.spGetChildRequests">
             <ResultMapping>
               <ComplexTypeMapping TypeName="GatewayModel.spGetChildRequests_Result">
@@ -830,19 +785,80 @@
                 <ScalarProperty Name="TimeTakeMs" ColumnName="TimeTakeMs" />
                 <ScalarProperty Name="ResultCode" ColumnName="ResultCode" />
                 <ScalarProperty Name="ResultMessage" ColumnName="ResultMessage" />
+                <ScalarProperty Name="UpdateTimeUtc" ColumnName="UpdateTimeUtc" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <EntitySetMapping Name="RequestChanges">
-            <EntityTypeMapping TypeName="GatewayModel.RequestChange">
-              <MappingFragment StoreEntitySet="RequestChange">
+          <FunctionImportMapping FunctionImportName="spGetRecentRequests" FunctionName="GatewayModel.Store.spGetRecentRequests">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GatewayModel.spGetRecentRequests_Result">
+                <ScalarProperty Name="CorrelationId" ColumnName="CorrelationId" />
+                <ScalarProperty Name="User" ColumnName="User" />
+                <ScalarProperty Name="IpAddress" ColumnName="IpAddress" />
+                <ScalarProperty Name="Controller" ColumnName="Controller" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+                <ScalarProperty Name="Resource" ColumnName="Resource" />
+                <ScalarProperty Name="RequestType" ColumnName="RequestType" />
+                <ScalarProperty Name="Priority" ColumnName="Priority" />
+                <ScalarProperty Name="IsAsync" ColumnName="IsAsync" />
+                <ScalarProperty Name="StartUtc" ColumnName="StartUtc" />
+                <ScalarProperty Name="EndUtc" ColumnName="EndUtc" />
+                <ScalarProperty Name="QueueTimeMs" ColumnName="QueueTimeMs" />
+                <ScalarProperty Name="TimeTakeMs" ColumnName="TimeTakeMs" />
+                <ScalarProperty Name="ResultCode" ColumnName="ResultCode" />
+                <ScalarProperty Name="ResultMessage" ColumnName="ResultMessage" />
                 <ScalarProperty Name="UpdateTimeUtc" ColumnName="UpdateTimeUtc" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetRecentRequestsAll" FunctionName="GatewayModel.Store.spGetRecentRequestsAll">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GatewayModel.spGetRecentRequestsAll_Result">
                 <ScalarProperty Name="CorrelationId" ColumnName="CorrelationId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
+                <ScalarProperty Name="User" ColumnName="User" />
+                <ScalarProperty Name="IpAddress" ColumnName="IpAddress" />
+                <ScalarProperty Name="Controller" ColumnName="Controller" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+                <ScalarProperty Name="Resource" ColumnName="Resource" />
+                <ScalarProperty Name="RequestType" ColumnName="RequestType" />
+                <ScalarProperty Name="Priority" ColumnName="Priority" />
+                <ScalarProperty Name="IsAsync" ColumnName="IsAsync" />
+                <ScalarProperty Name="StartUtc" ColumnName="StartUtc" />
+                <ScalarProperty Name="EndUtc" ColumnName="EndUtc" />
+                <ScalarProperty Name="QueueTimeMs" ColumnName="QueueTimeMs" />
+                <ScalarProperty Name="TimeTakeMs" ColumnName="TimeTakeMs" />
+                <ScalarProperty Name="ResultCode" ColumnName="ResultCode" />
+                <ScalarProperty Name="ResultMessage" ColumnName="ResultMessage" />
+                <ScalarProperty Name="UpdateTimeUtc" ColumnName="UpdateTimeUtc" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetRecentUserRequests" FunctionName="GatewayModel.Store.spGetRecentUserRequests">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GatewayModel.spGetRecentUserRequests_Result">
+                <ScalarProperty Name="CorrelationId" ColumnName="CorrelationId" />
+                <ScalarProperty Name="User" ColumnName="User" />
+                <ScalarProperty Name="IpAddress" ColumnName="IpAddress" />
+                <ScalarProperty Name="Controller" ColumnName="Controller" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+                <ScalarProperty Name="Resource" ColumnName="Resource" />
+                <ScalarProperty Name="RequestType" ColumnName="RequestType" />
+                <ScalarProperty Name="Priority" ColumnName="Priority" />
+                <ScalarProperty Name="IsAsync" ColumnName="IsAsync" />
+                <ScalarProperty Name="StartUtc" ColumnName="StartUtc" />
+                <ScalarProperty Name="EndUtc" ColumnName="EndUtc" />
+                <ScalarProperty Name="QueueTimeMs" ColumnName="QueueTimeMs" />
+                <ScalarProperty Name="TimeTakeMs" ColumnName="TimeTakeMs" />
+                <ScalarProperty Name="ResultCode" ColumnName="ResultCode" />
+                <ScalarProperty Name="ResultMessage" ColumnName="ResultMessage" />
+                <ScalarProperty Name="UpdateTimeUtc" ColumnName="UpdateTimeUtc" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

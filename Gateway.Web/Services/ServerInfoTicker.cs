@@ -16,7 +16,6 @@ namespace Gateway.Web.Services
     {
         IHubConnectionContext<object> Clients { get; set; }
         IEnumerable<Server> GetAllServers();
-        void LoadServers();
         void UpdateServerInfo(object state);
         void BroadcastServerInfo(Server server);
     }
@@ -29,16 +28,10 @@ namespace Gateway.Web.Services
                 () => new ServerInfoTicker(GlobalHost.ConnectionManager.GetHubContext<ServerInfoHub>().Clients));
 
         private readonly IServerInfoService _serverInfoService;
-
         private readonly ConcurrentDictionary<string, Server> _servers = new ConcurrentDictionary<string, Server>();
-
         private readonly Timer _timer;
-
-        private readonly TimeSpan _updateInterval;
-
-        private readonly object _updateServerLock = new object();
-
-        private volatile bool _updatingServers;
+        private readonly object _synchLock = new object();
+        private bool _updatingServers;
 
         public ServerInfoTicker(
             IHubConnectionContext<dynamic> clients
@@ -64,12 +57,10 @@ namespace Gateway.Web.Services
             double intervalMs;
             if (!double.TryParse(intervalMsConfigValue, out intervalMs))
                 intervalMs = 1000;
-
-            _updateInterval = TimeSpan.FromSeconds(intervalMs);
-
-            _timer = new Timer(UpdateServerInfo, null, _updateInterval, _updateInterval);
-
-            LoadServers();
+            
+            var updateInterval = TimeSpan.FromMilliseconds(intervalMs);
+            var startInterval = TimeSpan.FromMilliseconds(2000);
+            _timer = new Timer(UpdateServerInfo, null, startInterval, updateInterval);
         }
 
         public static ServerInfoTicker Instance
@@ -84,30 +75,27 @@ namespace Gateway.Web.Services
             return _servers.Values;
         }
 
-        public void LoadServers()
-        {
-            _servers.Clear();
-            var servers = _serverInfoService.GetServers();
-            servers.ForEach(server => _servers.TryAdd(server.Node, server));
-        }
-
         public void UpdateServerInfo(object state)
         {
-            lock (_updateServerLock)
+            if (_updatingServers) return;
+            lock (_synchLock)
             {
-                if (!_updatingServers)
+                if (_updatingServers) return;
+                _updatingServers = true;
+
+                // Retrieve servers
+                var servers = _serverInfoService.GetServers();
+
+                // Update server info
+                _servers.Clear();
+                servers.ForEach(server => _servers.TryAdd(server.Node, server));
+
+                // Broadcast server info
+                foreach (var server in _servers.Values)
                 {
-                    _updatingServers = true;
-
-                    LoadServers();
-
-                    foreach (var server in _servers.Values)
-                    {
-                        BroadcastServerInfo(server);
-                    }
-
-                    _updatingServers = false;
+                    BroadcastServerInfo(server);
                 }
+                _updatingServers = false;
             }
         }
 

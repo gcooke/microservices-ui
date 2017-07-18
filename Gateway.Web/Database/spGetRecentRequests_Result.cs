@@ -28,5 +28,7 @@ namespace Gateway.Web.Database
         public Nullable<int> TimeTakeMs { get; set; }
         public Nullable<int> ResultCode { get; set; }
         public string ResultMessage { get; set; }
+        public System.DateTime UpdateTimeUtc { get; set; }
+        public string Status { get; set; }
     }
 }

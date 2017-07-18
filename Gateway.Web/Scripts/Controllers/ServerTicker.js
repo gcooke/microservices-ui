@@ -21,10 +21,10 @@ $(function () {
                             "</span>" +
                         "</div>" +
                         "<div class='content'style='margin-bottom: 20px; margin-top: 20px;'>" +
-                           "<div class='glyphicon glyphicon-list-alt'>&nbsp;Workers:&nbsp;{Workers}&nbsp;</div>" +
-                           "<div class='glyphicon glyphicon-dashboard'>&nbsp;Queues:&nbsp;{Queues}&nbsp;</div>" +
-                           "<div class='glyphicon glyphicon-th'>&nbsp;CPU:&nbsp;{Cpu}&nbsp;</div>" +
-                           "<div class='glyphicon glyphicon-tasks'>&nbsp;Memory:&nbsp;{Memory}&nbsp;</div>" +
+                           "<div class='glyphicon glyphicon-list-alt'>&nbsp;Workers:&nbsp;<span class='server-info-label'>{Workers}</span>&nbsp;</div>" +
+                           "<div class='glyphicon glyphicon-dashboard'>&nbsp;Queues:&nbsp;<span class='server-info-label'>{Queues}</span>&nbsp;</div><br/>" +
+                           "<div class='glyphicon glyphicon-th'>&nbsp;CPU:&nbsp;<span class='server-info-label'>{Cpu}</span>&nbsp;</div>" +
+                           "<div class='glyphicon glyphicon-tasks'>&nbsp;Memory:&nbsp;<span class='server-info-label'>{Memory}</span>&nbsp;</div>" +
                          "</div>" +
                         "<div class='content alert alert-{Status}'style='margin-bottom: 0px; margin-top: 0px;;'>" +
                             "<span class='h6'><b>{Output}</b></span>" +
@@ -54,8 +54,12 @@ $(function () {
         var displayStock = formatServer(server),
             $row = $(rowTemplate.supplant(displayStock));
 
-        $serverTable.find('div[data-symbol=' + server.Node + ']')
-            .replaceWith($row);
+        var target = $serverTable.find('div[data-symbol=' + server.Node + ']');
+        if (!target) {
+            $serverTable.append($row);
+        } else {
+            target.replaceWith($row);
+        }
     }
 
     // Start the connection

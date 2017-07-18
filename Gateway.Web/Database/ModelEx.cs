@@ -40,6 +40,8 @@ namespace Gateway.Web.Database
             result.TimeTakeMs = item.TimeTakeMs;
             result.ResultCode = item.ResultCode;
             result.ResultMessage = item.ResultMessage;
+            result.RequestChangeUtc = item.UpdateTimeUtc;
+            result.RequestChangeMessage = item.Status;
             return result;
         }
 
@@ -61,6 +63,8 @@ namespace Gateway.Web.Database
             result.TimeTakeMs = item.TimeTakeMs;
             result.ResultCode = item.ResultCode;
             result.ResultMessage = item.ResultMessage;
+            result.RequestChangeUtc = item.UpdateTimeUtc;
+            result.RequestChangeMessage = item.Status;
             return result;
         }
 
@@ -82,6 +86,8 @@ namespace Gateway.Web.Database
             result.TimeTakeMs = item.TimeTakeMs;
             result.ResultCode = item.ResultCode;
             result.ResultMessage = item.ResultMessage;
+            result.RequestChangeUtc = item.UpdateTimeUtc;
+            result.RequestChangeMessage = item.Status;
             return result;
         }
 
@@ -103,6 +109,8 @@ namespace Gateway.Web.Database
             result.TimeTakeMs = item.TimeTakeMs;
             result.ResultCode = item.ResultCode;
             result.ResultMessage = item.ResultMessage;
+            result.RequestChangeUtc = item.UpdateTimeUtc;
+            result.RequestChangeMessage = item.Status;
             return result;
         }
 

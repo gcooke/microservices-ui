@@ -72,19 +72,6 @@ namespace Gateway.Web.Database
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetTimeStats_Result>("spGetTimeStats", startParameter, controllerParameter);
         }
     
-        public virtual ObjectResult<spGetRecentRequests_Result> spGetRecentRequests(Nullable<System.DateTime> start, string controller)
-        {
-            var startParameter = start.HasValue ?
-                new ObjectParameter("Start", start) :
-                new ObjectParameter("Start", typeof(System.DateTime));
-    
-            var controllerParameter = controller != null ?
-                new ObjectParameter("Controller", controller) :
-                new ObjectParameter("Controller", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetRecentRequests_Result>("spGetRecentRequests", startParameter, controllerParameter);
-        }
-    
         public virtual ObjectResult<spGetQueueCounts_Result> spGetQueueCounts(Nullable<System.DateTime> start, string controller)
         {
             var startParameter = start.HasValue ?
@@ -105,32 +92,6 @@ namespace Gateway.Web.Database
                 new ObjectParameter("Start", typeof(System.DateTime));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetQueueCountsAll_Result>("spGetQueueCountsAll", startParameter);
-        }
-    
-        public virtual ObjectResult<spGetRecentRequestsAll_Result> spGetRecentRequestsAll(Nullable<System.DateTime> start, string controller)
-        {
-            var startParameter = start.HasValue ?
-                new ObjectParameter("Start", start) :
-                new ObjectParameter("Start", typeof(System.DateTime));
-    
-            var controllerParameter = controller != null ?
-                new ObjectParameter("Controller", controller) :
-                new ObjectParameter("Controller", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetRecentRequestsAll_Result>("spGetRecentRequestsAll", startParameter, controllerParameter);
-        }
-    
-        public virtual ObjectResult<spGetRecentUserRequests_Result> spGetRecentUserRequests(Nullable<System.DateTime> start, string user)
-        {
-            var startParameter = start.HasValue ?
-                new ObjectParameter("Start", start) :
-                new ObjectParameter("Start", typeof(System.DateTime));
-    
-            var userParameter = user != null ?
-                new ObjectParameter("User", user) :
-                new ObjectParameter("User", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetRecentUserRequests_Result>("spGetRecentUserRequests", startParameter, userParameter);
         }
     
         public virtual ObjectResult<spGetResponseStatsAll_Result> spGetResponseStatsAll(Nullable<System.DateTime> start)
@@ -167,6 +128,45 @@ namespace Gateway.Web.Database
                 new ObjectParameter("correlationId", typeof(System.Guid));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetChildRequests_Result>("spGetChildRequests", correlationIdParameter);
+        }
+    
+        public virtual ObjectResult<spGetRecentRequests_Result> spGetRecentRequests(Nullable<System.DateTime> start, string controller)
+        {
+            var startParameter = start.HasValue ?
+                new ObjectParameter("Start", start) :
+                new ObjectParameter("Start", typeof(System.DateTime));
+    
+            var controllerParameter = controller != null ?
+                new ObjectParameter("Controller", controller) :
+                new ObjectParameter("Controller", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetRecentRequests_Result>("spGetRecentRequests", startParameter, controllerParameter);
+        }
+    
+        public virtual ObjectResult<spGetRecentRequestsAll_Result> spGetRecentRequestsAll(Nullable<System.DateTime> start, string controller)
+        {
+            var startParameter = start.HasValue ?
+                new ObjectParameter("Start", start) :
+                new ObjectParameter("Start", typeof(System.DateTime));
+    
+            var controllerParameter = controller != null ?
+                new ObjectParameter("Controller", controller) :
+                new ObjectParameter("Controller", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetRecentRequestsAll_Result>("spGetRecentRequestsAll", startParameter, controllerParameter);
+        }
+    
+        public virtual ObjectResult<spGetRecentUserRequests_Result> spGetRecentUserRequests(Nullable<System.DateTime> start, string user)
+        {
+            var startParameter = start.HasValue ?
+                new ObjectParameter("Start", start) :
+                new ObjectParameter("Start", typeof(System.DateTime));
+    
+            var userParameter = user != null ?
+                new ObjectParameter("User", user) :
+                new ObjectParameter("User", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetRecentUserRequests_Result>("spGetRecentUserRequests", startParameter, userParameter);
         }
     }
 }
