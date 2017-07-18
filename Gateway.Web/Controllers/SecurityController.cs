@@ -48,12 +48,31 @@ namespace Gateway.Web.Controllers
             return View("Permissions", model);
         }
 
+        [Route("Security/Reports/{report}")]
         public ActionResult Reports(string report)
         {
-            var model = new ReportsModel(report);
+            var model = _gateway.GetSecurityReport(report);
             return View(model);
         }
-        
+
+        [Route("Security/Reports/{report}/{parameter}")]
+        public ActionResult Reports(string report, string parameter)
+        {
+            if (parameter == "null") parameter = null;
+            var model = _gateway.GetSecurityReport(report, parameter);
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult ShowReport(FormCollection collection)
+        {
+            var name = collection["_name"];
+            var parameter = collection["_parameter"];
+
+            var route = string.Format("~/Security/Reports/{0}/{1}", name, parameter);
+            return Redirect(route);
+        }
+
         [HttpPost]
         public ActionResult InsertAddIn(FormCollection collection)
         {

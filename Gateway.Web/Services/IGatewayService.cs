@@ -44,6 +44,10 @@ namespace Gateway.Web.Services
 
         Models.Security.GroupsModel GetGroups();
 
+        Models.Security.ReportsModel GetSecurityReport(string name);
+
+        Models.Security.ReportsModel GetSecurityReport(string name, string parameter);
+
         Models.Group.GroupModel GetGroup(long id);
 
         string[] Create(Models.Group.GroupModel model);
