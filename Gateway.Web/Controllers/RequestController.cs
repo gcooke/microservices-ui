@@ -35,6 +35,12 @@ namespace Gateway.Web.Controllers
             return View(model);
         }
 
+        public ActionResult Transitions(string correlationId)
+        {
+            var model = _dataService.GetRequestTransitions(correlationId);
+            return View(model);
+        }
+
         public ActionResult Children(string correlationId, string filter = "")
         {
             Session.RegisterLastHistoryLocation(Request.Url);

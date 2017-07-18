@@ -35,7 +35,14 @@
                 </div>                
             </td>
             <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
-                @history.ResultFormatted                
+                @if (history.IsComplete)
+                {
+                    @history.ResultFormatted
+                }
+                else
+                {
+                    <div style="color: #F78A09">@history.ResultFormatted</div>
+                }                
             </td>
             <td>
                 @Html.ActionLink("View", "Summary", "Request", new { correlationId = history.CorrelationId }, new { @class = "hoverlink" })

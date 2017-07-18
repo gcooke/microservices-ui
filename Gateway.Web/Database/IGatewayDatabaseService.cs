@@ -30,6 +30,8 @@ namespace Gateway.Web.Database
 
         Payloads GetRequestPayloads(string correlationId);
 
+        Transitions GetRequestTransitions(string correlationId);
+
         PayloadData GetPayload(long id);
 
         Models.Controller.QueueChartModel GetControllerQueueSummary(string name, DateTime start);
@@ -39,7 +41,5 @@ namespace Gateway.Web.Database
         IEnumerable<Status> GetVersionStatuses();
 
         bool HasStatusChanged(string controller, string version, string status, string alias);
-
-        string[] UpdateAliases(List<Alias> aliases);
     }
 }

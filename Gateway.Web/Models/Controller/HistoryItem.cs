@@ -23,6 +23,8 @@ namespace Gateway.Web.Models.Controller
         public int? TimeTakeMs { get; set; }
         public int? ResultCode { get; set; }
         public string ResultMessage { get; set; }
+        public DateTime? RequestChangeUtc { get; set; }
+        public string RequestChangeMessage { get; set; }
 
         public bool WasSuccessful
         {
@@ -53,16 +55,18 @@ namespace Gateway.Web.Models.Controller
             }
         }
 
+        public bool IsComplete { get { return TimeTakeMs.HasValue; } }
+
         public string ResultFormatted
         {
             get
             {
                 if (!TimeTakeMs.HasValue)
-                    return "Pending...";
+                    return RequestChangeMessage ?? "Pending...";
 
                 if (ResultCode == 1)
                 {
-                    if(!string.IsNullOrEmpty(ResultMessage))
+                    if (!string.IsNullOrEmpty(ResultMessage))
                         return ResultMessage;
 
                     return "Success";

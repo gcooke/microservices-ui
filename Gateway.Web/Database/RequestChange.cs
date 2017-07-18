@@ -12,9 +12,11 @@ namespace Gateway.Web.Database
     using System;
     using System.Collections.Generic;
     
-    public partial class Alias
+    public partial class RequestChange
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public System.Guid CorrelationId { get; set; }
+        public string Status { get; set; }
+        public System.DateTime UpdateTimeUtc { get; set; }
     }
 }

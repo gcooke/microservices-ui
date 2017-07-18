@@ -35,10 +35,12 @@ namespace Gateway.Web.Services
         private readonly ILogger _logger;
         private readonly int _port = 7010;
         private readonly IGatewayRestService _restService;
+        private readonly TimeSpan _defaultRequestTimeout;
 
         public GatewayService(ISystemInformation information, IGatewayRestService restService,
             ILoggingService loggingService)
         {
+            _defaultRequestTimeout = TimeSpan.FromSeconds(10);
             _restService = restService;
             _logger = loggingService.GetLogger(this);
             var gateways = information.GetSetting("KnownGateways", GetDefaultKnownGateways(information.EnvironmentName));
@@ -57,7 +59,7 @@ namespace Gateway.Web.Services
                 try
                 {
                     var url = string.Format("http://{0}:{1}/{2}", gateway, _port, "health/info");
-                    var document = Fetch(url);
+                    var document = Fetch(_defaultRequestTimeout,url);
 
                     if (document == null || !document.Descendants().Any())
                         continue;
@@ -75,35 +77,35 @@ namespace Gateway.Web.Services
 
         public WorkersModel GetWorkers()
         {
-            var docs = Fetch("health/services", string.Empty);
+            var docs = Fetch(_defaultRequestTimeout, "health/services", string.Empty);
             var result = GetWorkers("All", docs);
 
             // Populate process information
-            docs = Fetch("health/processes/{0}", "Bagl.Cib.MSF.ControllerHost");
+            docs = Fetch(_defaultRequestTimeout, "health/processes/{0}", "Bagl.Cib.MSF.ControllerHost");
             return PopulateProcessInfo(result, docs);
         }
 
         public WorkersModel GetWorkers(string controller)
         {
-            var docs = Fetch("health/services/{0}", controller);
+            var docs = Fetch(_defaultRequestTimeout, "health/services/{0}", controller);
             return GetWorkers(controller, docs);
         }
 
         public IEnumerable<QueueModel> GetCurrentQueues(string controller)
         {
-            var docs = Fetch("health/queues/{0}", controller);
+            var docs = Fetch(_defaultRequestTimeout, "health/queues/{0}", controller);
             return GetCurrentQueues(docs);
         }
 
         public IEnumerable<QueueModel> GetCurrentQueues()
         {
-            var docs = Fetch("health/queues", string.Empty);
+            var docs = Fetch(_defaultRequestTimeout, "health/queues", string.Empty);
             return GetCurrentQueues(docs);
         }
 
         public XElement[] GetReport(string report)
         {
-            var doc = Fetch("api/riskdata/latest/{0}", report).FirstOrDefault();
+            var doc = Fetch(_defaultRequestTimeout, "api/riskdata/latest/{0}", report).FirstOrDefault();
 
             var element = doc.Document.Descendants("xVAReturnResult").ToArray();
             return element;
@@ -111,7 +113,7 @@ namespace Gateway.Web.Services
 
         public string[] GetSites()
         {
-            var doc = Fetch("api/tradestore/latest/{0}", "LegalEntities").FirstOrDefault();
+            var doc = Fetch(_defaultRequestTimeout, "api/tradestore/latest/{0}", "LegalEntities").FirstOrDefault();
 
             var element = doc.Document.Descendants("Result").ToArray().FirstOrDefault();
             var legalEntities = JsonConvert.DeserializeObject<IEnumerable<string>>(element.Value);
@@ -185,7 +187,7 @@ namespace Gateway.Web.Services
         public RequestPayload GetRequestTree(Guid correlationId)
         {
             var response =
-                Fetch("api/Catalogue/latest/tree/{0}?includepayloads=false", correlationId.ToString()).FirstOrDefault();
+                Fetch(_defaultRequestTimeout, "api/Catalogue/latest/tree/{0}?includepayloads=false", correlationId.ToString()).FirstOrDefault();
             if (response == null)
                 return null;
 
@@ -200,7 +202,7 @@ namespace Gateway.Web.Services
 
         public ConfigurationModel GetControllerConfiguration(string name)
         {
-            var response = Fetch("api/Catalogue/latest/controllers/{0}", name).FirstOrDefault();
+            var response = Fetch(_defaultRequestTimeout, "api/Catalogue/latest/controllers/{0}", name).FirstOrDefault();
             if (response == null)
                 return null;
 
@@ -300,31 +302,19 @@ namespace Gateway.Web.Services
             }
         }
 
-        private IEnumerable<ServerResponse> FetchTest(string url)
-        {
-            foreach (var gateway in _gateways)
-            {
-                //var url = (args != null && args.Length > 0) ? string.Format(format, args) : format;
-                url = string.Format("http://{0}:{1}/{2}", gateway, _port, url);
-                var document = Fetch(url);
-                if (document != null)
-                    yield return new ServerResponse(gateway, document);
-            }
-        }
-
-        private IEnumerable<ServerResponse> Fetch(string format, params string[] args)
+        private IEnumerable<ServerResponse> Fetch(TimeSpan timeout, string format, params string[] args)
         {
             foreach (var gateway in _gateways)
             {
                 var url = args != null && args.Length > 0 ? string.Format(format, args) : format;
                 url = string.Format("http://{0}:{1}/{2}", gateway, _port, url);
-                var document = Fetch(url);
+                var document = Fetch(timeout, url);
                 if (document != null)
                     yield return new ServerResponse(gateway, document);
             }
         }
 
-        private XDocument Fetch(string uri)
+        private XDocument Fetch(TimeSpan timeout, string uri)
         {
             try
             {
@@ -337,7 +327,7 @@ namespace Gateway.Web.Services
                     client.DefaultRequestHeaders.Add("Accept", "application/xml");
 
                     var response = client.GetAsync(uri);
-                    response.Wait();
+                    response.Wait(timeout);
                     if (response.Result.StatusCode != HttpStatusCode.OK)
                     {
                         return null;
