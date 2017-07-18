@@ -59,7 +59,7 @@ namespace Gateway.Web.Services
                 try
                 {
                     var url = string.Format("http://{0}:{1}/{2}", gateway, _port, "health/info");
-                    var document = Fetch(_defaultRequestTimeout,url);
+                    var document = Fetch(_defaultRequestTimeout, url);
 
                     if (document == null || !document.Descendants().Any())
                         continue;
@@ -406,6 +406,63 @@ namespace Gateway.Web.Services
                 result.Items.AddRange(interim.OrderBy(v => v.Name));
             }
 
+            return result;
+        }
+
+        public ReportsModel GetSecurityReport(string name)
+        {
+            var query = string.Format("reports/{0}", name);
+            var response = _restService.Get("Security", "latest", query);
+
+            if (response.Successfull)
+            {
+                try
+                {
+                    var element = response.Content.GetPayloadAsXElement();
+                    var model = element.Deserialize<ReportsModel>();
+                    model.Name = name;
+                    return model;
+                }
+                catch (Exception ex)
+                {
+                    _logger.WarnFormat("Could not fetch report: ", ex.Message);
+                }
+            }
+
+            var result = new Models.Security.ReportsModel();
+            result.Name = name;
+            return result;
+        }
+
+        public ReportsModel GetSecurityReport(string name, string parameter)
+        {
+            if (!string.IsNullOrEmpty(parameter))
+            {
+                var query = string.Format("reports/{0}/{1}", name, parameter);
+                var response = _restService.Get("Security", "latest", query);
+
+                if (response.Successfull)
+                {
+                    try
+                    {
+                        var element = response.Content.GetPayloadAsXElement();
+                        var model = element.Deserialize<ReportsModel>();
+                        model.Name = name;
+                        model.SupportsParameter = true;
+                        model.Parameter = parameter;
+                        return model;
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.WarnFormat("Could not fetch report: ", ex.Message);
+                    }
+                }
+            }
+
+            var result = new Models.Security.ReportsModel();
+            result.Name = name;
+            result.SupportsParameter = true;
+            result.Parameter = parameter;
             return result;
         }
 

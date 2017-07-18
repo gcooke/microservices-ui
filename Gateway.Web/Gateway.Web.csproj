@@ -535,6 +535,10 @@
     <Content Include="Views\Shared\_ControllerConfiguration.cshtml" />
     <Content Include="Views\Controllers\ServerInfos.cshtml" />
     <Content Include="Views\Request\Transitions.cshtml" />
+    <Content Include="Views\Security\Groups.cshtml" />
+    <Content Include="Views\Security\Permissions.cshtml" />
+    <Content Include="Views\Security\Reports.cshtml" />
+    <Content Include="Views\Security\_SecurityNav.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />
