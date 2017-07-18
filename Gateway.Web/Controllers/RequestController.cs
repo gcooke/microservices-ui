@@ -52,6 +52,7 @@ namespace Gateway.Web.Controllers
                 model.Requests.RemoveAll(
                     r => !string.Equals(r.Controller, filter, StringComparison.CurrentCultureIgnoreCase));
             }
+            model.Requests.SetRelativePercentages();
             return View(model);
         }
 
