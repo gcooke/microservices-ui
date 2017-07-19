@@ -21,14 +21,22 @@ namespace Gateway.Web.Controllers
             _gateway = gateway;
         }
 
-        public ActionResult Index()
+        public ActionResult Index(string sortOrder)
         {
-            Session.RegisterLastHistoryLocation(Request.Url);
+            if (string.IsNullOrEmpty(sortOrder))
+                Session.RegisterLastHistoryLocation(Request.Url);
+
+            if (string.IsNullOrEmpty(sortOrder))
+                sortOrder = "time_desc";
+            ViewBag.SortColumn = sortOrder;
+            ViewBag.SortDirection = sortOrder.EndsWith("_desc") ? "" : "_desc";
+            ViewBag.Controller = "Home";
+            ViewBag.Action = "Index";
 
             var items = _dataService.GetRecentRequests(DateTime.Today.AddDays(-1));
 
             var model = new IndexModel();
-            model.Requests.AddRange(items.Take(10));
+            model.Requests.AddRange(items.Take(10), sortOrder);
             model.Requests.SetRelativePercentages();
             return View(model);
         }
