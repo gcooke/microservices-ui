@@ -55,7 +55,7 @@ namespace Gateway.Web.Controllers
             return View(model);
         }
 
-        [Route("Security/Reports/{report}/{parameter}")]
+        [Route("Security/Reports/{report}/{*parameter}")]
         public ActionResult Reports(string report, string parameter)
         {
             if (parameter == "null") parameter = null;
