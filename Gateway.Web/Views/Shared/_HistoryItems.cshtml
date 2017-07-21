@@ -1,16 +1,105 @@
 ﻿@using Gateway.Web.Models.Controller
-@{var items = (List<HistoryItem>)Model;}
+@{
+    var items = (List<HistoryItem>)Model;
+    var direction = ViewBag.SortDirection;
+    var controller = (string)ViewBag.Controller;
+    var action = (string)ViewBag.Action ?? "History";
+}
 
 <table style="width: 100%; white-space: nowrap" class="datatable">
     <thead>
         <tr>
-            <td><b>Controller</b></td>
-            <td><b>Version</b></td>
-            <td><b>User</b></td>
-            <td><b>Resource</b></td>
-            <td><b>Time</b></td>
-            <td><b>Time Taken</b></td>
-            <td><b>Result</b></td>
+            <td>
+                <b>
+                    @Html.ActionLink("Controller", action, controller, new { sortOrder = "controller" + direction }, new { @class = "clickableheader" })
+                    @if (ViewBag.SortColumn == "controller")
+                    {
+                        <span class="glyphicon glyphicon-arrow-up"></span>
+                    }
+                    @if (ViewBag.SortColumn == "controller_desc")
+                    {
+                        <span class="glyphicon glyphicon-arrow-down"></span>
+                    }
+                </b>
+            </td>
+            <td>
+                <b>
+                    @Html.ActionLink("Version", action, controller, new { sortOrder = "version" + direction }, new { @class = "clickableheader" })
+                    @if (ViewBag.SortColumn == "version")
+                    {
+                        <span class="glyphicon glyphicon-arrow-up"></span>
+                    }
+                    @if (ViewBag.SortColumn == "version_desc")
+                    {
+                        <span class="glyphicon glyphicon-arrow-down"></span>
+                    }
+                </b>
+            </td>
+            <td>
+                <b>
+                    @Html.ActionLink("User", action, controller, new { sortOrder = "user" + direction }, new { @class = "clickableheader" })
+                    @if (ViewBag.SortColumn == "user")
+                    {
+                        <span class="glyphicon glyphicon-arrow-up"></span>
+                    }
+                    @if (ViewBag.SortColumn == "user_desc")
+                    {
+                        <span class="glyphicon glyphicon-arrow-down"></span>
+                    }
+                </b>
+            </td>
+            <td>
+                <b>
+                    @Html.ActionLink("Resource", action, controller, new { sortOrder = "resource" + direction }, new { @class = "clickableheader" })
+                    @if (ViewBag.SortColumn == "resource")
+                    {
+                        <span class="glyphicon glyphicon-arrow-up"></span>
+                    }
+                    @if (ViewBag.SortColumn == "resource_desc")
+                    {
+                        <span class="glyphicon glyphicon-arrow-down"></span>
+                    }
+                </b>
+            </td>
+            <td>
+                <b>
+                    @Html.ActionLink("Time", action, controller, new { sortOrder = "time" + direction }, new { @class = "clickableheader" })
+                    @if (ViewBag.SortColumn == "time")
+                    {
+                        <span class="glyphicon glyphicon-arrow-up"></span>
+                    }
+                    @if (ViewBag.SortColumn == "time_desc")
+                    {
+                        <span class="glyphicon glyphicon-arrow-down"></span>
+                    }
+                </b>
+            </td>
+            <td>
+                <b>
+                    @Html.ActionLink("Time Taken", action, controller, new { sortOrder = "timetaken" + direction }, new { @class = "clickableheader" })
+                    @if (ViewBag.SortColumn == "timetaken")
+                    {
+                        <span class="glyphicon glyphicon-arrow-up"></span>
+                    }
+                    @if (ViewBag.SortColumn == "timetaken_desc")
+                    {
+                        <span class="glyphicon glyphicon-arrow-down"></span>
+                    }
+                </b>
+            </td>
+            <td>
+                <b>
+                    @Html.ActionLink("Result", action, controller, new { sortOrder = "result" + direction }, new { @class = "clickableheader" })
+                    @if (ViewBag.SortColumn == "result")
+                    {
+                        <span class="glyphicon glyphicon-arrow-up"></span>
+                    }
+                    @if (ViewBag.SortColumn == "result_desc")
+                    {
+                        <span class="glyphicon glyphicon-arrow-down"></span>
+                    }
+                </b>
+            </td>
             <td><b>Action</b></td>
         </tr>
     </thead>
@@ -32,7 +121,7 @@
             <td>
                 <div style="width: @history.RelativePercentage%; background: rgb(128, 177, 133); overflow: visible;">
                     @history.TimeTakenFormatted
-                </div>                
+                </div>
             </td>
             <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
                 @if (history.IsComplete)
@@ -42,7 +131,7 @@
                 else
                 {
                     <div style="color: #F78A09">@history.ResultFormatted</div>
-                }                
+                }
             </td>
             <td>
                 @Html.ActionLink("View", "Summary", "Request", new { correlationId = history.CorrelationId }, new { @class = "hoverlink" })

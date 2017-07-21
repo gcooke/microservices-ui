@@ -282,3 +282,7 @@ input, textarea {
     font-weight: bold;
     color: darkred;     
 }
+
+.clickableheader {
+    color: white;
+}

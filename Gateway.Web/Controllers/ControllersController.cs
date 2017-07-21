@@ -51,13 +51,21 @@ namespace Gateway.Web.Controllers
             return View("Aliases", model);
         }
 
-        public ActionResult History()
+        public ActionResult History(string sortOrder)
         {
-            Session.RegisterLastHistoryLocation(Request.Url);
+            if (string.IsNullOrEmpty(sortOrder))
+            {
+                Session.RegisterLastHistoryLocation(Request.Url);
+                sortOrder = "time_desc";
+            }
+
+            ViewBag.SortColumn = sortOrder;
+            ViewBag.SortDirection = sortOrder.EndsWith("_desc") ? "" : "_desc";
+            ViewBag.Controller = "Controllers";
 
             var items = _dataService.GetRecentRequests(DateTime.Today.AddDays(-30));
             var model = new HistoryModel();
-            model.Requests.AddRange(items);
+            model.Requests.AddRange(items, sortOrder);
             model.Requests.SetRelativePercentages();
             return View(model);
         }

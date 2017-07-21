@@ -40,14 +40,22 @@ namespace Gateway.Web.Controllers
             return View("Details", model);
         }
 
-        public ActionResult History(string id)
+        public ActionResult History(string id, string sortOrder)
         {
-            Session.RegisterLastHistoryLocation(Request.Url);
+            if (string.IsNullOrEmpty(sortOrder))
+            {
+                Session.RegisterLastHistoryLocation(Request.Url);
+                sortOrder = "time_desc";
+            }
+
+            ViewBag.SortColumn = sortOrder;
+            ViewBag.SortDirection = sortOrder.EndsWith("_desc") ? "" : "_desc";
+            ViewBag.Controller = "User";
 
             var items = _dataService.GetRecentUserRequests("INTRANET\\" + id, DateTime.Today.AddDays(-7));
 
             var model = new HistoryModel(id);
-            model.Requests.AddRange(items);
+            model.Requests.AddRange(items, sortOrder);
             model.Requests.SetRelativePercentages();
             return View(model);
         }

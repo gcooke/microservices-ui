@@ -193,17 +193,15 @@ namespace Gateway.Web.Database
             return result;
         }
 
-        public Children GetRequestChildren(string correlationId)
+        public List<HistoryItem> GetRequestChildren(Guid correlationId)
         {
-            var result = new Children();
-            var id = Guid.Parse(correlationId);
-            result.CorrelationId = id;
+            var result = new List<HistoryItem>();
             using (var database = new GatewayEntities())
             {
-                var items = database.spGetChildRequests(id);
+                var items = database.spGetChildRequests(correlationId);
                 foreach (var item in items)
                 {
-                    result.Requests.Add(item.ToModel());
+                    result.Add(item.ToModel());
                 }
             }
             return result;

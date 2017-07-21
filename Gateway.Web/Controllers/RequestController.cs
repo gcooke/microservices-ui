@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Gateway.Web.Database;
+using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Request;
 using Gateway.Web.Services;
 using Gateway.Web.Utils;
@@ -41,17 +42,34 @@ namespace Gateway.Web.Controllers
             return View(model);
         }
 
-        public ActionResult Children(string correlationId, string filter = "")
+        public ActionResult Children(string correlationId, string sortOrder, string filter = "")
         {
-            Session.RegisterLastHistoryLocation(Request.Url);
+            if (string.IsNullOrEmpty(sortOrder))
+            {
+                Session.RegisterLastHistoryLocation(Request.Url);
+                sortOrder = "time_desc";
+            }
 
-            var model = _dataService.GetRequestChildren(correlationId);
+            ViewBag.SortColumn = sortOrder;
+            ViewBag.SortDirection = sortOrder.EndsWith("_desc") ? "" : "_desc";
+            ViewBag.Controller = "Request";
+            ViewBag.Action = "Children";
+            
+            var model = new Children();
+            var id = string.IsNullOrEmpty(correlationId) ? (Guid)Session["LastCorrelationId"] : Guid.Parse(correlationId);
+            Session["LastCorrelationId"] = id;
+            model.CorrelationId = id;
+
+            IEnumerable<HistoryItem> items = _dataService.GetRequestChildren(id);
             if (!string.IsNullOrEmpty(filter))
             {
-                // Remove all requests that don't match the controller name.
-                model.Requests.RemoveAll(
-                    r => !string.Equals(r.Controller, filter, StringComparison.CurrentCultureIgnoreCase));
+                // Only include requests that match the controller name.
+                items = items.Where(r => string.Equals(r.Controller, filter, StringComparison.CurrentCultureIgnoreCase));
             }
+
+            model.Requests.AddRange(items, sortOrder);
+            model.Requests.SetRelativePercentages();
+
             model.Requests.SetRelativePercentages();
             return View(model);
         }
