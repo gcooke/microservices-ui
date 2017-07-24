@@ -20,7 +20,6 @@ namespace Gateway.Web
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                 "~/Content/js/bootstrap.js",
-                "~/Content/js/jquery-1.10.2.min.js",
                 "~/Content/js/respond.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/spinner").Include(
