@@ -17,8 +17,7 @@ namespace Gateway.Web
         public void Configuration(IAppBuilder app)
         {
             var config = new HubConfiguration();
-            //TODO: Pass config to SignalR - config will contain dependencies that will be 
-            //injected into Hubs
+            //TODO: Pass config to SignalR - config will contain dependencies that will be injected into Hubs
             app.MapSignalR();
         }
 
