@@ -14,54 +14,51 @@
 <div id="page-content-wrapper">
 
     <div class="hero-unit">
-
-        <h3>Gateway Servers</h3>
-
-        <div class="containerx bulk">
+        <h3>Servers</h3>
+        <hr />
+        <div id="serverTable">
 
             @foreach (Server server in Model.Servers)
             {
-                <div class="widget">
-                    <div class="content">
-                        <div class="list-head clearfix">
-                            <h3 style="margin: 0 40px 0 0;">
-                                <span class="glyphicon glyphicon-hdd"></span> @server.Node
-                            </h3>
-                            <small>
-                                Queues: <b>@server.Queues</b>
-                                Workers: <b>@server.Workers</b>
-                            </small>
-                            <br />
-                            <br />
+                <div class='widget'>
 
-                            <div style="float: left;">
-                                <table style="min-width: 200px; padding: 10px">
-                                    <tr>
-                                        <td style="width: 150px">
-                                            <span class="glyphicon glyphicon-tasks" style="color: green"></span>&nbsp;&nbsp;CPU
-                                        </td>
-                                        <td><div id="cpu"></div></td>
-                                    </tr>
-                                    <tr>
-                                        <td style="width: 150px">
-                                            <span class="glyphicon glyphicon-thumbs-up" style="color: red"></span>&nbsp;&nbsp;Memory
-                                        </td>
-                                        <td>?</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="width: 150px">
-                                            <span class="glyphicon glyphicon-hdd" style="color: gray"></span>&nbsp;&nbsp;Disk
-                                        </td>
-                                        <td>?</td>
-                                    </tr>
-                                </table>
-                            </div>
+                    <div class='content alert alert-@server.Status'>
 
-                        </div>
+                        <span class='glyphicon glyphicon-hdd'>
+
+                            <span class='h3'>&nbsp;</span>
+                            <span class='h3 text-uppercase'>@server.Node</span>
+
+                        </span>
+
                     </div>
+                    <div class='content' style='margin-bottom: 20px; margin-top: 20px;'>
+
+                        <div class='glyphicon glyphicon-list-alt'>
+                            &nbsp;Workers:&nbsp;<span class='server-info-label'>@server.Workers</span>&nbsp;
+                        </div>
+                        <div class='glyphicon glyphicon-dashboard'>
+                            &nbsp;Queues:&nbsp;<span class='server-info-label'>@server.Queues</span>&nbsp;
+                        </div><br />
+                        <div class='glyphicon glyphicon-th'>
+                            &nbsp;CPU:&nbsp;<span class='server-info-label'>@server.Cpu</span>&nbsp;
+                        </div>
+                        <div class='glyphicon glyphicon-tasks'>
+                            &nbsp;Memory:&nbsp;<span class='server-info-label'>@server.Memory</span>&nbsp;
+                        </div>
+
+                    </div>
+                    <div class='content alert alert-@server.Status' style='margin-bottom: 0px; margin-top: 0px; ;'>
+
+                        <span class='h6'><b>@server.Output</b></span>
+
+                    </div>
+
                 </div>
             }
         </div>
-        <br />
     </div>
 </div>
+@*<script type="text/javascript">
+    setInterval("$('#serverTable').load('')", 30000);
+</script>*@

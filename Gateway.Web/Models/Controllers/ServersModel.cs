@@ -126,10 +126,15 @@ namespace Gateway.Web.Models.Controllers
                 gatewayInfo.GatewayNodeServices.Any(service => service.CheckID == "serfHealth") == false)
                 return;
 
-            Status = gatewayInfo
+            var gatewayStatus = gatewayInfo
                 .GatewayNodeServices
                 .Single(service => service.CheckID == "serfHealth")
                 .Status;
+
+            Status =
+              string.IsNullOrEmpty(gatewayStatus) == false &&
+              gatewayStatus.ToLower() == "passing" ?
+               "success" : "warning";
 
             Output = gatewayInfo
                 .GatewayNodeServices

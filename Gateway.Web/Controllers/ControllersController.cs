@@ -18,16 +18,13 @@ namespace Gateway.Web.Controllers
     {
         private readonly IGatewayDatabaseService _dataService;
         private readonly IGatewayService _gateway;
-        private readonly IGatewayRestService _gatewayRestService;
 
         public ControllersController(
             IGatewayDatabaseService dataService,
-            IGatewayService gateway,
-            IGatewayRestService gatewayRestService)
+            IGatewayService gateway)
         {
             _dataService = dataService;
             _gateway = gateway;
-            _gatewayRestService = gatewayRestService;
         }
 
         public ActionResult Dashboard()
@@ -39,10 +36,11 @@ namespace Gateway.Web.Controllers
             return View(model);
         }
 
+        //[OutputCache(NoStore = true, Location = System.Web.UI.OutputCacheLocation.Client, Duration = 30)]
         public ActionResult Servers()
         {
             var model = _gateway.GetServers();
-            return View(model);
+            return View("Servers", model);
         }
 
         public ActionResult Aliases()
@@ -100,11 +98,6 @@ namespace Gateway.Web.Controllers
         public ActionResult Create()
         {
             return View(new ConfigurationModel());
-        }
-
-        public ActionResult ServerInfos()
-        {
-            return View();
         }
 
         [HttpPost]

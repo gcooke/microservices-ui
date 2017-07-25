@@ -4,7 +4,7 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using Bagl.Cib.MIT.IoC.Models;
 using Bagl.Cib.MIT.Logging;
-using Microsoft.AspNet.SignalR;
+//using Microsoft.AspNet.SignalR;
 using Microsoft.Practices.Unity;
 
 namespace Gateway.Web
