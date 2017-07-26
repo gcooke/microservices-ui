@@ -51,8 +51,8 @@ namespace Gateway.Web.Models.Controllers
             var processorTime = CounterValue("Processor", "% Processor Time", "_Total");
             var memUsage = CounterValue("Memory", "Available MBytes");
 
-            Cpu = string.Format("{0} % Usage", processorTime);
-            Memory = string.Format("{0} RAM Avail.", memUsage);
+            Cpu = string.Format("{0} %", processorTime);
+            Memory = string.Format("{0} MBytes", memUsage);
 
             PerformanceCounter.CloseSharedResources();
 
