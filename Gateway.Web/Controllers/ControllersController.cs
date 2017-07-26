@@ -7,6 +7,7 @@ using Gateway.Web.Database;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Services;
 using Gateway.Web.Utils;
+using Microsoft.Practices.ObjectBuilder2;
 using Controller = System.Web.Mvc.Controller;
 using DashboardModel = Gateway.Web.Models.Controllers.DashboardModel;
 using HistoryModel = Gateway.Web.Models.Controllers.HistoryModel;
@@ -18,16 +19,13 @@ namespace Gateway.Web.Controllers
     {
         private readonly IGatewayDatabaseService _dataService;
         private readonly IGatewayService _gateway;
-        private readonly IGatewayRestService _gatewayRestService;
 
         public ControllersController(
             IGatewayDatabaseService dataService,
-            IGatewayService gateway,
-            IGatewayRestService gatewayRestService)
+            IGatewayService gateway)
         {
             _dataService = dataService;
             _gateway = gateway;
-            _gatewayRestService = gatewayRestService;
         }
 
         public ActionResult Dashboard()
@@ -41,8 +39,13 @@ namespace Gateway.Web.Controllers
 
         public ActionResult Servers()
         {
+            return View();
+        }
+
+        public ActionResult ServerInfo()
+        {
             var model = _gateway.GetServers();
-            return View(model);
+            return PartialView("ServerInfo", model);
         }
 
         public ActionResult Aliases()
@@ -100,11 +103,6 @@ namespace Gateway.Web.Controllers
         public ActionResult Create()
         {
             return View(new ConfigurationModel());
-        }
-
-        public ActionResult ServerInfos()
-        {
-            return View();
         }
 
         [HttpPost]

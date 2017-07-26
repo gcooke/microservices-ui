@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 
 namespace Gateway.Web.Models.Controllers
 {
@@ -14,6 +15,7 @@ namespace Gateway.Web.Models.Controllers
         }
         public ServersModel()
         {
+            Servers = new List<Server>();
         }
 
         public ArrayOfGatewayInfo Root { get; private set; }
@@ -30,7 +32,6 @@ namespace Gateway.Web.Models.Controllers
                 )
                 .ToList();
 
-            PerformanceCounter.CloseSharedResources();
         }
     }
 
@@ -47,22 +48,33 @@ namespace Gateway.Web.Models.Controllers
 
         public Server BuildPerformanceCounters()
         {
-            Cpu = CounterValue("processor", "% Processor Time", "_Total");
-            Memory = CounterValue("Memory", "% Committed Bytes In Use");
-            Disk = "err";
+            var processorTime = CounterValue("Processor", "% Processor Time", "_Total");
+            var memUsage = CounterValue("Memory", "Available MBytes");
+
+            Cpu = string.Format("{0} % Usage", processorTime);
+            Memory = string.Format("{0} RAM Avail.", memUsage);
+
+            PerformanceCounter.CloseSharedResources();
+
             return this;
         }
 
-        private string CounterValue(string categoryName, string counterName, string instanceName = "")
+        private object CounterValue(string categoryName, string counterName, string instanceName = "")
         {
             PerformanceCounter counter = null;
             try
             {
-
                 counter = instanceName == string.Empty ?
-                    new PerformanceCounter(categoryName, counterName, null, Node) :
-                    new PerformanceCounter(categoryName, counterName, instanceName, Node);
-                return counter.NextValue().ToString("4f");
+                    new PerformanceCounter(categoryName, counterName, Node, null) :
+                    new PerformanceCounter(categoryName, counterName, Node, instanceName);
+
+                // will always start at 0
+                dynamic firstValue = counter.NextValue();
+                Thread.Sleep(1000);
+                // now matches task manager reading
+                dynamic secondValue = counter.NextValue();
+
+                return secondValue;
             }
             catch (Exception)
             {
@@ -122,19 +134,32 @@ namespace Gateway.Web.Models.Controllers
 
         private void GetStatusAndOutput(GatewayInfo gatewayInfo)
         {
-            if (gatewayInfo.GatewayNodeServices == null ||
-                gatewayInfo.GatewayNodeServices.Any(service => service.CheckID == "serfHealth") == false)
+            if (gatewayInfo.GatewayNodeServices == null)
                 return;
 
-            Status = gatewayInfo
+            var allItemsPassing = gatewayInfo
                 .GatewayNodeServices
-                .Single(service => service.CheckID == "serfHealth")
-                .Status;
+                .All(s => s.Status.Equals("Passing", StringComparison.InvariantCultureIgnoreCase));
 
-            Output = gatewayInfo
-                .GatewayNodeServices
-                .Single(service => service.CheckID == "serfHealth")
-                .Output;
+            Status = allItemsPassing ? "success" : "danger";
+
+            if (allItemsPassing)
+            {
+                var serverHealthInfoItem = gatewayInfo
+                    .GatewayNodeServices
+                    .SingleOrDefault(service => service.CheckID == "serfHealth");
+
+                Output = serverHealthInfoItem == null ? "Unknown" : serverHealthInfoItem.Output;
+            }
+            else
+            {
+                var failingItemsCount =
+                      gatewayInfo
+                    .GatewayNodeServices
+                    .Count(s => !s.Status.Equals("Passing", StringComparison.InvariantCultureIgnoreCase));
+
+                Output = string.Format("{0} failing", failingItemsCount);
+            }
         }
     }
 }

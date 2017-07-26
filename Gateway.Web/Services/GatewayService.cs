@@ -54,8 +54,6 @@ namespace Gateway.Web.Services
 
             foreach (var gateway in _gateways)
             {
-                //TODO: Requires a clean-up:
-                //TODO: What is the gateways are not available?
                 try
                 {
                     var url = string.Format("http://{0}:{1}/{2}", gateway, _port, "health/info");

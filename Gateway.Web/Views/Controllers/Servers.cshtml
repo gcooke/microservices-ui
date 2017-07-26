@@ -1,67 +1,32 @@
-﻿@using Gateway.Web.Database
-@using Gateway.Web.Models
-@using Gateway.Web.Models.Controllers
-@using Gateway.Web.Utils
-@using Newtonsoft.Json
-@using Version = Gateway.Web.Models.Controller.Version
-@{
+﻿@{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
     ViewBag.Title = "All Controllers";
     ViewBag.Current = "Servers";
 }
+
 @{ Html.RenderPartial("_ControllersNav"); }
 
-<div id="page-content-wrapper">
-
-    <div class="hero-unit">
-
-        <h3>Gateway Servers</h3>
-
-        <div class="containerx bulk">
-
-            @foreach (Server server in Model.Servers)
-            {
-                <div class="widget">
-                    <div class="content">
-                        <div class="list-head clearfix">
-                            <h3 style="margin: 0 40px 0 0;">
-                                <span class="glyphicon glyphicon-hdd"></span> @server.Node
-                            </h3>
-                            <small>
-                                Queues: <b>@server.Queues</b>
-                                Workers: <b>@server.Workers</b>
-                            </small>
-                            <br />
-                            <br />
-
-                            <div style="float: left;">
-                                <table style="min-width: 200px; padding: 10px">
-                                    <tr>
-                                        <td style="width: 150px">
-                                            <span class="glyphicon glyphicon-tasks" style="color: green"></span>&nbsp;&nbsp;CPU
-                                        </td>
-                                        <td><div id="cpu"></div></td>
-                                    </tr>
-                                    <tr>
-                                        <td style="width: 150px">
-                                            <span class="glyphicon glyphicon-thumbs-up" style="color: red"></span>&nbsp;&nbsp;Memory
-                                        </td>
-                                        <td>?</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="width: 150px">
-                                            <span class="glyphicon glyphicon-hdd" style="color: gray"></span>&nbsp;&nbsp;Disk
-                                        </td>
-                                        <td>?</td>
-                                    </tr>
-                                </table>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            }
-        </div>
-        <br />
-    </div>
+<div id="serverTable">
+    @{Html.RenderAction("ServerInfo");}
 </div>
+
+<script type="text/javascript">
+    var isBusy = false;
+    setInterval(function () {
+        if (isBusy === true) return;
+
+        isBusy = true;
+
+        //The setInterval will refresh every minute
+        $.ajax({
+            url: "@Url.Action("ServerInfo")"
+        }).success(function (data) {
+            $("#serverTable").html(data);
+            isBusy = false;
+        }).error(function (e) {
+            isBusy = false;
+            $("#serverTable").html(e);
+        });
+    }, 60000);
+
+</script>

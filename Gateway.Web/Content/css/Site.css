@@ -272,15 +272,15 @@ input, textarea {
 }
 
 .user-info {
-    text-align: right; 
-    margin-top: 9px; 
-    color: #CCCCCC; 
-    line-height: 1.2
+    text-align: right;
+    margin-top: 9px;
+    color: #CCCCCC;
+    line-height: 1.2;
 }
 
 .server-info-label {
     font-weight: bold;
-    color: darkred;     
+    color: darkred;
 }
 
 .clickableheader {
