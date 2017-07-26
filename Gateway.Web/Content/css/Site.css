@@ -279,8 +279,14 @@ input, textarea {
 }
 
 .server-info-label {
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    line-height: 1.1;
+}
+.server-info-value {
     font-weight: bold;
     color: darkred;
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    line-height: 1.1;
 }
 
 .clickableheader {

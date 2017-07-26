@@ -19,29 +19,33 @@
                     <br />
 
                 </div>
+
                 <div class='content' style='margin-bottom: 20px; margin-top: 20px;'>
 
-                    <div class='glyphicon glyphicon-list-alt'>
-                        &nbsp;Workers:&nbsp;<span class='server-info-label'>@server.Workers</span>&nbsp;
+                    <div class='glyphicon glyphicon-list-alt text-left'>
+                        <span class='server-info-label'>Workers</span>
+                        <span class='server-info-value'>&nbsp;@server.Workers</span>
                     </div>
                     <br />
-                    <div class='glyphicon glyphicon-dashboard'>
-                        &nbsp;Queues:&nbsp;<span class='server-info-label'>@server.Queues</span>&nbsp;
+                    <div class='glyphicon glyphicon-random text-left'>
+                        <span class='server-info-label'> Queues:</span>
+                        <span class='server-info-value text-right'>&nbsp;@server.Queues</span>
                     </div>
                     <br />
-                    <div class='glyphicon glyphicon-th'>
-                        &nbsp;CPU:&nbsp;<span class='server-info-label'>@server.Cpu</span>&nbsp;
+                    <div class='glyphicon glyphicon-th text-left'>
+                        <span class='server-info-label'> CPU Usage:</span>
+                        <span class='server-info-value text-right'>&nbsp;@server.Cpu</span>
                     </div>
                     <br />
-                    <div class='glyphicon glyphicon-tasks'>
-                        &nbsp;Memory:&nbsp;<span class='server-info-label'>@server.Memory</span>&nbsp;
+                    <div class='glyphicon glyphicon-tasks text-left'>
+                        <span class='server-info-label'>Memory Avail.:</span>
+                        <span class='server-info-value text-right'>&nbsp;@server.Memory</span>
                     </div>
 
                 </div>
+
                 <div class='content alert alert-@server.Status' style='text-align: center;margin-bottom: 0; margin-top: 0;'>
-
-                    <span class='h6' style=""><b>@server.Output</b></span>
-
+                    <b>@server.Output</b>
                 </div>
 
             </div>
