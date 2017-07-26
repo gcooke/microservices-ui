@@ -134,6 +134,9 @@ namespace Gateway.Web.Models.Controllers
 
         private void GetStatusAndOutput(GatewayInfo gatewayInfo)
         {
+            if (gatewayInfo.GatewayNodeServices == null)
+                return;
+
             var allItemsPassing = gatewayInfo
                 .GatewayNodeServices
                 .All(s => s.Status.Equals("Passing", StringComparison.InvariantCultureIgnoreCase));
