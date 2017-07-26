@@ -483,6 +483,7 @@
     <Content Include="Views\Security\Permissions.cshtml" />
     <Content Include="Views\Security\Reports.cshtml" />
     <Content Include="Views\Security\_SecurityNav.cshtml" />
+    <Content Include="Views\Controllers\ServerInfo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />

@@ -1,0 +1,51 @@
+﻿@using Gateway.Web.Models.Controllers
+@model ServersModel
+
+<div id="page-content-wrapper">
+
+    <div class="hero-unit">
+        <h3>Servers</h3>
+        <hr />
+        @foreach (Server server in Model.Servers)
+        {
+            <div class='widget'>
+
+                <div class='content alert alert-@server.Status'>
+
+                    <span class='glyphicon glyphicon-hdd'>
+                        <span class='h3'>&nbsp;</span>
+                        <span class='h3 text-uppercase'>@server.Node</span>
+                    </span>
+                    <br />
+
+                </div>
+                <div class='content' style='margin-bottom: 20px; margin-top: 20px;'>
+
+                    <div class='glyphicon glyphicon-list-alt'>
+                        &nbsp;Workers:&nbsp;<span class='server-info-label'>@server.Workers</span>&nbsp;
+                    </div>
+                    <br />
+                    <div class='glyphicon glyphicon-dashboard'>
+                        &nbsp;Queues:&nbsp;<span class='server-info-label'>@server.Queues</span>&nbsp;
+                    </div>
+                    <br />
+                    <div class='glyphicon glyphicon-th'>
+                        &nbsp;CPU:&nbsp;<span class='server-info-label'>@server.Cpu</span>&nbsp;
+                    </div>
+                    <br />
+                    <div class='glyphicon glyphicon-tasks'>
+                        &nbsp;Memory:&nbsp;<span class='server-info-label'>@server.Memory</span>&nbsp;
+                    </div>
+
+                </div>
+                <div class='content alert alert-@server.Status' style='text-align: center;margin-bottom: 0; margin-top: 0;'>
+
+                    <span class='h6' style=""><b>@server.Output</b></span>
+
+                </div>
+
+            </div>
+        }
+
+    </div>
+</div>

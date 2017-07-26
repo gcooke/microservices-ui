@@ -81,7 +81,7 @@ namespace Gateway.Web.Tests.Models.Controllers
             var serversModel = new ServersModel(gatewayInfos);
             var server = serversModel.Servers.FirstOrDefault(svr => svr.Node == "jhbpsm020000757");
             Assert.IsNotNull(server);
-            Assert.AreEqual("passing", server.Status);
+            Assert.AreEqual("success", server.Status);
         }
     }
 }

@@ -1,64 +1,32 @@
-﻿@using Gateway.Web.Database
-@using Gateway.Web.Models
-@using Gateway.Web.Models.Controllers
-@using Gateway.Web.Utils
-@using Newtonsoft.Json
-@using Version = Gateway.Web.Models.Controller.Version
-@{
+﻿@{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
     ViewBag.Title = "All Controllers";
     ViewBag.Current = "Servers";
 }
+
 @{ Html.RenderPartial("_ControllersNav"); }
 
-<div id="page-content-wrapper">
-
-    <div class="hero-unit">
-        <h3>Servers</h3>
-        <hr />
-        <div id="serverTable">
-
-            @foreach (Server server in Model.Servers)
-            {
-                <div class='widget'>
-
-                    <div class='content alert alert-@server.Status'>
-
-                        <span class='glyphicon glyphicon-hdd'>
-
-                            <span class='h3'>&nbsp;</span>
-                            <span class='h3 text-uppercase'>@server.Node</span>
-
-                        </span>
-
-                    </div>
-                    <div class='content' style='margin-bottom: 20px; margin-top: 20px;'>
-
-                        <div class='glyphicon glyphicon-list-alt'>
-                            &nbsp;Workers:&nbsp;<span class='server-info-label'>@server.Workers</span>&nbsp;
-                        </div>
-                        <div class='glyphicon glyphicon-dashboard'>
-                            &nbsp;Queues:&nbsp;<span class='server-info-label'>@server.Queues</span>&nbsp;
-                        </div><br />
-                        <div class='glyphicon glyphicon-th'>
-                            &nbsp;CPU:&nbsp;<span class='server-info-label'>@server.Cpu</span>&nbsp;
-                        </div>
-                        <div class='glyphicon glyphicon-tasks'>
-                            &nbsp;Memory:&nbsp;<span class='server-info-label'>@server.Memory</span>&nbsp;
-                        </div>
-
-                    </div>
-                    <div class='content alert alert-@server.Status' style='margin-bottom: 0px; margin-top: 0px; ;'>
-
-                        <span class='h6'><b>@server.Output</b></span>
-
-                    </div>
-
-                </div>
-            }
-        </div>
-    </div>
+<div id="serverTable">
+    @{Html.RenderAction("ServerInfo");}
 </div>
-@*<script type="text/javascript">
-    setInterval("$('#serverTable').load('')", 30000);
-</script>*@
+
+<script type="text/javascript">
+    var isBusy = false;
+    setInterval(function () {
+        if (isBusy === true) return;
+
+        isBusy = true;
+
+        //The setInterval will refresh every minute
+        $.ajax({
+            url: "@Url.Action("ServerInfo")"
+        }).success(function (data) {
+            $("#serverTable").html(data);
+            isBusy = false;
+        }).error(function (e) {
+            isBusy = false;
+            $("#serverTable").html(e);
+        });
+    }, 60000);
+
+</script>

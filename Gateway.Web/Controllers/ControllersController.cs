@@ -7,6 +7,7 @@ using Gateway.Web.Database;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Services;
 using Gateway.Web.Utils;
+using Microsoft.Practices.ObjectBuilder2;
 using Controller = System.Web.Mvc.Controller;
 using DashboardModel = Gateway.Web.Models.Controllers.DashboardModel;
 using HistoryModel = Gateway.Web.Models.Controllers.HistoryModel;
@@ -36,11 +37,15 @@ namespace Gateway.Web.Controllers
             return View(model);
         }
 
-        //[OutputCache(NoStore = true, Location = System.Web.UI.OutputCacheLocation.Client, Duration = 30)]
         public ActionResult Servers()
         {
+            return View();
+        }
+
+        public ActionResult ServerInfo()
+        {
             var model = _gateway.GetServers();
-            return View("Servers", model);
+            return PartialView("ServerInfo", model);
         }
 
         public ActionResult Aliases()
