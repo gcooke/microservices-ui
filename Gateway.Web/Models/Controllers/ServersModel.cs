@@ -65,8 +65,8 @@ namespace Gateway.Web.Models.Controllers
             try
             {
                 counter = instanceName == string.Empty ?
-                    new PerformanceCounter(categoryName, counterName, Node, null) :
-                    new PerformanceCounter(categoryName, counterName, Node, instanceName);
+                    new PerformanceCounter(categoryName, counterName, null, Node):
+                    new PerformanceCounter(categoryName, counterName, instanceName, Node);
 
                 // will always start at 0
                 dynamic firstValue = counter.NextValue();
@@ -78,7 +78,7 @@ namespace Gateway.Web.Models.Controllers
             }
             catch (Exception)
             {
-                return "Err";
+                return "err";
             }
             finally
             {
