@@ -57,6 +57,19 @@ namespace Gateway.Web.Controllers
             //ViewBag.Message = "Your consule page.";
             return View();
         }
+        
+        [AllowAnonymous]
+        public ActionResult LogOff()
+        {
+            var url = Request.Url.Host;
+            var uriBuilder = new UriBuilder(url)
+            {
+                Scheme = Uri.UriSchemeHttp,
+                Port = -1 // default port for scheme
+            };
+
+            return Redirect(uriBuilder.Uri.ToString());
+        }
 
         public ActionResult ReturnToHistory()
         {
