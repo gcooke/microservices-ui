@@ -23,6 +23,11 @@ namespace Gateway.Web
             SiteLogo = "~/Content/img/Redstone." + Environment + ".png";
 
             AreaRegistration.RegisterAllAreas();
+
+            // Add handle error attribute and authorize attribute to entire site.
+            GlobalFilters.Filters.Add(new HandleErrorAttribute());
+            GlobalFilters.Filters.Add(new System.Web.Mvc.AuthorizeAttribute());
+
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles, Environment);

@@ -27,6 +27,7 @@
                         {
                             string loggedinuser = identity.Name;
                             <b>@loggedinuser</b>
+                            @Html.ActionLink("Logout", "LogOff", "Home")
                         }
                         else
                         {
