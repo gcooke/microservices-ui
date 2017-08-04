@@ -11,6 +11,7 @@ using AddInsModel = Gateway.Web.Models.User.AddInsModel;
 using Controller = System.Web.Mvc.Controller;
 using PortfoliosModel = Gateway.Web.Models.User.PortfoliosModel;
 using SitesModel = Gateway.Web.Models.User.SitesModel;
+using System.Globalization;
 
 namespace Gateway.Web.Controllers
 {
@@ -78,9 +79,9 @@ namespace Gateway.Web.Controllers
             var model = new UserModel
             {
                 Id = -1,
-                Login = login,
-                Domain = domain,
-                FullName = fullName
+                Login = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(login),
+                Domain = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(domain),
+                FullName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(fullName)
             };
 
             if (ModelState.IsValid)
