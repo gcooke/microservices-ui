@@ -1,6 +1,6 @@
 using System.Xml.Serialization;
 
-namespace Gateway.Web.Models.AddIn
+namespace Gateway.Web.Models.Shared
 {
     [XmlType("AddIn")]
     public class AddInModel

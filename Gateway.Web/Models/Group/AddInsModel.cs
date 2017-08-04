@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using Gateway.Web.Models.AddIn;
+using Gateway.Web.Models.Shared;
 
 namespace Gateway.Web.Models.Group
 {

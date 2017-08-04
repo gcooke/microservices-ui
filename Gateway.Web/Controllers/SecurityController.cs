@@ -4,6 +4,7 @@ using Gateway.Web.Models.AddIn;
 using Gateway.Web.Models.Group;
 using Gateway.Web.Models.Permission;
 using Gateway.Web.Models.Security;
+using Gateway.Web.Models.Shared;
 using Gateway.Web.Services;
 using Gateway.Web.Utils;
 using Controller = System.Web.Mvc.Controller;

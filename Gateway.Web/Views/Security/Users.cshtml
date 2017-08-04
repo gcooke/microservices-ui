@@ -25,12 +25,12 @@
 
             <table style="width: 100%; white-space: nowrap" class="datatable">
                 <thead>
-                    <tr>
-                        <td>Full Name</td>
-                        <td>Domain</td>
-                        <td>Login</td>
-                        <td>Action</td>
-                    </tr>
+                <tr>
+                    <td>Full Name</td>
+                    <td>Domain</td>
+                    <td>Login</td>
+                    <td>Action</td>
+                </tr>
                 </thead>
                 @foreach (UserModel user in Model.Items)
                 {
@@ -38,17 +38,62 @@
                         <td>@user.FullName</td>
                         <td>@user.Domain</td>
                         <td>@user.Login</td>
-                        <td>
-                            @Html.ActionLink("View", "Details", "User", new { id = user.Id }, new { @class = "hoverlink" })
-                        </td>
+                        <td>@Html.ActionLink("View", "Details", "User", new { id = user.Id }, new { @class = "hoverlink" })</td>
                     </tr>
                 }
             </table>
-            <br />
+            <br/>
 
         </div>
-        <br />
 
+        <br />
+        @using (Html.BeginForm("InsertUser", "User", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+            <a class="btn btn-primary" data-toggle="collapse" href="#collapsePanel" aria-expanded="false" aria-controls="collapsePanel">
+                Add New User
+            </a>
+            <div class="@(Html.ViewData.ModelState.IsValid ? "collapse" : "collapse show")" id="collapsePanel">
+                <div class="info-block">
+                    <div>
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label class="control-label">Domain</label>
+                                </div>
+                                <div class="col-md-4">
+                                    @Html.TextBox("_domain", "", new {@class = "form-control"})
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label class="control-label">Login</label>
+                                </div>
+                                <div class="col-md-4">
+                                    @Html.TextBox("_login", "", new { @class = "form-control" })
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label class="control-label">Full Name</label>
+                                </div>
+                                <div class="col-md-4">
+                                    @Html.TextBox("_fullName", "", new {@class = "form-control"})
+                                </div>
+                            </div>
+
+                            <div class="col-md-offset-2 col-md-4">
+                                <input type="submit" class="btn btn-primary" value="Add" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
 
     </div>
 </div>

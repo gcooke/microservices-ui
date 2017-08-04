@@ -1,13 +1,23 @@
-﻿namespace Gateway.Web.Models.User
+﻿using System.Collections.Generic;
+using Gateway.Web.Models.Group;
+
+namespace Gateway.Web.Models.User
 {
     public class GroupsModel : IUserModel
     {
-        public GroupsModel(long id)
+        public GroupsModel(long userId)
         {
-            Id = id;
+            UserId = userId;
         }
 
-        public long Id { get; set; }
-        public string Login { get { return Id.ToString(); } }
+        public GroupsModel() { }
+
+        public long UserId { get; set; }
+
+        public List<GroupModel> UserGroups { get; set; }
+
+        public List<GroupModel> Groups { get; set; }
+
+        public string Login { get; set; }
     }
 }

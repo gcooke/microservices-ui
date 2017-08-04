@@ -10,6 +10,7 @@ using Gateway.Web.Models.Group;
 using Gateway.Web.Models.Permission;
 using Gateway.Web.Models.Request;
 using Gateway.Web.Models.Security;
+using Gateway.Web.Models.Shared;
 using Gateway.Web.Models.User;
 
 namespace Gateway.Web.Services
@@ -28,7 +29,7 @@ namespace Gateway.Web.Services
 
         XElement[] GetReport(string url);
 
-        string[] GetSites();
+        List<SiteModel> GetSites();
 
         VersionsModel GetControllerVersions(string name);
 
@@ -44,6 +45,8 @@ namespace Gateway.Web.Services
 
         Models.Security.GroupsModel GetGroups();
 
+        List<PortfolioModel> GetPortfolios();
+
         Models.Security.ReportsModel GetSecurityReport(string name);
 
         Models.Security.ReportsModel GetSecurityReport(string name, string parameter);
@@ -56,13 +59,13 @@ namespace Gateway.Web.Services
 
         Models.Security.UsersModel GetUsers();
 
-        Models.User.UserModel GetUser(string login);
+        Models.User.UserModel GetUser(long id);
 
         Models.Security.AddInsModel GetAddIns();
 
-        Models.AddIn.AddInModel GetAddIn(long id);
+        AddInModel GetAddIn(long id);
 
-        string[] Create(Models.AddIn.AddInModel model);
+        string[] Create(AddInModel model);
 
         string[] DeleteAddIn(long id);
 
@@ -97,5 +100,44 @@ namespace Gateway.Web.Services
         string[] InsertGroupAddInVersion(long groupId, AddInVersionModel addInVersion);
 
         string[] DeleteGroupAddInVersion(long id, long groupId);
+
+        #region User Security Configuration
+        string[] RemoveUser(long id);
+
+        string[] Create(UserModel model);
+        #endregion
+
+        #region User Group Security Configuration
+        Models.User.UserModel GetUserGroups(long id);
+
+        string[] InsertUserGroup(long userId, long groupId);
+
+        string[] RemoveUserGroup(long userId, long groupId);
+        #endregion
+
+        #region User Portfolio Security Configuration
+        Models.User.PortfoliosModel GetUserPortfolios(long userId);
+
+        string[] InsertUserPortfolio(long userId, long portfolioId);
+
+        string[] RemoveUserPortfolio(long userId, long portfolioId);
+        #endregion
+
+        #region User Sites Security Configuration
+        Models.User.SitesModel GetUserSites(long userId);
+
+        string[] InsertUserSite(long userId, long siteId);
+
+        string[] RemoveUserSite(long userId, long siteId);
+        #endregion
+
+        #region User Add In Version Security Configuration
+        Models.User.AddInsModel GetUserAddInVersions(long userId);
+
+        string[] DeleteUserAddInVersions(long userId, long addInVersionId);
+
+        string[] InsertUserAddInVersions(long groupId, AddInVersionModel addInVersion);
+
+        #endregion
     }
 }
