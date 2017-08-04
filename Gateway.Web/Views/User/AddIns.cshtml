@@ -1,29 +1,98 @@
-﻿@using Gateway.Web.Database
-@using Gateway.Web.Models
-@using Gateway.Web.Models.Controller
+﻿@using Gateway.Web.Models.Group
 @using Gateway.Web.Models.User
-@using Gateway.Web.Utils
-@using Newtonsoft.Json
-@using Version = Gateway.Web.Models.Controller.Version
+@model Gateway.Web.Models.User.AddInsModel
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
     ViewBag.Title = "User: " + @Model.Login;
     ViewBag.Current = "AddIns";
 }
-@{ Html.RenderPartial("_UserNav", (IUserModel)@Model); }
+@{ Html.RenderPartial("_UserNav", @Model); }
 
 <div id="page-content-wrapper">
+
     <div class="hero-unit">
-
-        <h3>Add-Ins</h3>
-
-        <div id="containerx bulk">
-           
-
-        </div>
-        <br />
-
-        @Html.ActionLink("Update User", "UpdateUser", "User")
-
+        <h3>User Add-in Version</h3>
     </div>
+
+    <div class="containerx bulk">
+        <table style="white-space: nowrap; width: 100%;" class="datatable">
+            <thead>
+                <tr>
+                    <td>Name</td>
+                    <td>Friendly Name</td>
+                    <td>Version</td>
+                    <td>Action</td>
+                </tr>
+            </thead>
+            @foreach (var item in Model.ExcelAddInVersions)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.FriendlyName</td>
+                    <td>@item.Version</td>
+                    <td>
+                        @Html.ActionLink("Remove", "RemoveAddInVersion", "User", new { userId = @Model.Id, addInVersionId = item.ExcelAddInVersionId }, new { @class = "hoverlink" })
+                    </td>
+                </tr>
+            }
+        </table>
+        <br />
+    </div>
+
+    <div class="hero-unit">
+        <h3>Add-in versions inherited from groups</h3>
+    </div>
+
+    <div class="containerx bulk">
+        <table style="white-space: nowrap; width: 100%;" class="datatable">
+            <thead>
+                <tr>
+                    <td>Name</td>
+                    <td>Friendly Name</td>
+                    <td>Version</td>
+                </tr>
+            </thead>
+            @foreach (var item in Model.GroupExcelAddInVersions)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.FriendlyName</td>
+                    <td>@item.Version</td>
+                </tr>
+            }
+        </table>
+        <br />
+    </div>
+    @using (Html.BeginForm("AddIns", "User", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        <a class="btn btn-primary" data-toggle="collapse" href="#collapsePanel" aria-expanded="false" aria-controls="collapsePanel">
+            Add New Version
+        </a>
+        <div class="@(Html.ViewData.ModelState.IsValid ? "collapse" : "collapse show")" id="collapsePanel">
+            <div class="info-block">
+                <div>
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+                    <!-- Hidden Id Field -->
+                    @Html.TextBox("_id", Model.Id, new { @class = "form-control", @style = "display:none" })
+
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <label class="control-label">Version</label>
+                            </div>
+                            <div class="col-md-4">
+                                @Html.DropDownList("_version", Model.AvailableAddInVersions, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-offset-2 col-md-4">
+                            <input type="submit" class="btn btn-primary" value="Add" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 </div>

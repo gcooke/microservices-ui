@@ -19,8 +19,10 @@ using Gateway.Web.Models.Permission;
 using Gateway.Web.Models.Request;
 using Gateway.Web.Utils;
 using Gateway.Web.Models.Security;
+using Gateway.Web.Models.Shared;
 using Gateway.Web.Models.User;
 using Newtonsoft.Json;
+using WebGrease.Css.Extensions;
 using AddInsModel = Gateway.Web.Models.Group.AddInsModel;
 using PermissionsModel = Gateway.Web.Models.Group.PermissionsModel;
 using PortfoliosModel = Gateway.Web.Models.Group.PortfoliosModel;
@@ -37,8 +39,11 @@ namespace Gateway.Web.Services
         private readonly IGatewayRestService _restService;
         private readonly TimeSpan _defaultRequestTimeout;
 
-        public GatewayService(ISystemInformation information, IGatewayRestService restService,
-            ILoggingService loggingService)
+        public GatewayService(
+            ISystemInformation information,
+            IGatewayRestService restService,
+            ILoggingService loggingService
+        )
         {
             _defaultRequestTimeout = TimeSpan.FromSeconds(10);
             _restService = restService;
@@ -109,14 +114,21 @@ namespace Gateway.Web.Services
             return element;
         }
 
-        public string[] GetSites()
+        public List<SiteModel> GetSites()
         {
-            var doc = Fetch(_defaultRequestTimeout, "api/tradestore/latest/{0}", "LegalEntities").FirstOrDefault();
+            var response = _restService.Get("Security", "latest", "sites");
+            var result = new List<SiteModel>();
 
-            var element = doc.Document.Descendants("Result").ToArray().FirstOrDefault();
-            var legalEntities = JsonConvert.DeserializeObject<IEnumerable<string>>(element.Value);
+            if (!response.Successfull)
+                return result;
 
-            return legalEntities.ToArray();
+            var element = response.Content.GetPayloadAsXElement();
+            element.Descendants("Site").ForEach(item =>
+            {
+                result.Add(item.Deserialize<SiteModel>());
+            });
+
+            return result;
         }
 
         public void ExpireWorkItem(string id)
@@ -387,7 +399,6 @@ namespace Gateway.Web.Services
             }
         }
 
-
         public Models.Security.GroupsModel GetGroups()
         {
             var response = _restService.Get("Security", "latest", "groups");
@@ -524,9 +535,34 @@ namespace Gateway.Web.Services
             return result;
         }
 
-        public UserModel GetUser(string login)
+        public UserModel GetUser(long id)
         {
-            return new UserModel();
+            var query = string.Format("Users/{0}", id);
+            var response = _restService.Get("Security", "latest", query);
+
+            if (!response.Successfull)
+                return new UserModel();
+
+            var element = response.Content.GetPayloadAsXElement();
+            var result = element.Deserialize<UserModel>();
+
+            return result;
+        }
+
+        public Models.User.UserModel GetUserGroups(long id)
+        {
+            var query = string.Format("Users/{0}/Groups", id);
+            var response = _restService.Get("Security", "latest", query);
+
+            if (!response.Successfull)
+                return new UserModel(id);
+
+            var element = response.Content.GetPayloadAsXElement();
+            var result = element.Deserialize<UserModel>();
+
+            var model = GetGroups();
+            result.Items.AddRange(model.Items.Select(item => new SelectListItem { Value = item.Id.ToString(), Text = item.Name }));
+            return result;
         }
 
         public Models.Security.AddInsModel GetAddIns()
@@ -589,7 +625,6 @@ namespace Gateway.Web.Services
             return new[] { response.Message };
         }
 
-
         public Models.Security.PermissionsModel GetPermissions()
         {
             var response = _restService.Get("Security", "latest", "permissions");
@@ -612,6 +647,23 @@ namespace Gateway.Web.Services
             }
 
             PopulateAvailableSystems(result);
+            return result;
+        }
+
+        public List<PortfolioModel> GetPortfolios()
+        {
+            var response = _restService.Get("Security", "latest", "portfolios");
+            var result = new List<PortfolioModel>();
+
+            if (!response.Successfull)
+                return result;
+
+            var element = response.Content.GetPayloadAsXElement();
+            element.Descendants("Portfolio").ForEach(item =>
+            {
+                result.Add(item.Deserialize<PortfolioModel>());
+            });
+
             return result;
         }
 
@@ -883,7 +935,10 @@ namespace Gateway.Web.Services
             }
 
             PopulateAvailableAddIns(result);
-            PopulateAvailableVersions(result);
+
+            var availableVersions = PopulateAvailableVersions();
+            result.AvailableVersions.AddRange(availableVersions.OrderBy(v => v.Text));
+
             return result;
         }
 
@@ -902,14 +957,14 @@ namespace Gateway.Web.Services
             }
         }
 
-        private void PopulateAvailableVersions(Models.Group.AddInsModel target)
+        private List<SelectListItem> PopulateAvailableVersions()
         {
+            var selectListItems = new List<SelectListItem>();
             var response = _restService.Get("Security", "latest", "addins/versions");
 
             if (response.Successfull)
             {
                 var element = response.Content.GetPayloadAsXElement();
-                var interim = new List<SelectListItem>();
                 foreach (var item in element.Descendants("AddInVersion"))
                 {
                     var model = item.Deserialize<AddInVersionModel>();
@@ -920,11 +975,10 @@ namespace Gateway.Web.Services
                         Text = string.Format("{0} - {1}", model.AddIn, model.Version),
                         Value = string.Format("{0}|{1}", model.AddIn, model.Version)
                     };
-                    interim.Add(foo);
+                    selectListItems.Add(foo);
                 }
-
-                target.AvailableVersions.AddRange(interim.OrderBy(v => v.Text));
             }
+            return selectListItems;
         }
 
         public string[] InsertGroupAddInVersion(long groupId, AddInVersionModel addInVersion)
@@ -944,6 +998,202 @@ namespace Gateway.Web.Services
         {
             var query = string.Format("groups/{0}/addins/{1}", groupId, id);
             var response = _restService.Delete("Security", "latest", query, string.Empty);
+
+            if (response.Successfull)
+            {
+                return null;
+            }
+
+            return new[] { response.Message };
+        }
+
+        public string[] RemoveUser(long id)
+        {
+            var query = string.Format("users/{0}", id);
+            var response = _restService.Delete("Security", "latest", query, string.Empty);
+
+            if (response.Successfull)
+            {
+                return null;
+            }
+
+            return new[] { response.Content.Message };
+        }
+
+        public string[] Create(UserModel model)
+        {
+            var response = _restService.Put("Security", "latest", "users", model.Serialize());
+
+            if (response.Successfull)
+            {
+                return null;
+            }
+
+            return new[] { response.Message };
+        }
+
+        public string[] InsertUserPortfolio(long userId, long portfolioId)
+        {
+            var query = string.Format("users/{0}/portfolios/{1}", userId, portfolioId);
+            var response = _restService.Put("Security", "latest", query, string.Empty);
+
+            if (response.Successfull)
+            {
+                return null;
+            }
+
+            return new[] { response.Message };
+        }
+
+        public Models.User.PortfoliosModel GetUserPortfolios(long userId)
+        {
+            var query = string.Format("users/{0}/portfolios", userId);
+            var response = _restService.Get("Security", "latest", query);
+
+            if (response.Successfull)
+            {
+                var element = response.Content.GetPayloadAsXElement();
+                var model = element.Deserialize<Models.User.PortfoliosModel>();
+
+                var portfolios = GetPortfolios();
+
+                model.AvailablePortfolios.AddRange(portfolios.Select(item => new SelectListItem { Value = item.Id.ToString(), Text = item.Name }));
+
+                return model;
+            }
+
+            return null;
+        }
+
+        public string[] RemoveUserPortfolio(long userId, long portfolioId)
+        {
+            var query = string.Format("users/{0}/portfolios/{1}", userId, portfolioId);
+            var response = _restService.Delete("Security", "latest", query, string.Empty);
+
+            if (response.Successfull)
+            {
+                return null;
+            }
+
+            return new[] { response.Message };
+        }
+
+        public string[] InsertUserSite(long userId, long siteId)
+        {
+            var query = string.Format("users/{0}/sites/{1}", userId, siteId);
+            var response = _restService.Put("Security", "latest", query, string.Empty);
+
+            if (response.Successfull)
+            {
+                return null;
+            }
+
+            return new[] { response.Message };
+        }
+
+        public Models.User.SitesModel GetUserSites(long userId)
+        {
+            var query = string.Format("users/{0}/sites", userId);
+            var response = _restService.Get("Security", "latest", query);
+
+            if (!response.Successfull)
+                return null;
+
+            var element = response.Content.GetPayloadAsXElement();
+            var model = element.Deserialize<Models.User.SitesModel>();
+
+            var sites = GetSites();
+            model.AvailableSites.AddRange(sites.Select(item => new SelectListItem { Value = item.Id.ToString(), Text = item.Name }));
+
+            return model;
+        }
+
+        public string[] RemoveUserSite(long userId, long siteId)
+        {
+            var query = string.Format("users/{0}/sites/{1}", userId, siteId);
+            var response = _restService.Delete("Security", "latest", query, string.Empty);
+
+            if (response.Successfull)
+            {
+                return null;
+            }
+
+            return new[] { response.Message };
+        }
+
+        public string[] InsertUserGroup(long userId, long groupId)
+        {
+            var query = string.Format("users/{0}/groups/{1}", userId, groupId);
+            var response = _restService.Put("Security", "latest", query, string.Empty);
+
+            if (response.Successfull)
+            {
+                return null;
+            }
+
+            return new[] { response.Message };
+        }
+
+        public string[] RemoveUserGroup(long userId, long groupId)
+        {
+            var query = string.Format("users/{0}/groups/{1}", userId, groupId);
+            var response = _restService.Delete("Security", "latest", query, string.Empty);
+
+            if (response.Successfull)
+            {
+                return null;
+            }
+
+            return new[] { response.Content.Message };
+        }
+
+        public Models.User.AddInsModel GetUserAddInVersions(long userId)
+        {
+            var query = string.Format("users/{0}/addins", userId);
+            var response = _restService.Get("Security", "latest", query);
+
+            if (response.Successfull)
+            {
+                var element = response.Content.GetPayloadAsXElement();
+                var model = element.Deserialize<Models.User.AddInsModel>();
+                 
+                var availableVersions = PopulateAvailableVersions();
+                model.AvailableAddInVersions.AddRange(availableVersions.OrderBy(v => v.Text));
+                return model;
+            }
+
+            return null;
+        }
+
+        public string[] DeleteUserAddInVersions(long userId, long addInVersionId)
+        {
+            var query = string.Format("users/{0}/addins/{1}", userId, addInVersionId);
+            var response = _restService.Delete("Security", "latest", query, string.Empty);
+
+            if (response.Successfull)
+            {
+                return null;
+            }
+
+            return new[] { response.Message };
+        }
+
+        //public string[] InsertUserAddInVersions(long userId, long addInVersionId)
+        //{
+        //    var query = string.Format("users/{0}/addins/{1}", userId, addInVersionId);
+        //    var response = _restService.Put("Security", "latest", query, string.Empty);
+
+        //    if (response.Successfull)
+        //    {
+        //        return null;
+        //    }
+
+        //    return new[] { response.Message };
+        //}
+        public string[] InsertUserAddInVersions(long groupId, AddInVersionModel addInVersion)
+        {
+            var query = string.Format("users/{0}/addins", groupId);
+            var response = _restService.Put("Security", "latest", query, addInVersion.Serialize());
 
             if (response.Successfull)
             {

@@ -1,6 +1,6 @@
 using System.Xml.Serialization;
 
-namespace Gateway.Web.Models.Group
+namespace Gateway.Web.Models.Shared
 {
     [XmlType("Portfolio")]
     public class PortfolioModel
