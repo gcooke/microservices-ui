@@ -1,29 +1,77 @@
-﻿@using Gateway.Web.Database
-@using Gateway.Web.Models
-@using Gateway.Web.Models.Controller
+﻿@using Gateway.Web.Models.Group
 @using Gateway.Web.Models.User
-@using Gateway.Web.Utils
-@using Newtonsoft.Json
-@using Version = Gateway.Web.Models.Controller.Version
+@model UserModel
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
     ViewBag.Title = "User: " + @Model.Login;
     ViewBag.Current = "Groups";
 }
-@{ Html.RenderPartial("_UserNav", (IUserModel)@Model); }
+@{ Html.RenderPartial("_UserNav", (UserModel)@Model); }
 
 <div id="page-content-wrapper">
     <div class="hero-unit">
 
-        <h3>Groups</h3>
+        <h3>User Groups</h3>
+        <br />
 
         <div id="containerx bulk">
-           
+
+            <table style="width: 100%; white-space: nowrap" class="datatable">
+                <thead>
+                    <tr>
+                        <td>Description</td>
+                        <td>Name</td>
+                        <td>Action</td>
+                    </tr>
+                </thead>
+                @foreach (GroupModel item in Model.UserGroups)
+                {
+                    <tr>
+                        <td style="display: none;">@item.Id</td>
+                        <td>@item.Description</td>
+                        <td>@item.Name</td>
+                        <td>
+                            @Html.ActionLink("Remove", "RemoveGroup", "User", new { userId = @Model.Id, groupId = item.Id }, new { @class = "hoverlink" })
+                        </td>
+                    </tr>
+                }
+            </table>
+            <br />
 
         </div>
         <br />
 
-        @Html.ActionLink("Update User", "UpdateUser", "User")
+        @using (Html.BeginForm("Groups", "User", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            <a class="btn btn-primary" data-toggle="collapse" href="#collapsePanel" aria-expanded="false" aria-controls="collapsePanel">
+                Add User to Group
+            </a>
+            <div class="@(Html.ViewData.ModelState.IsValid ? "collapse" : "collapse show")" id="collapsePanel">
+                <div class="info-block">
+                    <div>
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
+                        <!-- Hidden Id Field -->
+                        @Html.TextBox("_id", Model.Id, new { @class = "form-control", @style = "display:none" })
+
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label class="control-label">Group</label>
+                                </div>
+                                <div class="col-md-4">
+                                    @Html.DropDownList("_system", @Model.Items, new { @class = "form-control" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-offset-2 col-md-4">
+                                <input type="submit" class="btn btn-primary" value="Add" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
     </div>
 </div>

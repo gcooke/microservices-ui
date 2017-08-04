@@ -1,0 +1,28 @@
+﻿<User>
+  <Id>48</Id>
+  <Domain>INTRANET</Domain>
+  <Login>TESTUS</Login>
+  <FullName>TEST USER</FullName>
+  <UserGroups>
+    <Group>
+      <Id>1</Id>
+      <Name>Development</Name>
+      <Description>All developers</Description>
+    </Group>
+    <Group>
+      <Id>2</Id>
+      <Name>Support</Name>
+      <Description>All support members</Description>
+    </Group>
+    <Group>
+      <Id>3</Id>
+      <Name>Administration</Name>
+      <Description>Can configure users and groups</Description>
+    </Group>
+    <Group>
+      <Id>8</Id>
+      <Name>Model Validation</Name>
+      <Description>All members of the Model Validations team</Description>
+    </Group>
+  </UserGroups>
+</User>

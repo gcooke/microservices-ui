@@ -17,38 +17,38 @@
 
     <ul class="sidebar-nav">
         <li>
-            <a href="~/User/Details/@Model.Login/"
+            <a href="~/User/Details/@Model.Id/"
                class="@(ViewBag.Current == "Details" ? "active" : "")">
                 <span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Details
             </a>
         </li>
         <li>
-            <a href="~/User/Groups/@Model.Login/"
+            <a href="~/User/Groups/@Model.Id/"
                class="@(ViewBag.Current == "Groups" ? "active" : "")">
                 <span class="glyphicon glyphicon-folder-close"></span>&nbsp;&nbsp;Groups
             </a>
         </li>
         <li>
-            <a href="~/User/Portfolios/@Model.Login/"
+            <a href="~/User/Portfolios/@Model.Id/"
                class="@(ViewBag.Current == "Portfolios" ? "active" : "")">
                 <span class="glyphicon glyphicon-tree-conifer"></span>&nbsp;&nbsp;Portfolios
             </a>
         </li>
         <li>
-            <a href="~/User/Sites/@Model.Login/"
+            <a href="~/User/Sites/@Model.Id/"
                class="@(ViewBag.Current == "Sites" ? "active" : "")">
                 <span class="glyphicon glyphicon-globe"></span>&nbsp;&nbsp;Sites
             </a>
         </li>
         <li>
-            <a href="~/User/AddIns/@Model.Login/"
+            <a href="~/User/AddIns/@Model.Id/"
                class="@(ViewBag.Current == "AddIns" ? "active" : "")">
                 <span class="glyphicon glyphicon-retweet"></span>&nbsp;&nbsp;Add-Ins
             </a>
         </li>
 
         <li>
-            <a href="~/User/History/@Model.Login"
+            <a href="~/User/History?id=@Model.Id&login=@Model.Login"
                class="@(ViewBag.Current == "History" ? "active" : "")">
                 <span class="glyphicon glyphicon-transfer"></span>&nbsp;&nbsp;History
             </a>

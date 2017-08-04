@@ -292,9 +292,11 @@
     <Compile Include="Models\Group\GroupActiveDirectory.cs" />
     <Compile Include="Models\Group\GroupAddInVersionModel.cs" />
     <Compile Include="Models\Group\PermissionsModel.cs" />
-    <Compile Include="Models\Group\PortfolioModel.cs" />
+    <Compile Include="Models\Shared\AddInModel.cs" />
+    <Compile Include="Models\Shared\EntityAddInVersionModel.cs" />
+    <Compile Include="Models\Shared\PortfolioModel.cs" />
     <Compile Include="Models\Group\PortfoliosModel.cs" />
-    <Compile Include="Models\Group\SiteModel.cs" />
+    <Compile Include="Models\Shared\SiteModel.cs" />
     <Compile Include="Models\Group\SitesModel.cs" />
     <Compile Include="Models\Request\Children.cs" />
     <Compile Include="Models\Request\Transitions.cs" />
@@ -324,7 +326,6 @@
     <Compile Include="Models\Controller\Version.cs" />
     <Compile Include="Models\Home\IndexModel.cs" />
     <Compile Include="Models\Request\Timings.cs" />
-    <Compile Include="Models\AddIn\AddInModel.cs" />
     <Compile Include="Models\Security\AddInsModel.cs" />
     <Compile Include="Models\Group\GroupModel.cs" />
     <Compile Include="Models\Security\GroupsModel.cs" />
@@ -333,9 +334,10 @@
     <Compile Include="Models\Security\ReportsModel.cs" />
     <Compile Include="Models\Permission\SystemPermissions.cs" />
     <Compile Include="Models\Security\SystemNameModel.cs" />
+    <Compile Include="Models\User\AddInsModel.cs" />
+    <Compile Include="Models\User\UserAddInVersionModel.cs" />
     <Compile Include="Models\User\IUserModel.cs" />
     <Compile Include="Models\User\GroupsModel.cs" />
-    <Compile Include="Models\User\AddInsModel.cs" />
     <Compile Include="Models\User\PortfoliosModel.cs" />
     <Compile Include="Models\User\SitesModel.cs" />
     <Compile Include="Models\User\UserModel.cs" />

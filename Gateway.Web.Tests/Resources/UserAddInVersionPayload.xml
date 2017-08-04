@@ -1,0 +1,22 @@
+﻿<UserAddIn>
+  <Id>48</Id>
+  <Login>MOOLOOUS</Login>
+  <ExcelAddInVersions>
+    <UserAddInVersion>
+      <ExcelAddInVersionId>15</ExcelAddInVersionId>
+      <Name>PnRLib</Name>
+      <FriendlyName>XVA</FriendlyName>
+      <Version>1.1.660</Version>
+      <UserId>48</UserId>
+    </UserAddInVersion>
+  </ExcelAddInVersions>
+  <GroupExcelAddInVersions>
+    <GroupAddInVersion>
+      <ExcelAddInVersionId>6</ExcelAddInVersionId>
+      <Name>PnRLib</Name>
+      <FriendlyName>XVA</FriendlyName>
+      <Version>1.1.630</Version>
+      <GroupId>1</GroupId>
+    </GroupAddInVersion>
+  </GroupExcelAddInVersions>
+</UserAddIn>

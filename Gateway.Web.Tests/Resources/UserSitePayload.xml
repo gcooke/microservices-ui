@@ -1,0 +1,20 @@
+﻿<UserSite>
+  <Id>48</Id>
+  <Login>MOOLOOUS</Login>
+  <Sites>
+    <Site>
+      <Id>4</Id>
+      <Name>ZAMBIA</Name>
+    </Site>
+  </Sites>
+  <InheritedSites>
+    <Site>
+      <Id>1</Id>
+      <Name>MOZAMBIQUE</Name>
+    </Site>
+    <Site>
+      <Id>2</Id>
+      <Name>EGYPT</Name>
+    </Site>
+  </InheritedSites>
+</UserSite>

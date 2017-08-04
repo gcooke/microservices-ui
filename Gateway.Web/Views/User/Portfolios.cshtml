@@ -1,29 +1,99 @@
 ﻿@using Gateway.Web.Database
 @using Gateway.Web.Models
 @using Gateway.Web.Models.Controller
-@using Gateway.Web.Models.User
-@using Gateway.Web.Utils
-@using Newtonsoft.Json
-@using Version = Gateway.Web.Models.Controller.Version
+@using Gateway.Web.Models.Group
+@using Gateway.Web.Models.Shared
+@model Gateway.Web.Models.User.PortfoliosModel
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
     ViewBag.Title = "User: " + @Model.Login;
     ViewBag.Current = "Portfolios";
 }
-@{ Html.RenderPartial("_UserNav", (IUserModel)@Model); }
+@{ Html.RenderPartial("_UserNav", @Model); }
 
 <div id="page-content-wrapper">
+
     <div class="hero-unit">
-
         <h3>Portfolios</h3>
-
-        <div id="containerx bulk">
-           
-
-        </div>
-        <br />
-
-        @Html.ActionLink("Update User", "UpdateUser", "User")
-
     </div>
+
+    <div class="containerx bulk">
+        <table style="width: 100%; white-space: nowrap" class="datatable">
+            <thead>
+                <tr>
+                    <td>Level</td>
+                    <td>Name</td>
+                    <td>Action</td>
+                </tr>
+            </thead>
+            @foreach (PortfolioModel item in Model.Portfolios)
+            {
+                <tr>
+                    <td>@item.Level</td>
+                    <td>@item.Name</td>
+                    <td>
+                        @Html.ActionLink("Remove", "RemovePortfolio", "User", new { userId = @Model.Id, portfolioId = item.Id }, new { @class = "hoverlink" })
+                    </td>
+                </tr>
+            }
+        </table>
+        <br />
+    </div>
+
+    <div class="hero-unit">
+        <h3>Portfolios inherited from groups</h3>
+    </div>
+
+    <div class="containerx bulk">
+        <table style="width: 100%; white-space: nowrap" class="datatable">
+            <thead>
+                <tr>
+                    <td>Level</td>
+                    <td>Name</td>
+                </tr>
+            </thead>
+            @foreach (PortfolioModel item in Model.InheritedPortfolios)
+            {
+                <tr>
+                    <td>@item.Level</td>
+                    <td>@item.Name</td>
+                </tr>
+            }
+        </table>
+        <br />
+    </div>
+    <br />
+
+    @using (Html.BeginForm("Portfolios", "User", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        <a class="btn btn-primary" data-toggle="collapse" href="#collapsePanel" aria-expanded="false" aria-controls="collapsePanel">
+            Add Portfolio
+        </a>
+        <div class="@(Html.ViewData.ModelState.IsValid ? "collapse" : "collapse show")" id="collapsePanel">
+            <div class="info-block">
+                <div>
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+                    <!-- Hidden Id Field -->
+                    @Html.TextBox("_id", Model.Id, new { @class = "form-control", @style = "display:none" })
+
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <label class="control-label">Portfolio</label>
+                            </div>
+                            <div class="col-md-4">
+                                @Html.DropDownList("_portfolio", @Model.AvailablePortfolios, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-offset-2 col-md-4">
+                            <input type="submit" class="btn btn-primary" value="Add" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 </div>
