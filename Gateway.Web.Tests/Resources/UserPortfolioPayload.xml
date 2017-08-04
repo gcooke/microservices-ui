@@ -1,0 +1,29 @@
+﻿<UserPortfolio>
+  <Id>48</Id>
+  <Login>TESTUSER</Login>
+  <Portfolios>
+    <Portfolio>
+      <Id>1</Id>
+      <Name>9803AFS OUTRIGHT</Name>
+      <Level>12</Level>
+      <ParentId>970514</ParentId>
+      <SourceSystemId>1</SourceSystemId>
+    </Portfolio>
+    <Portfolio>
+      <Id>4</Id>
+      <Name>DERV</Name>
+      <Level>12</Level>
+      <ParentId>714481</ParentId>
+      <SourceSystemId>1</SourceSystemId>
+    </Portfolio>
+  </Portfolios>
+  <InheritedPortfolios>
+    <Portfolio>
+      <Id>501032</Id>
+      <Name>Markets</Name>
+      <Level>5</Level>
+      <ParentId>500031</ParentId>
+      <SourceSystemId>3</SourceSystemId>
+    </Portfolio>
+  </InheritedPortfolios>
+</UserPortfolio>
