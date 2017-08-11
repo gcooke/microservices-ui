@@ -29,7 +29,7 @@ namespace Gateway.Web.Controllers
         #region User
         public ActionResult Details(long id)
         {
-            var model = _gateway.GetUser(id);
+            var model = _gateway.GetUser(id.ToString());
 
             return View("Details", model);
         }
@@ -78,7 +78,6 @@ namespace Gateway.Web.Controllers
             // Post instruction to security controller
             var model = new UserModel
             {
-                Id = -1,
                 Login = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(login),
                 Domain = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(domain),
                 FullName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(fullName)
@@ -347,6 +346,12 @@ namespace Gateway.Web.Controllers
             {
                 Session.RegisterLastHistoryLocation(Request.Url);
                 sortOrder = "time_desc";
+            }
+
+            if (1 > id)
+            {
+                var user = _gateway.GetUser(login);
+                id = user.Id;
             }
 
             ViewBag.SortColumn = sortOrder;
