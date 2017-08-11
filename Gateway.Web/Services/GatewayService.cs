@@ -535,7 +535,7 @@ namespace Gateway.Web.Services
             return result;
         }
 
-        public UserModel GetUser(long id)
+        public UserModel GetUser(string id)
         {
             var query = string.Format("Users/{0}", id);
             var response = _restService.Get("Security", "latest", query);
@@ -1004,7 +1004,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Message };
+            return new[] { response.Content.Message };
         }
 
         public string[] RemoveUser(long id)
@@ -1029,7 +1029,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Message };
+            return new[] { response.Content.Message };
         }
 
         public string[] InsertUserPortfolio(long userId, long portfolioId)
@@ -1042,7 +1042,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Message };
+            return new[] { response.Content.Message };
         }
 
         public Models.User.PortfoliosModel GetUserPortfolios(long userId)
@@ -1075,7 +1075,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Message };
+            return new[] { response.Content.Message };
         }
 
         public string[] InsertUserSite(long userId, long siteId)
@@ -1088,7 +1088,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Message };
+            return new[] { response.Content.Message };
         }
 
         public Models.User.SitesModel GetUserSites(long userId)
@@ -1118,7 +1118,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Message };
+            return new[] { response.Content.Message };
         }
 
         public string[] InsertUserGroup(long userId, long groupId)
@@ -1131,7 +1131,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Message };
+            return new[] { response.Content.Message };
         }
 
         public string[] RemoveUserGroup(long userId, long groupId)
@@ -1175,21 +1175,9 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Message };
+            return new[] { response.Content.Message };
         }
 
-        //public string[] InsertUserAddInVersions(long userId, long addInVersionId)
-        //{
-        //    var query = string.Format("users/{0}/addins/{1}", userId, addInVersionId);
-        //    var response = _restService.Put("Security", "latest", query, string.Empty);
-
-        //    if (response.Successfull)
-        //    {
-        //        return null;
-        //    }
-
-        //    return new[] { response.Message };
-        //}
         public string[] InsertUserAddInVersions(long groupId, AddInVersionModel addInVersion)
         {
             var query = string.Format("users/{0}/addins", groupId);
@@ -1200,7 +1188,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Message };
+            return new[] { response.Content.Message };
         }
 
         private class ServerResponse

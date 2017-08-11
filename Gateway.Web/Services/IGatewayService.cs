@@ -59,7 +59,7 @@ namespace Gateway.Web.Services
 
         Models.Security.UsersModel GetUsers();
 
-        Models.User.UserModel GetUser(long id);
+        Models.User.UserModel GetUser(string id);
 
         Models.Security.AddInsModel GetAddIns();
 

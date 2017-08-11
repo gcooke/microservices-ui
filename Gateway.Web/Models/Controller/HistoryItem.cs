@@ -9,6 +9,7 @@ namespace Gateway.Web.Models.Controller
         private static TimeSpan Second = TimeSpan.FromSeconds(1);
 
         public Guid CorrelationId { get; set; }
+        public long Id { get; set; }
         public string User { get; set; }
         public string IpAddress { get; set; }
         public string Controller { get; set; }
