@@ -117,20 +117,8 @@ namespace Gateway.Web.Services
 
         public void ExpireWorkItem(string id)
         {
-            //Send to each gateway
-            //foreach (var gateway in _gateways)
-            //{
-            //    var url = string.Format("health/queueitem/{0}", id);
-            //    url = string.Format("http://{0}:{1}/{2}", gateway, _port, url);
-
-            //    var message = new HttpRequestMessage
-            //    {
-            //        Method = HttpMethod.Delete
-            //    };
-
             var result = Delete("health/queueitem/{0}", id);
             result.Wait(2000);
-            // }
         }
 
         public VersionsModel GetControllerVersions(string name)
