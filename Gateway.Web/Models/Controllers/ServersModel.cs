@@ -26,12 +26,8 @@ namespace Gateway.Web.Models.Controllers
         {
             Servers = Root
                 .GatewayInfo
-                .Select(gatewayInfo =>
-                        new Server(gatewayInfo)
-                            .BuildPerformanceCounters()
-                )
+                .Select(gatewayInfo => new Server(gatewayInfo))
                 .ToList();
-
         }
     }
 
@@ -42,51 +38,12 @@ namespace Gateway.Web.Models.Controllers
             Node = gatewayInfo.GatewayNode.Node;
             Workers = GetWorkerCount(gatewayInfo);
             Queues = GetQueueSize(gatewayInfo);
-
             GetStatusAndOutput(gatewayInfo);
-        }
 
-        public Server BuildPerformanceCounters()
-        {
-            var processorTime = CounterValue("Processor", "% Processor Time", "_Total");
-            var memUsage = CounterValue("Memory", "Available MBytes");
-
-            Cpu = string.Format("{0} %", processorTime);
-            Memory = string.Format("{0} MBytes", memUsage);
-
-            PerformanceCounter.CloseSharedResources();
-
-            return this;
-        }
-
-        private object CounterValue(string categoryName, string counterName, string instanceName = "")
-        {
-            PerformanceCounter counter = null;
-            try
+            if (gatewayInfo.PerformanceCounters != null)
             {
-                counter = instanceName == string.Empty ?
-                    new PerformanceCounter(categoryName, counterName, null, Node):
-                    new PerformanceCounter(categoryName, counterName, instanceName, Node);
-
-                // will always start at 0
-                dynamic firstValue = counter.NextValue();
-                Thread.Sleep(1000);
-                // now matches task manager reading
-                dynamic secondValue = counter.NextValue();
-
-                return secondValue;
-            }
-            catch (Exception)
-            {
-                return "err";
-            }
-            finally
-            {
-                if (counter != null)
-                {
-                    counter.Close();
-                    counter.Dispose();
-                }
+                Cpu = string.Format("{0} %", gatewayInfo.PerformanceCounters.CpuUsage);
+                Memory = string.Format("{0} MBytes", gatewayInfo.PerformanceCounters.MemUsage);
             }
         }
 
