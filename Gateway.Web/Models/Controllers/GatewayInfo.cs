@@ -31,6 +31,8 @@ public partial class GatewayInfo
 
     private GatewayNodeService[] gatewayNodeServicesField;
 
+    private PerformanceCounters performanceCountersField;
+
     /// <remarks/>
     [System.Xml.Serialization.XmlArrayAttribute(IsNullable = true)]
     [System.Xml.Serialization.XmlArrayItemAttribute("ControllerProxyState", IsNullable = false)]
@@ -73,6 +75,21 @@ public partial class GatewayInfo
             this.gatewayNodeServicesField = value;
         }
     }
+
+
+    /// <remarks/>
+    public PerformanceCounters PerformanceCounters
+    {
+        get
+        {
+            return this.performanceCountersField;
+        }
+        set
+        {
+            this.performanceCountersField = value;
+        }
+    }
+
 }
 
 /// <remarks/>
@@ -779,6 +796,45 @@ public partial class WorkerEvents
         set
         {
             this.workerStateEventField = value;
+        }
+    }
+}
+
+/// <remarks/>
+
+[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://schemas.datacontract.org/2004/07/Gateway.Models")]
+[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://schemas.datacontract.org/2004/07/Gateway.Models", IsNullable = false)]
+
+public partial class PerformanceCounters
+{
+
+    private decimal cpuUsageField;
+
+    private ushort memUsageField;
+
+    /// <remarks/>
+    public decimal CpuUsage
+    {
+        get
+        {
+            return this.cpuUsageField;
+        }
+        set
+        {
+            this.cpuUsageField = value;
+        }
+    }
+
+    /// <remarks/>
+    public ushort MemUsage
+    {
+        get
+        {
+            return this.memUsageField;
+        }
+        set
+        {
+            this.memUsageField = value;
         }
     }
 }
