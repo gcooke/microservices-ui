@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Xml.Serialization;
 
 namespace Gateway.Web.Models.Controller
@@ -57,5 +58,9 @@ namespace Gateway.Web.Models.Controller
         [XmlElement]
         [Display(Name = "User Call Limit Per Sec")]
         public int UserCallLimit { get; set; }
+
+        [XmlArray(ElementName="Versions")]
+        [XmlArrayItem(ElementName = "Version", Namespace= "Gateway.Web.Models.Controller")]
+        public List<Version> Versions { get; set; }
     }
 }

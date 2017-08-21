@@ -1,0 +1,407 @@
+﻿<Catalogue AsOf="2017-08-17T12:23:57.4224831+02:00">
+  <Controllers>
+    <Controller Id="3" Name="Catalogue">
+      <TimeToLiveSec>600</TimeToLiveSec>
+      <UserCallLimit>0</UserCallLimit>
+      <ScalingStrategy>Local</ScalingStrategy>
+      <Weighting>13</Weighting>
+      <MaxInstances>83</MaxInstances>
+      <Type />
+      <Configuration />
+      <Versions>
+        <Version Name="1.1.11" Alias="" Status="Disabled" />
+        <Version Name="1.1.13" Alias="" Status="Disabled" />
+        <Version Name="1.1.14" Alias="" Status="Disabled" />
+        <Version Name="1.1.15" Alias="" Status="Disabled" />
+        <Version Name="1.1.16" Alias="" Status="Disabled" />
+        <Version Name="1.1.18" Alias="" Status="Disabled" />
+        <Version Name="1.1.21" Alias="" Status="Disabled" />
+        <Version Name="1.1.23" Alias="" Status="Disabled" />
+        <Version Name="1.1.25" Alias="" Status="Disabled" />
+        <Version Name="1.1.27" Alias="" Status="Disabled" />
+        <Version Name="1.1.29" Alias="" Status="Disabled" />
+        <Version Name="1.1.31" Alias="" Status="Disabled" />
+        <Version Name="1.1.33" Alias="" Status="Disabled" />
+        <Version Name="1.1.35" Alias="" Status="Active" />
+        <Version Name="1.1.36" Alias="" Status="Active" />
+        <Version Name="1.1.20" Alias="" Status="Disabled" />
+      </Versions>
+    </Controller>
+    <Controller Id="5" Name="Example">
+      <TimeToLiveSec>60</TimeToLiveSec>
+      <UserCallLimit>0</UserCallLimit>
+      <ScalingStrategy>Local</ScalingStrategy>
+      <Weighting>1</Weighting>
+      <MaxInstances>5</MaxInstances>
+      <Type>test</Type>
+      <Configuration></Configuration>
+      <Versions>
+        <Version Name="1.0.6" Alias="Beta,Omega" Status="Active" />
+        <Version Name="1.0.7" Alias="" Status="Active" />
+      </Versions>
+    </Controller>
+    <Controller Id="6" Name="Pricing">
+      <TimeToLiveSec>3600</TimeToLiveSec>
+      <UserCallLimit>0</UserCallLimit>
+      <ScalingStrategy>Local</ScalingStrategy>
+      <Weighting>1</Weighting>
+      <MaxInstances>9</MaxInstances>
+      <Type />
+      <Configuration />
+      <Versions>
+        <Version Name="1.1.788" Alias="" Status="Disabled" />
+        <Version Name="1.1.793" Alias="" Status="Disabled" />
+        <Version Name="1.1.787" Alias="" Status="Disabled" />
+        <Version Name="1.1.797" Alias="" Status="Disabled" />
+        <Version Name="1.1.800" Alias="" Status="Disabled" />
+        <Version Name="1.1.803" Alias="" Status="Disabled" />
+        <Version Name="1.1.807" Alias="" Status="Disabled" />
+        <Version Name="1.1.809" Alias="" Status="Active" />
+        <Version Name="1.1.811" Alias="" Status="Active" />
+        <Version Name="1.1.796" Alias="" Status="Disabled" />
+        <Version Name="1.1.813" Alias="" Status="Active" />
+        <Version Name="1.1.814" Alias="" Status="Active" />
+        <Version Name="1.1.817" Alias="" Status="Active" />
+        <Version Name="1.1.820" Alias="" Status="Active" />
+        <Version Name="1.1.823" Alias="" Status="Active" />
+        <Version Name="1.1.826" Alias="" Status="Active" />
+        <Version Name="1.1.818" Alias="" Status="Inactive" />
+      </Versions>
+    </Controller>
+    <Controller Id="8" Name="AquaRisk">
+      <TimeToLiveSec>360000</TimeToLiveSec>
+      <UserCallLimit>0</UserCallLimit>
+      <ScalingStrategy>Local</ScalingStrategy>
+      <Weighting>1</Weighting>
+      <MaxInstances>3</MaxInstances>
+      <Type>test</Type>
+      <Configuration />
+      <Versions>
+        <Version Name="1.7.611.9534" Alias="" Status="Disabled" />
+        <Version Name="1.7.631.7702" Alias="Alpha" Status="Disabled" />
+        <Version Name="1.7.632.8185" Alias="" Status="Disabled" />
+        <Version Name="1.7.641.2933" Alias="" Status="Inactive" />
+        <Version Name="1.7.642.3565" Alias="Official" Status="Active" />
+        <Version Name="1.7.644.7216" Alias="" Status="Active" />
+        <Version Name="1.7.645.9120" Alias="" Status="Inactive" />
+        <Version Name="1.7.646.7520" Alias="" Status="Inactive" />
+        <Version Name="1.7.651.1499" Alias="" Status="Inactive" />
+        <Version Name="1.7.652.3060" Alias="" Status="Inactive" />
+      </Versions>
+    </Controller>
+    <Controller Id="9" Name="MarketData">
+      <TimeToLiveSec>3600</TimeToLiveSec>
+      <UserCallLimit>0</UserCallLimit>
+      <ScalingStrategy>Local</ScalingStrategy>
+      <Weighting>1</Weighting>
+      <MaxInstances>3</MaxInstances>
+      <Type>test</Type>
+      <Configuration>test</Configuration>
+      <Versions>
+        <Version Name="1.0.93" Alias="" Status="Disabled" />
+        <Version Name="1.0.95" Alias="" Status="Disabled" />
+        <Version Name="1.0.98" Alias="" Status="Disabled" />
+        <Version Name="1.0.99" Alias="" Status="Active" />
+      </Versions>
+    </Controller>
+    <Controller Id="10" Name="TradeStore">
+      <TimeToLiveSec>1000</TimeToLiveSec>
+      <UserCallLimit>0</UserCallLimit>
+      <ScalingStrategy>Local</ScalingStrategy>
+      <Weighting>1</Weighting>
+      <MaxInstances>3</MaxInstances>
+      <Type>test</Type>
+      <Configuration>test</Configuration>
+      <Versions>
+        <Version Name="1.0.35" Alias="" Status="Disabled" />
+        <Version Name="1.0.36" Alias="" Status="Disabled" />
+        <Version Name="1.0.40" Alias="" Status="Disabled" />
+        <Version Name="1.0.42" Alias="" Status="Disabled" />
+        <Version Name="1.0.43" Alias="" Status="Disabled" />
+        <Version Name="1.0.44" Alias="" Status="Disabled" />
+        <Version Name="1.0.45" Alias="Beta" Status="Inactive" />
+        <Version Name="1.0.46" Alias="" Status="Inactive" />
+        <Version Name="1.0.47" Alias="" Status="Inactive" />
+        <Version Name="1.0.48" Alias="" Status="Active" />
+      </Versions>
+    </Controller>
+    <Controller Id="12" Name="Scaling">
+      <TimeToLiveSec>3600</TimeToLiveSec>
+      <UserCallLimit>0</UserCallLimit>
+      <ScalingStrategy>Local</ScalingStrategy>
+      <Weighting>1</Weighting>
+      <MaxInstances>10</MaxInstances>
+      <Type />
+      <Configuration />
+      <Versions>
+        <Version Name="1.0.4" Alias="" Status="Disabled" />
+        <Version Name="1.0.6" Alias="" Status="Disabled" />
+        <Version Name="1.0.7" Alias="" Status="Disabled" />
+        <Version Name="1.0.8" Alias="" Status="Disabled" />
+        <Version Name="1.0.9" Alias="" Status="Disabled" />
+        <Version Name="1.0.10" Alias="" Status="Disabled" />
+        <Version Name="1.0.11" Alias="" Status="Disabled" />
+        <Version Name="1.0.13" Alias="" Status="Disabled" />
+        <Version Name="1.0.15" Alias="" Status="Disabled" />
+        <Version Name="1.0.17" Alias="" Status="Disabled" />
+        <Version Name="1.0.22" Alias="" Status="Disabled" />
+        <Version Name="1.0.23" Alias="" Status="Disabled" />
+        <Version Name="1.0.26" Alias="" Status="Disabled" />
+        <Version Name="1.0.28" Alias="" Status="Disabled" />
+        <Version Name="1.0.29" Alias="" Status="Disabled" />
+        <Version Name="1.0.32" Alias="" Status="Disabled" />
+        <Version Name="1.0.33" Alias="" Status="Disabled" />
+        <Version Name="1.0.35" Alias="" Status="Disabled" />
+        <Version Name="1.0.36" Alias="" Status="Disabled" />
+        <Version Name="1.0.38" Alias="" Status="Disabled" />
+        <Version Name="1.0.39" Alias="" Status="Disabled" />
+        <Version Name="1.0.42" Alias="" Status="Disabled" />
+        <Version Name="1.0.43" Alias="" Status="Disabled" />
+        <Version Name="1.0.45" Alias="" Status="Active" />
+      </Versions>
+    </Controller>
+    <Controller Id="14" Name="RiskData">
+      <TimeToLiveSec>3600</TimeToLiveSec>
+      <UserCallLimit>0</UserCallLimit>
+      <ScalingStrategy>Local</ScalingStrategy>
+      <Weighting>3</Weighting>
+      <MaxInstances>5</MaxInstances>
+      <Type>Generic</Type>
+      <Configuration />
+      <Versions>
+        <Version Name="1.0.35" Alias="" Status="Disabled" />
+        <Version Name="1.0.39" Alias="Official" Status="Active" />
+        <Version Name="1.0.40" Alias="" Status="Active" />
+      </Versions>
+    </Controller>
+    <Controller Id="15" Name="Reporting">
+      <TimeToLiveSec>3600</TimeToLiveSec>
+      <UserCallLimit>0</UserCallLimit>
+      <ScalingStrategy>Local</ScalingStrategy>
+      <Weighting>1</Weighting>
+      <MaxInstances>1</MaxInstances>
+      <Type>Generic</Type>
+      <Configuration />
+      <Versions>
+        <Version Name="1.0.1" Alias="" Status="Disabled" />
+        <Version Name="1.0.2" Alias="" Status="Disabled" />
+        <Version Name="1.0.3" Alias="" Status="Disabled" />
+        <Version Name="1.0.4" Alias="" Status="Disabled" />
+        <Version Name="1.0.5" Alias="" Status="Disabled" />
+        <Version Name="1.0.6" Alias="" Status="Active" />
+      </Versions>
+    </Controller>
+    <Controller Id="16" Name="RiskBatch">
+      <TimeToLiveSec>3600</TimeToLiveSec>
+      <UserCallLimit>0</UserCallLimit>
+      <ScalingStrategy>Local</ScalingStrategy>
+      <Weighting>1</Weighting>
+      <MaxInstances>20</MaxInstances>
+      <Type>Generic</Type>
+      <Configuration />
+      <Versions>
+        <Version Name="1.1.758" Alias="" Status="Disabled" />
+        <Version Name="1.1.760" Alias="" Status="Disabled" />
+        <Version Name="1.1.766" Alias="" Status="Active" />
+        <Version Name="1.1.761" Alias="" Status="Disabled" />
+        <Version Name="1.1.762" Alias="" Status="Disabled" />
+        <Version Name="1.1.764" Alias="" Status="Disabled" />
+        <Version Name="1.1.767" Alias="" Status="Active" />
+        <Version Name="1.1.769" Alias="" Status="Active" />
+        <Version Name="1.1.773" Alias="" Status="Active" />
+        <Version Name="1.1.775" Alias="" Status="Active" />
+        <Version Name="1.1.777" Alias="" Status="Active" />
+        <Version Name="1.1.778" Alias="" Status="Active" />
+        <Version Name="1.1.781" Alias="" Status="Active" />
+        <Version Name="1.1.785" Alias="" Status="Active" />
+        <Version Name="1.1.787" Alias="" Status="Active" />
+        <Version Name="1.1.788" Alias="" Status="Active" />
+        <Version Name="1.1.793" Alias="" Status="Active" />
+        <Version Name="1.1.797" Alias="" Status="Active" />
+        <Version Name="1.1.800" Alias="" Status="Active" />
+        <Version Name="1.1.803" Alias="" Status="Active" />
+        <Version Name="1.1.807" Alias="" Status="Active" />
+        <Version Name="1.1.809" Alias="" Status="Active" />
+        <Version Name="1.1.811" Alias="" Status="Active" />
+        <Version Name="1.1.813" Alias="" Status="Active" />
+        <Version Name="1.1.814" Alias="" Status="Active" />
+        <Version Name="1.1.817" Alias="" Status="Active" />
+        <Version Name="1.1.820" Alias="" Status="Active" />
+        <Version Name="1.1.823" Alias="" Status="Active" />
+        <Version Name="1.1.826" Alias="" Status="Active" />
+        <Version Name="1.1.796" Alias="" Status="Inactive" />
+        <Version Name="1.1.818" Alias="" Status="Inactive" />
+      </Versions>
+    </Controller>
+    <Controller Id="17" Name="AfricaFTP">
+      <TimeToLiveSec>3600</TimeToLiveSec>
+      <UserCallLimit>0</UserCallLimit>
+      <ScalingStrategy>Local</ScalingStrategy>
+      <Weighting>1</Weighting>
+      <MaxInstances>5</MaxInstances>
+      <Type>Generic</Type>
+      <Configuration></Configuration>
+      <Versions>
+        <Version Name="1.1.2" Alias="" Status="Disabled" />
+        <Version Name="1" Alias="" Status="Disabled" />
+        <Version Name="1.1.4" Alias="" Status="Active" />
+        <Version Name="1.1.6" Alias="latest" Status="Active" />
+        <Version Name="1.1.8" Alias="" Status="Inactive" />
+      </Versions>
+    </Controller>
+    <Controller Id="18" Name="Limits">
+      <TimeToLiveSec>3600</TimeToLiveSec>
+      <UserCallLimit>0</UserCallLimit>
+      <ScalingStrategy>Local</ScalingStrategy>
+      <Weighting>1</Weighting>
+      <MaxInstances>3</MaxInstances>
+      <Type>Generic</Type>
+      <Configuration />
+      <Versions>
+        <Version Name="1.1.13" Alias="" Status="Inactive" />
+        <Version Name="1.1.17" Alias="" Status="Inactive" />
+        <Version Name="1.1.21" Alias="Official" Status="Active" />
+        <Version Name="1.1.18" Alias="" Status="Inactive" />
+      </Versions>
+    </Controller>
+    <Controller Id="19" Name="AgreementData">
+      <TimeToLiveSec>3600</TimeToLiveSec>
+      <UserCallLimit>0</UserCallLimit>
+      <ScalingStrategy>Local</ScalingStrategy>
+      <Weighting>1</Weighting>
+      <MaxInstances>3</MaxInstances>
+      <Type>Generic</Type>
+      <Configuration />
+      <Versions>
+        <Version Name="1.1.2" Alias="" Status="Inactive" />
+        <Version Name="1.1.4" Alias="latest" Status="Active" />
+        <Version Name="1.1.6" Alias="Official" Status="Active" />
+        <Version Name="1" Alias="" Status="Inactive" />
+        <Version Name="1.1.7" Alias="" Status="Inactive" />
+        <Version Name="1.1.10" Alias="" Status="Inactive" />
+      </Versions>
+    </Controller>
+    <Controller Id="20" Name="Security">
+      <TimeToLiveSec>3600</TimeToLiveSec>
+      <UserCallLimit>0</UserCallLimit>
+      <ScalingStrategy>Local</ScalingStrategy>
+      <Weighting>1</Weighting>
+      <MaxInstances>1</MaxInstances>
+      <Type>Generic</Type>
+      <Configuration />
+      <Versions>
+        <Version Name="1.0.16" Alias="" Status="Disabled" />
+        <Version Name="1.0.17" Alias="" Status="Disabled" />
+        <Version Name="1.0.18" Alias="" Status="Disabled" />
+        <Version Name="1.0.20" Alias="" Status="Disabled" />
+        <Version Name="1.0.22" Alias="" Status="Disabled" />
+        <Version Name="1.0.25" Alias="" Status="Disabled" />
+        <Version Name="1.0.27" Alias="" Status="Disabled" />
+        <Version Name="1.0.29" Alias="" Status="Disabled" />
+        <Version Name="1.0.31" Alias="" Status="Inactive" />
+        <Version Name="1.0.33" Alias="" Status="Inactive" />
+        <Version Name="1.0.36" Alias="" Status="Inactive" />
+        <Version Name="1.0.38" Alias="" Status="Active" />
+        <Version Name="1.0.40" Alias="latest" Status="Active" />
+      </Versions>
+    </Controller>
+    <Controller Id="31" Name="Diagnostics">
+      <TimeToLiveSec>3600</TimeToLiveSec>
+      <UserCallLimit>0</UserCallLimit>
+      <ScalingStrategy>Local</ScalingStrategy>
+      <Weighting>1</Weighting>
+      <MaxInstances>1</MaxInstances>
+      <Type>Generic</Type>
+      <Configuration />
+      <Versions>
+        <Version Name="1.0.1" Alias="" Status="Active" />
+        <Version Name="1.0.3" Alias="" Status="Inactive" />
+      </Versions>
+    </Controller>
+    <Controller Id="32" Name="HealthChecker">
+      <TimeToLiveSec>3600</TimeToLiveSec>
+      <UserCallLimit>0</UserCallLimit>
+      <ScalingStrategy>Local</ScalingStrategy>
+      <Weighting>1</Weighting>
+      <MaxInstances>1</MaxInstances>
+      <Type>Generic</Type>
+      <Configuration />
+      <Versions>
+        <Version Name="1.1.4" Alias="" Status="Active" />
+        <Version Name="1.1.6" Alias="" Status="Active" />
+        <Version Name="1.1.9" Alias="" Status="Active" />
+        <Version Name="1.1.8" Alias="" Status="Inactive" />
+      </Versions>
+    </Controller>
+    <Controller Id="34" Name="ReEntrantExample">
+      <TimeToLiveSec>120</TimeToLiveSec>
+      <UserCallLimit>0</UserCallLimit>
+      <ScalingStrategy>Local</ScalingStrategy>
+      <Weighting>1</Weighting>
+      <MaxInstances>1</MaxInstances>
+      <Type>Test</Type>
+      <Configuration />
+      <Versions>
+        <Version Name="1.0.4" Alias="" Status="Active" />
+        <Version Name="1.0.6" Alias="" Status="Active" />
+        <Version Name="1.0.7" Alias="" Status="Active" />
+        <Version Name="1.0.9" Alias="" Status="Active" />
+        <Version Name="1.0.11" Alias="" Status="Active" />
+        <Version Name="1.0.13" Alias="" Status="Active" />
+        <Version Name="1.0.15" Alias="" Status="Active" />
+        <Version Name="1.0.17" Alias="" Status="Active" />
+        <Version Name="1.0.18" Alias="" Status="Inactive" />
+      </Versions>
+    </Controller>
+    <Controller Id="36" Name="StaticData">
+      <TimeToLiveSec>3600</TimeToLiveSec>
+      <UserCallLimit>0</UserCallLimit>
+      <ScalingStrategy>Local</ScalingStrategy>
+      <Weighting>1</Weighting>
+      <MaxInstances>1</MaxInstances>
+      <Type>Generic</Type>
+      <Configuration />
+      <Versions>
+        <Version Name="1.0.9" Alias="" Status="Inactive" />
+        <Version Name="1.1.788" Alias="" Status="Inactive" />
+        <Version Name="1.1.793" Alias="" Status="Inactive" />
+        <Version Name="1.1.800" Alias="" Status="Active" />
+        <Version Name="1.1.803" Alias="" Status="Active" />
+        <Version Name="1.1.807" Alias="" Status="Active" />
+        <Version Name="1.1.809" Alias="" Status="Active" />
+        <Version Name="1.1.811" Alias="" Status="Active" />
+        <Version Name="1.1.813" Alias="" Status="Active" />
+        <Version Name="1.1.814" Alias="" Status="Active" />
+        <Version Name="1.1.817" Alias="" Status="Active" />
+        <Version Name="1.1.820" Alias="" Status="Active" />
+        <Version Name="1.1.823" Alias="" Status="Active" />
+        <Version Name="1.1.826" Alias="" Status="Active" />
+        <Version Name="1.1.761" Alias="" Status="Inactive" />
+        <Version Name="1.1.762" Alias="" Status="Inactive" />
+        <Version Name="1.1.764" Alias="" Status="Inactive" />
+        <Version Name="1.1.766" Alias="" Status="Inactive" />
+        <Version Name="1.1.767" Alias="" Status="Inactive" />
+        <Version Name="1.1.769" Alias="" Status="Inactive" />
+        <Version Name="1.1.773" Alias="" Status="Inactive" />
+        <Version Name="1.1.775" Alias="" Status="Inactive" />
+        <Version Name="1.1.777" Alias="" Status="Inactive" />
+        <Version Name="1.1.778" Alias="" Status="Inactive" />
+        <Version Name="1.1.781" Alias="" Status="Inactive" />
+        <Version Name="1.1.785" Alias="" Status="Inactive" />
+        <Version Name="1.1.787" Alias="" Status="Inactive" />
+        <Version Name="1.1.796" Alias="" Status="Inactive" />
+        <Version Name="1.1.797" Alias="" Status="Inactive" />
+        <Version Name="1.1.818" Alias="" Status="Inactive" />
+      </Versions>
+    </Controller>
+    <Controller Id="0" Name="Gateway">
+      <TimeToLiveSec p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+      <UserCallLimit>0</UserCallLimit>
+      <Weighting>0</Weighting>
+      <MaxInstances>0</MaxInstances>
+      <Versions>
+        <Version Name="1.0.1" Alias="" Status="Inactive" />
+      </Versions>
+    </Controller>
+  </Controllers>
+</Catalogue>
