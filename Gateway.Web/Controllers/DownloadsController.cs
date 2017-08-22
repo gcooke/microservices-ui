@@ -15,7 +15,8 @@ namespace Gateway.Web.Controllers
     [RoutePrefix("downloads")]
     public class DownloadsController : Controller
     {
-        private const string AppsDirectory = @"\\Intranet.barcapint.com\dfs-emea\Group\Jhb\IT_Pricing_Risk\Builds\Redstone\Apps";
+        private const string RemoteAppsDirectory = @"\\Intranet.barcapint.com\dfs-emea\Group\Jhb\IT_Pricing_Risk\Builds\Redstone\Apps";
+        private const string LocalAppsDirectory = "~\\Content\\Downloads\\";
 
         private readonly IGatewayService _gateway;
         private readonly ILogger _logger;
@@ -39,17 +40,39 @@ namespace Gateway.Web.Controllers
                 throw new InvalidOperationException("Invalid parameter (version): " + version);
 
             string path, fileName;
-            if (!GetAppVersionPath(app, version, out path, out fileName))
+            if (!GetRemoteAppVersionPath(app, version, out path, out fileName))
                 return HttpNotFound(string.Format("Could not find application {0} with version {1}", app, version));
 
-            var contentType = string.Format("application/{0}", Path.GetExtension(fileName)).ToLower();
-            return File(path, contentType, fileName);
+            path = GetLocalAppVersionPath(app, version, path, fileName);
+
+            var stream = System.IO.File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            var result = new FileStreamResult(stream, System.Net.Mime.MediaTypeNames.Application.Octet);
+            result.FileDownloadName = fileName;
+            return result;
         }
 
-        private bool GetAppVersionPath(string app, string version, out string path, out string fileName)
+        private string GetLocalAppVersionPath(string app, string version, string remotePath, string fileName)
+        {
+            // Check if local path exists.
+            var path = Server.MapPath(LocalAppsDirectory);
+            path = System.IO.Path.Combine(path, app, version);
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
+            var localFileName = Path.Combine(path, fileName);
+            if (System.IO.File.Exists(localFileName)) return localFileName;
+
+            // Copy binary locally.
+            _logger.InfoFormat("Copying package locally to speed up future downloads: {0}", localFileName);
+            System.IO.File.Copy(remotePath, localFileName, true);
+
+            return path;
+        }
+
+        private bool GetRemoteAppVersionPath(string app, string version, out string path, out string fileName)
         {
             // Determine if path is valid.
-            path = string.Format("{0}\\{1}\\{2}\\", AppsDirectory, app, version);
+            path = string.Format("{0}\\{1}\\{2}\\", RemoteAppsDirectory, app, version);
             fileName = "";
             if (!Directory.Exists(path))
                 return false;
