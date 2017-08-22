@@ -18,7 +18,7 @@ namespace Gateway.Web.Database
     {
         private static TimeSpan Slot1 = TimeSpan.FromDays(7);
         private static TimeSpan Slot2 = TimeSpan.FromHours(24);
-        private static TimeSpan Slot3 = TimeSpan.FromMinutes(60);
+        private static TimeSpan Slot3 = TimeSpan.FromMinutes(120);
 
         private readonly Dictionary<string, UserRecentRequest> _history;
 
