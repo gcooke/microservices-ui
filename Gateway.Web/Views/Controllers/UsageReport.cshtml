@@ -1,0 +1,50 @@
+﻿@model Gateway.Web.Models.Security.ReportsModel
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "All Controllers";
+    ViewBag.Current = "Usage Report";
+}
+@{ Html.RenderPartial("_ControllersNav"); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+
+        <h3>@Model.Title</h3>
+
+        <br />
+
+        <div class="containerx bulk">
+
+            @foreach (var table in Model.Tables)
+            {
+                <h4>@table.Title</h4>
+
+                <table style="width: 100%; white-space: nowrap" class="datatable">
+                    <thead>
+                        <tr>
+                            @foreach (string col in @table.Columns)
+                            {
+                                <td>@col</td>
+                            }
+                        </tr>
+                    </thead>
+                    @foreach (var row in table.Rows)
+                    {
+                        <tr>
+                            @foreach (string val in @row.Values)
+                            {
+                                <td>@Html.Raw(@val)</td>
+                            }
+                        </tr>
+                    }
+                </table>
+                <br />
+                <br />
+            }
+
+        </div>
+
+        <br />
+
+    </div>
+</div>
