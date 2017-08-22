@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Controllers;
 using Gateway.Web.Models.Request;
+using Gateway.Web.Models.Security;
 
 namespace Gateway.Web.Database
 {
@@ -33,6 +34,8 @@ namespace Gateway.Web.Database
         Transitions GetRequestTransitions(string correlationId);
 
         PayloadData GetPayload(long id);
+
+        ReportsModel GetUsage();
 
         Models.Controller.QueueChartModel GetControllerQueueSummary(string name, DateTime start);
 

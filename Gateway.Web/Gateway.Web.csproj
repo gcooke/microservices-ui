@@ -283,9 +283,13 @@
     <Compile Include="Database\spGetTimeStats_Result.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
+    <Compile Include="Database\spGetUserReport_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
     <Compile Include="Database\Status.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
+    <Compile Include="Database\UserRecentRequest.cs" />
     <Compile Include="Helpers\TreeView.cs" />
     <Compile Include="Models\AddIn\AddInVersionModel.cs" />
     <Compile Include="Models\Controllers\AliasesModel.cs" />
@@ -294,6 +298,7 @@
     <Compile Include="Models\Controllers\QueueChartModel.cs" />
     <Compile Include="Models\Controllers\QueuesModel.cs" />
     <Compile Include="Models\Controllers\ServersModel.cs" />
+    <Compile Include="Models\Controllers\UsageModel.cs" />
     <Compile Include="Models\Controller\HistoryItem.cs" />
     <Compile Include="Models\Controller\HistoryModel.cs" />
     <Compile Include="Models\Controller\QueueModel.cs" />
@@ -497,6 +502,7 @@
     <Content Include="Views\Security\Reports.cshtml" />
     <Content Include="Views\Security\_SecurityNav.cshtml" />
     <Content Include="Views\Controllers\ServerInfo.cshtml" />
+    <Content Include="Views\Controllers\UsageReport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />

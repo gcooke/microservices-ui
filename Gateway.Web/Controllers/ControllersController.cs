@@ -90,6 +90,12 @@ namespace Gateway.Web.Controllers
             return View(model);
         }
 
+        public ActionResult UsageReport()
+        {
+            var model = _dataService.GetUsage();
+            return View(model);
+        }
+
         public ActionResult QueueChart(string date)
         {
             DateTime start;
