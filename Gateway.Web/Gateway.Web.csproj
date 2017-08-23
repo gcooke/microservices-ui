@@ -299,6 +299,8 @@
     <Compile Include="Models\Controllers\QueuesModel.cs" />
     <Compile Include="Models\Controllers\ServersModel.cs" />
     <Compile Include="Models\Controllers\UsageModel.cs" />
+    <Compile Include="Models\Controllers\VersionsModel.cs" />
+    <Compile Include="Models\Controllers\Catalogue.cs" />
     <Compile Include="Models\Controller\HistoryItem.cs" />
     <Compile Include="Models\Controller\HistoryModel.cs" />
     <Compile Include="Models\Controller\QueueModel.cs" />
@@ -377,6 +379,7 @@
     <Compile Include="Utils\Compression.cs" />
     <Compile Include="Utils\Constants.cs" />
     <Compile Include="Utils\DataContractSerializationEx.cs" />
+    <Compile Include="Utils\RestResponseEx.cs" />
     <Compile Include="Utils\SerializationEx.cs" />
     <Compile Include="Utils\SessionEx.cs" />
     <Compile Include="Utils\StringEx.cs" />
@@ -503,6 +506,7 @@
     <Content Include="Views\Security\_SecurityNav.cshtml" />
     <Content Include="Views\Controllers\ServerInfo.cshtml" />
     <Content Include="Views\Controllers\UsageReport.cshtml" />
+    <Content Include="Views\Controllers\Versions.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />

@@ -12,6 +12,7 @@ using Gateway.Web.Models.Request;
 using Gateway.Web.Models.Security;
 using Gateway.Web.Models.Shared;
 using Gateway.Web.Models.User;
+using VersionsModel = Gateway.Web.Models.Controller.VersionsModel;
 
 namespace Gateway.Web.Services
 {
