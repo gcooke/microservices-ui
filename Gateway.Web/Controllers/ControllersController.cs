@@ -161,7 +161,7 @@ namespace Gateway.Web.Controllers
         [HttpPost]
         public ActionResult Versions(Models.Controllers.VersionsModel model)
         {
-            var response = _gatewayRestService.Delete("Catalogue", "controllers/versions/cleanup", string.Empty, CancellationToken.None);
+            var response = _gatewayRestService.Delete("Catalogue", "versions/cleanup", string.Empty, CancellationToken.None);
 
             model.Success = response.Successfull;
             model.Log = response.Content.Message.Split(new[] { '\n' }).ToList();
