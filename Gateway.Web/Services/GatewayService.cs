@@ -27,6 +27,7 @@ using PermissionsModel = Gateway.Web.Models.Security.PermissionsModel;
 using PortfoliosModel = Gateway.Web.Models.Group.PortfoliosModel;
 using SitesModel = Gateway.Web.Models.Group.SitesModel;
 using Version = Gateway.Web.Models.Controller.Version;
+using VersionsModel = Gateway.Web.Models.Controller.VersionsModel;
 
 namespace Gateway.Web.Services
 {
@@ -937,7 +938,7 @@ namespace Gateway.Web.Services
             {
                 if (doc.Document == null) continue;
 
-                foreach (var info in doc.Document.Descendants("Controller"))
+                foreach (var info in doc.Document.Descendants("Controllers"))
                 {
                     var item = info.Deserialize<ControllerQueueInformation>();
                     foreach (var version in item.Versions)

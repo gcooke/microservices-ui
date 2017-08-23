@@ -43,12 +43,17 @@ namespace Gateway.Web.Controllers
             if (!GetRemoteAppVersionPath(app, version, out path, out fileName))
                 return HttpNotFound(string.Format("Could not find application {0} with version {1}", app, version));
 
-            path = GetLocalAppVersionPath(app, version, path, fileName);
+            var contentType = System.Net.Mime.MediaTypeNames.Application.Octet;
+            return File(path, contentType, fileName);
 
-            var stream = System.IO.File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            var result = new FileStreamResult(stream, System.Net.Mime.MediaTypeNames.Application.Octet);
-            result.FileDownloadName = fileName;
-            return result;
+            
+            // This was an attempt to speed up downloads - worked in UAT but not in PROD
+
+            //path = GetLocalAppVersionPath(app, version, path, fileName);
+            //var stream = System.IO.File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            //var result = new FileStreamResult(stream, System.Net.Mime.MediaTypeNames.Application.Octet);
+            //result.FileDownloadName = fileName;
+            //return result;
         }
 
         private string GetLocalAppVersionPath(string app, string version, string remotePath, string fileName)
