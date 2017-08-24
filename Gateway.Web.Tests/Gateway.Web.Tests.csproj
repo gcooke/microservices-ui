@@ -125,6 +125,7 @@
   <ItemGroup>
     <Compile Include="Extensions\TimeSpanTests.cs" />
     <Compile Include="Models\Controllers\CatalogueTest.cs" />
+    <Compile Include="Models\Controllers\QueueModelTest.cs" />
     <Compile Include="Models\Controllers\ServersTest.cs" />
     <Compile Include="Models\Request\TimingTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -182,6 +183,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\CataloguePayload.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\QueueModelPayload.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
