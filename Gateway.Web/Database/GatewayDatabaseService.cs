@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Controllers;
 using Gateway.Web.Models.Request;
+using Gateway.Web.Models.Security;
 
 namespace Gateway.Web.Database
 {
@@ -253,6 +255,47 @@ namespace Gateway.Web.Database
             }
         }
 
+        public ReportsModel GetUsage()
+        {
+            var result = new ReportsModel("Usage Report");
+            using (var database = new GatewayEntities())
+            {
+                var rows = database.spGetUserReport(DateTime.Today.AddDays(-1));
+                var target = new UserRecentRequests();
+                var table = new ReportTable();
+                table.Title = "Recent Requests";
+                table.Columns.Add("User");
+                table.Columns.Add("Last Request");
+                table.Columns.Add("Last 60 Minutes");
+                table.Columns.Add("Last 24 Hours");
+                table.Columns.Add("Last 7 Days");
+
+                foreach (var row in rows)
+                {
+                    target.Add(row);
+                }
+
+                foreach (var line in target.GetAll())
+                {
+                    var reportRow = new ReportRows();
+                    var user = line.User;
+                    if (user.Contains("\\"))
+                        user = user.Substring(user.IndexOf("\\") + 1);
+                    var link = string.Format("<a href='../../User/History?id=0&login={0}'>{0}</a>", user);
+
+                    reportRow.Values.Add(link);
+                    reportRow.Values.Add(line.Latest.ToString("dd MMM HH:mm:ss"));
+                    reportRow.Values.Add(line.Total60Minutes.ToString());
+                    reportRow.Values.Add(line.Total24Hours.ToString());
+                    reportRow.Values.Add(line.Total7Days.ToString());
+                    table.Rows.Add(reportRow);
+
+                }
+                result.Tables.Add(table);
+            }
+            return result;
+        }
+
         private void PopulateFields(Summary result, Response response)
         {
             if (response == null) return;
@@ -356,6 +399,6 @@ namespace Gateway.Web.Database
                 }
                 return false;
             }
-        }        
+        }
     }
 }

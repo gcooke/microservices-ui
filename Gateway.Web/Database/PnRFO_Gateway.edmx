@@ -69,7 +69,7 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="CorrelationId" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="Status" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Status" Type="nvarchar" MaxLength="250" />
           <Property Name="UpdateTimeUtc" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="Response">
@@ -181,6 +181,9 @@
         <Function Name="spGetTimeStats" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Start" Type="datetime" Mode="In" />
           <Parameter Name="Controller" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="spGetUserReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Start" Type="datetime" Mode="In" />
         </Function>
         <EntityContainer Name="GatewayModelStoreContainer">
           <EntitySet Name="Controller" EntityType="Self.Controller" Schema="dbo" store:Type="Tables" />
@@ -334,7 +337,7 @@
           </FunctionImport>
           <EntitySet Name="RequestChanges" EntityType="GatewayModel.RequestChange" />
           <FunctionImport Name="spGetChildRequests" ReturnType="Collection(GatewayModel.spGetChildRequests_Result)">
-            <Parameter Name="correlationId" Mode="In" Type="Guid" />
+          <Parameter Name="correlationId" Mode="In" Type="Guid" />
           </FunctionImport>
           <FunctionImport Name="spGetRecentRequests" ReturnType="Collection(GatewayModel.spGetRecentRequests_Result)">
             <Parameter Name="Start" Mode="In" Type="DateTime" />
@@ -347,6 +350,9 @@
           <FunctionImport Name="spGetRecentUserRequests" ReturnType="Collection(GatewayModel.spGetRecentUserRequests_Result)">
             <Parameter Name="Start" Mode="In" Type="DateTime" />
             <Parameter Name="User" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="spGetUserReport" ReturnType="Collection(GatewayModel.spGetUserReport_Result)">
+            <Parameter Name="Start" Mode="In" Type="DateTime" />
           </FunctionImport>
         </EntityContainer>
         <ComplexType Name="spGetRequestStats_Result">
@@ -466,7 +472,7 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="CorrelationId" Type="Guid" Nullable="false" />
-          <Property Name="Status" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="UpdateTimeUtc" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
         <ComplexType Name="spGetChildRequests_Result">
@@ -544,6 +550,13 @@
           <Property Type="String" Name="ResultMessage" Nullable="true" />
           <Property Type="DateTime" Name="UpdateTimeUtc" Nullable="false" Precision="23" />
           <Property Type="String" Name="Status" Nullable="false" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="spGetUserReport_Result">
+          <Property Type="DateTime" Name="Date" Nullable="true" />
+          <Property Type="DateTime" Name="Latest" Nullable="true" />
+          <Property Type="String" Name="Hour" Nullable="true" MaxLength="33" />
+          <Property Type="String" Name="User" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="Count" Nullable="true" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -856,6 +869,17 @@
                 <ScalarProperty Name="ResultMessage" ColumnName="ResultMessage" />
                 <ScalarProperty Name="UpdateTimeUtc" ColumnName="UpdateTimeUtc" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetUserReport" FunctionName="GatewayModel.Store.spGetUserReport">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GatewayModel.spGetUserReport_Result">
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Latest" ColumnName="Latest" />
+                <ScalarProperty Name="Hour" ColumnName="Hour" />
+                <ScalarProperty Name="User" ColumnName="User" />
+                <ScalarProperty Name="Count" ColumnName="Count" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

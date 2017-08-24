@@ -12,7 +12,14 @@
     <div class="hero-unit">
 
         <h3>Controllers</h3>
+        <hr />
         <p>Statistics for last 7 days</p>
+
+        <p>
+            <a href="~/Controllers/Create/">
+                <span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;Create
+            </a>
+        </p>
 
         <div class="containerx bulk">
             @foreach (ControllerStats controller in Model.Controllers)

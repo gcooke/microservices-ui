@@ -76,14 +76,14 @@ namespace Gateway.Web.Controllers
         [RoleBasedAuthorize(Roles = "Security.Modify")]
         public ActionResult UpdateVersionStatuses(FormCollection collection)
         {
-            var controllerName = collection["id"];
+            var controllerName = collection["_id"];
             var statusUpdates = new List<VersionUpdate>();
             var versionsMarkedForDelete = new List<string>();
             var usedAliases = new List<string>();
 
             foreach (var key in collection.Keys)
             {
-                if (key.ToString() != "id")
+                if (key.ToString() != "_id")
                 {
                     var versionName = key.ToString().Split('_')[0];
                     if (key.ToString().Contains("_Delete"))

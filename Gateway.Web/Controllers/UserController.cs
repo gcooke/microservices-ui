@@ -363,9 +363,17 @@ namespace Gateway.Web.Controllers
                 sortOrder = "time_desc";
             }
 
-            if (1 > id)
+            var domain = "INTRANET";
+            if (id >= 1 && string.IsNullOrEmpty(login))
+            {
+                var user = _gateway.GetUser(id.ToString());
+                domain = user.Domain;
+                login = user.Login;
+            }
+            if (id < 1)
             {
                 var user = _gateway.GetUser(login);
+                domain = user.Domain;
                 id = user.Id;
             }
 
@@ -373,7 +381,7 @@ namespace Gateway.Web.Controllers
             ViewBag.SortDirection = sortOrder.EndsWith("_desc") ? "" : "_desc";
             ViewBag.Controller = "User";
 
-            var items = _dataService.GetRecentUserRequests("INTRANET\\" + login, DateTime.Today.AddDays(-7));
+            var items = _dataService.GetRecentUserRequests(domain + "\\" + login, DateTime.Today.AddDays(-7));
 
             var model = new HistoryModel(id, login);
             model.Requests.AddRange(items, sortOrder);

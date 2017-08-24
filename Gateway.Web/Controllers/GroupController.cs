@@ -101,7 +101,7 @@ namespace Gateway.Web.Controllers
             ModelState.Clear();
 
             // Validate parameters
-            var groupId = collection["id"];
+            var groupId = collection["_id"];
             var domain = collection["_domain"];
             var adGroup = collection["_adgroup"];
 
@@ -229,7 +229,7 @@ namespace Gateway.Web.Controllers
             ModelState.Clear();
 
             // Validate parameters
-            var groupId = collection["id"];
+            var groupId = collection["_id"];
             var siteId = collection["_site"];
 
             if (string.IsNullOrEmpty(siteId))

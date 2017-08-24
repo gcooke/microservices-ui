@@ -1,12 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Gateway.Web.Authorization;
 using Gateway.Web.Database;
+using Gateway.Web.Models.AddIn;
 using Gateway.Web.Models.Controller;
+using Gateway.Web.Models.Controllers;
 using Gateway.Web.Services;
 using Gateway.Web.Utils;
+using Microsoft.Ajax.Utilities;
+using Microsoft.Practices.ObjectBuilder2;
 using Controller = System.Web.Mvc.Controller;
 using DashboardModel = Gateway.Web.Models.Controllers.DashboardModel;
 using HistoryModel = Gateway.Web.Models.Controllers.HistoryModel;
@@ -19,13 +27,16 @@ namespace Gateway.Web.Controllers
     {
         private readonly IGatewayDatabaseService _dataService;
         private readonly IGatewayService _gateway;
+        private readonly IGatewayRestService _gatewayRestService;
 
         public ControllersController(
             IGatewayDatabaseService dataService,
-            IGatewayService gateway)
+            IGatewayService gateway,
+            IGatewayRestService gatewayRestService)
         {
             _dataService = dataService;
             _gateway = gateway;
+            _gatewayRestService = gatewayRestService;
         }
 
         public ActionResult Dashboard()
@@ -90,6 +101,12 @@ namespace Gateway.Web.Controllers
             return View(model);
         }
 
+        public ActionResult UsageReport()
+        {
+            var model = _dataService.GetUsage();
+            return View(model);
+        }
+
         public ActionResult QueueChart(string date)
         {
             DateTime start;
@@ -129,5 +146,62 @@ namespace Gateway.Web.Controllers
 
             return View(model);
         }
+        public ActionResult Versions()
+        {
+            var model = new Models.Controllers.VersionsModel();
+            return View(model);
+        }
+
+        private IEnumerable<AddInVersionModel> GetAddInVersions()
+        {
+            var response = _gatewayRestService.Get("Security", "addins/versions", CancellationToken.None);
+
+            return (response.Successfull)
+                ? response.Content.GetPayloadAsXElement().Deserialize<IEnumerable<AddInVersionModel>>()
+                : null;
+        }
+
+        [HttpPost]
+        public ActionResult Versions(Models.Controllers.VersionsModel model)
+        {
+            var response = _gatewayRestService.Delete("Catalogue", "versions/cleanup", string.Empty, CancellationToken.None);
+
+            model.Success = response.Successfull;
+            model.Log = response.Content.Message.Split(new[] { '\n' }).ToList();
+            model.Loading = false;
+            model.Loaded = true;
+            return View(model);
+        }
+
+        public void SomeTaskAsync(int id)
+        {
+            AsyncManager.OutstandingOperations.Increment();
+            Task.Factory.StartNew(taskId =>
+            {
+                for (int i = 0; i < 100; i++)
+                {
+                    Thread.Sleep(200);
+                    HttpContext.Application["task" + taskId] = i;
+                }
+                var result = "result";
+                AsyncManager.OutstandingOperations.Decrement();
+                AsyncManager.Parameters["result"] = result;
+                return result;
+            }, id);
+        }
+
+        public ActionResult SomeTaskCompleted(string result)
+        {
+            return Content(result, "text/plain");
+        }
+
+        public ActionResult SomeTaskProgress(int id)
+        {
+            return Json(new
+            {
+                Progress = HttpContext.Application["task" + id]
+            }, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }
