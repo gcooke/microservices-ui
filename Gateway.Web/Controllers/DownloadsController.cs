@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using Bagl.Cib.MIT.Logging;
+using Gateway.Web.Authorization;
 using Gateway.Web.Database;
 using Gateway.Web.Models.AddIn;
 using Gateway.Web.Models.Security;
@@ -13,6 +14,7 @@ using Controller = System.Web.Mvc.Controller;
 namespace Gateway.Web.Controllers
 {
     [RoutePrefix("downloads")]
+    [RoleBasedAuthorize(Roles = "Access")]
     public class DownloadsController : Controller
     {
         private const string AppsDirectory = @"\\Intranet.barcapint.com\dfs-emea\Group\Jhb\IT_Pricing_Risk\Builds\Redstone\Apps";

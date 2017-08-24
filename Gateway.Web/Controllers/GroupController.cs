@@ -1,16 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Web.Mvc;
-using Gateway.Web.Database;
+﻿using System.Web.Mvc;
+using Gateway.Web.Authorization;
 using Gateway.Web.Models.AddIn;
 using Gateway.Web.Models.Group;
-using Gateway.Web.Models.Permission;
 using Gateway.Web.Services;
 using Gateway.Web.Utils;
 using Controller = System.Web.Mvc.Controller;
 
 namespace Gateway.Web.Controllers
 {
+    [RoleBasedAuthorize(Roles = "Security.View")]
     public class GroupController : Controller
     {
         private readonly IGatewayService _gateway;
@@ -31,6 +29,7 @@ namespace Gateway.Web.Controllers
             return View("Details", model);
         }
 
+        [RoleBasedAuthorize(Roles = "Security.Delete")]
         public ActionResult RemoveGroup(string id)
         {
             ModelState.Clear();
@@ -64,6 +63,7 @@ namespace Gateway.Web.Controllers
             return View("ADGroups", model);
         }
 
+        [RoleBasedAuthorize(Roles = "Security.Delete")]
         public ActionResult RemoveGroupADGroup(string id, string groupId)
         {
             ModelState.Clear();
@@ -94,6 +94,8 @@ namespace Gateway.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
+        [RoleBasedAuthorize(Roles = "Security.Modify")]
         public ActionResult InsertGroupADGroup(FormCollection collection)
         {
             ModelState.Clear();
@@ -142,6 +144,8 @@ namespace Gateway.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
+        [RoleBasedAuthorize(Roles = "Security.Modify")]
         public ActionResult InsertPermission(FormCollection collection)
         {
             ModelState.Clear();
@@ -187,6 +191,7 @@ namespace Gateway.Web.Controllers
             return View("Sites", model);
         }
 
+        [RoleBasedAuthorize(Roles = "Security.Delete")]
         public ActionResult RemoveSite(string id, string groupId)
         {
             ModelState.Clear();
@@ -217,6 +222,8 @@ namespace Gateway.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
+        [RoleBasedAuthorize(Roles = "Security.Modify")]
         public ActionResult InsertSite(FormCollection collection)
         {
             ModelState.Clear();
@@ -253,6 +260,7 @@ namespace Gateway.Web.Controllers
             return View("AddIns", model);
         }
 
+        [RoleBasedAuthorize(Roles = "Security.Delete")]
         public ActionResult RemoveAddInVersion(string id, string groupId)
         {
             ModelState.Clear();
@@ -283,6 +291,8 @@ namespace Gateway.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
+        [RoleBasedAuthorize(Roles = "Security.Modify")]
         public ActionResult InsertAddInVersion(FormCollection collection)
         {
             ModelState.Clear();

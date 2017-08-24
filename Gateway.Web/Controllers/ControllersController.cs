@@ -2,12 +2,11 @@
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
-using Bagl.Cib.MSF.ClientAPI.Gateway;
+using Gateway.Web.Authorization;
 using Gateway.Web.Database;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Services;
 using Gateway.Web.Utils;
-using Microsoft.Practices.ObjectBuilder2;
 using Controller = System.Web.Mvc.Controller;
 using DashboardModel = Gateway.Web.Models.Controllers.DashboardModel;
 using HistoryModel = Gateway.Web.Models.Controllers.HistoryModel;
@@ -15,6 +14,7 @@ using QueuesModel = Gateway.Web.Models.Controllers.QueuesModel;
 
 namespace Gateway.Web.Controllers
 {
+    [RoleBasedAuthorize(Roles = "Security.View")]
     public class ControllersController : Controller
     {
         private readonly IGatewayDatabaseService _dataService;
@@ -100,12 +100,14 @@ namespace Gateway.Web.Controllers
             return View(model);
         }
 
+        [RoleBasedAuthorize(Roles = "Security.Modify")]
         public ActionResult Create()
         {
             return View(new ConfigurationModel());
         }
 
         [HttpPost]
+        [RoleBasedAuthorize(Roles = "Security.Modify")]
         public ActionResult Create(ConfigurationModel model)
         {
             try

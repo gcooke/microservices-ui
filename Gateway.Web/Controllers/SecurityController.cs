@@ -1,9 +1,7 @@
 ﻿using System.Web.Mvc;
-using Gateway.Web.Database;
-using Gateway.Web.Models.AddIn;
+using Gateway.Web.Authorization;
 using Gateway.Web.Models.Group;
 using Gateway.Web.Models.Permission;
-using Gateway.Web.Models.Security;
 using Gateway.Web.Models.Shared;
 using Gateway.Web.Services;
 using Gateway.Web.Utils;
@@ -11,6 +9,7 @@ using Controller = System.Web.Mvc.Controller;
 
 namespace Gateway.Web.Controllers
 {
+    [RoleBasedAuthorize(Roles = "Security.View")]
     public class SecurityController : Controller
     {
         private readonly IGatewayService _gateway;
@@ -65,6 +64,7 @@ namespace Gateway.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult ShowReport(FormCollection collection)
         {
             var name = collection["_name"];
@@ -75,6 +75,8 @@ namespace Gateway.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
+        [RoleBasedAuthorize(Roles = "Security.Modify")]
         public ActionResult InsertAddIn(FormCollection collection)
         {
             ModelState.Clear();
@@ -118,6 +120,8 @@ namespace Gateway.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
+        [RoleBasedAuthorize(Roles = "Security.Modify")]
         public ActionResult InsertGroup(FormCollection collection)
         {
             ModelState.Clear();
@@ -156,6 +160,8 @@ namespace Gateway.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
+        [RoleBasedAuthorize(Roles = "Security.Modify")]
         public ActionResult InsertPermission(FormCollection collection)
         {
             ModelState.Clear();

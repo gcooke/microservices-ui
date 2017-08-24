@@ -1,9 +1,14 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using Bagl.Cib.MIT.IoC.Models;
 using Bagl.Cib.MIT.Logging;
+using Gateway.Web.Authorization;
+using Microsoft.Practices.ServiceLocation;
 using Microsoft.Practices.Unity;
 
 namespace Gateway.Web
@@ -16,7 +21,7 @@ namespace Gateway.Web
         public static string SiteLogo { get; set; }
 
         protected void Application_Start()
-        {    
+        {
             Environment = ConfigurationManager.AppSettings["Environment"];
             FavIcon = "~/content/img/favicon." + Environment + ".png";
             ControllerIcon = "~/content/img/controller." + Environment + ".png";
@@ -26,7 +31,7 @@ namespace Gateway.Web
 
             // Add handle error attribute and authorize attribute to entire site.
             GlobalFilters.Filters.Add(new HandleErrorAttribute());
-            GlobalFilters.Filters.Add(new System.Web.Mvc.AuthorizeAttribute());
+            GlobalFilters.Filters.Add(new RoleBasedAuthorizeAttribute());
 
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
@@ -34,10 +39,14 @@ namespace Gateway.Web
 
             BundleTable.EnableOptimizations = true;
             var container = new UnityContainer();
-            var information = new SystemInformation("Redstone.UI", Environment, SessionKeyType.Application, new string[0], container);
+            var information = new SystemInformation("Redstone.UI", Environment, SessionKeyType.Application,
+                new string[0], container);
             Registrations.Register(information);
             container.Resolve<ILoggingService>().Initialize(information.LoggingInformation);
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
+
+            var locator = new UnityServiceLocator(container);
+            ServiceLocator.SetLocatorProvider(() => locator);
         }
     }
 }

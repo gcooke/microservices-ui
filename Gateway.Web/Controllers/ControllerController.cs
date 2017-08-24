@@ -8,13 +8,12 @@ using Gateway.Web.Utils;
 using Controller = System.Web.Mvc.Controller;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using System.Web.DynamicData;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
+using Gateway.Web.Authorization;
 
 namespace Gateway.Web.Controllers
 {
+    [RoleBasedAuthorize(Roles = "Security.View")]
     public class ControllerController : Controller
     {
         private readonly IGatewayDatabaseService _dataService;
@@ -73,6 +72,8 @@ namespace Gateway.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
+        [RoleBasedAuthorize(Roles = "Security.Modify")]
         public ActionResult UpdateVersionStatuses(FormCollection collection)
         {
             var controllerName = collection["id"];
@@ -154,6 +155,7 @@ namespace Gateway.Web.Controllers
         }
 
         [HttpPost]
+        [RoleBasedAuthorize(Roles = "Security.Modify")]
         public ActionResult Configuration(ConfigurationModel model)
         {
             try

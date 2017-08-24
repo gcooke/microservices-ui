@@ -48,24 +48,24 @@
       <HintPath>..\packages\Bagl.Cib.MIT.IO.1.0.3\lib\net452\Bagl.Cib.MIT.IO.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Bagl.Cib.MIT.IoC, Version=1.0.18.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Bagl.Cib.MIT.IoC.1.0.18\lib\net452\Bagl.Cib.MIT.IoC.dll</HintPath>
+    <Reference Include="Bagl.Cib.MIT.IoC, Version=1.0.31.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bagl.Cib.MIT.IoC.1.0.31\lib\net452\Bagl.Cib.MIT.IoC.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Bagl.Cib.MIT.Logging, Version=1.0.25.0, Culture=neutral, PublicKeyToken=6d1ad0679d79c706, processorArchitecture=MSIL">
       <HintPath>..\packages\Bagl.Cib.MIT.Logging.1.0.25\lib\net452\Bagl.Cib.MIT.Logging.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Bagl.Cib.MIT.Scheduling, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Bagl.Cib.MIT.Scheduling.1.0.3\lib\net452\Bagl.Cib.MIT.Scheduling.dll</HintPath>
+    <Reference Include="Bagl.Cib.MIT.Scheduling, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bagl.Cib.MIT.Scheduling.1.0.5\lib\net452\Bagl.Cib.MIT.Scheduling.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Bagl.Cib.MSF.ClientAPI, Version=1.0.754.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Bagl.Cib.MSF.ClientAPI.1.0.754\lib\net452\Bagl.Cib.MSF.ClientAPI.dll</HintPath>
+    <Reference Include="Bagl.Cib.MSF.ClientAPI, Version=1.0.819.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bagl.Cib.MSF.ClientAPI.1.0.819\lib\net452\Bagl.Cib.MSF.ClientAPI.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Bagl.Cib.MSF.Contracts, Version=1.0.754.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Bagl.Cib.MSF.ClientAPI.1.0.754\lib\net452\Bagl.Cib.MSF.Contracts.dll</HintPath>
+    <Reference Include="Bagl.Cib.MSF.Contracts, Version=1.0.819.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bagl.Cib.MSF.ClientAPI.1.0.819\lib\net452\Bagl.Cib.MSF.Contracts.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -203,6 +203,8 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Authorization\AuthorizedRoleProvider.cs" />
+    <Compile Include="Authorization\RoleBasedAuthorizeAttribute.cs" />
     <Compile Include="Controllers\DownloadsController.cs" />
     <Compile Include="Controllers\AddInController.cs" />
     <Compile Include="Controllers\PermissionController.cs" />
@@ -497,6 +499,7 @@
     <Content Include="Views\Security\Reports.cshtml" />
     <Content Include="Views\Security\_SecurityNav.cshtml" />
     <Content Include="Views\Controllers\ServerInfo.cshtml" />
+    <Content Include="Views\Error\Unauthorized.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />

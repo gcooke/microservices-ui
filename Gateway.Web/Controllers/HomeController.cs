@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using Gateway.Web.Authorization;
 using Gateway.Web.Database;
-using Gateway.Web.Models;
 using Gateway.Web.Models.Home;
 using Gateway.Web.Services;
 using Gateway.Web.Utils;
@@ -10,6 +10,7 @@ using Controller = System.Web.Mvc.Controller;
 
 namespace Gateway.Web.Controllers
 {
+    [RoleBasedAuthorize(Roles = "Access")]
     public class HomeController : Controller
     {
         private readonly IGatewayDatabaseService _dataService;
