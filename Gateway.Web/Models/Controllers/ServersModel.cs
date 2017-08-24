@@ -92,7 +92,11 @@ namespace Gateway.Web.Models.Controllers
         private void GetStatusAndOutput(GatewayInfo gatewayInfo)
         {
             if (gatewayInfo.GatewayNodeServices == null)
+            {
+                Status = "warning";
+                Output = "Gateway did not return service info";
                 return;
+            }
 
             var allItemsPassing = gatewayInfo
                 .GatewayNodeServices
