@@ -96,8 +96,13 @@ namespace Gateway.Web.Controllers
 
         public ActionResult Workers()
         {
-            var model = _gateway.GetWorkers();
-            return View(model);
+            //var model = _gateway.GetWorkers();
+
+            return View(new ManageWorkersModel
+            {
+                
+            });
+            //return View(model);
         }
 
         public ActionResult UsageReport()

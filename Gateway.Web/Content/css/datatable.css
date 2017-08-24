@@ -1,57 +1,101 @@
 ﻿.datatable {
-  width: 100%;
-  border: 1px solid #d6dde6;
-  border-collapse: collapse;
+    width: 100%;
+    border: 1px solid #d6dde6;
+    border-collapse: collapse;
 }
 
-.datatable td {
-  border: 1px solid #d6dde6;
-  padding: 0.3em;
-}
+    .datatable td {
+        border: 1px solid #d6dde6;
+        padding: 0.3em;
+    }
 
-.datatable th {
-  border: 1px solid #828282;
-  background-color: #bcbcbc;
-  font-weight: bold;
-  text-align: left;
-  padding-left: 0.3em;
-}
+    .datatable th {
+        border: 1px solid #828282;
+        background-color: #bcbcbc;
+        font-weight: bold;
+        text-align: left;
+        padding-left: 0.3em;
+    }
 
-.datatable caption {
-  font: bold 110% Arial, Helvetica, sans-serif;
-  color: #33517a;
-  text-align: left;
-  padding: 0.4em 0 0.8em 0;
-}
+    .datatable caption {
+        font: bold 110% Arial, Helvetica, sans-serif;
+        color: #33517a;
+        text-align: left;
+        padding: 0.4em 0 0.8em 0;
+    }
 
 .error {
-  color: #990505;  
+    color: #990505;
 }
 
 .success {
-  color: darkblue;  
+    color: darkblue;
 }
 
 .datatable thead {
-  background-color: #990505;
-  color: #FFF;
+    background-color: #990505;
+    color: #FFF;
 }
 
 .datatable .columnheader {
-  border: 1px solid #828282;
-  background-color: #bcbcbc;
-  background-color: #990505;
-  color: #FFF;
-  font-weight: bold;
-  text-align: left;
-  padding-left: 0.3em;
+    border: 1px solid #828282;
+    background-color: #bcbcbc;
+    background-color: #990505;
+    color: #FFF;
+    font-weight: bold;
+    text-align: left;
+    padding-left: 0.3em;
 }
 
 .datatable tr:nth-child(even) {
-  background-color: #E9E9E9;  
+    background-color: #E9E9E9;
 }
 
 .taken_bg {
     background-color: red;
     z-index: -1;
+}
+
+.badge-info {
+    color: #ffffff;
+    background-color: #474949;
+    border-color: #474949;
+}
+
+.badge-danger {
+  background-color: #b94a48;
+  border-color: #eed3d7;
+  color: #ffffff;
+}
+
+.badge-success {
+    background-color: #008000;
+    border-color: #d6e9c6;
+    color: #ffffff;
+    /*color: #468847;*/
+}
+
+.alert-caption {
+    background-color: #bcbcbc;
+    color: #FFF;
+    padding: 8px;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+}
+
+.alert-default {
+    background-color: #E9E9E9;
+    color: #828282;
+    padding: 8px;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+.alert-redstone {
+    background-color: #990510;
+    color: #FFF;
+    padding: 8px;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    font-weight: bold;
 }
