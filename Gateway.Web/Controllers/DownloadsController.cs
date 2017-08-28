@@ -14,7 +14,6 @@ using Controller = System.Web.Mvc.Controller;
 namespace Gateway.Web.Controllers
 {
     [RoutePrefix("downloads")]
-    [RoleBasedAuthorize(Roles = "Access")]
     public class DownloadsController : Controller
     {
         private const string RemoteAppsDirectory = @"\\Intranet.barcapint.com\dfs-emea\Group\Jhb\IT_Pricing_Risk\Builds\Redstone\Apps";
@@ -31,6 +30,7 @@ namespace Gateway.Web.Controllers
 
         [HttpGet]
         [Route("{app}/{version}")]
+        [AllowAnonymous]
         public ActionResult Downloads(string app, string version)
         {
             _logger.InfoFormat("A user located at {0} is attempting to download {1} version {2}", Request.UserHostAddress, app, version);
