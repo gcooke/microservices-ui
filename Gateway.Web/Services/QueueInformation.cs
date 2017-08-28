@@ -12,7 +12,7 @@ namespace Gateway.Web.Services
         public string Name { get; set; }
 
         [XmlElement(ElementName = "Version")]
-        public QueueVersionInformation[] Versions { get; set; } 
+        public QueueVersionInformation[] Versions { get; set; }
     }
 
     [XmlType("Version")]

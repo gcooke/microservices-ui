@@ -46,12 +46,12 @@
       <HintPath>..\packages\Bagl.Cib.MIT.Scheduling.1.0.3\lib\net452\Bagl.Cib.MIT.Scheduling.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Bagl.Cib.MSF.ClientAPI, Version=1.0.754.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Bagl.Cib.MSF.ClientAPI.1.0.754\lib\net452\Bagl.Cib.MSF.ClientAPI.dll</HintPath>
+    <Reference Include="Bagl.Cib.MSF.ClientAPI, Version=1.0.786.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bagl.Cib.MSF.ClientAPI.1.0.786\lib\net452\Bagl.Cib.MSF.ClientAPI.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Bagl.Cib.MSF.Contracts, Version=1.0.754.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Bagl.Cib.MSF.ClientAPI.1.0.754\lib\net452\Bagl.Cib.MSF.Contracts.dll</HintPath>
+    <Reference Include="Bagl.Cib.MSF.Contracts, Version=1.0.786.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bagl.Cib.MSF.ClientAPI.1.0.786\lib\net452\Bagl.Cib.MSF.Contracts.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
@@ -125,6 +125,7 @@
   <ItemGroup>
     <Compile Include="Extensions\TimeSpanTests.cs" />
     <Compile Include="Models\Controllers\CatalogueTest.cs" />
+    <Compile Include="Models\Controllers\QueueModelTest.cs" />
     <Compile Include="Models\Controllers\ServersTest.cs" />
     <Compile Include="Models\Request\TimingTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -182,6 +183,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\CataloguePayload.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\QueueModelPayload.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

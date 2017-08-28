@@ -17,6 +17,7 @@ namespace Gateway.Web
             information.RegisterType<IGatewayService, GatewayService>(Scope.Singleton);
             information.RegisterType<IRestService, RestService>(Scope.Singleton);
             information.RegisterType<IGatewayRestService, GatewayRestService>(Scope.Singleton);
+            information.RegisterType<IRoleService, RoleService>(Scope.Singleton);
         }
     }
 }

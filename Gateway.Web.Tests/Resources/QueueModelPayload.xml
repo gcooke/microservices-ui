@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Controllers>
+  <Controller Name="marketdata">
+    <Version Name="1.0.99">
+      <Queue Length="0" Workers="1"
+             LastEnqueue="2017-08-24T10:04:48.4452855+02:00"
+             LastDequeue="2017-08-24T10:04:48.4452855+02:00" />
+    </Version>
+  </Controller>
+</Controllers>

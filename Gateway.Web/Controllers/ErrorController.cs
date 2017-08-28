@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 
 namespace Gateway.Web.Controllers
 {
@@ -26,6 +22,13 @@ namespace Gateway.Web.Controllers
         {
             Response.StatusCode = 200;
             return View("InternalServer");
+        }
+
+        [AllowAnonymous]
+        public ActionResult Unauthorized()
+        {
+            Response.StatusCode = 200;
+            return View("Unauthorized");
         }
     }
 }

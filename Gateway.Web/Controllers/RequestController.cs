@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using Gateway.Web.Authorization;
 using Gateway.Web.Database;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Request;
@@ -11,6 +12,7 @@ using Controller = System.Web.Mvc.Controller;
 
 namespace Gateway.Web.Controllers
 {
+    [RoleBasedAuthorize(Roles = "Security.View")]
     public class RequestController : Controller
     {
         private readonly IGatewayDatabaseService _dataService;
@@ -74,6 +76,7 @@ namespace Gateway.Web.Controllers
             return View(model);
         }
 
+        [RoleBasedAuthorize(Roles = "Security.Modify")]
         public ActionResult Cancel(string correlationId)
         {
             _gateway.ExpireWorkItem(correlationId);

@@ -260,7 +260,7 @@ namespace Gateway.Web.Database
             var result = new ReportsModel("Usage Report");
             using (var database = new GatewayEntities())
             {
-                var rows = database.spGetUserReport(DateTime.Today.AddDays(-1));
+                var rows = database.spGetUserReport(DateTime.Today.AddDays(-7));
                 var target = new UserRecentRequests();
                 var table = new ReportTable();
                 table.Title = "Recent Requests";

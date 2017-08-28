@@ -938,7 +938,7 @@ namespace Gateway.Web.Services
             {
                 if (doc.Document == null) continue;
 
-                foreach (var info in doc.Document.Descendants("Controllers"))
+                foreach (var info in doc.Document.Descendants("Controller"))
                 {
                     var item = info.Deserialize<ControllerQueueInformation>();
                     foreach (var version in item.Versions)
