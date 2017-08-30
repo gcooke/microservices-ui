@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -10,15 +9,13 @@ using Bagl.Cib.MSF.ClientAPI.Gateway;
 using Gateway.Web.Database;
 using Gateway.Web.Models.AddIn;
 using Gateway.Web.Models.Controller;
-using Gateway.Web.Models.Controllers;
 using Gateway.Web.Services;
 using Gateway.Web.Utils;
-using Microsoft.Ajax.Utilities;
-using Microsoft.Practices.ObjectBuilder2;
 using Controller = System.Web.Mvc.Controller;
 using DashboardModel = Gateway.Web.Models.Controllers.DashboardModel;
 using HistoryModel = Gateway.Web.Models.Controllers.HistoryModel;
 using QueuesModel = Gateway.Web.Models.Controllers.QueuesModel;
+using VersionsModel = Gateway.Web.Models.Controllers.VersionsModel;
 
 namespace Gateway.Web.Controllers
 {
@@ -96,13 +93,8 @@ namespace Gateway.Web.Controllers
 
         public ActionResult Workers()
         {
-            //var model = _gateway.GetWorkers();
-
-            return View(new ManageWorkersModel
-            {
-                
-            });
-            //return View(model);
+            var model = _gateway.GetWorkers();
+            return View(model);
         }
 
         public ActionResult UsageReport()
@@ -148,9 +140,10 @@ namespace Gateway.Web.Controllers
 
             return View(model);
         }
+
         public ActionResult Versions()
         {
-            var model = new Models.Controllers.VersionsModel();
+            var model = new VersionsModel();
             return View(model);
         }
 
@@ -158,18 +151,19 @@ namespace Gateway.Web.Controllers
         {
             var response = _gatewayRestService.Get("Security", "addins/versions", CancellationToken.None);
 
-            return (response.Successfull)
+            return response.Successfull
                 ? response.Content.GetPayloadAsXElement().Deserialize<IEnumerable<AddInVersionModel>>()
                 : null;
         }
 
         [HttpPost]
-        public ActionResult Versions(Models.Controllers.VersionsModel model)
+        public ActionResult Versions(VersionsModel model)
         {
-            var response = _gatewayRestService.Delete("Catalogue", "versions/cleanup", string.Empty, CancellationToken.None);
+            var response = _gatewayRestService.Delete("Catalogue", "versions/cleanup", string.Empty,
+                CancellationToken.None);
 
             model.Success = response.Successfull;
-            model.Log = response.Content.Message.Split(new[] { '\n' }).ToList();
+            model.Log = response.Content.Message.Split('\n').ToList();
             model.Loading = false;
             model.Loaded = true;
             return View(model);
@@ -204,6 +198,5 @@ namespace Gateway.Web.Controllers
                 Progress = HttpContext.Application["task" + id]
             }, JsonRequestBehavior.AllowGet);
         }
-
     }
 }

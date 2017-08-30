@@ -1,6 +1,4 @@
-﻿@using Gateway.Web.Services
-@model Gateway.Web.Models.Controllers.ManageWorkersModel
-@{
+﻿@{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
     ViewBag.Title = "All Controllers";
     ViewBag.Current = "Workers";
@@ -13,41 +11,37 @@
     </div>
     <hr />
     <div>
+
         <div class="container-fluid alert alert-redstone">
             <div class="col-sm-offset-2 col-sm-1">Version</div>
-            <div class="col-sm-2">Node</div>
-            <div class="col-sm-1">PID</div>
-            <div class="col-sm-1">Alive</div>
-            <div class="col-sm-1">Exists</div>
-            @*<div class="col-sm-offset-3 col-sm-1">Status</div>*@
-
+            <div class="col-sm-2 text-center">Node</div>
+            <div class="col-sm-1 text-center">PID</div>
+            <div class="col-sm-3 text-center">Output</div>
         </div>
-        @foreach (var item in @Model.Controllers)
-            {
+
+        @foreach (var item in @Model.Workers)
+        {
             <div class="alert alert-default" role="alert"
-                 data-toggle="collapse" href="#@item.Name" aria-expanded="true"
-                 aria-controls="@item.Name">
+                 data-toggle="collapse" href="#@item.Controller" aria-expanded="true"
+                 aria-controls="@item.Controller">
                 <span class="badge badge-info pull-left">@item.Count</span>&nbsp;
-                @item.Name&nbsp;
+                @item.Controller&nbsp;
                 <small class="badge badge-info pull-right">@item.Errors</small>
                 <small class="pull-right">Errors&nbsp;</small>
             </div>
-            <div class="collapse" id="@item.Name">
-
-                @foreach (var worker in item.Workers)
+            <div class="" id="@item.Controller">
+                @foreach (var worker in item.WorkerInfos)
                 {
-                    <div class="container-fluid @(worker.State ? "alert alert-success" : "alert alert-danger")" style="padding: 5px;margin-top: 0.1em; margin-bottom: 0.1em;" role="alert">
-                        <div class="col-sm-2">
+                    <div class="container-fluid @(worker.State ? "alert alert-success" : "alert alert-danger")" style="padding: 5px; margin-top: 0.1em; margin-bottom: 0.1em;" role="alert">
+                        <div class="col-sm-2" style="display: none;">
                             <button class="btn btn-xs btn-primary glyphicon glyphicon-play"></button>
                             <button class="btn btn-xs btn-danger glyphicon glyphicon-stop"></button>
                         </div>
-                        <div class="col-sm-1">@worker.Version</div>
+                        <div class="col-sm-offset-2 col-sm-1">@worker.Version</div>
                         <div class="col-sm-2">@worker.Node</div>
-                        <div class="col-sm-1">@worker.ProcessId</div>
-                        <div class="col-sm-1 @(worker.Alive ? "glyphicon glyphicon-ok" : "glyphicon glyphicon-remove")"></div>
-                        <div class="col-sm-1 @(worker.Exists ? "glyphicon glyphicon-ok" : "glyphicon glyphicon-remove")"></div>
-                        @*<div class="col-sm-2">@worker.CorrelationId</div>*@
-                        <div class="col-sm-offset-3 col-sm-1  pull-left badge @(worker.State ? "badge-success" : "badge-danger")">@worker.Status</div>
+                        <div class="col-sm-1">@worker.Pid</div>
+                        <div class="col-sm-3">@worker.Output</div>
+                        <div class="col-sm-offset-2 col-sm-1  pull-left badge @(worker.State ? "badge-success" : "badge-danger")">@worker.Status</div>
                     </div>
                 }
             </div>

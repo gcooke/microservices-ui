@@ -62,24 +62,27 @@ namespace Gateway.Web.Services
                 return new ServersModel();
 
             var xmlElement = serverResponse.Document.Descendants().First();
-            var servers = xmlElement.Deserialize<ArrayOfGatewayInfo>();
+            var servers = xmlElement.Deserialize<GatewayInfo>();
             return new ServersModel(servers);
         }
 
         public WorkersModel GetWorkers()
         {
-            var docs = FetchAll("health/services");
-            var result = GetWorkers("All", docs);
+            var serverResponse = Fetch("health/info");
 
-            // Populate process information
-            docs = FetchAll(string.Format("health/processes/{0}", "Bagl.Cib.MSF.ControllerHost"));
-            return PopulateProcessInfo(result, docs);
+            if (serverResponse == null || !serverResponse.Document.Descendants().Any())
+                return new WorkersModel("All");
+
+            var xmlElement = serverResponse.Document.Descendants().First();
+            var gatewayInfo = xmlElement.Deserialize<GatewayInfo>();
+            return new WorkersModel("All").BuildModel(gatewayInfo);
         }
 
         public WorkersModel GetWorkers(string controller)
         {
-            var docs = FetchAll("health/services/{0}", controller);
-            return GetWorkers(controller, docs);
+            //var docs = FetchAll("health/services/{0}", controller);
+            //return GetWorkers(controller, docs);
+            return new WorkersModel(controller);
         }
 
         public IEnumerable<QueueModel> GetCurrentQueues(string controller)
@@ -474,9 +477,9 @@ namespace Gateway.Web.Services
             return result;
         }
 
-        public string[] DeletePermission(long id)
+        public string[] DeletePermission(long id, long groupId)
         {
-            var query = string.Format("permissions/{0}", id);
+            var query = string.Format("groups/{0}/permissions/{1}", groupId, id);
             var response = _gatewayRestService.Delete("Security", "latest", query, string.Empty);
 
             if (response.Successfull)
@@ -484,7 +487,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Message };
+            return new[] { response.Content.Message };
         }
 
         public string[] Create(PermissionModel model)
@@ -497,7 +500,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Message };
+            return new[] { response.Content.Message };
         }
 
         public string[] InsertGroupPermission(long groupId, long permissionId)
@@ -901,36 +904,36 @@ namespace Gateway.Web.Services
             }
         }
 
-        private WorkersModel PopulateProcessInfo(WorkersModel result, IEnumerable<ServerResponse> docs)
-        {
-            foreach (var doc in docs)
-            {
-                if (doc.Document == null) continue;
+        //private WorkersModel PopulateProcessInfo(WorkersModel result, IEnumerable<ServerResponse> docs)
+        //{
+        //    foreach (var doc in docs)
+        //    {
+        //        if (doc.Document == null) continue;
 
-                foreach (var info in doc.Document.Descendants("Process"))
-                {
-                    var item = info.Deserialize<ProcessInformation>();
-                    result.Processes.Add(item);
-                }
-            }
-            return result;
-        }
+        //        foreach (var info in doc.Document.Descendants("Process"))
+        //        {
+        //            var item = info.Deserialize<ProcessInformation>();
+        //            result.Processes.Add(item);
+        //        }
+        //    }
+        //    return result;
+        //}
 
-        private WorkersModel GetWorkers(string name, IEnumerable<ServerResponse> docs)
-        {
-            var result = new WorkersModel(name);
-            foreach (var doc in docs)
-            {
-                if (doc.Document == null) continue;
+        //private WorkersModel GetWorkers(string name, IEnumerable<ServerResponse> docs)
+        //{
+        //    var result = new WorkersModel(name);
+        //    foreach (var doc in docs)
+        //    {
+        //        if (doc.Document == null) continue;
 
-                foreach (var info in doc.Document.Descendants("ControllerInformation"))
-                {
-                    var item = info.Deserialize<ControllerInformation>();
-                    result.State.Add(item);
-                }
-            }
-            return result;
-        }
+        //        foreach (var info in doc.Document.Descendants("ControllerInformation"))
+        //        {
+        //            var item = info.Deserialize<ControllerInformation>();
+        //            result.State.Add(item);
+        //        }
+        //    }
+        //    return result;
+        //}
 
         private IEnumerable<QueueModel> GetCurrentQueues(IEnumerable<ServerResponse> docs)
         {

@@ -1,0 +1,45 @@
+﻿<GatewayInfo xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/Gateway.Models">
+  <GatewayNodes>
+    <GatewayNode>
+      <Address>22.241.145.10</Address>
+      <Id>f171d21f-1c42-0037-45db-332dd3451ba0</Id>
+      <Node>JHBDSM020000420</Node>
+      <PerformanceCounters>
+        <CpuUsage>1.03547692</CpuUsage>
+        <MemUsage>13414</MemUsage>
+      </PerformanceCounters>
+      <Processes i:nil="true" />
+    </GatewayNode>
+    <GatewayNode>
+      <Address>22.241.145.56</Address>
+      <Id>23385569-da25-537b-9f22-392ee2c41cc6</Id>
+      <Node>JHBDSM020000421</Node>
+      <PerformanceCounters>
+        <CpuUsage>1.18198979</CpuUsage>
+        <MemUsage>13396</MemUsage>
+      </PerformanceCounters>
+      <Processes i:nil="true" />
+    </GatewayNode>
+    <GatewayNode>
+      <Address>22.149.221.102</Address>
+      <Id>3767a041-a6ad-89fd-9c03-d351f9919743</Id>
+      <Node>jhbpsm020000757</Node>
+      <PerformanceCounters>
+        <CpuUsage>11.7992086</CpuUsage>
+        <MemUsage>3523</MemUsage>
+      </PerformanceCounters>
+      <Processes i:nil="true" />
+    </GatewayNode>
+    <GatewayNode>
+      <Address>22.149.223.125</Address>
+      <Id>d2be239a-20c8-1d2c-1e8b-cd9689b2cfa2</Id>
+      <Node>jhbpsm020000758</Node>
+      <PerformanceCounters>
+        <CpuUsage>3.19678426</CpuUsage>
+        <MemUsage>3362</MemUsage>
+      </PerformanceCounters>
+      <Processes i:nil="true" />
+    </GatewayNode>
+  </GatewayNodes>
+  <ServiceInfo xmlns:d2p1="http://schemas.datacontract.org/2004/07/Gateway.Services.Registry" i:nil="true" />
+</GatewayInfo>

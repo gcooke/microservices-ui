@@ -27,18 +27,14 @@ namespace Gateway.Web.Controllers
             return View("Details", model);
         }
 
-        public ActionResult RemovePermission(string id)
+        public ActionResult RemovePermission(long id, long groupId)
         {
             ModelState.Clear();
-
-            // Validate parameters
-            if (string.IsNullOrEmpty(id))
-                ModelState.AddModelError("Id", "Id cannot be empty");
 
             // Post instruction to security controller
             if (ModelState.IsValid)
             {
-                var result = _gateway.DeletePermission(id.ToLongOrDefault());
+                var result = _gateway.DeletePermission(id, groupId);
                 if (result != null)
                     foreach (var item in result)
                     {
@@ -50,7 +46,7 @@ namespace Gateway.Web.Controllers
             if (ModelState.IsValid)
                 return Redirect("~/Security/Permissions");
 
-            return Details(id.ToLongOrDefault());
+            return Details(id);
         }
     }
 }

@@ -74,7 +74,7 @@ namespace Gateway.Web.Services
 
         Models.Permission.PermissionModel GetPermission(long id);
 
-        string[] DeletePermission(long id);
+        string[] DeletePermission(long id, long groupId);
 
         string[] Create(Models.Permission.PermissionModel model);
 

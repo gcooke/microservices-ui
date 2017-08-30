@@ -35,6 +35,7 @@
 .datatable thead {
     background-color: #990505;
     color: #FFF;
+    font-weight: bold;
 }
 
 .datatable .columnheader {

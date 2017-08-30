@@ -300,7 +300,7 @@ namespace Gateway.Web.Controllers
             // Post instruction to security controller
             if (ModelState.IsValid)
             {
-                var addInVersion = new AddInVersionModel() {AddIn = addInName, Version = versionName};
+                var addInVersion = new AddInVersionModel() { AddIn = addInName, Version = versionName };
                 var result = _gateway.InsertGroupAddInVersion(groupId.ToLongOrDefault(), addInVersion);
                 if (result != null)
                     foreach (var item in result)

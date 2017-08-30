@@ -37,7 +37,7 @@
                         <td>
                             @Html.ActionLink("View", "Details", "Permission", new { id = item.Id }, new { @class = "hoverlink" })
                             &nbsp;
-                            @Html.ActionLink("Remove", "RemovePermission", "Group", new { id = item.Id }, new { @class = "hoverlink" })
+                            @Html.ActionLink("Remove", "RemovePermission", "Permission", new {  groupId = @Model.Id, id = item.Id }, new { @class = "hoverlink" })
                         </td>
                     </tr>
                 }

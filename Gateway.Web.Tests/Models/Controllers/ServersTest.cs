@@ -24,13 +24,13 @@ namespace Gateway.Web.Tests.Models.Controllers
         {
             Assert.DoesNotThrow(() =>
             {
-                var gatewayInfos = GetPayload<ArrayOfGatewayInfo>();
+                var gatewayInfos = GetPayload<GatewayInfo>();
                 var serversModel = new ServersModel(gatewayInfos);
             });
 
             Assert.DoesNotThrow(() =>
             {
-                var gatewayInfos = GetPayload<ArrayOfGatewayInfo>("Gateway.Web.Tests.Resources.ServersModelPayload.xml");
+                var gatewayInfos = GetPayload<GatewayInfo>("Gateway.Web.Tests.Resources.ServersModelPayload.xml");
                 var serversModel = new ServersModel(gatewayInfos);
                 //ToList() required due to lazy loading.
                 var servers = serversModel.Servers.ToList();
@@ -40,13 +40,13 @@ namespace Gateway.Web.Tests.Models.Controllers
         [Test]
         public void Can_load_payload()
         {
-            Assert.DoesNotThrow(() => GetPayload<ArrayOfGatewayInfo>());
+            Assert.DoesNotThrow(() => GetPayload<GatewayInfo>());
         }
 
         [Test]
         public void Does_model_constructs_three_server_items()
         {
-            var gatewayInfos = GetPayload<ArrayOfGatewayInfo>();
+            var gatewayInfos = GetPayload<GatewayInfo>();
             var serversModel = new ServersModel(gatewayInfos);
 
             Assert.AreEqual(3, serversModel.Servers.Count());
@@ -55,7 +55,7 @@ namespace Gateway.Web.Tests.Models.Controllers
         [Test]
         public void Does_model_counts_the_number_of_queues_correctly()
         {
-            var gatewayInfos = GetPayload<ArrayOfGatewayInfo>();
+            var gatewayInfos = GetPayload<GatewayInfo>();
             var serversModel = new ServersModel(gatewayInfos);
             var server = serversModel.Servers.FirstOrDefault(svr => svr.Node == "jhbpsm020000757");
             Assert.IsNotNull(server);
@@ -66,7 +66,7 @@ namespace Gateway.Web.Tests.Models.Controllers
         [Test]
         public void Does_model_counts_the_number_of_workers_correctly()
         {
-            var gatewayInfos = GetPayload<ArrayOfGatewayInfo>();
+            var gatewayInfos = GetPayload<GatewayInfo>();
             var serversModel = new ServersModel(gatewayInfos);
             var server = serversModel.Servers.FirstOrDefault(svr => svr.Node == "jhbpsm020000757");
             Assert.IsNotNull(server);
@@ -77,7 +77,7 @@ namespace Gateway.Web.Tests.Models.Controllers
         [Test]
         public void Does_model_set_server_status_to_passing()
         {
-            var gatewayInfos = GetPayload<ArrayOfGatewayInfo>();
+            var gatewayInfos = GetPayload<GatewayInfo>();
             var serversModel = new ServersModel(gatewayInfos);
             var server = serversModel.Servers.FirstOrDefault(svr => svr.Node == "jhbpsm020000757");
             Assert.IsNotNull(server);
