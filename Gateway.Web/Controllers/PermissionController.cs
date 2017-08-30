@@ -28,6 +28,7 @@ namespace Gateway.Web.Controllers
         }
 
         [RoleBasedAuthorize(Roles = "Security.Delete")]
+        public ActionResult RemovePermission(long id, long groupId)
         {
             ModelState.Clear();
 
@@ -46,7 +47,7 @@ namespace Gateway.Web.Controllers
             if (ModelState.IsValid)
                 return Redirect("~/Security/Permissions");
 
-            return Details(id.ToLongOrDefault());
+            return Details(id);
         }
     }
 }
