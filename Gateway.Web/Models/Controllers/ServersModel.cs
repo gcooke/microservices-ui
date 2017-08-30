@@ -1,45 +1,55 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 
 namespace Gateway.Web.Models.Controllers
 {
     public class ServersModel
     {
-        public ServersModel(ArrayOfGatewayInfo info)
+        public ServersModel(GatewayInfo info)
         {
+            Workers = new List<WorkerInfo>();
+
             Root = info;
             ConstructModel();
         }
+
         public ServersModel()
         {
             Servers = new List<Server>();
         }
 
-        public ArrayOfGatewayInfo Root { get; private set; }
+        public GatewayInfo Root { get; }
 
         public IEnumerable<Server> Servers { get; private set; }
 
+        private List<WorkerInfo> Workers { get; set; }
+
         public void ConstructModel()
         {
+            BuildWorkers();
+
             Servers = Root
-                .GatewayInfo
-                .Select(gatewayInfo => new Server(gatewayInfo))
+                .GatewayNodes
+                .Select(gatewayNode => new Server(gatewayNode).SetWorkers(Workers))
                 .ToList();
+        }
+
+        public void BuildWorkers()
+        {
+            if (Root.Services == null) return;
+            Workers = Root.Services.SelectMany(s => s.Versions).Select(c => new WorkerInfo(c)).ToList();
         }
     }
 
     public class Server
     {
-        public Server(GatewayInfo gatewayInfo)
-        {
-            Node = gatewayInfo.GatewayNode.Node;
-            Workers = GetWorkerCount(gatewayInfo);
-            Queues = GetQueueSize(gatewayInfo);
-            GetStatusAndOutput(gatewayInfo);
+        private List<WorkerInfo> _workers;
 
+        public Server(GatewayInfoGatewayNode gatewayInfo)
+        {
+            Node = gatewayInfo.Node;
+            Queues = GetQueueSize(gatewayInfo.Queues);
             if (gatewayInfo.PerformanceCounters != null)
             {
                 Cpu = string.Format("{0} %", gatewayInfo.PerformanceCounters.CpuUsage);
@@ -47,7 +57,7 @@ namespace Gateway.Web.Models.Controllers
             }
         }
 
-        public string Node { get; private set; }
+        public string Node { get; }
 
         public string Memory { get; private set; }
 
@@ -55,7 +65,10 @@ namespace Gateway.Web.Models.Controllers
 
         public string Cpu { get; private set; }
 
-        public int Workers { get; private set; }
+        public int Workers
+        {
+            get { return _workers.Count; }
+        }
 
         public int Queues { get; private set; }
 
@@ -63,64 +76,41 @@ namespace Gateway.Web.Models.Controllers
 
         public string Output { get; private set; }
 
-        private int GetQueueSize(GatewayInfo gatewayInfo)
+        public Server SetWorkers(List<WorkerInfo> workers)
         {
-            if (gatewayInfo.ControllerProxyStates == null) return 0;
-
-            return gatewayInfo
-                  .ControllerProxyStates
-                  .Where(queue => queue.Queue != null)
-                  .Select(queue => queue.Queue)
-                  .Where(queueSize => queueSize.QueueSizes != null)
-                  .SelectMany(queueSize => queueSize.QueueSizes)
-                  .Sum(queue => queue.Value);
+            _workers = workers.Where(c => c.Node == Node).ToList();
+            GetStatusAndOutput();
+            return this;
         }
 
-        private int GetWorkerCount(GatewayInfo gatewayInfo)
+        private int GetQueueSize(GatewayInfoGatewayNodeQueues gatewayInfo)
         {
-            if (gatewayInfo.ControllerProxyStates == null) return 0;
+            if (gatewayInfo== null || gatewayInfo.ControllerQueueInfos == null) return 0;
 
             return gatewayInfo
-                .ControllerProxyStates
-                .Where(proxy => proxy.WorkerState != null)
-                .Select(proxy => proxy.WorkerState)
-                .Where(proxy => proxy.LiveWorkers != null)
-                .SelectMany(proxy => proxy.LiveWorkers)
-                .Count();
+                .ControllerQueueInfos
+                .Sum(queue => queue.Length);
         }
 
-        private void GetStatusAndOutput(GatewayInfo gatewayInfo)
+        private void GetStatusAndOutput()
         {
-            if (gatewayInfo.GatewayNodeServices == null)
+            if (_workers == null)
             {
                 Status = "warning";
                 Output = "Gateway did not return service info";
-                return;
             }
 
-            var allItemsPassing = gatewayInfo
-                .GatewayNodeServices
+            if (_workers.Any() == false)
+            {
+                Status = "success";
+                Output = "No workers";
+            }
+
+            var allItemsPassing = _workers
                 .All(s => s.Status.Equals("Passing", StringComparison.InvariantCultureIgnoreCase));
 
-            Status = allItemsPassing ? "success" : "danger";
-
-            if (allItemsPassing)
-            {
-                var serverHealthInfoItem = gatewayInfo
-                    .GatewayNodeServices
-                    .SingleOrDefault(service => service.CheckID == "serfHealth");
-
-                Output = serverHealthInfoItem == null ? "Unknown" : serverHealthInfoItem.Output;
-            }
-            else
-            {
-                var failingItemsCount =
-                      gatewayInfo
-                    .GatewayNodeServices
-                    .Count(s => !s.Status.Equals("Passing", StringComparison.InvariantCultureIgnoreCase));
-
-                Output = string.Format("{0} failing", failingItemsCount);
-            }
+            Status = allItemsPassing ? "success" : "warning";
+            Output = "Healthy";
         }
     }
 }

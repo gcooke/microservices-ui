@@ -31,7 +31,7 @@
 
                     @foreach (ControllerVersion version in group.Controllers)
                     {
-                        <tr style="background: @(version.IsActive ? "transparent" : "yellow")">
+                        <tr style="background: @(version.IsActive ? "" : "yellow")">
                             <td><a href="~/Controller/Dashboard/@version.Name" class="hoverlink">@version.Name</a></td>
                             <td><a href="~/Controller/Versions/@version.Name" class="hoverlink">@version.Version</a></td>
                             <td>@version.Status</td>

@@ -16,6 +16,7 @@ using Controller = System.Web.Mvc.Controller;
 using DashboardModel = Gateway.Web.Models.Controllers.DashboardModel;
 using HistoryModel = Gateway.Web.Models.Controllers.HistoryModel;
 using QueuesModel = Gateway.Web.Models.Controllers.QueuesModel;
+using VersionsModel = Gateway.Web.Models.Controllers.VersionsModel;
 
 namespace Gateway.Web.Controllers
 {
@@ -143,9 +144,10 @@ namespace Gateway.Web.Controllers
 
             return View(model);
         }
+
         public ActionResult Versions()
         {
-            var model = new Models.Controllers.VersionsModel();
+            var model = new VersionsModel();
             return View(model);
         }
 
@@ -153,19 +155,20 @@ namespace Gateway.Web.Controllers
         {
             var response = _gatewayRestService.Get("Security", "addins/versions", CancellationToken.None);
 
-            return (response.Successfull)
+            return response.Successfull
                 ? response.Content.GetPayloadAsXElement().Deserialize<IEnumerable<AddInVersionModel>>()
                 : null;
         }
 
         [HttpPost]
         [RoleBasedAuthorize(Roles = "Security.Modify")]
-        public ActionResult Versions(Models.Controllers.VersionsModel model)
+        public ActionResult Versions(VersionsModel model)
         {
-            var response = _gatewayRestService.Delete("Catalogue", "versions/cleanup", string.Empty, CancellationToken.None);
+            var response = _gatewayRestService.Delete("Catalogue", "versions/cleanup", string.Empty,
+                CancellationToken.None);
 
             model.Success = response.Successfull;
-            model.Log = response.Content.Message.Split(new[] { '\n' }).ToList();
+            model.Log = response.Content.Message.Split('\n').ToList();
             model.Loading = false;
             model.Loaded = true;
             return View(model);
@@ -200,6 +203,5 @@ namespace Gateway.Web.Controllers
                 Progress = HttpContext.Application["task" + id]
             }, JsonRequestBehavior.AllowGet);
         }
-
     }
 }

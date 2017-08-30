@@ -167,7 +167,9 @@
     <EmbeddedResource Include="Resources\RichServersModelPayload.xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\ServersModelPayload.xml" />
+    <EmbeddedResource Include="Resources\ServersModelPayload.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\UserPortfolioPayload.xml" />
@@ -186,6 +188,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\QueueModelPayload.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\GatewayInfoPayload.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
