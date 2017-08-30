@@ -1,19 +1,18 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Xml.Serialization;
 
 namespace Gateway.Web.Models.Controllers
 {
-
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://schemas.datacontract.org/2004/07/Gateway.Models")]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "http://schemas.datacontract.org/2004/07/Gateway.Models", IsNullable = false)]
-    public partial class GatewayInfo
+    [XmlType(AnonymousType = true, Namespace = "http://schemas.datacontract.org/2004/07/Gateway.Models")]
+    [XmlRoot(Namespace = "http://schemas.datacontract.org/2004/07/Gateway.Models", IsNullable = false)]
+    public class GatewayInfo
     {
-
         private GatewayInfoGatewayNode[] gatewayNodesField;
-
         private ControllerInformation[] servicesField;
 
-
-        [System.Xml.Serialization.XmlArrayItemAttribute("GatewayNode", IsNullable = false)]
+        [XmlArrayItem("GatewayNode", IsNullable = false)]
         public GatewayInfoGatewayNode[] GatewayNodes
         {
             get
@@ -26,8 +25,7 @@ namespace Gateway.Web.Models.Controllers
             }
         }
 
-
-        [System.Xml.Serialization.XmlArrayItemAttribute("ControllerInformation", Namespace = "http://schemas.datacontract.org/2004/07/Gateway.Services.Registry", IsNullable = false)]
+        [XmlArrayItem("ControllerInformation", Namespace = "http://schemas.datacontract.org/2004/07/Gateway.Services.Registry", IsNullable = false)]
         public ControllerInformation[] Services
         {
             get
@@ -41,9 +39,8 @@ namespace Gateway.Web.Models.Controllers
         }
     }
 
-
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://schemas.datacontract.org/2004/07/Gateway.Models")]
-    public partial class GatewayInfoGatewayNode
+    [XmlType(AnonymousType = true, Namespace = "http://schemas.datacontract.org/2004/07/Gateway.Models")]
+    public class GatewayInfoGatewayNode
     {
 
         private string addressField;
@@ -124,7 +121,7 @@ namespace Gateway.Web.Models.Controllers
         }
 
 
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
+        [XmlElementAttribute(IsNullable = true)]
         public GatewayInfoGatewayNodeQueues Queues
         {
             get
@@ -138,9 +135,8 @@ namespace Gateway.Web.Models.Controllers
         }
     }
 
-
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://schemas.datacontract.org/2004/07/Gateway.Models")]
-    public partial class GatewayInfoGatewayNodePerformanceCounters
+    [XmlType(AnonymousType = true, Namespace = "http://schemas.datacontract.org/2004/07/Gateway.Models")]
+    public class GatewayInfoGatewayNodePerformanceCounters
     {
 
         private decimal cpuUsageField;
@@ -174,10 +170,9 @@ namespace Gateway.Web.Models.Controllers
         }
     }
 
-
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://schemas.datacontract.org/2004/07/CondenserDotNet.Core.DataContracts")]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "http://schemas.datacontract.org/2004/07/CondenserDotNet.Core.DataContracts", IsNullable = false)]
-    public partial class InformationServiceSet
+    [XmlType(AnonymousType = true, Namespace = "http://schemas.datacontract.org/2004/07/CondenserDotNet.Core.DataContracts")]
+    [XmlRoot(Namespace = "http://schemas.datacontract.org/2004/07/CondenserDotNet.Core.DataContracts", IsNullable = false)]
+    public class InformationServiceSet
     {
 
         private InformationServiceSetInformationCheck[] checksField;
@@ -187,7 +182,7 @@ namespace Gateway.Web.Models.Controllers
         private InformationServiceSetService serviceField;
 
 
-        [System.Xml.Serialization.XmlArrayItemAttribute("InformationCheck", IsNullable = false)]
+        [XmlArrayItem("InformationCheck", IsNullable = false)]
         public InformationServiceSetInformationCheck[] Checks
         {
             get
@@ -227,483 +222,75 @@ namespace Gateway.Web.Models.Controllers
         }
     }
 
-
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://schemas.datacontract.org/2004/07/CondenserDotNet.Core.DataContracts")]
-    public partial class InformationServiceSetInformationCheck
+    [XmlType(AnonymousType = true, Namespace = "http://schemas.datacontract.org/2004/07/CondenserDotNet.Core.DataContracts")]
+    public class InformationServiceSetInformationCheck
     {
-
-        private string checkIDField;
-
-        private string nameField;
-
-        private string outputField;
-
-        private string statusField;
-
-
-        public string CheckID
-        {
-            get
-            {
-                return this.checkIDField;
-            }
-            set
-            {
-                this.checkIDField = value;
-            }
-        }
-
-
-        public string Name
-        {
-            get
-            {
-                return this.nameField;
-            }
-            set
-            {
-                this.nameField = value;
-            }
-        }
-
-
-        public string Output
-        {
-            get
-            {
-                return this.outputField;
-            }
-            set
-            {
-                this.outputField = value;
-            }
-        }
-
-
-        public string Status
-        {
-            get
-            {
-                return this.statusField;
-            }
-            set
-            {
-                this.statusField = value;
-            }
-        }
+        public string CheckID { get; set; }
+        public string Name { get; set; }
+        public string Output { get; set; }
+        public string Status { get; set; }
     }
 
-
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://schemas.datacontract.org/2004/07/CondenserDotNet.Core.DataContracts")]
-    public partial class InformationServiceSetNode
+    [XmlType(AnonymousType = true, Namespace = "http://schemas.datacontract.org/2004/07/CondenserDotNet.Core.DataContracts")]
+    public class InformationServiceSetNode
     {
-
-        private string addressField;
-
-        private string nodeField;
-
-
-        public string Address
-        {
-            get
-            {
-                return this.addressField;
-            }
-            set
-            {
-                this.addressField = value;
-            }
-        }
-
-
-        public string Node
-        {
-            get
-            {
-                return this.nodeField;
-            }
-            set
-            {
-                this.nodeField = value;
-            }
-        }
+        public string Address { get; set; }
+        public string Node { get; set; }
     }
 
-
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://schemas.datacontract.org/2004/07/CondenserDotNet.Core.DataContracts")]
-    public partial class InformationServiceSetService
+    [XmlType(AnonymousType = true, Namespace = "http://schemas.datacontract.org/2004/07/CondenserDotNet.Core.DataContracts")]
+    public class InformationServiceSetService
     {
-
-        private string addressField;
-
-        private string idField;
-
-        private ushort portField;
-
-        private string serviceField;
-
-        private InformationServiceSetServiceTags tagsField;
-
-
-        public string Address
-        {
-            get
-            {
-                return this.addressField;
-            }
-            set
-            {
-                this.addressField = value;
-            }
-        }
-
-
-        public string ID
-        {
-            get
-            {
-                return this.idField;
-            }
-            set
-            {
-                this.idField = value;
-            }
-        }
-
-
-        public ushort Port
-        {
-            get
-            {
-                return this.portField;
-            }
-            set
-            {
-                this.portField = value;
-            }
-        }
-
-
-        public string Service
-        {
-            get
-            {
-                return this.serviceField;
-            }
-            set
-            {
-                this.serviceField = value;
-            }
-        }
-
-
-        public InformationServiceSetServiceTags Tags
-        {
-            get
-            {
-                return this.tagsField;
-            }
-            set
-            {
-                this.tagsField = value;
-            }
-        }
+        public string Address { get; set; }
+        public string ID { get; set; }
+        public ushort Port { get; set; }
+        public string Service { get; set; }
     }
 
-
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://schemas.datacontract.org/2004/07/CondenserDotNet.Core.DataContracts")]
-    public partial class InformationServiceSetServiceTags
+    [XmlType(AnonymousType = true, Namespace = "http://schemas.datacontract.org/2004/07/Gateway.Services.Registry")]
+    [XmlRoot(Namespace = "http://schemas.datacontract.org/2004/07/Gateway.Services.Registry", IsNullable = false)]
+    public class ControllerInformation
     {
+        public string Name { get; set; }
 
-        private string stringField;
-
-
-        [System.Xml.Serialization.XmlElementAttribute(Namespace = "http://schemas.microsoft.com/2003/10/Serialization/Arrays")]
-        public string @string
-        {
-            get
-            {
-                return this.stringField;
-            }
-            set
-            {
-                this.stringField = value;
-            }
-        }
+        [XmlArrayItem("InformationServiceSet", Namespace = "http://schemas.datacontract.org/2004/07/CondenserDotNet.Core.DataContracts", IsNullable = false)]
+        public InformationServiceSet[] Versions { get; set; }
     }
 
-
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://schemas.datacontract.org/2004/07/Gateway.Services.Registry")]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "http://schemas.datacontract.org/2004/07/Gateway.Services.Registry", IsNullable = false)]
-    public partial class ControllerInformation
+    [XmlType(AnonymousType = true, Namespace = "http://schemas.datacontract.org/2004/07/Gateway.Models")]
+    public class GatewayInfoGatewayNodeProcesses
     {
-
-        private string nameField;
-
-        private InformationServiceSet[] versionsField;
-
-
-        public string Name
-        {
-            get
-            {
-                return this.nameField;
-            }
-            set
-            {
-                this.nameField = value;
-            }
-        }
-
-
-        [System.Xml.Serialization.XmlArrayItemAttribute("InformationServiceSet", Namespace = "http://schemas.datacontract.org/2004/07/CondenserDotNet.Core.DataContracts", IsNullable = false)]
-        public InformationServiceSet[] Versions
-        {
-            get
-            {
-                return this.versionsField;
-            }
-            set
-            {
-                this.versionsField = value;
-            }
-        }
+        [XmlArrayItem("Process", IsNullable = false)]
+        public GatewayInfoGatewayNodeProcessesProcess[] Process { get; set; }
     }
 
-
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://schemas.datacontract.org/2004/07/Gateway.Models")]
-    public partial class GatewayInfoGatewayNodeProcesses
+    [XmlType(AnonymousType = true, Namespace = "http://schemas.datacontract.org/2004/07/Gateway.Models")]
+    public class GatewayInfoGatewayNodeProcessesProcess
     {
-
-        private GatewayInfoGatewayNodeProcessesProcess[] processField;
-
-
-        [System.Xml.Serialization.XmlArrayItemAttribute("Process", IsNullable = false)]
-        public GatewayInfoGatewayNodeProcessesProcess[] Process
-        {
-            get
-            {
-                return this.processField;
-            }
-            set
-            {
-                this.processField = value;
-            }
-        }
+        public string Args { get; set; }
+        public string Name { get; set; }
+        public ushort PID { get; set; }
+        public DateTime StartTime { get; set; }
+        public uint WorkingSet { get; set; }
     }
 
-
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://schemas.datacontract.org/2004/07/Gateway.Models")]
-    public partial class GatewayInfoGatewayNodeProcessesProcess
+    [XmlType(AnonymousType = true, Namespace = "http://schemas.datacontract.org/2004/07/Gateway.Models")]
+    public class GatewayInfoGatewayNodeQueues
     {
-
-        private string argsField;
-
-        private string nameField;
-
-        private ushort pIDField;
-
-        private System.DateTime startTimeField;
-
-        private uint workingSetField;
-
-
-        public string Args
-        {
-            get
-            {
-                return this.argsField;
-            }
-            set
-            {
-                this.argsField = value;
-            }
-        }
-
-
-        public string Name
-        {
-            get
-            {
-                return this.nameField;
-            }
-            set
-            {
-                this.nameField = value;
-            }
-        }
-
-
-        public ushort PID
-        {
-            get
-            {
-                return this.pIDField;
-            }
-            set
-            {
-                this.pIDField = value;
-            }
-        }
-
-
-        public System.DateTime StartTime
-        {
-            get
-            {
-                return this.startTimeField;
-            }
-            set
-            {
-                this.startTimeField = value;
-            }
-        }
-
-
-        public uint WorkingSet
-        {
-            get
-            {
-                return this.workingSetField;
-            }
-            set
-            {
-                this.workingSetField = value;
-            }
-        }
+        [XmlArrayItem("ControllerQueueInfo", IsNullable = false)]
+        public GatewayInfoGatewayNodeQueuesControllerQueueInfo[] ControllerQueueInfos { get; set; }
+        public string Node { get; set; }
     }
 
-
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://schemas.datacontract.org/2004/07/Gateway.Models")]
-    public partial class GatewayInfoGatewayNodeQueues
+    [XmlType(AnonymousType = true, Namespace = "http://schemas.datacontract.org/2004/07/Gateway.Models")]
+    public class GatewayInfoGatewayNodeQueuesControllerQueueInfo
     {
-
-        private GatewayInfoGatewayNodeQueuesControllerQueueInfo[] controllerQueueInfosField;
-
-        private string nodeField;
-
-
-        [System.Xml.Serialization.XmlArrayItemAttribute("ControllerQueueInfo", IsNullable = false)]
-        public GatewayInfoGatewayNodeQueuesControllerQueueInfo[] ControllerQueueInfos
-        {
-            get
-            {
-                return this.controllerQueueInfosField;
-            }
-            set
-            {
-                this.controllerQueueInfosField = value;
-            }
-        }
-
-
-        public string Node
-        {
-            get
-            {
-                return this.nodeField;
-            }
-            set
-            {
-                this.nodeField = value;
-            }
-        }
-    }
-
-
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://schemas.datacontract.org/2004/07/Gateway.Models")]
-    public partial class GatewayInfoGatewayNodeQueuesControllerQueueInfo
-    {
-
-        private System.DateTime lastDequeueField;
-
-        private System.DateTime lastEnqueueField;
-
-        private byte lengthField;
-
-        private string nameField;
-
-        private string versionField;
-
-        private byte workersField;
-
-
-        public System.DateTime LastDequeue
-        {
-            get
-            {
-                return this.lastDequeueField;
-            }
-            set
-            {
-                this.lastDequeueField = value;
-            }
-        }
-
-
-        public System.DateTime LastEnqueue
-        {
-            get
-            {
-                return this.lastEnqueueField;
-            }
-            set
-            {
-                this.lastEnqueueField = value;
-            }
-        }
-
-
-        public byte Length
-        {
-            get
-            {
-                return this.lengthField;
-            }
-            set
-            {
-                this.lengthField = value;
-            }
-        }
-
-
-        public string Name
-        {
-            get
-            {
-                return this.nameField;
-            }
-            set
-            {
-                this.nameField = value;
-            }
-        }
-
-
-        public string Version
-        {
-            get
-            {
-                return this.versionField;
-            }
-            set
-            {
-                this.versionField = value;
-            }
-        }
-
-
-        public byte Workers
-        {
-            get
-            {
-                return this.workersField;
-            }
-            set
-            {
-                this.workersField = value;
-            }
-        }
+        public DateTime LastDequeue { get; set; }
+        public DateTime LastEnqueue { get; set; }
+        public int Length { get; set; }
+        public string Name { get; set; }
+        public string Version { get; set; }
+        public int Workers { get; set; }
     }
 
     public class WorkerInfo
@@ -735,6 +322,21 @@ namespace Gateway.Web.Models.Controllers
         public bool State
         {
             get { return Status != "Passing"; }
+        }
+    }
+
+    public class ControllerInfo
+    {
+        public List<WorkerInfo> WorkerInfos { get; set; }
+        public string Controller { get; set; }
+        public int Count { get { return WorkerInfos.Count; } }
+        public int Errors
+        {
+            get
+            {
+                return WorkerInfos.Count(c =>
+                    !string.Equals(c.Status, "passing", StringComparison.InvariantCultureIgnoreCase));
+            }
         }
     }
 }

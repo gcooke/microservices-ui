@@ -7,21 +7,12 @@ namespace Gateway.Web.Models.Controller
 {
     public class WorkersModel : BaseControllerModel
     {
-        public List<WorkerInfo> WorkerInfos { get; set; }
-        public class ControllerInfo
+        public WorkersModel(string name) : base(name)
         {
-            public List<WorkerInfo> WorkerInfos { get; set; }
-            public string Controller { get; set; }
-            public int Count { get { return WorkerInfos.Count; } }
-            public int Errors
-            {
-                get
-                {
-                    return WorkerInfos.Count(c =>
-                        !string.Equals(c.Status, "passing", StringComparison.InvariantCultureIgnoreCase));
-                }
-            }
+            WorkerInfos = new List<WorkerInfo>();
         }
+
+        public List<WorkerInfo> WorkerInfos { get; set; }
 
         public IEnumerable<ControllerInfo> Workers
         {
@@ -30,11 +21,6 @@ namespace Gateway.Web.Models.Controller
                 return WorkerInfos.GroupBy(c => c.Service)
                         .Select(c => new ControllerInfo { Controller = c.Key, WorkerInfos = c.ToList() });
             }
-        }
-
-        public WorkersModel(string name) : base(name)
-        {
-            WorkerInfos = new List<WorkerInfo>();
         }
 
         public WorkersModel BuildModel(GatewayInfo gatewayInfo)
@@ -61,6 +47,7 @@ namespace Gateway.Web.Models.Controller
 
             foreach (var gatewayNode in gatewayInfo.GatewayNodes)
             {
+                if (gatewayNode.Processes == null || gatewayNode.Processes.Process == null) continue;
                 foreach (var process in gatewayNode.Processes.Process)
                 {
                     var found = WorkerInfos.Any(w => w.Pid != process.PID.ToString() || w.Node == gatewayNode.Node);
