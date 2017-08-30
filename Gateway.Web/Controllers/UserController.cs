@@ -12,9 +12,11 @@ using Controller = System.Web.Mvc.Controller;
 using PortfoliosModel = Gateway.Web.Models.User.PortfoliosModel;
 using SitesModel = Gateway.Web.Models.User.SitesModel;
 using System.Globalization;
+using Gateway.Web.Authorization;
 
 namespace Gateway.Web.Controllers
 {
+    [RoleBasedAuthorize(Roles = "Security.View")]
     public class UserController : Controller
     {
         private readonly IGatewayDatabaseService _dataService;
@@ -34,6 +36,7 @@ namespace Gateway.Web.Controllers
             return View("Details", model);
         }
 
+        [RoleBasedAuthorize(Roles = "Security.Delete")]
         public ActionResult RemoveUser(long id)
         {
             ModelState.Clear();
@@ -57,6 +60,8 @@ namespace Gateway.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
+        [RoleBasedAuthorize(Roles = "Security.Modify")]
         public ActionResult InsertUser(FormCollection collection)
         {
             ModelState.Clear();
@@ -108,6 +113,7 @@ namespace Gateway.Web.Controllers
             return View(model);
         }
 
+        [RoleBasedAuthorize(Roles = "Security.Delete")]
         public ActionResult RemoveGroup(string userId, string groupId)
         {
             ModelState.Clear();
@@ -137,6 +143,7 @@ namespace Gateway.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [RoleBasedAuthorize(Roles = "Security.Modify")]
         public ActionResult Groups(FormCollection collection)
         {
             ModelState.Clear();
@@ -173,6 +180,7 @@ namespace Gateway.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [RoleBasedAuthorize(Roles = "Security.Modify")]
         public ActionResult Portfolios(FormCollection collection)
         {
             ModelState.Clear();
@@ -199,6 +207,7 @@ namespace Gateway.Web.Controllers
             return Redirect(string.Format("~/User/Portfolios/{0}", userId));
         }
 
+        [RoleBasedAuthorize(Roles = "Security.Delete")]
         public ActionResult RemovePortfolio(string userId, string portfolioId)
         {
             ModelState.Clear();
@@ -230,6 +239,8 @@ namespace Gateway.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
+        [RoleBasedAuthorize(Roles = "Security.Modify")]
         public ActionResult Sites(FormCollection collection)
         {
             ModelState.Clear();
@@ -256,6 +267,7 @@ namespace Gateway.Web.Controllers
             return Redirect(string.Format("~/User/Sites/{0}", userId));
         }
 
+        [RoleBasedAuthorize(Roles = "Security.Delete")]
         public ActionResult RemoveSite(string userId, string siteId)
         {
             ModelState.Clear();
@@ -287,6 +299,8 @@ namespace Gateway.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
+        [RoleBasedAuthorize(Roles = "Security.Modify")]
         public ActionResult AddIns(FormCollection collection)
         {
             ModelState.Clear();
@@ -317,6 +331,7 @@ namespace Gateway.Web.Controllers
             return Redirect(string.Format("~/User/AddIns/{0}", userId));
         }
 
+        [RoleBasedAuthorize(Roles = "Security.Delete")]
         public ActionResult RemoveAddInVersion(string userId, string addInVersionId)
         {
             ModelState.Clear();

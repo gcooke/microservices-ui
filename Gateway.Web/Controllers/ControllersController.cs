@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
+using Gateway.Web.Authorization;
 using Gateway.Web.Database;
 using Gateway.Web.Models.AddIn;
 using Gateway.Web.Models.Controller;
@@ -19,6 +20,7 @@ using VersionsModel = Gateway.Web.Models.Controllers.VersionsModel;
 
 namespace Gateway.Web.Controllers
 {
+    [RoleBasedAuthorize(Roles = "Security.View")]
     public class ControllersController : Controller
     {
         private readonly IGatewayDatabaseService _dataService;
@@ -113,12 +115,14 @@ namespace Gateway.Web.Controllers
             return View(model);
         }
 
+        [RoleBasedAuthorize(Roles = "Security.Modify")]
         public ActionResult Create()
         {
             return View(new ConfigurationModel());
         }
 
         [HttpPost]
+        [RoleBasedAuthorize(Roles = "Security.Modify")]
         public ActionResult Create(ConfigurationModel model)
         {
             try
@@ -157,6 +161,7 @@ namespace Gateway.Web.Controllers
         }
 
         [HttpPost]
+        [RoleBasedAuthorize(Roles = "Security.Modify")]
         public ActionResult Versions(VersionsModel model)
         {
             var response = _gatewayRestService.Delete("Catalogue", "versions/cleanup", string.Empty,

@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using Bagl.Cib.MIT.Logging;
+using Gateway.Web.Authorization;
 using Gateway.Web.Database;
 using Gateway.Web.Models.AddIn;
 using Gateway.Web.Models.Security;
@@ -29,6 +30,7 @@ namespace Gateway.Web.Controllers
 
         [HttpGet]
         [Route("{app}/{version}")]
+        [AllowAnonymous]
         public ActionResult Downloads(string app, string version)
         {
             _logger.InfoFormat("A user located at {0} is attempting to download {1} version {2}", Request.UserHostAddress, app, version);

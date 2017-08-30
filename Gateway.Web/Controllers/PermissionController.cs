@@ -1,12 +1,12 @@
 ﻿using System.Web.Mvc;
-using Gateway.Web.Database;
-using Gateway.Web.Models.Security;
+using Gateway.Web.Authorization;
 using Gateway.Web.Services;
 using Gateway.Web.Utils;
 using Controller = System.Web.Mvc.Controller;
 
 namespace Gateway.Web.Controllers
 {
+    [RoleBasedAuthorize(Roles = "Security.View")]
     public class PermissionController : Controller
     {
         private readonly IGatewayService _gateway;
@@ -27,7 +27,7 @@ namespace Gateway.Web.Controllers
             return View("Details", model);
         }
 
-        public ActionResult RemovePermission(long id, long groupId)
+        [RoleBasedAuthorize(Roles = "Security.Delete")]
         {
             ModelState.Clear();
 
@@ -46,7 +46,7 @@ namespace Gateway.Web.Controllers
             if (ModelState.IsValid)
                 return Redirect("~/Security/Permissions");
 
-            return Details(id);
+            return Details(id.ToLongOrDefault());
         }
     }
 }
