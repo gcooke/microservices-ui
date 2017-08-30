@@ -506,6 +506,7 @@
     <Content Include="Views\Controllers\UsageReport.cshtml" />
     <Content Include="Views\Error\Unauthorized.cshtml" />
     <Content Include="Views\Controllers\Versions.cshtml" />
+    <Content Include="Views\Shared\_WorkerItems.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />

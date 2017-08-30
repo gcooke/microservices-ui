@@ -315,13 +315,17 @@ namespace Gateway.Web.Models.Controllers
         public string Pid { get { return Id.Split('|').Length > 1 ? Id.Split('|')[1] : string.Empty; } }
         public string Id { get; set; }
         public string Service { get; set; }
+        public string Controller { get { return Service.Split('/').Length > 1 ? Service.Split('/')[0] : string.Empty; } }
         public string Version { get { return Service.Split('/').Length > 1 ? Service.Split('/')[1] : string.Empty; } }
         public string Node { get; set; }
         public string Status { get; set; }
         public string Output { get; set; }
         public bool State
         {
-            get { return Status != "Passing"; }
+            get
+            {
+                return string.Equals(Status, "passing", StringComparison.InvariantCultureIgnoreCase);
+            }
         }
     }
 

@@ -66,19 +66,26 @@ namespace Gateway.Web.Services
 
         public WorkersModel GetWorkers()
         {
-            var serverResponse = Fetch("health/info");
+            var response = Fetch("health/info");
 
-            if (serverResponse == null || !serverResponse.Document.Descendants().Any())
-                return new WorkersModel("All");
+            if (response == null || !response.Document.Descendants().Any())
+                return new WorkersModel();
 
-            var xmlElement = serverResponse.Document.Descendants().First();
+            var xmlElement = response.Document.Descendants().First();
             var gatewayInfo = xmlElement.Deserialize<GatewayInfo>();
-            return new WorkersModel("All").BuildModel(gatewayInfo);
+            return new WorkersModel().BuildModel(gatewayInfo);
         }
 
         public WorkersModel GetWorkers(string controller)
         {
-            return new WorkersModel(controller);
+            var response = Fetch("health/info");
+
+            if (response == null || !response.Document.Descendants().Any())
+                return new WorkersModel(controller);
+
+            var xmlElement = response.Document.Descendants().First();
+            var gatewayInfo = xmlElement.Deserialize<GatewayInfo>();
+            return new WorkersModel(controller).BuildModel(gatewayInfo);
         }
 
         public IEnumerable<QueueModel> GetCurrentQueues(string controller)
