@@ -300,7 +300,6 @@
     <Compile Include="Models\Controllers\UsageModel.cs" />
     <Compile Include="Models\Controllers\VersionsModel.cs" />
     <Compile Include="Models\Controllers\Catalogue.cs" />
-    <Compile Include="Models\Controllers\WorkerModel.cs" />
     <Compile Include="Models\Controller\HistoryItem.cs" />
     <Compile Include="Models\Controller\HistoryModel.cs" />
     <Compile Include="Models\Controller\QueueModel.cs" />
@@ -362,7 +361,6 @@
     <Compile Include="Models\Security\UsersModel.cs" />
     <Compile Include="Models\User\HistoryModel.cs" />
     <Compile Include="Registrations.cs" />
-    <Compile Include="Services\ControllerInformation.cs" />
     <Compile Include="Services\GatewayService.cs" />
     <Compile Include="Services\IGatewayService.cs" />
     <Compile Include="Services\ProcessInformation.cs" />

@@ -38,7 +38,6 @@ namespace Gateway.Web.Services
         private readonly string[] _gateways;
         private readonly ILogger _logger;
         private readonly int _port = 7010;
-        private string _gatewayRequestUrlFormat;
 
         public GatewayService(
             ISystemInformation information,
@@ -51,7 +50,6 @@ namespace Gateway.Web.Services
             _logger = loggingService.GetLogger(this);
             var gateways = information.GetSetting("KnownGateways", GetDefaultKnownGateways(information.EnvironmentName));
             _gateways = gateways.Split(';');
-            _gatewayRequestUrlFormat = "https://{0}:7010/{1}";
         }
 
         public ServersModel GetServers()
@@ -80,8 +78,6 @@ namespace Gateway.Web.Services
 
         public WorkersModel GetWorkers(string controller)
         {
-            //var docs = FetchAll("health/services/{0}", controller);
-            //return GetWorkers(controller, docs);
             return new WorkersModel(controller);
         }
 
@@ -903,37 +899,6 @@ namespace Gateway.Web.Services
                     return "JHBPSM050000114";
             }
         }
-
-        //private WorkersModel PopulateProcessInfo(WorkersModel result, IEnumerable<ServerResponse> docs)
-        //{
-        //    foreach (var doc in docs)
-        //    {
-        //        if (doc.Document == null) continue;
-
-        //        foreach (var info in doc.Document.Descendants("Process"))
-        //        {
-        //            var item = info.Deserialize<ProcessInformation>();
-        //            result.Processes.Add(item);
-        //        }
-        //    }
-        //    return result;
-        //}
-
-        //private WorkersModel GetWorkers(string name, IEnumerable<ServerResponse> docs)
-        //{
-        //    var result = new WorkersModel(name);
-        //    foreach (var doc in docs)
-        //    {
-        //        if (doc.Document == null) continue;
-
-        //        foreach (var info in doc.Document.Descendants("ControllerInformation"))
-        //        {
-        //            var item = info.Deserialize<ControllerInformation>();
-        //            result.State.Add(item);
-        //        }
-        //    }
-        //    return result;
-        //}
 
         private IEnumerable<QueueModel> GetCurrentQueues(IEnumerable<ServerResponse> docs)
         {

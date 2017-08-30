@@ -37,7 +37,8 @@ namespace Gateway.Web.Models.Controller
                        .GatewayNodes
                        .Where(n => string.Equals(n.Node, worker.Node, StringComparison.InvariantCultureIgnoreCase))
                        .Select(p => p.Processes)
-                       .SelectMany(p => p.Process).Any(p => p.PID.ToString() == worker.Pid);
+                       .SelectMany(p => p.Process)
+                       .Any(p => p.PID.ToString() == worker.Pid);
 
                 if (!found)
                 {
