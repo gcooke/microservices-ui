@@ -312,10 +312,10 @@ namespace Gateway.Web.Models.Controllers
         {
         }
 
-        public string Pid { get { return (Id.Split('|').Any()) ? Id.Split('|')[1] : string.Empty; } }
+        public string Pid { get { return Id.Split('|').Length > 1 ? Id.Split('|')[1] : string.Empty; } }
         public string Id { get; set; }
         public string Service { get; set; }
-        public string Version { get { return (Service.Split('/').Any()) ? Service.Split('/')[1] : string.Empty; } }
+        public string Version { get { return Service.Split('/').Length > 1 ? Service.Split('/')[1] : string.Empty; } }
         public string Node { get; set; }
         public string Status { get; set; }
         public string Output { get; set; }
