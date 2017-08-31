@@ -1,66 +1,10 @@
-﻿@using Gateway.Web.Services
+﻿@using System.ComponentModel
+@using Gateway.Web.Models.Controller
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
     ViewBag.Title = "All Controllers";
     ViewBag.Current = "Workers";
 }
+
 @{ Html.RenderPartial("_ControllersNav"); }
-
-<div id="page-content-wrapper">
-    <div class="hero-unit">
-
-        <h3>Workers</h3>
-        <hr />
-
-        <br />
-
-        <table style="width: 100%">
-            <thead>
-                <tr>
-                    <td><b>Service</b></td>
-                    <td><b>Server</b></td>
-                    <td><b>Id</b></td>
-                    <td><b>Port</b></td>
-                </tr>
-            </thead>
-            @foreach (ControllerInformation info in Model.State)
-            {
-                foreach (var version in info.Versions)
-                {
-                    <tr>
-                        <td>@version.Service.Service</td>
-                        <td>@version.Service.Address</td>
-                        <td>@version.Service.ID</td>
-                        <td>@version.Service.Port</td>
-                    </tr>
-                }
-            }
-        </table>
-
-        <br />
-        <h3>All Controller Host Executables</h3>
-        <hr />
-
-        <br />
-
-        <table style="width: 100%">
-            <thead>
-                <tr>
-                    <td><b>PID</b></td>
-                    <td><b>Started</b></td>
-                    <td><b>Threads</b></td>
-                    <td><b>Working Set</b></td>
-                </tr>
-            </thead>
-            @foreach (ProcessInformation info in Model.Processes)
-            {
-                <tr>
-                    <td>@info.PID</td>
-                    <td>@info.StartTime</td>
-                    <td>@info.Threads</td>
-                    <td>@info.WorkingSetLabel</td>
-                </tr>
-            }
-        </table>
-    </div>
-</div>
+@{ Html.RenderPartial("_WorkerItems", (WorkersModel)@Model); }

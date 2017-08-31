@@ -1,0 +1,723 @@
+﻿<GatewayInfo xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/Gateway.Models">
+  <GatewayNodes>
+    <GatewayNode>
+      <Address>22.241.145.10</Address>
+      <Id>f171d21f-1c42-0037-45db-332dd3451ba0</Id>
+      <Node>JHBDSM020000420</Node>
+      <PerformanceCounters>
+        <CpuUsage>0.772881031</CpuUsage>
+        <MemUsage>12565</MemUsage>
+      </PerformanceCounters>
+      <Processes>
+        <Process>
+          <Process>
+            <Args>D:\Services\Redstone\Gateway\1.0.833\Bagl.Cib.MSF.ControllerHost.exe "D:\Services\Redstone\Gateway\1.0.833\Bagl.Cib.MSF.ControllerHost.exe" -controller pricing -version 1.1.861 -environment UAT -id b8e615d9-e5d1-4767-a2b7-138bfbbca14f </Args>
+            <Name>Bagl.Cib.MSF.ControllerHost</Name>
+            <PID>5904</PID>
+            <StartTime>2017-08-31T10:54:03.4139563+02:00</StartTime>
+            <WorkingSet>157032448</WorkingSet>
+          </Process>
+          <Process>
+            <Args>D:\Services\Redstone\Gateway\1.0.833\Bagl.Cib.MSF.ControllerHost.exe "D:\Services\Redstone\Gateway\1.0.833\Bagl.Cib.MSF.ControllerHost.exe" -controller marketdata -version 1.0.99 -environment UAT -id ff9e8a58-8a5e-4726-8bae-b2568f1054be </Args>
+            <Name>Bagl.Cib.MSF.ControllerHost</Name>
+            <PID>13584</PID>
+            <StartTime>2017-08-31T11:17:12.6120473+02:00</StartTime>
+            <WorkingSet>78307328</WorkingSet>
+          </Process>
+          <Process>
+            <Args>D:\Services\Redstone\Gateway\1.0.833\Bagl.Cib.MSF.ControllerHost.exe "D:\Services\Redstone\Gateway\1.0.833\Bagl.Cib.MSF.ControllerHost.exe" -controller pricing -version 1.1.861 -environment UAT -id 9cca703c-3f55-4ce2-a0ff-ee2cd227d8fd </Args>
+            <Name>Bagl.Cib.MSF.ControllerHost</Name>
+            <PID>832</PID>
+            <StartTime>2017-08-31T11:17:04.7524937+02:00</StartTime>
+            <WorkingSet>180002816</WorkingSet>
+          </Process>
+          <Process>
+            <Args>D:\Services\Redstone\Gateway\1.0.833\Bagl.Cib.MSF.ControllerHost.exe "D:\Services\Redstone\Gateway\1.0.833\Bagl.Cib.MSF.ControllerHost.exe" -controller pricing -version 1.1.861 -environment UAT -id ebc4e169-a2a8-4960-ac51-1fc6097e6c64 </Args>
+            <Name>Bagl.Cib.MSF.ControllerHost</Name>
+            <PID>13620</PID>
+            <StartTime>2017-08-31T10:54:03.3179557+02:00</StartTime>
+            <WorkingSet>160542720</WorkingSet>
+          </Process>
+        </Process>
+      </Processes>
+      <Queues i:nil="true" />
+    </GatewayNode>
+    <GatewayNode>
+      <Address>22.241.145.56</Address>
+      <Id>23385569-da25-537b-9f22-392ee2c41cc6</Id>
+      <Node>JHBDSM020000421</Node>
+      <PerformanceCounters>
+        <CpuUsage>1.08067167</CpuUsage>
+        <MemUsage>12819</MemUsage>
+      </PerformanceCounters>
+      <Processes>
+        <Process>
+          <Process>
+            <Args>D:\Services\Redstone\Gateway\1.0.833\Bagl.Cib.MSF.ControllerHost.exe "D:\Services\Redstone\Gateway\1.0.833\Bagl.Cib.MSF.ControllerHost.exe" -controller pricing -version 1.1.861 -environment UAT -id 14ea1610-2eae-40d3-9007-f27c6b4bf3f2 </Args>
+            <Name>Bagl.Cib.MSF.ControllerHost</Name>
+            <PID>3324</PID>
+            <StartTime>2017-08-31T11:17:28.9089482+02:00</StartTime>
+            <WorkingSet>137707520</WorkingSet>
+          </Process>
+          <Process>
+            <Args>D:\Services\Redstone\Gateway\1.0.833\Bagl.Cib.MSF.ControllerHost.exe "D:\Services\Redstone\Gateway\1.0.833\Bagl.Cib.MSF.ControllerHost.exe" -controller pricing -version 1.1.861 -environment UAT -id df45478d-87de-43f0-a661-456382910b1b </Args>
+            <Name>Bagl.Cib.MSF.ControllerHost</Name>
+            <PID>10808</PID>
+            <StartTime>2017-08-31T10:54:03.4454547+02:00</StartTime>
+            <WorkingSet>159301632</WorkingSet>
+          </Process>
+          <Process>
+            <Args>D:\Services\Redstone\Gateway\1.0.833\Bagl.Cib.MSF.ControllerHost.exe "D:\Services\Redstone\Gateway\1.0.833\Bagl.Cib.MSF.ControllerHost.exe" -controller pricing -version 1.1.861 -environment UAT -id 5f64cdb2-7a29-4c11-853d-b91ec7d5701f </Args>
+            <Name>Bagl.Cib.MSF.ControllerHost</Name>
+            <PID>6268</PID>
+            <StartTime>2017-08-31T10:54:03.3524546+02:00</StartTime>
+            <WorkingSet>158228480</WorkingSet>
+          </Process>
+        </Process>
+      </Processes>
+      <Queues i:nil="true" />
+    </GatewayNode>
+    <GatewayNode>
+      <Address>22.149.221.102</Address>
+      <Id>3767a041-a6ad-89fd-9c03-d351f9919743</Id>
+      <Node>jhbpsm020000757</Node>
+      <PerformanceCounters>
+        <CpuUsage>41.2569733</CpuUsage>
+        <MemUsage>3630</MemUsage>
+      </PerformanceCounters>
+      <Processes>
+        <Process>
+          <Process>
+            <Args>D:\Services\Redstone\Gateway\1.0.833\Bagl.Cib.MSF.ControllerHost.exe "D:\Services\Redstone\Gateway\1.0.833\Bagl.Cib.MSF.ControllerHost.exe" -controller pricing -version 1.1.861 -environment UAT -id 88be3e20-dba6-4421-98dc-b01ffd00627a </Args>
+            <Name>Bagl.Cib.MSF.ControllerHost</Name>
+            <PID>5868</PID>
+            <StartTime>2017-08-31T11:17:38.3318567+02:00</StartTime>
+            <WorkingSet>99991552</WorkingSet>
+          </Process>
+          <Process>
+            <Args>D:\Services\Redstone\Gateway\1.0.833\Bagl.Cib.MSF.ControllerHost.exe "D:\Services\Redstone\Gateway\1.0.833\Bagl.Cib.MSF.ControllerHost.exe" -controller riskdata -version 1.0.48 -environment UAT -id c6fad348-4bd1-4524-b61f-fbf1251f7e28 </Args>
+            <Name>Bagl.Cib.MSF.ControllerHost</Name>
+            <PID>4440</PID>
+            <StartTime>2017-08-31T09:27:07.9205493+02:00</StartTime>
+            <WorkingSet>92848128</WorkingSet>
+          </Process>
+          <Process>
+            <Args>D:\Services\Redstone\Gateway\1.0.833\Bagl.Cib.MSF.ControllerHost.exe "D:\Services\Redstone\Gateway\1.0.833\Bagl.Cib.MSF.ControllerHost.exe" -controller catalogue -version 1.1.56 -environment UAT -id 4095819d-aeda-4831-b371-3057327173ac </Args>
+            <Name>Bagl.Cib.MSF.ControllerHost</Name>
+            <PID>9136</PID>
+            <StartTime>2017-08-31T12:07:55.1886451+02:00</StartTime>
+            <WorkingSet>86761472</WorkingSet>
+          </Process>
+          <Process>
+            <Args>D:\Services\Redstone\Gateway\1.0.833\Bagl.Cib.MSF.ControllerHost.exe "D:\Services\Redstone\Gateway\1.0.833\Bagl.Cib.MSF.ControllerHost.exe" -controller agreementdata -version 1.1.10 -environment UAT -id 9e3c4fcc-bc2f-4109-a81e-03f1d5dbcad0 </Args>
+            <Name>Bagl.Cib.MSF.ControllerHost</Name>
+            <PID>11856</PID>
+            <StartTime>2017-08-31T11:09:08.4248567+02:00</StartTime>
+            <WorkingSet>82956288</WorkingSet>
+          </Process>
+          <Process>
+            <Args>D:\Services\Redstone\Gateway\1.0.833\Bagl.Cib.MSF.ControllerHost.exe "D:\Services\Redstone\Gateway\1.0.833\Bagl.Cib.MSF.ControllerHost.exe" -controller riskbatch -version 1.1.861 -environment UAT -id 97fcd186-fc26-4912-acd8-5d3d85b17aed </Args>
+            <Name>Bagl.Cib.MSF.ControllerHost</Name>
+            <PID>7540</PID>
+            <StartTime>2017-08-31T10:53:49.1386191+02:00</StartTime>
+            <WorkingSet>151498752</WorkingSet>
+          </Process>
+        </Process>
+      </Processes>
+      <Queues>
+        <ControllerQueueInfos>
+          <ControllerQueueInfo>
+            <LastDequeue>2017-08-31T11:17:47.8378567+02:00</LastDequeue>
+            <LastEnqueue>2017-08-31T11:17:47.8378567+02:00</LastEnqueue>
+            <Length>0</Length>
+            <Name>riskdata</Name>
+            <Version>1.0.48</Version>
+            <Workers>1</Workers>
+          </ControllerQueueInfo>
+          <ControllerQueueInfo>
+            <LastDequeue>2017-08-31T11:17:41.8858567+02:00</LastDequeue>
+            <LastEnqueue>2017-08-31T11:17:41.8858567+02:00</LastEnqueue>
+            <Length>0</Length>
+            <Name>marketdata</Name>
+            <Version>1.0.99</Version>
+            <Workers>2</Workers>
+          </ControllerQueueInfo>
+          <ControllerQueueInfo>
+            <LastDequeue>2017-08-31T11:17:36.7098567+02:00</LastDequeue>
+            <LastEnqueue>2017-08-31T11:17:33.8678567+02:00</LastEnqueue>
+            <Length>0</Length>
+            <Name>pricing</Name>
+            <Version>1.1.861</Version>
+            <Workers>9</Workers>
+          </ControllerQueueInfo>
+          <ControllerQueueInfo>
+            <LastDequeue>2017-08-31T10:24:50.1127339+02:00</LastDequeue>
+            <LastEnqueue>2017-08-31T10:24:47.7384965+02:00</LastEnqueue>
+            <Length>0</Length>
+            <Name>pricing</Name>
+            <Version>1.1.859</Version>
+            <Workers>0</Workers>
+          </ControllerQueueInfo>
+          <ControllerQueueInfo>
+            <LastDequeue>2017-08-31T11:09:09.7838567+02:00</LastDequeue>
+            <LastEnqueue>2017-08-31T11:09:06.4198567+02:00</LastEnqueue>
+            <Length>0</Length>
+            <Name>agreementdata</Name>
+            <Version>1.1.10</Version>
+            <Workers>1</Workers>
+          </ControllerQueueInfo>
+          <ControllerQueueInfo>
+            <LastDequeue>2017-08-31T11:16:54.5958567+02:00</LastDequeue>
+            <LastEnqueue>2017-08-31T11:16:54.5958567+02:00</LastEnqueue>
+            <Length>0</Length>
+            <Name>riskbatch</Name>
+            <Version>1.1.861</Version>
+            <Workers>1</Workers>
+          </ControllerQueueInfo>
+          <ControllerQueueInfo>
+            <LastDequeue>2017-08-31T12:07:59.0226451+02:00</LastDequeue>
+            <LastEnqueue>2017-08-31T12:07:53.1856451+02:00</LastEnqueue>
+            <Length>0</Length>
+            <Name>catalogue</Name>
+            <Version>1.1.56</Version>
+            <Workers>1</Workers>
+          </ControllerQueueInfo>
+          <ControllerQueueInfo>
+            <LastDequeue>2017-08-31T11:16:59.3448567+02:00</LastDequeue>
+            <LastEnqueue>2017-08-31T11:16:58.7048567+02:00</LastEnqueue>
+            <Length>0</Length>
+            <Name>tradestore</Name>
+            <Version>1.0.50</Version>
+            <Workers>0</Workers>
+          </ControllerQueueInfo>
+        </ControllerQueueInfos>
+        <Node>jhbpsm020000757</Node>
+      </Queues>
+    </GatewayNode>
+    <GatewayNode>
+      <Address>22.149.223.125</Address>
+      <Id>d2be239a-20c8-1d2c-1e8b-cd9689b2cfa2</Id>
+      <Node>jhbpsm020000758</Node>
+      <PerformanceCounters>
+        <CpuUsage>3.947416</CpuUsage>
+        <MemUsage>3115</MemUsage>
+      </PerformanceCounters>
+      <Processes>
+        <Process>
+          <Process>
+            <Args>D:\Services\Redstone\Gateway\1.0.833\Bagl.Cib.MSF.ControllerHost.exe "D:\Services\Redstone\Gateway\1.0.833\Bagl.Cib.MSF.ControllerHost.exe" -controller pricing -version 1.1.861 -environment UAT -id 39130882-5d71-46ec-93c2-5f1987dd2aba </Args>
+            <Name>Bagl.Cib.MSF.ControllerHost</Name>
+            <PID>19784</PID>
+            <StartTime>2017-08-31T11:17:04.6503186+02:00</StartTime>
+            <WorkingSet>166002688</WorkingSet>
+          </Process>
+          <Process>
+            <Args>D:\Services\Redstone\Gateway\1.0.833\Bagl.Cib.MSF.ControllerHost.exe "D:\Services\Redstone\Gateway\1.0.833\Bagl.Cib.MSF.ControllerHost.exe" -controller marketdata -version 1.0.99 -environment UAT -id e2521333-a9cc-4630-96c4-cdbafe924096 </Args>
+            <Name>Bagl.Cib.MSF.ControllerHost</Name>
+            <PID>38368</PID>
+            <StartTime>2017-08-31T10:54:08.7237397+02:00</StartTime>
+            <WorkingSet>97755136</WorkingSet>
+          </Process>
+          <Process>
+            <Args>D:\Services\Redstone\Gateway\1.0.833\Bagl.Cib.MSF.ControllerHost.exe "D:\Services\Redstone\Gateway\1.0.833\Bagl.Cib.MSF.ControllerHost.exe" -controller security -version 1.0.52 -environment UAT -id c97c4d9b-7817-4823-9775-8e5cc911418a </Args>
+            <Name>Bagl.Cib.MSF.ControllerHost</Name>
+            <PID>27012</PID>
+            <StartTime>2017-08-31T09:09:29.9379239+02:00</StartTime>
+            <WorkingSet>101830656</WorkingSet>
+          </Process>
+          <Process>
+            <Args>D:\Services\Redstone\Gateway\1.0.833\Bagl.Cib.MSF.ControllerHost.exe "D:\Services\Redstone\Gateway\1.0.833\Bagl.Cib.MSF.ControllerHost.exe" -controller pricing -version 1.1.861 -environment UAT -id bd5bf31a-ac5c-44cf-bf93-a1e048d43653 </Args>
+            <Name>Bagl.Cib.MSF.ControllerHost</Name>
+            <PID>21424</PID>
+            <StartTime>2017-08-31T10:54:03.3091983+02:00</StartTime>
+            <WorkingSet>151588864</WorkingSet>
+          </Process>
+        </Process>
+      </Processes>
+      <Queues>
+        <ControllerQueueInfos>
+          <ControllerQueueInfo>
+            <LastDequeue>2017-08-31T12:07:48.8247056+02:00</LastDequeue>
+            <LastEnqueue>2017-08-31T12:07:48.8237055+02:00</LastEnqueue>
+            <Length>0</Length>
+            <Name>security</Name>
+            <Version>1.0.52</Version>
+            <Workers>1</Workers>
+          </ControllerQueueInfo>
+        </ControllerQueueInfos>
+        <Node>jhbpsm020000758</Node>
+      </Queues>
+    </GatewayNode>
+  </GatewayNodes>
+  <Services xmlns:d2p1="http://schemas.datacontract.org/2004/07/Gateway.Services.Registry">
+    <d2p1:ControllerInformation>
+      <d2p1:Name>riskbatch</d2p1:Name>
+      <d2p1:Versions xmlns:d4p1="http://schemas.datacontract.org/2004/07/CondenserDotNet.Core.DataContracts">
+        <d4p1:InformationServiceSet>
+          <d4p1:Checks>
+            <d4p1:InformationCheck>
+              <d4p1:CheckID>serfHealth</d4p1:CheckID>
+              <d4p1:Name>Serf Health Status</d4p1:Name>
+              <d4p1:Output>Agent alive and reachable</d4p1:Output>
+              <d4p1:Status>passing</d4p1:Status>
+            </d4p1:InformationCheck>
+            <d4p1:InformationCheck>
+              <d4p1:CheckID>service:riskbatch/1.1.861/JHBPSM020000757|7540</d4p1:CheckID>
+              <d4p1:Name>service:riskbatch/1.1.861/JHBPSM020000757|7540</d4p1:Name>
+              <d4p1:Output></d4p1:Output>
+              <d4p1:Status>passing</d4p1:Status>
+            </d4p1:InformationCheck>
+          </d4p1:Checks>
+          <d4p1:Node>
+            <d4p1:Address>22.149.221.102</d4p1:Address>
+            <d4p1:Node>jhbpsm020000757</d4p1:Node>
+          </d4p1:Node>
+          <d4p1:Service>
+            <d4p1:Address>JHBPSM020000757</d4p1:Address>
+            <d4p1:ID>riskbatch/1.1.861/JHBPSM020000757|7540</d4p1:ID>
+            <d4p1:Port>7111</d4p1:Port>
+            <d4p1:Service>riskbatch/1.1.861</d4p1:Service>
+            <d4p1:Tags xmlns:d7p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+              <d7p1:string>urlprefix-97fcd186-fc26-4912-acd8-5d3d85b17aed</d7p1:string>
+            </d4p1:Tags>
+          </d4p1:Service>
+        </d4p1:InformationServiceSet>
+      </d2p1:Versions>
+    </d2p1:ControllerInformation>
+    <d2p1:ControllerInformation>
+      <d2p1:Name>tradestore</d2p1:Name>
+      <d2p1:Versions xmlns:d4p1="http://schemas.datacontract.org/2004/07/CondenserDotNet.Core.DataContracts" />
+    </d2p1:ControllerInformation>
+    <d2p1:ControllerInformation>
+      <d2p1:Name>agreementdata</d2p1:Name>
+      <d2p1:Versions xmlns:d4p1="http://schemas.datacontract.org/2004/07/CondenserDotNet.Core.DataContracts">
+        <d4p1:InformationServiceSet>
+          <d4p1:Checks>
+            <d4p1:InformationCheck>
+              <d4p1:CheckID>serfHealth</d4p1:CheckID>
+              <d4p1:Name>Serf Health Status</d4p1:Name>
+              <d4p1:Output>Agent alive and reachable</d4p1:Output>
+              <d4p1:Status>passing</d4p1:Status>
+            </d4p1:InformationCheck>
+            <d4p1:InformationCheck>
+              <d4p1:CheckID>service:agreementdata/1.1.10/JHBPSM020000757|11856</d4p1:CheckID>
+              <d4p1:Name>service:agreementdata/1.1.10/JHBPSM020000757|11856</d4p1:Name>
+              <d4p1:Output></d4p1:Output>
+              <d4p1:Status>passing</d4p1:Status>
+            </d4p1:InformationCheck>
+          </d4p1:Checks>
+          <d4p1:Node>
+            <d4p1:Address>22.149.221.102</d4p1:Address>
+            <d4p1:Node>jhbpsm020000757</d4p1:Node>
+          </d4p1:Node>
+          <d4p1:Service>
+            <d4p1:Address>JHBPSM020000757</d4p1:Address>
+            <d4p1:ID>agreementdata/1.1.10/JHBPSM020000757|11856</d4p1:ID>
+            <d4p1:Port>7111</d4p1:Port>
+            <d4p1:Service>agreementdata/1.1.10</d4p1:Service>
+            <d4p1:Tags xmlns:d7p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+              <d7p1:string>urlprefix-9e3c4fcc-bc2f-4109-a81e-03f1d5dbcad0</d7p1:string>
+            </d4p1:Tags>
+          </d4p1:Service>
+        </d4p1:InformationServiceSet>
+      </d2p1:Versions>
+    </d2p1:ControllerInformation>
+    <d2p1:ControllerInformation>
+      <d2p1:Name>catalogue</d2p1:Name>
+      <d2p1:Versions xmlns:d4p1="http://schemas.datacontract.org/2004/07/CondenserDotNet.Core.DataContracts">
+        <d4p1:InformationServiceSet>
+          <d4p1:Checks>
+            <d4p1:InformationCheck>
+              <d4p1:CheckID>serfHealth</d4p1:CheckID>
+              <d4p1:Name>Serf Health Status</d4p1:Name>
+              <d4p1:Output>Agent alive and reachable</d4p1:Output>
+              <d4p1:Status>passing</d4p1:Status>
+            </d4p1:InformationCheck>
+            <d4p1:InformationCheck>
+              <d4p1:CheckID>service:catalogue/1.1.56/JHBPSM020000757|9136</d4p1:CheckID>
+              <d4p1:Name>service:catalogue/1.1.56/JHBPSM020000757|9136</d4p1:Name>
+              <d4p1:Output></d4p1:Output>
+              <d4p1:Status>passing</d4p1:Status>
+            </d4p1:InformationCheck>
+          </d4p1:Checks>
+          <d4p1:Node>
+            <d4p1:Address>22.149.221.102</d4p1:Address>
+            <d4p1:Node>jhbpsm020000757</d4p1:Node>
+          </d4p1:Node>
+          <d4p1:Service>
+            <d4p1:Address>JHBPSM020000757</d4p1:Address>
+            <d4p1:ID>catalogue/1.1.56/JHBPSM020000757|9136</d4p1:ID>
+            <d4p1:Port>7111</d4p1:Port>
+            <d4p1:Service>catalogue/1.1.56</d4p1:Service>
+            <d4p1:Tags xmlns:d7p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+              <d7p1:string>urlprefix-4095819d-aeda-4831-b371-3057327173ac</d7p1:string>
+            </d4p1:Tags>
+          </d4p1:Service>
+        </d4p1:InformationServiceSet>
+      </d2p1:Versions>
+    </d2p1:ControllerInformation>
+    <d2p1:ControllerInformation>
+      <d2p1:Name>riskdata</d2p1:Name>
+      <d2p1:Versions xmlns:d4p1="http://schemas.datacontract.org/2004/07/CondenserDotNet.Core.DataContracts">
+        <d4p1:InformationServiceSet>
+          <d4p1:Checks>
+            <d4p1:InformationCheck>
+              <d4p1:CheckID>serfHealth</d4p1:CheckID>
+              <d4p1:Name>Serf Health Status</d4p1:Name>
+              <d4p1:Output>Agent alive and reachable</d4p1:Output>
+              <d4p1:Status>passing</d4p1:Status>
+            </d4p1:InformationCheck>
+            <d4p1:InformationCheck>
+              <d4p1:CheckID>service:riskdata/1.0.48/JHBPSM020000757|4440</d4p1:CheckID>
+              <d4p1:Name>service:riskdata/1.0.48/JHBPSM020000757|4440</d4p1:Name>
+              <d4p1:Output></d4p1:Output>
+              <d4p1:Status>passing</d4p1:Status>
+            </d4p1:InformationCheck>
+          </d4p1:Checks>
+          <d4p1:Node>
+            <d4p1:Address>22.149.221.102</d4p1:Address>
+            <d4p1:Node>jhbpsm020000757</d4p1:Node>
+          </d4p1:Node>
+          <d4p1:Service>
+            <d4p1:Address>JHBPSM020000757</d4p1:Address>
+            <d4p1:ID>riskdata/1.0.48/JHBPSM020000757|4440</d4p1:ID>
+            <d4p1:Port>7111</d4p1:Port>
+            <d4p1:Service>riskdata/1.0.48</d4p1:Service>
+            <d4p1:Tags xmlns:d7p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+              <d7p1:string>urlprefix-c6fad348-4bd1-4524-b61f-fbf1251f7e28</d7p1:string>
+            </d4p1:Tags>
+          </d4p1:Service>
+        </d4p1:InformationServiceSet>
+      </d2p1:Versions>
+    </d2p1:ControllerInformation>
+    <d2p1:ControllerInformation>
+      <d2p1:Name>marketdata</d2p1:Name>
+      <d2p1:Versions xmlns:d4p1="http://schemas.datacontract.org/2004/07/CondenserDotNet.Core.DataContracts">
+        <d4p1:InformationServiceSet>
+          <d4p1:Checks>
+            <d4p1:InformationCheck>
+              <d4p1:CheckID>serfHealth</d4p1:CheckID>
+              <d4p1:Name>Serf Health Status</d4p1:Name>
+              <d4p1:Output>Agent alive and reachable</d4p1:Output>
+              <d4p1:Status>passing</d4p1:Status>
+            </d4p1:InformationCheck>
+            <d4p1:InformationCheck>
+              <d4p1:CheckID>service:marketdata/1.0.99/JHBDSM020000420|13584</d4p1:CheckID>
+              <d4p1:Name>service:marketdata/1.0.99/JHBDSM020000420|13584</d4p1:Name>
+              <d4p1:Output></d4p1:Output>
+              <d4p1:Status>passing</d4p1:Status>
+            </d4p1:InformationCheck>
+          </d4p1:Checks>
+          <d4p1:Node>
+            <d4p1:Address>22.241.145.10</d4p1:Address>
+            <d4p1:Node>JHBDSM020000420</d4p1:Node>
+          </d4p1:Node>
+          <d4p1:Service>
+            <d4p1:Address>JHBDSM020000420</d4p1:Address>
+            <d4p1:ID>marketdata/1.0.99/JHBDSM020000420|13584</d4p1:ID>
+            <d4p1:Port>7111</d4p1:Port>
+            <d4p1:Service>marketdata/1.0.99</d4p1:Service>
+            <d4p1:Tags xmlns:d7p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+              <d7p1:string>urlprefix-ff9e8a58-8a5e-4726-8bae-b2568f1054be</d7p1:string>
+            </d4p1:Tags>
+          </d4p1:Service>
+        </d4p1:InformationServiceSet>
+        <d4p1:InformationServiceSet>
+          <d4p1:Checks>
+            <d4p1:InformationCheck>
+              <d4p1:CheckID>serfHealth</d4p1:CheckID>
+              <d4p1:Name>Serf Health Status</d4p1:Name>
+              <d4p1:Output>Agent alive and reachable</d4p1:Output>
+              <d4p1:Status>passing</d4p1:Status>
+            </d4p1:InformationCheck>
+            <d4p1:InformationCheck>
+              <d4p1:CheckID>service:marketdata/1.0.99/JHBPSM020000758|38368</d4p1:CheckID>
+              <d4p1:Name>service:marketdata/1.0.99/JHBPSM020000758|38368</d4p1:Name>
+              <d4p1:Output></d4p1:Output>
+              <d4p1:Status>passing</d4p1:Status>
+            </d4p1:InformationCheck>
+          </d4p1:Checks>
+          <d4p1:Node>
+            <d4p1:Address>22.149.223.125</d4p1:Address>
+            <d4p1:Node>jhbpsm020000758</d4p1:Node>
+          </d4p1:Node>
+          <d4p1:Service>
+            <d4p1:Address>JHBPSM020000758</d4p1:Address>
+            <d4p1:ID>marketdata/1.0.99/JHBPSM020000758|38368</d4p1:ID>
+            <d4p1:Port>7111</d4p1:Port>
+            <d4p1:Service>marketdata/1.0.99</d4p1:Service>
+            <d4p1:Tags xmlns:d7p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+              <d7p1:string>urlprefix-e2521333-a9cc-4630-96c4-cdbafe924096</d7p1:string>
+            </d4p1:Tags>
+          </d4p1:Service>
+        </d4p1:InformationServiceSet>
+      </d2p1:Versions>
+    </d2p1:ControllerInformation>
+    <d2p1:ControllerInformation>
+      <d2p1:Name>pricing</d2p1:Name>
+      <d2p1:Versions xmlns:d4p1="http://schemas.datacontract.org/2004/07/CondenserDotNet.Core.DataContracts">
+        <d4p1:InformationServiceSet>
+          <d4p1:Checks>
+            <d4p1:InformationCheck>
+              <d4p1:CheckID>serfHealth</d4p1:CheckID>
+              <d4p1:Name>Serf Health Status</d4p1:Name>
+              <d4p1:Output>Agent alive and reachable</d4p1:Output>
+              <d4p1:Status>passing</d4p1:Status>
+            </d4p1:InformationCheck>
+            <d4p1:InformationCheck>
+              <d4p1:CheckID>service:pricing/1.1.861/JHBDSM020000420|13620</d4p1:CheckID>
+              <d4p1:Name>service:pricing/1.1.861/JHBDSM020000420|13620</d4p1:Name>
+              <d4p1:Output></d4p1:Output>
+              <d4p1:Status>passing</d4p1:Status>
+            </d4p1:InformationCheck>
+          </d4p1:Checks>
+          <d4p1:Node>
+            <d4p1:Address>22.241.145.10</d4p1:Address>
+            <d4p1:Node>JHBDSM020000420</d4p1:Node>
+          </d4p1:Node>
+          <d4p1:Service>
+            <d4p1:Address>JHBDSM020000420</d4p1:Address>
+            <d4p1:ID>pricing/1.1.861/JHBDSM020000420|13620</d4p1:ID>
+            <d4p1:Port>7111</d4p1:Port>
+            <d4p1:Service>pricing/1.1.861</d4p1:Service>
+            <d4p1:Tags xmlns:d7p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+              <d7p1:string>urlprefix-ebc4e169-a2a8-4960-ac51-1fc6097e6c64</d7p1:string>
+            </d4p1:Tags>
+          </d4p1:Service>
+        </d4p1:InformationServiceSet>
+        <d4p1:InformationServiceSet>
+          <d4p1:Checks>
+            <d4p1:InformationCheck>
+              <d4p1:CheckID>serfHealth</d4p1:CheckID>
+              <d4p1:Name>Serf Health Status</d4p1:Name>
+              <d4p1:Output>Agent alive and reachable</d4p1:Output>
+              <d4p1:Status>passing</d4p1:Status>
+            </d4p1:InformationCheck>
+            <d4p1:InformationCheck>
+              <d4p1:CheckID>service:pricing/1.1.861/JHBDSM020000420|5904</d4p1:CheckID>
+              <d4p1:Name>service:pricing/1.1.861/JHBDSM020000420|5904</d4p1:Name>
+              <d4p1:Output></d4p1:Output>
+              <d4p1:Status>passing</d4p1:Status>
+            </d4p1:InformationCheck>
+          </d4p1:Checks>
+          <d4p1:Node>
+            <d4p1:Address>22.241.145.10</d4p1:Address>
+            <d4p1:Node>JHBDSM020000420</d4p1:Node>
+          </d4p1:Node>
+          <d4p1:Service>
+            <d4p1:Address>JHBDSM020000420</d4p1:Address>
+            <d4p1:ID>pricing/1.1.861/JHBDSM020000420|5904</d4p1:ID>
+            <d4p1:Port>7111</d4p1:Port>
+            <d4p1:Service>pricing/1.1.861</d4p1:Service>
+            <d4p1:Tags xmlns:d7p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+              <d7p1:string>urlprefix-b8e615d9-e5d1-4767-a2b7-138bfbbca14f</d7p1:string>
+            </d4p1:Tags>
+          </d4p1:Service>
+        </d4p1:InformationServiceSet>
+        <d4p1:InformationServiceSet>
+          <d4p1:Checks>
+            <d4p1:InformationCheck>
+              <d4p1:CheckID>serfHealth</d4p1:CheckID>
+              <d4p1:Name>Serf Health Status</d4p1:Name>
+              <d4p1:Output>Agent alive and reachable</d4p1:Output>
+              <d4p1:Status>passing</d4p1:Status>
+            </d4p1:InformationCheck>
+            <d4p1:InformationCheck>
+              <d4p1:CheckID>service:pricing/1.1.861/JHBDSM020000420|832</d4p1:CheckID>
+              <d4p1:Name>service:pricing/1.1.861/JHBDSM020000420|832</d4p1:Name>
+              <d4p1:Output></d4p1:Output>
+              <d4p1:Status>passing</d4p1:Status>
+            </d4p1:InformationCheck>
+          </d4p1:Checks>
+          <d4p1:Node>
+            <d4p1:Address>22.241.145.10</d4p1:Address>
+            <d4p1:Node>JHBDSM020000420</d4p1:Node>
+          </d4p1:Node>
+          <d4p1:Service>
+            <d4p1:Address>JHBDSM020000420</d4p1:Address>
+            <d4p1:ID>pricing/1.1.861/JHBDSM020000420|832</d4p1:ID>
+            <d4p1:Port>7111</d4p1:Port>
+            <d4p1:Service>pricing/1.1.861</d4p1:Service>
+            <d4p1:Tags xmlns:d7p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+              <d7p1:string>urlprefix-9cca703c-3f55-4ce2-a0ff-ee2cd227d8fd</d7p1:string>
+            </d4p1:Tags>
+          </d4p1:Service>
+        </d4p1:InformationServiceSet>
+        <d4p1:InformationServiceSet>
+          <d4p1:Checks>
+            <d4p1:InformationCheck>
+              <d4p1:CheckID>serfHealth</d4p1:CheckID>
+              <d4p1:Name>Serf Health Status</d4p1:Name>
+              <d4p1:Output>Agent alive and reachable</d4p1:Output>
+              <d4p1:Status>passing</d4p1:Status>
+            </d4p1:InformationCheck>
+            <d4p1:InformationCheck>
+              <d4p1:CheckID>service:pricing/1.1.861/JHBDSM020000421|10808</d4p1:CheckID>
+              <d4p1:Name>service:pricing/1.1.861/JHBDSM020000421|10808</d4p1:Name>
+              <d4p1:Output></d4p1:Output>
+              <d4p1:Status>passing</d4p1:Status>
+            </d4p1:InformationCheck>
+          </d4p1:Checks>
+          <d4p1:Node>
+            <d4p1:Address>22.241.145.56</d4p1:Address>
+            <d4p1:Node>JHBDSM020000421</d4p1:Node>
+          </d4p1:Node>
+          <d4p1:Service>
+            <d4p1:Address>JHBDSM020000421</d4p1:Address>
+            <d4p1:ID>pricing/1.1.861/JHBDSM020000421|10808</d4p1:ID>
+            <d4p1:Port>7111</d4p1:Port>
+            <d4p1:Service>pricing/1.1.861</d4p1:Service>
+            <d4p1:Tags xmlns:d7p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+              <d7p1:string>urlprefix-df45478d-87de-43f0-a661-456382910b1b</d7p1:string>
+            </d4p1:Tags>
+          </d4p1:Service>
+        </d4p1:InformationServiceSet>
+        <d4p1:InformationServiceSet>
+          <d4p1:Checks>
+            <d4p1:InformationCheck>
+              <d4p1:CheckID>serfHealth</d4p1:CheckID>
+              <d4p1:Name>Serf Health Status</d4p1:Name>
+              <d4p1:Output>Agent alive and reachable</d4p1:Output>
+              <d4p1:Status>passing</d4p1:Status>
+            </d4p1:InformationCheck>
+            <d4p1:InformationCheck>
+              <d4p1:CheckID>service:pricing/1.1.861/JHBDSM020000421|3324</d4p1:CheckID>
+              <d4p1:Name>service:pricing/1.1.861/JHBDSM020000421|3324</d4p1:Name>
+              <d4p1:Output></d4p1:Output>
+              <d4p1:Status>passing</d4p1:Status>
+            </d4p1:InformationCheck>
+          </d4p1:Checks>
+          <d4p1:Node>
+            <d4p1:Address>22.241.145.56</d4p1:Address>
+            <d4p1:Node>JHBDSM020000421</d4p1:Node>
+          </d4p1:Node>
+          <d4p1:Service>
+            <d4p1:Address>JHBDSM020000421</d4p1:Address>
+            <d4p1:ID>pricing/1.1.861/JHBDSM020000421|3324</d4p1:ID>
+            <d4p1:Port>7111</d4p1:Port>
+            <d4p1:Service>pricing/1.1.861</d4p1:Service>
+            <d4p1:Tags xmlns:d7p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+              <d7p1:string>urlprefix-14ea1610-2eae-40d3-9007-f27c6b4bf3f2</d7p1:string>
+            </d4p1:Tags>
+          </d4p1:Service>
+        </d4p1:InformationServiceSet>
+        <d4p1:InformationServiceSet>
+          <d4p1:Checks>
+            <d4p1:InformationCheck>
+              <d4p1:CheckID>serfHealth</d4p1:CheckID>
+              <d4p1:Name>Serf Health Status</d4p1:Name>
+              <d4p1:Output>Agent alive and reachable</d4p1:Output>
+              <d4p1:Status>passing</d4p1:Status>
+            </d4p1:InformationCheck>
+            <d4p1:InformationCheck>
+              <d4p1:CheckID>service:pricing/1.1.861/JHBDSM020000421|6268</d4p1:CheckID>
+              <d4p1:Name>service:pricing/1.1.861/JHBDSM020000421|6268</d4p1:Name>
+              <d4p1:Output></d4p1:Output>
+              <d4p1:Status>passing</d4p1:Status>
+            </d4p1:InformationCheck>
+          </d4p1:Checks>
+          <d4p1:Node>
+            <d4p1:Address>22.241.145.56</d4p1:Address>
+            <d4p1:Node>JHBDSM020000421</d4p1:Node>
+          </d4p1:Node>
+          <d4p1:Service>
+            <d4p1:Address>JHBDSM020000421</d4p1:Address>
+            <d4p1:ID>pricing/1.1.861/JHBDSM020000421|6268</d4p1:ID>
+            <d4p1:Port>7111</d4p1:Port>
+            <d4p1:Service>pricing/1.1.861</d4p1:Service>
+            <d4p1:Tags xmlns:d7p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+              <d7p1:string>urlprefix-5f64cdb2-7a29-4c11-853d-b91ec7d5701f</d7p1:string>
+            </d4p1:Tags>
+          </d4p1:Service>
+        </d4p1:InformationServiceSet>
+        <d4p1:InformationServiceSet>
+          <d4p1:Checks>
+            <d4p1:InformationCheck>
+              <d4p1:CheckID>serfHealth</d4p1:CheckID>
+              <d4p1:Name>Serf Health Status</d4p1:Name>
+              <d4p1:Output>Agent alive and reachable</d4p1:Output>
+              <d4p1:Status>passing</d4p1:Status>
+            </d4p1:InformationCheck>
+            <d4p1:InformationCheck>
+              <d4p1:CheckID>service:pricing/1.1.861/JHBPSM020000757|5868</d4p1:CheckID>
+              <d4p1:Name>service:pricing/1.1.861/JHBPSM020000757|5868</d4p1:Name>
+              <d4p1:Output></d4p1:Output>
+              <d4p1:Status>passing</d4p1:Status>
+            </d4p1:InformationCheck>
+          </d4p1:Checks>
+          <d4p1:Node>
+            <d4p1:Address>22.149.221.102</d4p1:Address>
+            <d4p1:Node>jhbpsm020000757</d4p1:Node>
+          </d4p1:Node>
+          <d4p1:Service>
+            <d4p1:Address>JHBPSM020000757</d4p1:Address>
+            <d4p1:ID>pricing/1.1.861/JHBPSM020000757|5868</d4p1:ID>
+            <d4p1:Port>7111</d4p1:Port>
+            <d4p1:Service>pricing/1.1.861</d4p1:Service>
+            <d4p1:Tags xmlns:d7p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+              <d7p1:string>urlprefix-88be3e20-dba6-4421-98dc-b01ffd00627a</d7p1:string>
+            </d4p1:Tags>
+          </d4p1:Service>
+        </d4p1:InformationServiceSet>
+        <d4p1:InformationServiceSet>
+          <d4p1:Checks>
+            <d4p1:InformationCheck>
+              <d4p1:CheckID>serfHealth</d4p1:CheckID>
+              <d4p1:Name>Serf Health Status</d4p1:Name>
+              <d4p1:Output>Agent alive and reachable</d4p1:Output>
+              <d4p1:Status>passing</d4p1:Status>
+            </d4p1:InformationCheck>
+            <d4p1:InformationCheck>
+              <d4p1:CheckID>service:pricing/1.1.861/JHBPSM020000758|19784</d4p1:CheckID>
+              <d4p1:Name>service:pricing/1.1.861/JHBPSM020000758|19784</d4p1:Name>
+              <d4p1:Output></d4p1:Output>
+              <d4p1:Status>passing</d4p1:Status>
+            </d4p1:InformationCheck>
+          </d4p1:Checks>
+          <d4p1:Node>
+            <d4p1:Address>22.149.223.125</d4p1:Address>
+            <d4p1:Node>jhbpsm020000758</d4p1:Node>
+          </d4p1:Node>
+          <d4p1:Service>
+            <d4p1:Address>JHBPSM020000758</d4p1:Address>
+            <d4p1:ID>pricing/1.1.861/JHBPSM020000758|19784</d4p1:ID>
+            <d4p1:Port>7111</d4p1:Port>
+            <d4p1:Service>pricing/1.1.861</d4p1:Service>
+            <d4p1:Tags xmlns:d7p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+              <d7p1:string>urlprefix-39130882-5d71-46ec-93c2-5f1987dd2aba</d7p1:string>
+            </d4p1:Tags>
+          </d4p1:Service>
+        </d4p1:InformationServiceSet>
+        <d4p1:InformationServiceSet>
+          <d4p1:Checks>
+            <d4p1:InformationCheck>
+              <d4p1:CheckID>serfHealth</d4p1:CheckID>
+              <d4p1:Name>Serf Health Status</d4p1:Name>
+              <d4p1:Output>Agent alive and reachable</d4p1:Output>
+              <d4p1:Status>passing</d4p1:Status>
+            </d4p1:InformationCheck>
+            <d4p1:InformationCheck>
+              <d4p1:CheckID>service:pricing/1.1.861/JHBPSM020000758|21424</d4p1:CheckID>
+              <d4p1:Name>service:pricing/1.1.861/JHBPSM020000758|21424</d4p1:Name>
+              <d4p1:Output></d4p1:Output>
+              <d4p1:Status>passing</d4p1:Status>
+            </d4p1:InformationCheck>
+          </d4p1:Checks>
+          <d4p1:Node>
+            <d4p1:Address>22.149.223.125</d4p1:Address>
+            <d4p1:Node>jhbpsm020000758</d4p1:Node>
+          </d4p1:Node>
+          <d4p1:Service>
+            <d4p1:Address>JHBPSM020000758</d4p1:Address>
+            <d4p1:ID>pricing/1.1.861/JHBPSM020000758|21424</d4p1:ID>
+            <d4p1:Port>7111</d4p1:Port>
+            <d4p1:Service>pricing/1.1.861</d4p1:Service>
+            <d4p1:Tags xmlns:d7p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+              <d7p1:string>urlprefix-bd5bf31a-ac5c-44cf-bf93-a1e048d43653</d7p1:string>
+            </d4p1:Tags>
+          </d4p1:Service>
+        </d4p1:InformationServiceSet>
+      </d2p1:Versions>
+    </d2p1:ControllerInformation>
+  </Services>
+</GatewayInfo>

@@ -1,4 +1,5 @@
 ﻿@using Gateway.Web.Models.Controller
+@using Gateway.Web.Models.Controllers
 @using Gateway.Web.Services
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
@@ -6,36 +7,4 @@
     ViewBag.Current = "Workers";
 }
 @{ Html.RenderPartial("_ControllerNav", (BaseControllerModel)@Model); }
-
-<div id="page-content-wrapper">
-    <div class="hero-unit">
-
-        <h3>Workers</h3>
-
-        <br />
-
-        <table style="width: 100%">
-            <thead>
-                <tr>
-                    <td><b>Service</b></td>
-                    <td><b>Server</b></td>
-                    <td><b>Id</b></td>
-                    <td><b>Port</b></td>
-                </tr>
-            </thead>
-            @foreach (ControllerInformation info in Model.State)
-            {
-                foreach (var version in info.Versions)
-                {
-                    <tr>
-                        <td>@version.Service.Service</td>
-                        <td>@version.Service.Address</td>
-                        <td>@version.Service.ID</td>
-                        <td>@version.Service.Port</td>
-                    </tr>
-                }
-            }
-        </table>
-
-    </div>
-</div>
+@{ Html.RenderPartial("_WorkerItems", (WorkersModel)@Model); }

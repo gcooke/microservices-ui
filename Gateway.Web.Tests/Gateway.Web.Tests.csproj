@@ -125,8 +125,8 @@
   <ItemGroup>
     <Compile Include="Extensions\TimeSpanTests.cs" />
     <Compile Include="Models\Controllers\CatalogueTest.cs" />
+    <Compile Include="Models\Controllers\GatewayInfoTests.cs" />
     <Compile Include="Models\Controllers\QueueModelTest.cs" />
-    <Compile Include="Models\Controllers\ServersTest.cs" />
     <Compile Include="Models\Request\TimingTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -164,12 +164,6 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\RichServersModelPayload.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\ServersModelPayload.xml" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Resources\UserPortfolioPayload.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -186,6 +180,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\QueueModelPayload.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\GatewayInfoPayload.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

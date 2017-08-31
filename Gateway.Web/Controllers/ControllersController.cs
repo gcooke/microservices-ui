@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Bagl.Cib.MIT.IoC;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
 using Gateway.Web.Authorization;
 using Gateway.Web.Database;
@@ -16,6 +17,7 @@ using Controller = System.Web.Mvc.Controller;
 using DashboardModel = Gateway.Web.Models.Controllers.DashboardModel;
 using HistoryModel = Gateway.Web.Models.Controllers.HistoryModel;
 using QueuesModel = Gateway.Web.Models.Controllers.QueuesModel;
+using VersionsModel = Gateway.Web.Models.Controllers.VersionsModel;
 
 namespace Gateway.Web.Controllers
 {
@@ -25,8 +27,10 @@ namespace Gateway.Web.Controllers
         private readonly IGatewayDatabaseService _dataService;
         private readonly IGatewayService _gateway;
         private readonly IGatewayRestService _gatewayRestService;
+        private readonly int _refreshPeriodInSeconds;
 
         public ControllersController(
+            ISystemInformation information,
             IGatewayDatabaseService dataService,
             IGatewayService gateway,
             IGatewayRestService gatewayRestService)
@@ -34,6 +38,12 @@ namespace Gateway.Web.Controllers
             _dataService = dataService;
             _gateway = gateway;
             _gatewayRestService = gatewayRestService;
+
+            var refreshPeriodInSeconds = information.GetSetting("ControllerActionRefresh");
+            if (!int.TryParse(refreshPeriodInSeconds, out _refreshPeriodInSeconds))
+            {
+                _refreshPeriodInSeconds = 60;
+            }
         }
 
         public ActionResult Dashboard()
@@ -47,13 +57,9 @@ namespace Gateway.Web.Controllers
 
         public ActionResult Servers()
         {
-            return View();
-        }
-
-        public ActionResult ServerInfo()
-        {
+            Response.AddHeader("Refresh", _refreshPeriodInSeconds.ToString());
             var model = _gateway.GetServers();
-            return PartialView("ServerInfo", model);
+            return View(model);
         }
 
         public ActionResult Aliases()
@@ -94,6 +100,7 @@ namespace Gateway.Web.Controllers
 
         public ActionResult Workers()
         {
+            Response.AddHeader("Refresh", _refreshPeriodInSeconds.ToString());
             var model = _gateway.GetWorkers();
             return View(model);
         }
@@ -143,9 +150,10 @@ namespace Gateway.Web.Controllers
 
             return View(model);
         }
+
         public ActionResult Versions()
         {
-            var model = new Models.Controllers.VersionsModel();
+            var model = new VersionsModel();
             return View(model);
         }
 
@@ -153,19 +161,20 @@ namespace Gateway.Web.Controllers
         {
             var response = _gatewayRestService.Get("Security", "addins/versions", CancellationToken.None);
 
-            return (response.Successfull)
+            return response.Successfull
                 ? response.Content.GetPayloadAsXElement().Deserialize<IEnumerable<AddInVersionModel>>()
                 : null;
         }
 
         [HttpPost]
         [RoleBasedAuthorize(Roles = "Security.Modify")]
-        public ActionResult Versions(Models.Controllers.VersionsModel model)
+        public ActionResult Versions(VersionsModel model)
         {
-            var response = _gatewayRestService.Delete("Catalogue", "versions/cleanup", string.Empty, CancellationToken.None);
+            var response = _gatewayRestService.Delete("Catalogue", "versions/cleanup", string.Empty,
+                CancellationToken.None);
 
             model.Success = response.Successfull;
-            model.Log = response.Content.Message.Split(new[] { '\n' }).ToList();
+            model.Log = response.Content.Message.Split('\n').ToList();
             model.Loading = false;
             model.Loaded = true;
             return View(model);
@@ -200,6 +209,5 @@ namespace Gateway.Web.Controllers
                 Progress = HttpContext.Application["task" + id]
             }, JsonRequestBehavior.AllowGet);
         }
-
     }
 }

@@ -17,7 +17,7 @@
     <AssemblyName>Gateway.Web</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>true</UseIISExpress>
+    <UseIISExpress>false</UseIISExpress>
     <IISExpressSSLPort>42001</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
@@ -361,7 +361,6 @@
     <Compile Include="Models\Security\UsersModel.cs" />
     <Compile Include="Models\User\HistoryModel.cs" />
     <Compile Include="Registrations.cs" />
-    <Compile Include="Services\ControllerInformation.cs" />
     <Compile Include="Services\GatewayService.cs" />
     <Compile Include="Services\IGatewayService.cs" />
     <Compile Include="Services\ProcessInformation.cs" />
@@ -503,10 +502,10 @@
     <Content Include="Views\Security\Permissions.cshtml" />
     <Content Include="Views\Security\Reports.cshtml" />
     <Content Include="Views\Security\_SecurityNav.cshtml" />
-    <Content Include="Views\Controllers\ServerInfo.cshtml" />
     <Content Include="Views\Controllers\UsageReport.cshtml" />
     <Content Include="Views\Error\Unauthorized.cshtml" />
     <Content Include="Views\Controllers\Versions.cshtml" />
+    <Content Include="Views\Shared\_WorkerItems.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />

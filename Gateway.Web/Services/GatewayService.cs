@@ -38,7 +38,6 @@ namespace Gateway.Web.Services
         private readonly string[] _gateways;
         private readonly ILogger _logger;
         private readonly int _port = 7010;
-        private string _gatewayRequestUrlFormat;
 
         public GatewayService(
             ISystemInformation information,
@@ -51,35 +50,30 @@ namespace Gateway.Web.Services
             _logger = loggingService.GetLogger(this);
             var gateways = information.GetSetting("KnownGateways", GetDefaultKnownGateways(information.EnvironmentName));
             _gateways = gateways.Split(';');
-            _gatewayRequestUrlFormat = "https://{0}:7010/{1}";
         }
 
         public ServersModel GetServers()
         {
-            var serverResponse = Fetch("health/info");
-
-            if (serverResponse == null || !serverResponse.Document.Descendants().Any())
-                return new ServersModel();
-
-            var xmlElement = serverResponse.Document.Descendants().First();
-            var servers = xmlElement.Deserialize<ArrayOfGatewayInfo>();
-            return new ServersModel(servers);
+            var gatewayInfo = GetGatewayInfo();
+            return new ServersModel(gatewayInfo);
         }
 
         public WorkersModel GetWorkers()
         {
-            var docs = FetchAll("health/services");
-            var result = GetWorkers("All", docs);
-
-            // Populate process information
-            docs = FetchAll(string.Format("health/processes/{0}", "Bagl.Cib.MSF.ControllerHost"));
-            return PopulateProcessInfo(result, docs);
+            var gatewayInfo = GetGatewayInfo();
+            return new WorkersModel().BuildModel(gatewayInfo);
         }
 
         public WorkersModel GetWorkers(string controller)
         {
-            var docs = FetchAll("health/services/{0}", controller);
-            return GetWorkers(controller, docs);
+            var response = Fetch("health/info");
+
+            if (response == null || !response.Document.Descendants().Any())
+                return new WorkersModel(controller);
+
+            var xmlElement = response.Document.Descendants().First();
+            var gatewayInfo = xmlElement.Deserialize<GatewayInfo>();
+            return new WorkersModel(controller).BuildModel(gatewayInfo);
         }
 
         public IEnumerable<QueueModel> GetCurrentQueues(string controller)
@@ -474,9 +468,9 @@ namespace Gateway.Web.Services
             return result;
         }
 
-        public string[] DeletePermission(long id)
+        public string[] DeletePermission(long id, long groupId)
         {
-            var query = string.Format("permissions/{0}", id);
+            var query = string.Format("groups/{0}/permissions/{1}", groupId, id);
             var response = _gatewayRestService.Delete("Security", "latest", query, string.Empty);
 
             if (response.Successfull)
@@ -484,7 +478,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Message };
+            return new[] { response.Content.Message };
         }
 
         public string[] Create(PermissionModel model)
@@ -497,7 +491,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Message };
+            return new[] { response.Content.Message };
         }
 
         public string[] InsertGroupPermission(long groupId, long permissionId)
@@ -901,37 +895,6 @@ namespace Gateway.Web.Services
             }
         }
 
-        private WorkersModel PopulateProcessInfo(WorkersModel result, IEnumerable<ServerResponse> docs)
-        {
-            foreach (var doc in docs)
-            {
-                if (doc.Document == null) continue;
-
-                foreach (var info in doc.Document.Descendants("Process"))
-                {
-                    var item = info.Deserialize<ProcessInformation>();
-                    result.Processes.Add(item);
-                }
-            }
-            return result;
-        }
-
-        private WorkersModel GetWorkers(string name, IEnumerable<ServerResponse> docs)
-        {
-            var result = new WorkersModel(name);
-            foreach (var doc in docs)
-            {
-                if (doc.Document == null) continue;
-
-                foreach (var info in doc.Document.Descendants("ControllerInformation"))
-                {
-                    var item = info.Deserialize<ControllerInformation>();
-                    result.State.Add(item);
-                }
-            }
-            return result;
-        }
-
         private IEnumerable<QueueModel> GetCurrentQueues(IEnumerable<ServerResponse> docs)
         {
             foreach (var doc in docs)
@@ -1137,6 +1100,17 @@ namespace Gateway.Web.Services
                 }
             }
             return selectListItems;
+        }
+
+        private GatewayInfo GetGatewayInfo()
+        {
+            var serverResponse = Fetch("health/info");
+
+            if (serverResponse == null || !serverResponse.Document.Descendants().Any())
+                return new GatewayInfo();
+
+            var xmlElement = serverResponse.Document.Descendants().First();
+            return  xmlElement.Deserialize<GatewayInfo>();
         }
 
         private class ServerResponse
