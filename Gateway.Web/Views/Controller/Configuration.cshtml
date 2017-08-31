@@ -10,7 +10,7 @@
 @{ Html.RenderPartial("_ControllerNav", @Model); }
 <div id="page-content-wrapper">
     <div class="hero-unit">
-        <h3>@ViewBag.Title</h3>
+        <h3 class="text-lowercase">@ViewBag.Title</h3>
         <br />
         @using (Html.BeginForm("Configuration", "Controller", FormMethod.Post, new { name = "form", @class = "form-horizontal", role = "form" }))
         {

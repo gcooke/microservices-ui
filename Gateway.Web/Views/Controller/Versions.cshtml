@@ -11,7 +11,7 @@
 <div id="page-content-wrapper">
     <div class="hero-unit">
 
-        <h3>Versions</h3>
+        <h3 class="text-lowercase">Versions</h3>
         <br />
         @{
             if (Model.UpdateResults != null)
@@ -92,7 +92,10 @@
                     }
                 </table>
                 <br/>
-                <input id="UpdateBtn" type="submit" value="Update All" class="btn btn-default btn-sm"/>
+
+                <button class="btn btn-default btn-sm" type="submit" i="submit">
+                    Update
+                </button>
             }
         </div>
         <br/>
