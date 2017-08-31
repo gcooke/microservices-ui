@@ -36,10 +36,10 @@ namespace Gateway.Web.Models.Controller
             {
                 return gatewayInfo
                     .GatewayNodes
-                    .Where(n => string.Equals(n.Node, node, StringComparison.InvariantCultureIgnoreCase))
+                    .Where(n => n.Node.Equals(node, StringComparison.InvariantCultureIgnoreCase))
                     .Select(p => p.Processes)
                     .SelectMany(p => p.Process)
-                    .Any(n => string.Equals(n.PID.ToString(), pid, StringComparison.InvariantCultureIgnoreCase));
+                    .Any(n => n.PID.ToString().Equals(pid, StringComparison.InvariantCultureIgnoreCase));
             };
 
             foreach (var version in gatewayInfo.Services.SelectMany(s => s.Versions))
@@ -56,7 +56,7 @@ namespace Gateway.Web.Models.Controller
                     gatewayNode.Processes.Process == null) continue;
 
                 var validProcessIds = WorkerInfos
-                    .Where(n => string.Equals(n.Node, gatewayNode.Node, StringComparison.InvariantCultureIgnoreCase))
+                    .Where(n => n.Node.Equals(gatewayNode.Node, StringComparison.InvariantCultureIgnoreCase))
                     .Select(p => p.Pid);
 
                 var unknownProcesses = gatewayNode
@@ -65,9 +65,6 @@ namespace Gateway.Web.Models.Controller
                                         .Where(p => !validProcessIds.Contains(p.PID.ToString()))
                                         .ToList();
 
-                //D:\Services\Redstone\Gateway\1.0.833\Bagl.Cib.MSF.ControllerHost.exe 
-                //"D:\Services\Redstone\Gateway\1.0.833\Bagl.Cib.MSF.ControllerHost.exe"
-                //-controller catalogue -version 1.1.56 -environment UAT -id 91a753e4-7dc6-4a01-a4bb-69d7e4a08a18 
                 foreach (var process in unknownProcesses)
                 {
                     var serviceName = GetServiceName(process);

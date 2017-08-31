@@ -9,7 +9,6 @@ namespace Gateway.Web.Models.Controllers
         public ServersModel(GatewayInfo info)
         {
             Workers = new List<WorkerInfo>();
-
             Root = info;
             ConstructModel();
         }
@@ -25,7 +24,7 @@ namespace Gateway.Web.Models.Controllers
 
         private List<WorkerInfo> Workers { get; set; }
 
-        public void ConstructModel()
+        private void ConstructModel()
         {
             BuildWorkers();
 
@@ -35,10 +34,10 @@ namespace Gateway.Web.Models.Controllers
                 .ToList();
         }
 
-        public void BuildWorkers()
+        private void BuildWorkers()
         {
             if (Root.Services == null) return;
-            Workers = Root.Services.SelectMany(s => s.Versions).Select(c => new WorkerInfo(c)).ToList();
+            Workers = Root.Services.SelectMany(s => s.Versions).Select(version => new WorkerInfo(version)).ToList();
         }
     }
 
@@ -78,14 +77,14 @@ namespace Gateway.Web.Models.Controllers
 
         public Server SetWorkers(List<WorkerInfo> workers)
         {
-            _workers = workers.Where(c => c.Node == Node).ToList();
+            _workers = workers.Where(c => c.Node.Equals(Node, StringComparison.InvariantCultureIgnoreCase)).ToList();
             GetStatusAndOutput();
             return this;
         }
 
         private int GetQueueSize(GatewayInfoGatewayNodeQueues gatewayInfo)
         {
-            if (gatewayInfo== null || gatewayInfo.ControllerQueueInfos == null) return 0;
+            if (gatewayInfo == null || gatewayInfo.ControllerQueueInfos == null) return 0;
 
             return gatewayInfo
                 .ControllerQueueInfos

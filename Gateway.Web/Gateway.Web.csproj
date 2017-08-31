@@ -502,7 +502,6 @@
     <Content Include="Views\Security\Permissions.cshtml" />
     <Content Include="Views\Security\Reports.cshtml" />
     <Content Include="Views\Security\_SecurityNav.cshtml" />
-    <Content Include="Views\Controllers\ServerInfo.cshtml" />
     <Content Include="Views\Controllers\UsageReport.cshtml" />
     <Content Include="Views\Error\Unauthorized.cshtml" />
     <Content Include="Views\Controllers\Versions.cshtml" />
