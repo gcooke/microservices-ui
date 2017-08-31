@@ -64,16 +64,15 @@
 }
 
 .badge-danger {
-  background-color: #b94a48;
-  border-color: #eed3d7;
-  color: #ffffff;
+    background-color: #b94a48;
+    border-color: #eed3d7;
+    color: #ffffff;
 }
 
 .badge-success {
     background-color: #008000;
     border-color: #d6e9c6;
     color: #ffffff;
-    /*color: #468847;*/
 }
 
 .alert-caption {
@@ -99,4 +98,18 @@
     margin-top: 0.5em;
     margin-bottom: 0.5em;
     font-weight: bold;
+}
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 2px solid #990510;
+    margin: 1em 0;
+    padding: 0;
+}
+
+h3 {
+
+    color: #990510;
 }

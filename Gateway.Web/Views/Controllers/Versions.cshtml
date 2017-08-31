@@ -13,25 +13,18 @@
         <h3>Cleanup Versions of Controllers </h3>
         <hr />
 
-        <br />
-
         <div class="list-group, @(Model.Loaded ? "hide" : "show")">
-            <table style="width: 100%; white-space: nowrap" class="datatable">
-                <thead>
-                    <tr><td> The following actions will be applied:</td></tr>
-                </thead>
-                <tr><td> Mark all latest versions of controllers as active</td></tr>
-                <tr><td> Mark all other versions as inactive unless they have an alias (e.g. official) or they are the pricing/riskbatch controllers</td></tr>
-                <tr><td> For pricing/riskbatch controllers mark as inactive if they do not have alias AND there is no assigned PnRLib add-in version to any group or user</td></tr>
-                <tr><td> Delete all versions that are inactive/disabled older than 4 versions before latest</td></tr>
-            </table>
-
+            <ul style="list-style: circle">
+                <li>Mark all latest versions of controllers as active</li>
+                <li>Set recent versions to inactive</li>
+                <li>Delete versions that are older than 4 versions before latest AND are not aliased or referenced by add-ins</li>
+            </ul>
             <br />
 
             @using (Html.BeginForm("Versions", "Controllers", FormMethod.Post, new { name = "form", @class = "form-horizontal", role = "form" }))
             {
                 <img src="../../Content/img/ajax-loader.gif" id="loading" />
-                <button type="submit" i="submit">
+                <button class="btn btn-default btn-sm" type="submit" i="submit">
                     Update All Versions
                 </button>
             }

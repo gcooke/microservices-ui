@@ -13,16 +13,10 @@
 
 <div id="page-content-wrapper">
     <div class="hero-unit">
-
         <h3>Last @Model.Requests.Count requests</h3>
-
-        <br />
-
+        <hr />
         <div class="containerx bulk">
             @{ Html.RenderPartial("_HistoryItems", (List<HistoryItem>)@Model.Requests); }
         </div>
-
-        <br />
-
     </div>
 </div>

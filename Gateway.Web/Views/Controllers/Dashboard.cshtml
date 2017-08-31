@@ -15,11 +15,35 @@
         <hr />
         <p>Statistics for last 7 days</p>
 
-        <p>
-            <a href="~/Controllers/Create/">
-                <span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;Create
-            </a>
-        </p>
+        <!-- Navigate list -->
+        <div style="margin-left: 5px">
+            @foreach (var character in Model.Characters)
+            {
+                <a href="#@character.Character">
+                    <div class="widget" style="width: 26px; margin: 1px; padding: 4px; background: #F5F5F5;">
+                        <div class="content">
+                            <div class="list-head clearfix">
+                                @if (character.IsPresent)
+                                {
+                                    <h3 style="margin: 0px 0px; font-size: 12px; font-weight: bold; color: #990505">
+                                        @character.Character
+                                    </h3>
+                                }
+                                else
+                                {
+                                    <h3 style="margin: 0px 0px; font-size: 12px; font-weight: bold; color: #CCCCCC">
+                                        @character.Character
+                                    </h3>
+
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            }
+        </div>
+
+        <br style="clear:both" />
 
         <div class="containerx bulk">
             @foreach (ControllerStats controller in Model.Controllers)
@@ -32,6 +56,9 @@
                                 <h3 style="margin: 30px 90px; font-size: 72px; font-weight: bold; color: #990505">
                                     @controller.Name
                                 </h3>
+                                <!-- Navigate anchor -->
+                                <a id="@controller.Name">&nbsp;</a>
+
                             </div>
                         </div>
                     </div>

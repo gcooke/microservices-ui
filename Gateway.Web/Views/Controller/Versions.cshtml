@@ -12,8 +12,7 @@
     <div class="hero-unit">
 
         <h3>Versions</h3>
-
-        <br/>
+        <hr />
         @{
             if (Model.UpdateResults != null)
             {
@@ -24,7 +23,6 @@
                 <br/>
             }
         }
-        <br/>
 
         <div id="list-meta">
             @using (Html.BeginForm("UpdateVersionStatuses", "Controller", FormMethod.Post, new {enctype = "multipart/form-data"}))

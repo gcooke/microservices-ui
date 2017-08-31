@@ -18,7 +18,7 @@
     <div class="hero-unit">
 
         <h3>Add-In Versions</h3>
-        <br />
+        <hr />
 
         <div id="containerx bulk">
 
@@ -50,7 +50,7 @@
 
         @using (Html.BeginForm("InsertAddInVersion", "Group", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
-            <a class="btn btn-primary" data-toggle="collapse" href="#collapsePanel" aria-expanded="false" aria-controls="collapsePanel">
+            <a class="btn btn-default btn-sm" data-toggle="collapse" href="#collapsePanel" aria-expanded="false" aria-controls="collapsePanel">
                 Add New Version
             </a>
             <div class="@(Html.ViewData.ModelState.IsValid ? "collapse" : "collapse show")" id="collapsePanel">
@@ -73,7 +73,7 @@
                             </div>
 
                             <div class="col-md-offset-2 col-md-4">
-                                <input type="submit" class="btn btn-primary" value="Add" />
+                                <input type="submit" class="btn btn-default btn-sm" value="Add" />
                             </div>
                         </div>
                     </div>
