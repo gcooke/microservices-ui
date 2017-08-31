@@ -15,21 +15,21 @@
 
 <div id="page-content-wrapper">
     <div class="hero-unit">
-
-        <h3>Users</h3>
-        <hr />
-        <p><strong>Please Note:</strong> users can have access without appearing in this list through Active Directory membership to groups. To view effective permissions for a user, please click on the report links in the left hand navigation panel.</p>
+        <br />
+        <p>
+            <strong>Please Note:</strong> users can have access without appearing in this list through Active Directory membership to groups. To view effective permissions for a user, please click on the report links in the left hand navigation panel.
+        </p>
 
         <div id="containerx bulk">
 
             <table style="width: 100%; white-space: nowrap" class="datatable">
                 <thead>
-                <tr>
-                    <td>Full Name</td>
-                    <td>Domain</td>
-                    <td>Login</td>
-                    <td>Action</td>
-                </tr>
+                    <tr>
+                        <td>Full Name</td>
+                        <td>Domain</td>
+                        <td>Login</td>
+                        <td>Action</td>
+                    </tr>
                 </thead>
                 @foreach (UserModel user in Model.Items)
                 {
@@ -41,13 +41,13 @@
                     </tr>
                 }
             </table>
-            <br/>
+            <br />
 
         </div>
 
         <br />
         @using (Html.BeginForm("InsertUser", "User", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-            {
+        {
             <a class="btn btn-default btn-sm" data-toggle="collapse" href="#collapsePanel" aria-expanded="false" aria-controls="collapsePanel">
                 Add New User
             </a>
@@ -63,7 +63,7 @@
                                     <label class="control-label">Domain</label>
                                 </div>
                                 <div class="col-md-4">
-                                    @Html.TextBox("_domain", "", new {@class = "form-control"})
+                                    @Html.TextBox("_domain", "", new { @class = "form-control" })
                                 </div>
                             </div>
 
@@ -81,7 +81,7 @@
                                     <label class="control-label">Full Name</label>
                                 </div>
                                 <div class="col-md-4">
-                                    @Html.TextBox("_fullName", "", new {@class = "form-control"})
+                                    @Html.TextBox("_fullName", "", new { @class = "form-control" })
                                 </div>
                             </div>
 

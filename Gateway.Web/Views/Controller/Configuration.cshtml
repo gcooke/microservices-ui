@@ -11,7 +11,7 @@
 <div id="page-content-wrapper">
     <div class="hero-unit">
         <h3>@ViewBag.Title</h3>
-        <hr />
+        <br />
         @using (Html.BeginForm("Configuration", "Controller", FormMethod.Post, new { name = "form", @class = "form-horizontal", role = "form" }))
         {
             @Html.Partial("_ControllerConfiguration", @Model)
