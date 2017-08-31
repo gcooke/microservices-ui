@@ -54,25 +54,13 @@ namespace Gateway.Web.Services
 
         public ServersModel GetServers()
         {
-            var serverResponse = Fetch("health/info");
-
-            if (serverResponse == null || !serverResponse.Document.Descendants().Any())
-                return new ServersModel();
-
-            var xmlElement = serverResponse.Document.Descendants().First();
-            var servers = xmlElement.Deserialize<GatewayInfo>();
-            return new ServersModel(servers);
+            var gatewayInfo = GetGatewayInfo();
+            return new ServersModel(gatewayInfo);
         }
 
         public WorkersModel GetWorkers()
         {
-            var response = Fetch("health/info");
-
-            if (response == null || !response.Document.Descendants().Any())
-                return new WorkersModel();
-
-            var xmlElement = response.Document.Descendants().First();
-            var gatewayInfo = xmlElement.Deserialize<GatewayInfo>();
+            var gatewayInfo = GetGatewayInfo();
             return new WorkersModel().BuildModel(gatewayInfo);
         }
 
@@ -1112,6 +1100,17 @@ namespace Gateway.Web.Services
                 }
             }
             return selectListItems;
+        }
+
+        private GatewayInfo GetGatewayInfo()
+        {
+            var serverResponse = Fetch("health/info");
+
+            if (serverResponse == null || !serverResponse.Document.Descendants().Any())
+                return new GatewayInfo();
+
+            var xmlElement = serverResponse.Document.Descendants().First();
+            return  xmlElement.Deserialize<GatewayInfo>();
         }
 
         private class ServerResponse

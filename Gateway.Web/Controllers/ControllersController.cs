@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Bagl.Cib.MIT.IoC;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
 using Gateway.Web.Authorization;
 using Gateway.Web.Database;
@@ -26,8 +27,10 @@ namespace Gateway.Web.Controllers
         private readonly IGatewayDatabaseService _dataService;
         private readonly IGatewayService _gateway;
         private readonly IGatewayRestService _gatewayRestService;
+        private readonly int _refreshPeriodInSeconds;
 
         public ControllersController(
+            ISystemInformation information,
             IGatewayDatabaseService dataService,
             IGatewayService gateway,
             IGatewayRestService gatewayRestService)
@@ -35,6 +38,12 @@ namespace Gateway.Web.Controllers
             _dataService = dataService;
             _gateway = gateway;
             _gatewayRestService = gatewayRestService;
+
+            var refreshPeriodInSeconds = information.GetSetting("ControllerActionRefresh");
+            if (!int.TryParse(refreshPeriodInSeconds, out _refreshPeriodInSeconds))
+            {
+                _refreshPeriodInSeconds = 60;
+            }
         }
 
         public ActionResult Dashboard()
@@ -48,13 +57,9 @@ namespace Gateway.Web.Controllers
 
         public ActionResult Servers()
         {
-            return View();
-        }
-
-        public ActionResult ServerInfo()
-        {
+            Response.AddHeader("Refresh", _refreshPeriodInSeconds.ToString());
             var model = _gateway.GetServers();
-            return PartialView("ServerInfo", model);
+            return View(model);
         }
 
         public ActionResult Aliases()
@@ -95,6 +100,7 @@ namespace Gateway.Web.Controllers
 
         public ActionResult Workers()
         {
+            Response.AddHeader("Refresh", _refreshPeriodInSeconds.ToString());
             var model = _gateway.GetWorkers();
             return View(model);
         }

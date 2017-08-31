@@ -5,6 +5,6 @@
     ViewBag.Title = "All Controllers";
     ViewBag.Current = "Workers";
 }
-@{ Html.RenderPartial("_ControllersNav"); }
 
+@{ Html.RenderPartial("_ControllersNav"); }
 @{ Html.RenderPartial("_WorkerItems", (WorkersModel)@Model); }
