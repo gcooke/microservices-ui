@@ -15,13 +15,15 @@
 <div id="page-content-wrapper">
     <div class="hero-unit">
 
-        <h3>Payloads</h3>
+        <h3 class="text-lowercase">Payloads</h3>
         @foreach (PayloadModel payload in Model.Items)
         {
             <br />
-            <h4>@payload.Direction</h4>
+            <h4>
+                @payload.Direction
+                @Html.ActionLink(" ", "Download", "Request", new {correlationId = Model.CorrelationId, payloadId = payload.Id}, new {@class = "glyphicon glyphicon-download hoverlink"})
+            </h4>
             <pre>@payload.Data</pre>
-            @Html.ActionLink("Download Payload", "Download", "Request", new { correlationId = Model.CorrelationId, payloadId = payload.Id }, new { @class = "hoverlink" })
             <br />
         }
     </div>

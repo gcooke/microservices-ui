@@ -209,5 +209,11 @@ namespace Gateway.Web.Controllers
                 Progress = HttpContext.Application["task" + id]
             }, JsonRequestBehavior.AllowGet);
         }
+
+        public ActionResult Actions()
+        {
+            return View();
+        }
+
     }
 }

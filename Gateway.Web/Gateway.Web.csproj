@@ -17,8 +17,8 @@
     <AssemblyName>Gateway.Web</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>false</UseIISExpress>
-    <IISExpressSSLPort>42001</IISExpressSSLPort>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort>443</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
     <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
@@ -382,6 +382,7 @@
     <Compile Include="Utils\SessionEx.cs" />
     <Compile Include="Utils\StringEx.cs" />
     <Compile Include="Utils\TimeSpanExtensions.cs" />
+    <Compile Include="Utils\VersionUtils.cs" />
     <Compile Include="Utils\XmlExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -506,6 +507,7 @@
     <Content Include="Views\Error\Unauthorized.cshtml" />
     <Content Include="Views\Controllers\Versions.cshtml" />
     <Content Include="Views\Shared\_WorkerItems.cshtml" />
+    <Content Include="Views\Controllers\Actions.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />

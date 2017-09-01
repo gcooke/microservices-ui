@@ -16,9 +16,6 @@
 
 <div id="page-content-wrapper">
     <div class="hero-unit">
-
-        <h3>Permissions</h3>
-
         <br />
         <div id="containerx bulk">
 
@@ -51,7 +48,7 @@
 
         @using (Html.BeginForm("InsertPermission", "Security", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
-            <a class="btn btn-primary" data-toggle="collapse" href="#collapsePanel" aria-expanded="false" aria-controls="collapsePanel">
+            <a class="btn btn-default btn-sm" data-toggle="collapse" href="#collapsePanel" aria-expanded="false" aria-controls="collapsePanel">
                 Add New Permission
             </a>
             <div class="@(Html.ViewData.ModelState.IsValid ? "collapse" : "collapse show")" id="collapsePanel">
@@ -77,10 +74,13 @@
                                     @Html.TextBox("_name", "", new { @class = "form-control" })
                                 </div>
                             </div>
-                            
+
                             <div class="col-md-offset-2 col-md-4">
-                                <input type="submit" class="btn btn-primary" value="Add" />
+                                <button class="btn btn-default btn-sm" type="submit" i="submit">
+                                    Add
+                                </button>
                             </div>
+
                         </div>
                     </div>
                 </div>

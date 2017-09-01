@@ -6,7 +6,7 @@
             <img class="sidebar-img" src="@Url.Content(MvcApplication.ControllerIcon)" style="height: 48px">
         </div>
         <div style="float: left; margin-top: 5px">
-            <span class="sidebar-title">@Model.Name</span><br/>
+            <span class="sidebar-title">@Model.Name</span><br />
             <span class="sidebar-subtitle">@ViewBag.Title</span>
         </div>
     </div>
@@ -19,13 +19,13 @@
         <li>
             <a href="~/Controller/Dashboard/@Model.Name"
                class="@(ViewBag.Current == "Controller" ? "active" : "")">
-                <span class="glyphicon glyphicon-stats"></span>&nbsp;&nbsp;Dashboard
+                <span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;Summary
             </a>
         </li>
         <li>
             <a href="~/Controller/Workers/@Model.Name"
                class="@(ViewBag.Current == "Workers" ? "active" : "")">
-                <span class="glyphicon glyphicon-cloud"></span>&nbsp;&nbsp;Workers
+                <span class="glyphicon glyphicon-th"></span>&nbsp;&nbsp;Workers
             </a>
         </li>
         <li>

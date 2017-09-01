@@ -18,8 +18,7 @@
 <div id="page-content-wrapper">
     <div class="hero-unit">
 
-        <h3>Sites</h3>
-
+        <br />
         <div id="containerx bulk">
 
             <table style="width: 100%; white-space: nowrap" class="datatable">
@@ -46,7 +45,7 @@
 
         @using (Html.BeginForm("InsertSite", "Group", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
-            <a class="btn btn-primary" data-toggle="collapse" href="#collapsePanel" aria-expanded="false" aria-controls="collapsePanel">
+            <a class="btn btn-default btn-sm" data-toggle="collapse" href="#collapsePanel" aria-expanded="false" aria-controls="collapsePanel">
                 Add New Site
             </a>
             <div class="@(Html.ViewData.ModelState.IsValid ? "collapse" : "collapse show")" id="collapsePanel">

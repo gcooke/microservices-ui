@@ -17,9 +17,6 @@
 
 <div id="page-content-wrapper">
     <div class="hero-unit">
-
-        <h3>User</h3>
-
         <br />
         @Html.ValidationSummary(false, "", new { @class = "text-danger" })
         <div id="containerx bulk">
@@ -41,7 +38,7 @@
 
         </div>
         <br />
-        @Html.ActionLink("Delete", "RemoveUser", "User", new { id = Model.Id }, new { @class = "btn btn-primary" })
+        @Html.ActionLink("Delete", "RemoveUser", "User", new { id = Model.Id }, new { @class = "btn btn-default btn-sm" })
 
     </div>
 </div>

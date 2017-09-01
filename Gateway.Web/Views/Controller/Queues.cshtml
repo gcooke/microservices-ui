@@ -8,66 +8,60 @@
 
 <div id="page-content-wrapper">
     <div class="hero-unit">
-
-        <h3>Current Queues</h3>
-        <hr/>
-
-        <table style="width: 100%">
-            <thead>
-                <tr>
-                    <td><b>Server</b></td>
-                    <td><b>Version</b></td>
-                    <td><b>Last Enqueue</b></td>
-                    <td><b>Last Dequeue</b></td>
-                    <td><b>Count</b></td>
-                    <td><b>Workers</b></td>
-                </tr>
-            </thead>
-            @foreach (QueueModel version in Model.Current)
-            {
-                <tr>
-                    <td>@version.Server</td>
-                    <td>@version.Version</td>
-                    <td>@version.LastEnqueue</td>
-                    <td>@version.LastDequeue</td>
-                    <td>@version.Length</td>
-                    <td>@version.Workers</td>
-                </tr>
-            }
-        </table>
-
+        <h3 class="text-lowercase">Current Queues</h3>
         <br />
-        <h3>History</h3>
-        <hr />
+        <div class="container-fluid alert alert-redstone">
+            <div class="col-sm-1">Server</div>
+            <div class="col-sm-3 text-center">Version</div>
+            <div class="col-sm-3 text-center">Last Enqueue</div>
+            <div class="col-sm-3 text-center">Last Dequeue</div>
+            <div class="col-sm-1 text-center">Count</div>
+            <div class="col-sm-1 text-center">Workers</div>
+        </div>
 
+        @foreach (QueueModel version in Model.Current)
+        {
+            <div class="container-fluid">
+
+                <div class="col-sm-1">>@version.Server</div>
+                <div class="col-sm-3 text-center">>@version.Version</div>
+                <div class="col-sm-3 text-center">>@version.LastEnqueue</div>
+                <div class="col-sm-3 text-center">>@version.LastDequeue</div>
+                <div class="col-sm-1 text-center">>@version.Length</div>
+                <div class="col-sm-1 text-center">>@version.Workers</div>
+            </div>
+        }
+        <br />
+        <br />
+        <br />
+        <h3 class="text-lowercase">History</h3>
         <br />
         <div>
             <img src="~/Controller/QueueChart?id=@Model.Name&date=@Model.HistoryStartTime.ToString("yyyyMMdd")" />
         </div>
-
-        <br />
-        <table style="width: 100%">
-            <thead>
-                <tr>
-                    <td><b>Time</b></td>
-                    <td><b>Last Enqueue</b></td>
-                    <td><b>Last Dequeue</b></td>
-                    <td><b>Count</b></td>
-                </tr>
-            </thead>
-            @foreach (QueueCount version in Model.Queues.AllItems)
-            {
-                <tr>
-                    <td>@version.Version</td>
-                    <td>@version.Time</td>
-                    <td>@version.LastEnqueue</td>
-                    <td>@version.LastDequeue</td>
-                    <td>@version.Count</td>
-                </tr>
-            }
-        </table>
-
         <br />
 
+        <div class="container-fluid alert alert-redstone">
+
+            <div class="col-sm-1">Version</div>
+            <div class="col-sm-3 text-center">Time</div>
+            <div class="col-sm-3 text-center">Last Enqueue</div>
+            <div class="col-sm-3 text-center">Last Dequeue</div>
+            <div class="col-sm-2 text-center">Count</div>
+
+        </div>
+
+        @foreach (QueueCount version in Model.Queues.AllItems)
+        {
+            <div class="container-fluid">
+
+                <div class="col-sm-1">@version.Version</div>
+                <div class="col-sm-3 text-center">@version.Time</div>
+                <div class="col-sm-3 text-center">@version.LastEnqueue</div>
+                <div class="col-sm-3 text-center">@version.LastDequeue</div>
+                <div class="col-sm-2 text-center">@version.Count</div>
+
+            </div>
+        }
     </div>
 </div>

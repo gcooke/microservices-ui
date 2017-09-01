@@ -19,7 +19,7 @@
         <li>
             <a href="~/Controllers/Dashboard/"
                class="@(ViewBag.Current == "Dashboard" ? "active" : "")">
-                <span class="glyphicon glyphicon-stats"></span>&nbsp;&nbsp;Dashboard
+                <span class="glyphicon glyphicon-th-list"></span>&nbsp;&nbsp;Controllers
             </a>
         </li>
         <li>
@@ -29,21 +29,9 @@
             </a>
         </li>
         <li>
-            <a href="~/Controllers/Versions/"
-               class="@(ViewBag.Current == "Versions" ? "active" : "")">
-                <span class="glyphicon glyphicon-globe"></span>&nbsp;&nbsp;Versions
-            </a>
-        </li>
-        <li>
-            <a href="~/Controllers/Aliases/"
-               class="@(ViewBag.Current == "Aliases" ? "active" : "")">
-                <span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;Aliases
-            </a>
-        </li>
-        <li>
             <a href="~/Controllers/Workers/"
                class="@(ViewBag.Current == "Workers" ? "active" : "")">
-                <span class="glyphicon glyphicon-cloud"></span>&nbsp;&nbsp;Workers
+                <span class="glyphicon glyphicon-th"></span>&nbsp;&nbsp;Workers
             </a>
         </li>
         <li>
@@ -59,6 +47,12 @@
             </a>
         </li>
         <li>
+            <a href="~/Controllers/Actions/"
+               class="@(ViewBag.Current == "Actions" ? "active" : "")">
+                <span class="glyphicon glyphicon-cog"></span>&nbsp;&nbsp;Actions
+            </a>
+        </li>
+        <li>
             &nbsp;
         </li>
     </ul>
@@ -68,6 +62,12 @@
     </div>
 
     <ul class="sidebar-nav">
+        <li>
+            <a href="~/Controllers/Aliases/"
+               class="@(ViewBag.Current == "Aliases" ? "active" : "")">
+                <span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;Aliases
+            </a>
+        </li>
         <li>
             <a href="~/Controllers/UsageReport/"
                class="@(ViewBag.Current == "Usage Report" ? "active" : "")">

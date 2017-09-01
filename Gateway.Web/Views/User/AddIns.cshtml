@@ -11,7 +11,7 @@
 <div id="page-content-wrapper">
 
     <div class="hero-unit">
-        <h3>User Add-in Version</h3>
+        <h3 class="text-lowercase">User Add-in Version</h3>
     </div>
 
     <div class="containerx bulk">
@@ -40,7 +40,7 @@
     </div>
 
     <div class="hero-unit">
-        <h3>Add-in versions inherited from groups</h3>
+        <h3 class="text-lowercase">Add-in versions inherited from groups</h3>
     </div>
 
     <div class="containerx bulk">
@@ -65,7 +65,7 @@
     </div>
     @using (Html.BeginForm("AddIns", "User", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {
-        <a class="btn btn-primary" data-toggle="collapse" href="#collapsePanel" aria-expanded="false" aria-controls="collapsePanel">
+        <a class="btn btn-default btn-sm" data-toggle="collapse" href="#collapsePanel" aria-expanded="false" aria-controls="collapsePanel">
             Add New Version
         </a>
         <div class="@(Html.ViewData.ModelState.IsValid ? "collapse" : "collapse show")" id="collapsePanel">
@@ -88,7 +88,7 @@
                         </div>
 
                         <div class="col-md-offset-2 col-md-4">
-                            <input type="submit" class="btn btn-primary" value="Add" />
+                            <input type="submit" class="btn btn-default btn-sm" value="Add" />
                         </div>
                     </div>
                 </div>

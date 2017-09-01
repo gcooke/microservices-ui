@@ -16,10 +16,7 @@
 
 <div id="page-content-wrapper">
     <div class="hero-unit">
-
-        <h3>Group</h3>
-
-        <br/>
+        <br />
         @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
         <div id="containerx bulk">
@@ -42,7 +39,7 @@
         </div>
 
         <br />
-        @Html.ActionLink("Delete", "RemoveGroup", "Group", new { id = Model.Id }, new { @class = "btn btn-primary" })
+        @Html.ActionLink("Delete", "RemoveGroup", "Group", new { id = Model.Id }, new { @class = "btn btn-default btn-sm" })
 
 
     </div>
