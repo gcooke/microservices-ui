@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Xml.Serialization;
 
 namespace Gateway.Web.Models.Controller
-{
+{ 
     [XmlRoot(ElementName = "Controller")]
     public class ConfigurationModel
     {

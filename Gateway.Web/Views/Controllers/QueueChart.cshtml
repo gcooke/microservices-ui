@@ -9,7 +9,7 @@
     var model = (QueueChartModel)@Model;
 
 
-    var chart = new Chart(600, 400, theme: ChartTheme.Vanilla);
+    var chart = new Chart(600, 400);
 
     foreach (var version in model.Versions)
         chart.AddSeries(version.Label,
@@ -20,5 +20,5 @@
             chartType: "Line");
 
     chart.AddLegend();
-    chart.Write();    
+    chart.Write();
 }
