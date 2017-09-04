@@ -27,6 +27,12 @@ namespace Gateway.Web.Controllers
             return View("Details", model);
         }
 
+        public ActionResult Versions(long id)
+        {
+            var model = _gateway.GetAddInVersions();
+            return View(model);
+        }
+
         [RoleBasedAuthorize(Roles = "Security.Delete")]
         public ActionResult RemoveAddIn(string id)
         {

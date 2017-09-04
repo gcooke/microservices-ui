@@ -66,6 +66,8 @@ namespace Gateway.Web.Services
 
         AddInModel GetAddIn(long id);
 
+        IEnumerable<AddInVersionModel> GetAddInVersions();
+
         string[] Create(AddInModel model);
 
         string[] DeleteAddIn(long id);
