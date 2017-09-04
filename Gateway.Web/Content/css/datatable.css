@@ -100,16 +100,6 @@
     font-weight: bold;
 }
 
-hr {
-    display: block;
-    height: 1px;
-    border: 0;
-    border-top: 2px solid #990510;
-    margin: 1em 0;
-    padding: 0;
-}
-
 h3 {
-
     color: #990510;
 }

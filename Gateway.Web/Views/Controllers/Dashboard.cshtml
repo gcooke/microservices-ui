@@ -12,7 +12,7 @@
     <div class="hero-unit">
 
         <h3 class="text-lowercase">Controllers</h3>
- 
+
         <p>Statistics for last 7 days</p>
 
         <!-- Navigate list -->
@@ -34,7 +34,6 @@
                                     <h3 style="margin: 0px 0px; font-size: 12px; font-weight: bold; color: #CCCCCC">
                                         @character.Character
                                     </h3>
-
                                 }
                             </div>
                         </div>
@@ -44,91 +43,81 @@
         </div>
 
         <br style="clear:both" />
-
         <div class="containerx bulk">
             @foreach (ControllerStats controller in Model.Controllers)
             {
                 if (controller.IsSeperator)
                 {
-                    <div class="widget" style="height: 181px; background: #F5F5F5;">
+                        <!-- Navigate anchor -->
+                    <div class="widget" id="@controller.Name" style="height: 181px; background: #F5F5F5;">
                         <div class="content">
                             <div class="list-head clearfix">
                                 <h3 style="margin: 30px 90px; font-size: 72px; font-weight: bold; color: #990505">
                                     @controller.Name
                                 </h3>
-                                <!-- Navigate anchor -->
-                                <a id="@controller.Name">&nbsp;</a>
-
                             </div>
                         </div>
                     </div>
                 }
                 else
                 {
-                    <div class="widget">
-                        <div class="content">
-                            <div class="list-head clearfix">
-                                <table>
-                                    <tr>
-                                        <td><img src="@Url.Content(MvcApplication.ControllerIcon)" alt="" class="avatar" /></td>
-                                        <td style="width: 200px; overflow: hidden; text-overflow: ellipsis;">
-                                            <h3 style="margin: 0 40px 0 5px;">
-                                                <a href="~/Controller/Dashboard/@controller.Name">
+                    <a href="~/Controller/Dashboard/@controller.Name">
+                        <div class="widget" title="@controller.Name">
+                            <div class="content">
+                                <div class="list-head clearfix" style="color:black">
+                                    <table>
+                                        <tr>
+                                            <td><img src="@Url.Content(MvcApplication.ControllerIcon)" alt="" class="avatar" /></td>
+                                            <td style="width: 200px; overflow: hidden; text-overflow: ellipsis;">
+                                                <h3 style="margin: 0 40px 0 5px;">
                                                     @controller.Name
-                                                </a>
-                                            </h3>
-                                        </td>
-                                    </tr>
-                                </table>
-                                <small>
-                                    @foreach (var item in controller.VersionSummary)
-                                    {
-                                        <span>@item.Key: <b>@item.Value</b></span>
-                                    }
-                                </small>
-                                <br />
-                                <br />
-
-                                <div style="float: left;">
-                                    <table style="min-width: 200px; padding: 10px">
-                                        <tr>
-                                            <td style="width: 150px">
-                                                <span class="glyphicon glyphicon-log-in" style="color: green"></span>&nbsp;&nbsp;Calls
+                                                </h3>
                                             </td>
-                                            <td>@controller.TotalCalls</td>
-                                        </tr>
-                                        <tr>
-                                            <td style="width: 150px">
-                                                <span class="glyphicon glyphicon-thumbs-down" style="color: red"></span>&nbsp;&nbsp;Errors
-                                            </td>
-                                            <td>@controller.TotalErrors</td>
-                                        </tr>
-                                        <tr>
-                                            <td style="width: 150px">
-                                                <span class="glyphicon glyphicon-resize-full" style="color: gray"></span>&nbsp;&nbsp;Bandwidth
-                                            </td>
-                                            <td>...</td>
-                                        </tr>
-                                        <tr>
-                                            <td style="width: 150px">
-                                                <span class="glyphicon glyphicon-time" style="color: black"></span>&nbsp;&nbsp;Avg. Response
-                                            </td>
-                                            <td>@controller.AverageResponse</td>
                                         </tr>
                                     </table>
+                                    <small>
+                                        @foreach (var item in controller.VersionSummary)
+                                        {
+                                        <span>@item.Key: <b>@item.Value</b></span>
+                                        }
+                                    </small>
+                                    <br />
+                                    <br />
+                                    <div style="float: left;">
+                                        <table style="min-width: 200px; padding: 10px">
+                                            <tr>
+                                                <td style="width: 150px">
+                                                    <span class="glyphicon glyphicon-log-in" style="color: green"></span>&nbsp;&nbsp;Calls
+                                                </td>
+                                                <td>@controller.TotalCalls</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="width: 150px">
+                                                    <span class="glyphicon glyphicon-thumbs-down" style="color: red"></span>&nbsp;&nbsp;Errors
+                                                </td>
+                                                <td>@controller.TotalErrors</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="width: 150px">
+                                                    <span class="glyphicon glyphicon-resize-full" style="color: gray"></span>&nbsp;&nbsp;Bandwidth
+                                                </td>
+                                                <td>...</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="width: 150px">
+                                                    <span class="glyphicon glyphicon-time" style="color: black"></span>&nbsp;&nbsp;Avg. Response
+                                                </td>
+                                                <td>@controller.AverageResponse</td>
+                                            </tr>
+                                        </table>
+                                    </div>
                                 </div>
-
-                                @*<div style="float: left;">
-                                        <img src="~/Controller/RequestsChart?id=@controller.Name&date=@Model.HistoryStartTime.ToString("yyyyMMdd")"/>
-                                    </div>*@
-
                             </div>
                         </div>
-                    </div>
+                    </a>
                 }
             }
         </div>
-
         <br />
     </div>
 </div>

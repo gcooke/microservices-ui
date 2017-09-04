@@ -175,10 +175,19 @@ namespace Gateway.Web.Services
         {
             var response = _gatewayRestService.Get("Catalogue", string.Format("controllers/{0}", name),
                 CancellationToken.None);
-            if (!response.Successfull)
-                return null;
 
-            return response.Content.GetPayloadAsXElement().Deserialize<ConfigurationModel>();
+            if (response.Successfull)
+            {
+                var element = response.Content.GetPayloadAsXElement();
+
+                foreach (var item in element.Descendants("Controller"))
+                {
+                    if (item.Attributes().Any(x => x.Name == "Name") && item.Attribute("Name").Value.Equals(name, StringComparison.InvariantCultureIgnoreCase))
+                        return item.Deserialize<ConfigurationModel>();
+                }
+            }
+
+            return null;
         }
 
         public RestResponse UpdateControllerConfiguration(ConfigurationModel model)
@@ -383,6 +392,28 @@ namespace Gateway.Web.Services
             {
                 var element = response.Content.GetPayloadAsXElement();
                 result = element.Deserialize<AddInModel>();
+            }
+
+            return result;
+        }
+
+        public IEnumerable<AddInVersionModel> GetAddInVersions()
+        {
+            var query = "addins/versions";
+            var response = _gatewayRestService.Get("Security", "latest", query);
+
+            var result = new List<AddInVersionModel>();
+            if (response.Successfull)
+            {
+                var element = response.Content.GetPayloadAsXElement();
+                foreach (var item in element.Descendants("AddInVersion"))
+                {
+                    result.Add(new AddInVersionModel
+                    {
+                        AddIn=item.Element("AddIn").Value,
+                        Version = item.Element("Version").Value
+                    });
+                }
             }
 
             return result;
@@ -1110,7 +1141,7 @@ namespace Gateway.Web.Services
                 return new GatewayInfo();
 
             var xmlElement = serverResponse.Document.Descendants().First();
-            return  xmlElement.Deserialize<GatewayInfo>();
+            return xmlElement.Deserialize<GatewayInfo>();
         }
 
         private class ServerResponse

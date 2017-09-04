@@ -1,0 +1,44 @@
+﻿
+@using Gateway.Web.Models.Group
+@using Version = Gateway.Web.Models.Controller.Version
+@model   Gateway.Web.Models.Shared.AddInModel
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "Group";
+    ViewBag.Current = "AddIns";
+}
+@{ Html.RenderPartial("_AddInNav", @Model); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+        <br />
+
+        <div id="containerx bulk">
+
+            <table style="width: 100%; white-space: nowrap" class="datatable">
+                <thead>
+                    <tr>
+                        @*<td>Name</td>
+                        <td>Friendly Name</td>*@
+                        <td>Version</td>
+                        @*<td>Action</td>*@
+                    </tr>
+                </thead>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        @*<td>@item.Name</td>
+                        <td>@item.FriendlyName</td>*@
+                        <td>@item.Version</td>
+                        @*<td>
+                            @Html.ActionLink("Remove", "RemoveAddInVersion", "Group", new { id = item.ExcelAddInVersionId, groupId = Model.Id }, new { @class = "hoverlink" })
+                        </td>*@
+                    </tr>
+                }
+            </table>
+            <br />
+
+        </div>
+        <br />
+    </div>
+</div>
