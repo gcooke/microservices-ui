@@ -17,7 +17,7 @@
     <AssemblyName>Gateway.Web</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>true</UseIISExpress>
+    <UseIISExpress>false</UseIISExpress>
     <IISExpressSSLPort>443</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
@@ -309,6 +309,7 @@
     <Compile Include="Models\Group\ADGroupsModel.cs" />
     <Compile Include="Models\Group\GroupActiveDirectory.cs" />
     <Compile Include="Models\Group\GroupAddInVersionModel.cs" />
+    <Compile Include="Models\Group\IGroupModel.cs" />
     <Compile Include="Models\Group\PermissionsModel.cs" />
     <Compile Include="Models\Shared\AddInModel.cs" />
     <Compile Include="Models\Shared\EntityAddInVersionModel.cs" />
@@ -362,6 +363,7 @@
     <Compile Include="Models\Security\UsersModel.cs" />
     <Compile Include="Models\User\HistoryModel.cs" />
     <Compile Include="Registrations.cs" />
+    <Compile Include="Services\BasicRestService.cs" />
     <Compile Include="Services\GatewayService.cs" />
     <Compile Include="Services\IGatewayService.cs" />
     <Compile Include="Services\ProcessInformation.cs" />
@@ -408,6 +410,7 @@
     <Content Include="Content\img\Redstone.UAT.png" />
     <Content Include="Content\js\checkall.js" />
     <Content Include="Content\js\loading.js" />
+    <Content Include="Content\js\row-click.js" />
     <Content Include="Content\js\spinner.js" />
     <Content Include="Database\PnRFO_Gateway.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

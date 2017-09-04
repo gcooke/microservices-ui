@@ -6,7 +6,7 @@
     var action = (string)ViewBag.Action ?? "History";
 }
 
-<table style="width: 100%; white-space: nowrap" class="datatable">
+<table style="width: 100%; white-space: nowrap" class="datatable table">
     <thead>
         <tr>
             <td>
@@ -100,13 +100,13 @@
                     }
                 </b>
             </td>
-            <td><b>Action</b></td>
+            @*<td><b>Action</b></td>*@
         </tr>
     </thead>
 
     @foreach (var history in items)
     {
-        <tr>
+        <tr data-href="@(Url.Action("Summary", "Request", new { correlationId = history.CorrelationId }))">
             <td>
                 <a href="~/Controller/History/@history.Controller" class="hoverlink">@history.Controller</a>
             </td>
@@ -132,9 +132,6 @@
                 {
                     <div style="color: #F78A09">@history.ResultFormatted</div>
                 }
-            </td>
-            <td>
-                @Html.ActionLink("View", "Summary", "Request", new { correlationId = history.CorrelationId }, new { @class = "hoverlink" })
             </td>
         </tr>
     }

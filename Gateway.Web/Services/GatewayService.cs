@@ -498,8 +498,33 @@ namespace Gateway.Web.Services
 
             return result;
         }
+        public string[] DeletePermission(long id)
+        {
+            var query = string.Format("permissions/{1}", id);
+            var response = _gatewayRestService.Delete("Security", "latest", query, string.Empty);
 
-        public string[] DeletePermission(long id, long groupId)
+            if (response.Successfull)
+            {
+                return null;
+            }
+
+            return new[] { response.Content.Message };
+        }
+
+        public string[] DeleteGroupPortfolio(long id, long groupId)
+        {
+            var query = string.Format("groups/{0}/portfolios/{1}", groupId, id);
+            var response = _gatewayRestService.Delete("Security", "latest", query, string.Empty);
+
+            if (response.Successfull)
+            {
+                return null;
+            }
+
+            return new[] { response.Content.Message };
+        }
+
+        public string[] DeleteGroupPermission(long id, long groupId)
         {
             var query = string.Format("groups/{0}/permissions/{1}", groupId, id);
             var response = _gatewayRestService.Delete("Security", "latest", query, string.Empty);

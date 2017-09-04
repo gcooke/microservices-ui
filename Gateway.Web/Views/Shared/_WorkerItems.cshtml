@@ -3,35 +3,51 @@
     <h3 class="text-lowercase">
         Workers
     </h3>
-
     <br />
     <div>
         <div class="container-fluid alert alert-redstone">
-            <div class="col-sm-offset-2 col-sm-1">Version</div>
+            <div class="col-sm-offset-1 col-sm-1">Version</div>
             <div class="col-sm-2 text-center">Node</div>
             <div class="col-sm-1 text-center">PID</div>
             <div class="col-sm-3 text-center">Output</div>
+            <div class="col-sm-offset-2">
+                <a href="~/Controllers/KillAll/" title="Kill all workers">
+                    <span class="btn btn-danger btn-xs glyphicon glyphicon-remove pull-right"></span>
+                </a>
+            </div>
         </div>
 
         @foreach (var item in @Model.Workers)
         {
             <div class="alert alert-default" role="alert"
-                 data-toggle="collapse" href="#@item.Controller" aria-expanded="true"
+                 href="#@item.Controller" aria-expanded="true"
                  aria-controls="@item.Controller">
-                <span class="badge badge-info pull-left">@item.Count</span>&nbsp;
-                @item.Controller&nbsp;
-                <small class="badge badge-info pull-right">@item.Errors</small>
-                <small class="pull-right">Errors&nbsp;</small>
+                &nbsp;
+                <span class="pull-left">
+                    <small class="badge badge-info">@item.Count</small>
+                    <small class="badge badge-danger @(item.Errors > 0 ? "block" : "hidden")">@item.Errors</small>
+                    <span>&nbsp;@item.Name&nbsp;</span>
+                </span>
+                &nbsp;
+                <div class="pull-right">
+                    <a href="~/Controllers/KillWorkers?name=@item.Name" title="Kill @item.Name workers">
+                        <small class="btn btn-danger btn-xs glyphicon glyphicon-remove pull-right"></small>
+                    </a>
+                </div>
             </div>
             <div class="" id="@item.Controller">
                 @foreach (var worker in item.WorkerInfos)
                 {
-                    <div class="container-fluid @(worker.State ? "alert alert-success" : "alert alert-danger")" style="padding: 5px; margin-top: 0.1em; margin-bottom: 0.1em;" role="alert">
-                        <div class="col-sm-2" style="display: none;">
-                            <button class="btn btn-xs btn-primary glyphicon glyphicon-play"></button>
-                            <button class="btn btn-xs btn-danger glyphicon glyphicon-stop"></button>
+                    <div class="container-fluid @(worker.State ? "alert alert-success" : "alert alert-danger")"
+                         style="padding: 5px; margin-top: 0.1em; margin-bottom: 0.1em;"
+                         role="alert">
+                        <div class="col-sm-1 @(worker.State ? "hidden" : "block")">
+                            <a href="~/Controllers/KillWorker?name=@item.Name&version=@worker.Version&node=@worker.Node&pid=@worker.Pid"
+                               title="controller=@item.Name&version=@worker.Version&node=@worker.Node&pid=@worker.Pid">
+                                <small class="btn btn-danger btn-xs glyphicon glyphicon-remove pull-right"></small>
+                            </a>
                         </div>
-                        <div class="col-sm-offset-2 col-sm-1">@worker.Version</div>
+                        <div class="col-sm-offset-1 col-sm-1">@worker.Version</div>
                         <div class="col-sm-2">@worker.Node</div>
                         <div class="col-sm-1">@worker.Pid</div>
                         <div class="col-sm-3">@worker.Output</div>

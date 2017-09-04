@@ -8,7 +8,7 @@
 @using Version = Gateway.Web.Models.Controller.Version
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
-    ViewBag.Title = "Group";
+    ViewBag.Title = @Model.Name;
     ViewBag.Current = "Portfolios";
 }
 @{ Html.RenderPartial("_GroupNav", (PortfoliosModel)@Model); }
@@ -22,19 +22,19 @@
             <table style="width: 100%; white-space: nowrap" class="datatable">
                 <thead>
                     <tr>
+                        <td></td>
                         <td>Level</td>
                         <td>Name</td>
-                        <td>Action</td>
                     </tr>
                 </thead>
                 @foreach (PortfolioModel item in Model.Items)
                 {
                     <tr>
+                        <td>
+                            @Html.ActionLink(" ", "RemovePortfolio", "Group", new { id = item.Id }, new { @class = "text-center glyphicon glyphicon-trash" })
+                        </td>
                         <td>@item.Level</td>
                         <td>@item.Name</td>
-                        <td>
-                            @Html.ActionLink("Remove", "RemovePortfolio", "Group", new { id = item.Id }, new { @class = "hoverlink" })
-                        </td>
                     </tr>
                 }
             </table>
