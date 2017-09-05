@@ -1,4 +1,5 @@
 ﻿using System.Web.Mvc;
+using Bagl.Cib.MIT.Logging;
 using Gateway.Web.Authorization;
 using Gateway.Web.Services;
 using Gateway.Web.Utils;
@@ -7,11 +8,12 @@ using Controller = System.Web.Mvc.Controller;
 namespace Gateway.Web.Controllers
 {
     [RoleBasedAuthorize(Roles = "Security.View")]
-    public class AddInController : Controller
+    public class AddInController : BaseController
     {
         private readonly IGatewayService _gateway;
 
-        public AddInController(IGatewayService gateway)
+        public AddInController(IGatewayService gateway, ILoggingService loggingService)
+            : base(loggingService)
         {
             _gateway = gateway;
         }

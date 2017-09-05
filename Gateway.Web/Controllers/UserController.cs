@@ -1,28 +1,27 @@
 ﻿using System;
-using System.Net.Http;
 using System.Web.Mvc;
 using Gateway.Web.Database;
 using Gateway.Web.Models.AddIn;
-using Gateway.Web.Models.Group;
 using Gateway.Web.Models.User;
 using Gateway.Web.Services;
 using Gateway.Web.Utils;
-using AddInsModel = Gateway.Web.Models.User.AddInsModel;
-using Controller = System.Web.Mvc.Controller;
-using PortfoliosModel = Gateway.Web.Models.User.PortfoliosModel;
-using SitesModel = Gateway.Web.Models.User.SitesModel;
 using System.Globalization;
+using Bagl.Cib.MIT.Logging;
 using Gateway.Web.Authorization;
 
 namespace Gateway.Web.Controllers
 {
     [RoleBasedAuthorize(Roles = "Security.View")]
-    public class UserController : Controller
+    public class UserController : BaseController
     {
         private readonly IGatewayDatabaseService _dataService;
         private readonly IGatewayService _gateway;
 
-        public UserController(IGatewayDatabaseService dataService, IGatewayService gateway)
+        public UserController(
+            IGatewayDatabaseService dataService,
+            IGatewayService gateway,
+            ILoggingService loggingService)
+            : base(loggingService)
         {
             _dataService = dataService;
             _gateway = gateway;

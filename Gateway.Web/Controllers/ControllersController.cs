@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Bagl.Cib.MIT.IoC;
+using Bagl.Cib.MIT.Logging;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
 using Gateway.Web.Authorization;
 using Gateway.Web.Database;
@@ -22,7 +23,7 @@ using VersionsModel = Gateway.Web.Models.Controllers.VersionsModel;
 namespace Gateway.Web.Controllers
 {
     [RoleBasedAuthorize(Roles = "Security.View")]
-    public class ControllersController : Controller
+    public class ControllersController : BaseController
     {
         private readonly IGatewayDatabaseService _dataService;
         private readonly IGatewayService _gateway;
@@ -33,7 +34,8 @@ namespace Gateway.Web.Controllers
             ISystemInformation information,
             IGatewayDatabaseService dataService,
             IGatewayService gateway,
-            IGatewayRestService gatewayRestService)
+            IGatewayRestService gatewayRestService, ILoggingService loggingService) 
+            : base(loggingService)
         {
             _dataService = dataService;
             _gateway = gateway;

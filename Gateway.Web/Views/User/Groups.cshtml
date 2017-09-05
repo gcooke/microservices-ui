@@ -16,8 +16,8 @@
             <table style="width: 100%; white-space: nowrap" class="datatable">
                 <thead>
                     <tr>
-                        <td>Description</td>
                         <td>Name</td>
+                        <td>Description</td>
                         <td>Action</td>
                     </tr>
                 </thead>
@@ -25,8 +25,8 @@
                 {
                 <tr>
                     <td style="display: none;">@item.Id</td>
-                    <td>@item.Description</td>
                     <td>@item.Name</td>
+                    <td>@item.Description</td>
                     <td>
                         @Html.ActionLink("Remove", "RemoveGroup", "User", new { userId = @Model.Id, groupId = item.Id }, new { @class = "hoverlink" })
                     </td>

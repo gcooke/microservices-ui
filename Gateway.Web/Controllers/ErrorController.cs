@@ -1,9 +1,17 @@
 ﻿using System.Web.Mvc;
+using Bagl.Cib.MIT.Logging;
+using Bagl.Cib.MSF.Contracts.Utils;
 
 namespace Gateway.Web.Controllers
 {
     public class ErrorController : Controller
     {
+        private readonly ILogger _logger;
+        public ErrorController(ILoggingService loggingService)
+        {
+            _logger = loggingService.GetLogger(this);
+        }
+
         [AllowAnonymous]
         public ActionResult Index()
         {
