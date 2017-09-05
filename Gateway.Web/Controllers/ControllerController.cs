@@ -8,13 +8,14 @@ using Gateway.Web.Utils;
 using Controller = System.Web.Mvc.Controller;
 using System.Collections.Generic;
 using System.Linq;
+using Bagl.Cib.MIT.Logging;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
 using Gateway.Web.Authorization;
 
 namespace Gateway.Web.Controllers
 {
     [RoleBasedAuthorize(Roles = "Security.View")]
-    public class ControllerController : Controller
+    public class ControllerController : BaseController
     {
         private readonly IGatewayDatabaseService _dataService;
         private readonly IGatewayService _gateway;
@@ -23,7 +24,8 @@ namespace Gateway.Web.Controllers
         public ControllerController(
             IGatewayDatabaseService dataService,
             IGatewayService gateway,
-            IGatewayRestService gatewayRestService)
+            IGatewayRestService gatewayRestService, ILoggingService loggingService) 
+            : base(loggingService)
         {
             _dataService = dataService;
             _gateway = gateway;

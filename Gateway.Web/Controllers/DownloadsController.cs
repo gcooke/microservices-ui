@@ -3,18 +3,13 @@ using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using Bagl.Cib.MIT.Logging;
-using Gateway.Web.Authorization;
-using Gateway.Web.Database;
-using Gateway.Web.Models.AddIn;
-using Gateway.Web.Models.Security;
 using Gateway.Web.Services;
-using Gateway.Web.Utils;
 using Controller = System.Web.Mvc.Controller;
 
 namespace Gateway.Web.Controllers
 {
     [RoutePrefix("downloads")]
-    public class DownloadsController : Controller
+    public class DownloadsController : BaseController
     {
         private const string RemoteAppsDirectory = @"\\Intranet.barcapint.com\dfs-emea\Group\Jhb\IT_Pricing_Risk\Builds\Redstone\Apps";
         private const string LocalAppsDirectory = "~\\Content\\Downloads\\";
@@ -23,6 +18,7 @@ namespace Gateway.Web.Controllers
         private readonly ILogger _logger;
 
         public DownloadsController(IGatewayService gateway, ILoggingService loggingService)
+            : base(loggingService)
         {
             _gateway = gateway;
             _logger = loggingService.GetLogger(this);
@@ -48,7 +44,7 @@ namespace Gateway.Web.Controllers
             var contentType = System.Net.Mime.MediaTypeNames.Application.Octet;
             return File(path, contentType, fileName);
 
-            
+
             // This was an attempt to speed up downloads - worked in UAT but not in PROD
 
             //path = GetLocalAppVersionPath(app, version, path, fileName);

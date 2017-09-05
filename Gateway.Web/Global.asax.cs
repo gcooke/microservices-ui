@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿
 using System.Configuration;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
@@ -44,7 +42,6 @@ namespace Gateway.Web
             Registrations.Register(information);
             container.Resolve<ILoggingService>().Initialize(information.LoggingInformation);
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
-
             var locator = new UnityServiceLocator(container);
             ServiceLocator.SetLocatorProvider(() => locator);
         }
