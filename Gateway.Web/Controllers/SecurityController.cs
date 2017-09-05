@@ -1,20 +1,20 @@
 ﻿using System.Web.Mvc;
+using Bagl.Cib.MIT.Logging;
 using Gateway.Web.Authorization;
 using Gateway.Web.Models.Group;
 using Gateway.Web.Models.Permission;
 using Gateway.Web.Models.Shared;
 using Gateway.Web.Services;
 using Gateway.Web.Utils;
-using Controller = System.Web.Mvc.Controller;
-
 namespace Gateway.Web.Controllers
 {
     [RoleBasedAuthorize(Roles = "Security.View")]
-    public class SecurityController : Controller
+    public class SecurityController : BaseController
     {
         private readonly IGatewayService _gateway;
 
-        public SecurityController(IGatewayService gateway)
+        public SecurityController(IGatewayService gateway, ILoggingService loggingService) 
+            : base(loggingService)
         {
             _gateway = gateway;
         }

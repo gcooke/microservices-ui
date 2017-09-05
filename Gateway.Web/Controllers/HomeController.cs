@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using Bagl.Cib.MIT.Logging;
 using Gateway.Web.Authorization;
 using Gateway.Web.Database;
 using Gateway.Web.Models.Home;
@@ -11,15 +12,15 @@ using Controller = System.Web.Mvc.Controller;
 namespace Gateway.Web.Controllers
 {
     [RoleBasedAuthorize(Roles = "Access")]
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private readonly IGatewayDatabaseService _dataService;
-        private readonly IGatewayService _gateway;
 
-        public HomeController(IGatewayDatabaseService dataService, IGatewayService gateway)
+        public HomeController(IGatewayDatabaseService dataService,
+            ILoggingService loggingService)
+            : base(loggingService)
         {
             _dataService = dataService;
-            _gateway = gateway;
         }
 
         public ActionResult Index(string sortOrder)
@@ -58,7 +59,7 @@ namespace Gateway.Web.Controllers
             //ViewBag.Message = "Your consule page.";
             return View();
         }
-        
+
         [AllowAnonymous]
         public ActionResult LogOff()
         {
@@ -75,7 +76,7 @@ namespace Gateway.Web.Controllers
         public ActionResult ReturnToHistory()
         {
             var uri = Session.GetLastHistoryLocation();
-            while(uri != null && uri == Request.UrlReferrer)
+            while (uri != null && uri == Request.UrlReferrer)
                 uri = Session.GetLastHistoryLocation();
             if (uri == null) return ReturnToAllHistory();
 

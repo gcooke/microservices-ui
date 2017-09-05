@@ -2,25 +2,24 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using Bagl.Cib.MIT.Logging;
 using Gateway.Web.Authorization;
 using Gateway.Web.Database;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Request;
 using Gateway.Web.Services;
 using Gateway.Web.Utils;
-using Controller = System.Web.Mvc.Controller;
 
 namespace Gateway.Web.Controllers
 {
     [RoleBasedAuthorize(Roles = "Security.View")]
-    public class RequestController : Controller
+    public class RequestController : BaseController
     {
         private readonly IGatewayDatabaseService _dataService;
         private readonly IGatewayService _gateway;
-        private const string CurrentRequestCorrelationId = "CurrentRequestCorrelationId";
 
-
-        public RequestController(IGatewayDatabaseService dataService, IGatewayService gateway)
+        public RequestController(IGatewayDatabaseService dataService, IGatewayService gateway, ILoggingService loggingService)
+            : base(loggingService)
         {
             _dataService = dataService;
             _gateway = gateway;
@@ -56,7 +55,7 @@ namespace Gateway.Web.Controllers
             ViewBag.SortDirection = sortOrder.EndsWith("_desc") ? "" : "_desc";
             ViewBag.Controller = "Request";
             ViewBag.Action = "Children";
-            
+
             var model = new Children();
             var id = string.IsNullOrEmpty(correlationId) ? (Guid)Session["LastCorrelationId"] : Guid.Parse(correlationId);
             Session["LastCorrelationId"] = id;

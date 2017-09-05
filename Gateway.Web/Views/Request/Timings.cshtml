@@ -22,8 +22,8 @@
             <div class="row h5">All timings relating to original request (@Model.Root.CorrelationId)</div>
             <br />
             <div class="row alert alert-danger" style="display: @showError">The request was unsuccessful</div>
-            <h4 class="row" style="display: @requestIsSuccessful">Summary</h4>
-            <table style="width: 50%; white-space: nowrap; display:  @requestIsSuccessful" class="row datatable">
+            <h4 class="row">Summary</h4>
+            <table style="width: 50%; white-space: nowrap;" class="row datatable">
                 <tr>
                     <td class="columnheader">Wall Clock</td>
                     <td>@Model.WallClock</td>
@@ -34,8 +34,8 @@
                 </tr>
             </table>
             <br />
-            <h4 class="row" style="display: @requestIsSuccessful">Controller Summaries</h4>
-            <table style="width: 100%; white-space: nowrap; display: @requestIsSuccessful" class="row datatable">
+            <h4 class="row">Controller Summaries</h4>
+            <table style="width: 100%; white-space: nowrap;" class="row datatable">
                 <thead>
                     <tr>
                         <td class="">Controller</td>
@@ -55,7 +55,7 @@
 
             <br />
 
-            <div class="treeview" style="display: @requestIsSuccessful">
+            <div class="treeview">
 
                 <h4 class="row">Requests</h4>
 

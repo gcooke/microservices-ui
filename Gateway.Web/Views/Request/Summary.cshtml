@@ -110,18 +110,20 @@
         @if (Model.HasChildren)
         {
             <br />
-            <h3>Child Requests</h3>
+
+            <h3 class="text-lowercase">Child Requests</h3>
 
             <table style="width: 100%; white-space: nowrap" class="datatable">
                 <thead>
-                    <tr>
-                        <td>Controller</td>
-                        <td>Requests</td>
-                        <td>Successful</td>
-                        <td>Items</td>
-                        <td>Min Start</td>
-                        <td>Max End</td>
-                    </tr>
+                <tr>
+                    <!--TODO: Click through to child requests-->
+                    <td>Controller</td>
+                    <td>Requests</td>
+                    <td>Successful</td>
+                    <td>Items</td>
+                    <td>Min Start</td>
+                    <td>Max End</td>
+                </tr>
                 </thead>
                 @foreach (DetailRow row in Model.Items)
                 {
