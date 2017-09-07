@@ -9,7 +9,7 @@
 @model GroupModel
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
-    ViewBag.Title = "Group";
+    ViewBag.Title = @Model.Name;
     ViewBag.Current = "Details";
 }
 @{ Html.RenderPartial("_GroupNav", (GroupModel)@Model); }

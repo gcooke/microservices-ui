@@ -28,6 +28,7 @@ namespace Gateway.Web.Controllers
         public ActionResult Details(string id)
         {
             var model = _gateway.GetGroup(id.ToLongOrDefault());
+            TempData["GroupName"]= model.Name;
             return View("Details", model);
         }
 
@@ -62,6 +63,7 @@ namespace Gateway.Web.Controllers
         public ActionResult ADGroups(string id)
         {
             var model = _gateway.GetGroupADGroups(id.ToLongOrDefault());
+            SetName(model);
             return View("ADGroups", model);
         }
 
@@ -142,6 +144,7 @@ namespace Gateway.Web.Controllers
         public ActionResult Permissions(string id)
         {
             var model = _gateway.GetGroupPermisions(id.ToLongOrDefault());
+            SetName(model);
             return View("Permissions", model);
         }
 
@@ -159,7 +162,7 @@ namespace Gateway.Web.Controllers
             if (string.IsNullOrEmpty(permissionId))
                 ModelState.AddModelError("Permission", "Permission cannot be empty");
 
-            // Post instruction to security controller            
+            // Post instruction to security controller
             if (ModelState.IsValid)
             {
                 var result = _gateway.InsertGroupPermission(groupId.ToLongOrDefault(), permissionId.ToLongOrDefault());
@@ -182,14 +185,46 @@ namespace Gateway.Web.Controllers
         public ActionResult Portfolios(string id)
         {
             var model = _gateway.GetGroupPortfolios(id.ToLongOrDefault());
+            SetName(model);
             return View("Portfolios", model);
         }
+
+        [RoleBasedAuthorize(Roles = "Security.Delete")]
+        public ActionResult RemovePortfolio(string id, string groupId)
+        {
+            ModelState.Clear();
+
+            // Validate parameters
+            if (string.IsNullOrEmpty(id))
+                ModelState.AddModelError("Id", "Id cannot be empty");
+
+            if (string.IsNullOrEmpty(groupId))
+                ModelState.AddModelError("GroupId", "GroupId cannot be empty");
+
+            // Post instruction to security controller
+            if (ModelState.IsValid)
+            {
+                var result = _gateway.DeleteGroupPortfolio(id.ToLongOrDefault(), groupId.ToLongOrDefault());
+                if (result != null)
+                    foreach (var item in result)
+                    {
+                        ModelState.AddModelError("Remote", item);
+                    }
+            }
+
+            //Setup next view
+            if (ModelState.IsValid)
+                return Redirect(string.Format("~/Group/Portfolios/{0}", groupId));
+
+            return Portfolios(groupId);
+        }        
         #endregion
 
         #region Sites
         public ActionResult Sites(string id)
         {
             var model = _gateway.GetGroupSites(id.ToLongOrDefault());
+            SetName(model);
             return View("Sites", model);
         }
 
@@ -259,6 +294,7 @@ namespace Gateway.Web.Controllers
         public ActionResult AddIns(string id)
         {
             var model = _gateway.GetGroupAddIns(id.ToLongOrDefault());
+            SetName(model);
             return View("AddIns", model);
         }
 
@@ -328,5 +364,15 @@ namespace Gateway.Web.Controllers
             return AddIns(groupId);
         }
         #endregion
+
+        private void SetName(IGroupModel model)
+        {
+            object name;
+            if (TempData.TryGetValue("GroupName", out name))
+            {
+                TempData["GroupName"] = name;
+                model.Name = name.ToString();
+            }
+        }
     }
 }

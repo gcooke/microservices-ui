@@ -18,25 +18,29 @@
     <div class="hero-unit">
         <br />
         <div id="containerx bulk">
-
             <table style="width: 100%; white-space: nowrap" class="datatable">
                 <thead>
                     <tr>
                         <td>Name</td>
                         <td>Friendly Name</td>
-                        <td>Description</td>
-                        <td>Action</td>
+                        <td>
+                            Description
+                            <a class="btn btn-default btn-xs glyphicon glyphicon-plus pull-right"
+                               data-target=".add-modal"
+                               data-toggle="modal">
+                            </a>
+                        </td>
                     </tr>
                 </thead>
                 @foreach (AddInModel item in Model.Items)
-                {
-                    <tr>
+            {
+                    <tr data-href="@(Url.Action("Details", "AddIn", new { id = item.Id }))">
                         <td>@item.Name</td>
                         <td>@item.FriendlyName</td>
                         <td>@item.Description</td>
-                        <td>
-                            @Html.ActionLink("View", "Details", "AddIn", new { id = item.Id }, new { @class = "hoverlink" })
-                        </td>
+                        @*<td>
+                                @Html.ActionLink("View", "Details", "AddIn", new { id = item.Id }, new { @class = "hoverlink" })
+                            </td>*@
                     </tr>
                 }
             </table>
@@ -47,46 +51,59 @@
 
         @using (Html.BeginForm("InsertAddIn", "Security", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
-            <a class="btn btn-default btn-sm" data-toggle="collapse" href="#collapsePanel" aria-expanded="false" aria-controls="collapsePanel">
-                Add New Add-In
-            </a>
-            <div class="@(Html.ViewData.ModelState.IsValid ? "collapse" : "collapse show")" id="collapsePanel">
-                <div class="info-block">
-                    <div>
-                        @Html.AntiForgeryToken()
-                        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+            @*<a class="btn btn-default btn-sm" data-toggle="collapse" href="#collapsePanel" aria-expanded="false" aria-controls="collapsePanel">
+                    Add New Add-In
+                </a>
+                <div class="@(Html.ViewData.ModelState.IsValid ? "collapse" : "collapse show")" id="collapsePanel">
+                    <div class="info-block">
+                        <div>*@
+            <div class="modal fade add-modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
 
-                        <div class="container-fluid">
-                            <div class="row">
-                                <div class="col-md-2">
-                                    <label class="control-label">Name</label>
-                                </div>
-                                <div class="col-md-4">
-                                    @Html.TextBox("_name", "", new { @class = "form-control" })
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-2">
-                                    <label class="control-label">Friendly Name</label>
-                                </div>
-                                <div class="col-md-4">
-                                    @Html.TextBox("_friendly", "", new { @class = "form-control" })
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-2">
-                                    <label class="control-label">Description</label>
-                                </div>
-                                <div class="col-md-4">
-                                    @Html.TextBox("_description", "", new { @class = "form-control" })
-                                </div>
-                            </div>
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel">Add Excel Add-In</h4>
+                        </div>
 
-                            <div class="col-md-offset-2 col-md-4">
-                                <button class="btn btn-default btn-sm" type="submit" i="submit">
-                                    Add
-                                </button>
+                        <div class="modal-body">
+
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(false, "", new {@class = "text-danger"})
+
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label class="control-label">Name</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        @Html.TextBox("_name", "", new {@class = "form-control"})
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label class="control-label">Friendly Name</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        @Html.TextBox("_friendly", "", new {@class = "form-control"})
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label class="control-label">Description</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        @Html.TextBox("_description", "", new {@class = "form-control"})
+                                    </div>
+                                </div>
+
                             </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-default">Add</button>
                         </div>
                     </div>
                 </div>

@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
 using Bagl.Cib.MIT.IoC;
 using Bagl.Cib.MIT.Logging;
@@ -28,18 +29,23 @@ namespace Gateway.Web.Controllers
         private readonly IGatewayDatabaseService _dataService;
         private readonly IGatewayService _gateway;
         private readonly IGatewayRestService _gatewayRestService;
+        private readonly IBasicRestService _basicRestService;
         private readonly int _refreshPeriodInSeconds;
 
         public ControllersController(
             ISystemInformation information,
             IGatewayDatabaseService dataService,
             IGatewayService gateway,
-            IGatewayRestService gatewayRestService, ILoggingService loggingService) 
+            IGatewayRestService gatewayRestService,
+            ILoggingService loggingService,
+            IBasicRestService basicRestService
+            )
             : base(loggingService)
         {
             _dataService = dataService;
             _gateway = gateway;
             _gatewayRestService = gatewayRestService;
+            _basicRestService = basicRestService;
 
             var refreshPeriodInSeconds = information.GetSetting("ControllerActionRefresh");
             if (!int.TryParse(refreshPeriodInSeconds, out _refreshPeriodInSeconds))
@@ -104,6 +110,7 @@ namespace Gateway.Web.Controllers
         {
             Response.AddHeader("Refresh", _refreshPeriodInSeconds.ToString());
             var model = _gateway.GetWorkers();
+            TempData["Workers"] = model;
             return View(model);
         }
 
@@ -217,5 +224,47 @@ namespace Gateway.Web.Controllers
             return View();
         }
 
+        [RoleBasedAuthorize(Roles = "Security.Delete")]
+        public ActionResult KillAll()
+        {
+            var model = (WorkersModel)TempData["Workers"];
+            if (model == null) return RedirectToAction("Workers");
+
+            var workerProxies = model.Workers.SelectMany(item => item.WorkerInfos);
+            foreach (var item in workerProxies)
+            {
+                var query = string.Format("worker/{0}/{1}/{2}", item.Controller, item.Version, item.Pid);
+                _basicRestService.Delete(item.Node, query, new CancellationToken());
+            }
+
+            return RedirectToAction("Workers");
+        }
+
+        [RoleBasedAuthorize(Roles = "Security.Delete")]
+        public ActionResult KillWorkers(string name)
+        {
+            var model = (WorkersModel)TempData["Workers"];
+            if (model == null) return RedirectToAction("Workers");
+
+            var controllerInfo = model.Workers.FirstOrDefault(i => i.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+            if (controllerInfo == null) return RedirectToAction("Workers");
+
+            var workerProxies = controllerInfo.WorkerInfos;
+            foreach (var item in workerProxies)
+            {
+                var query = string.Format("worker/{0}/{1}/{2}", name, item.Version, item.Pid);
+                _basicRestService.Delete(item.Node, query, new CancellationToken());
+            }
+
+            return RedirectToAction("Workers");
+        }
+
+        [RoleBasedAuthorize(Roles = "Security.Delete")]
+        public ActionResult KillWorker(string name, string version, string node, string pid)
+        {
+            var query = string.Format("worker/{0}/{1}/{2}", name, version, pid);
+            _basicRestService.Delete(node, query, new CancellationToken());
+            return RedirectToAction("Workers");
+        }
     }
 }

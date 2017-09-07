@@ -82,8 +82,8 @@ namespace Gateway.Web.Controllers
             // Post instruction to security controller
             var model = new UserModel
             {
-                Login = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(login),
-                Domain = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(domain),
+                Login = login.ToLower(),
+                Domain = domain.ToUpper(),
                 FullName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(fullName)
             };
 
