@@ -333,6 +333,7 @@ namespace Gateway.Web.Models.Controllers
     {
         public List<WorkerInfo> WorkerInfos { get; set; }
         public string Controller { get; set; }
+        public string Name { get { return Controller.Split('/').Length > 1 ? Controller.Split('/')[0] : Controller; } }
         public int Count { get { return WorkerInfos.Count; } }
         public int Errors
         {

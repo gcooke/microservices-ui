@@ -3,7 +3,7 @@
 namespace Gateway.Web.Models.Group
 {
     [XmlType("Group")]
-    public class GroupModel
+    public class GroupModel:IGroupModel
     {
         public long Id { get; set; }
         public string Name { get; set; }

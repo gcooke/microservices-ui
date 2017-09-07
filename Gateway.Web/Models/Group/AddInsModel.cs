@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
-using Gateway.Web.Models.AddIn;
 using Gateway.Web.Models.Shared;
 
 namespace Gateway.Web.Models.Group
 {
-    public class AddInsModel
+    public class AddInsModel : IGroupModel
     {
         public AddInsModel(long id)
         {
@@ -19,5 +18,6 @@ namespace Gateway.Web.Models.Group
         public List<GroupAddInVersionModel> Items { get; private set; }
         public List<AddInModel> AvailableAddIns { get; private set; }
         public List<SelectListItem> AvailableVersions { get; private set; }
+        public string Name { get; set; }
     }
 }

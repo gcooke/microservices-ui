@@ -2,7 +2,7 @@
 
 namespace Gateway.Web.Models.Group
 {
-    public class ADGroupsModel
+    public class ADGroupsModel : IGroupModel
     {
         public ADGroupsModel(long id)
         {
@@ -12,5 +12,6 @@ namespace Gateway.Web.Models.Group
 
         public long Id { get; set; }
         public List<GroupActiveDirectory> Items { get; set; }
+        public string Name { get; set; }
     }
 }

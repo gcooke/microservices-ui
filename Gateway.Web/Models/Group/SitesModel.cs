@@ -4,7 +4,7 @@ using Gateway.Web.Models.Shared;
 
 namespace Gateway.Web.Models.Group
 {
-    public class SitesModel
+    public class SitesModel : IGroupModel
     {
         public SitesModel(long id)
         {
@@ -16,5 +16,6 @@ namespace Gateway.Web.Models.Group
         public long Id { get; private set; }
         public List<SiteModel> Items { get; private set; }
         public List<SelectListItem> AvailableSites { get; private set; }
+        public string Name { get; set; }
     }
 }

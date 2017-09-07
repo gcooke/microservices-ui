@@ -76,7 +76,9 @@ namespace Gateway.Web.Services
 
         Models.Permission.PermissionModel GetPermission(long id);
 
-        string[] DeletePermission(long id, long groupId);
+        string[] DeleteGroupPermission(long id, long groupId);
+
+        string[] DeleteGroupPortfolio(long id, long groupId);
 
         string[] Create(Models.Permission.PermissionModel model);
 

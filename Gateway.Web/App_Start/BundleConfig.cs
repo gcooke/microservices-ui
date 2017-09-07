@@ -24,6 +24,7 @@ namespace Gateway.Web
 
             bundles.Add(new ScriptBundle("~/bundles/spinner").Include(
                 "~/Content/js/spinner.js",
+                "~/Content/js/row-click.js",
                 "~/Content/js/loading.js"
                 ));
 

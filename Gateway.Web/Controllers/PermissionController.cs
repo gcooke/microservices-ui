@@ -1,5 +1,6 @@
 ﻿using System.Web.Mvc;
 using Bagl.Cib.MIT.Logging;
+using Bagl.Cib.MSF.ClientAPI.Gateway;
 using Gateway.Web.Authorization;
 using Gateway.Web.Services;
 using Gateway.Web.Utils;
@@ -11,10 +12,14 @@ namespace Gateway.Web.Controllers
     public class PermissionController : BaseController
     {
         private readonly IGatewayService _gateway;
+        private readonly IGatewayRestService _gatewayRestService;
 
-        public PermissionController(IGatewayService gateway, ILoggingService loggingService)
+        public PermissionController(IGatewayService gateway,
+            IGatewayRestService gatewayRestService,
+            ILoggingService loggingService)
             : base(loggingService)
         {
+            _gatewayRestService = gatewayRestService;
             _gateway = gateway;
         }
 
@@ -30,26 +35,21 @@ namespace Gateway.Web.Controllers
         }
 
         [RoleBasedAuthorize(Roles = "Security.Delete")]
-        public ActionResult RemovePermission(long id, long groupId)
+        public ActionResult RemovePermission(long id)
         {
             ModelState.Clear();
 
-            // Post instruction to security controller
             if (ModelState.IsValid)
             {
-                var result = _gateway.DeletePermission(id, groupId);
-                if (result != null)
-                    foreach (var item in result)
-                    {
-                        ModelState.AddModelError("Remote", item);
-                    }
+                var query = string.Format("permissions/{0}", id);
+                var response = _gatewayRestService.Delete("Security", "latest", query, string.Empty);
+                if (!response.Successfull)
+                {
+                    ModelState.AddModelError("Remote", response.Content.Message);
+                }
             }
 
-            //Setup next view
-            if (ModelState.IsValid)
-                return Redirect("~/Security/Permissions");
-
-            return Details(id);
+            return RedirectToAction("Permissions", "Security");
         }
     }
 }

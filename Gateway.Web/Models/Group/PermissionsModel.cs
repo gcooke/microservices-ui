@@ -4,7 +4,7 @@ using Gateway.Web.Models.Permission;
 
 namespace Gateway.Web.Models.Group
 {
-    public class PermissionsModel
+    public class PermissionsModel : IGroupModel
     {
         public PermissionsModel(long id)
         {
@@ -16,5 +16,6 @@ namespace Gateway.Web.Models.Group
         public long Id { get; set; }
         public List<PermissionModel> Items { get; private set; }
         public List<SelectListItem> AvailablePermissions { get; private set; }
+        public string Name { get; set; }
     }
 }
