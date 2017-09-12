@@ -57,52 +57,6 @@ namespace Gateway.Web.Controllers
 
             return Details(id);
         }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [RoleBasedAuthorize(Roles = "Security.Modify")]
-        public ActionResult InsertUser(FormCollection collection)
-        {
-            ModelState.Clear();
-
-            // Validate parameters
-            var login = collection["_login"];
-            var domain = collection["_domain"];
-            var fullName = collection["_fullName"];
-
-            if (string.IsNullOrEmpty(domain))
-                ModelState.AddModelError("Domain", "Domain cannot be empty");
-
-            if (string.IsNullOrEmpty(fullName))
-                ModelState.AddModelError("_fullName", "Full name cannot be empty");
-
-            if (string.IsNullOrEmpty(login))
-                ModelState.AddModelError("_login", "User name cannot be empty");
-
-            // Post instruction to security controller
-            var model = new UserModel
-            {
-                Login = login.ToLower(),
-                Domain = domain.ToUpper(),
-                FullName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(fullName)
-            };
-
-            if (ModelState.IsValid)
-            {
-                var result = _gateway.Create(model);
-                if (result != null)
-                    foreach (var item in result)
-                    {
-                        ModelState.AddModelError("Remote", item);
-                    }
-            }
-
-            //Setup next view
-            if (ModelState.IsValid)
-                return Redirect("~/Security/Users");
-
-            return View("Details", model);
-        }
         #endregion
 
         #region Groups

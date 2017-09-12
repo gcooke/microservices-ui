@@ -13,6 +13,7 @@
 
         <br />
         <div id="containerx bulk">
+            @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
             <table style="width: 100%; white-space: nowrap" class="datatable table">
                 <thead>
@@ -53,7 +54,6 @@
 
                         <div class="modal-body">
                             @Html.AntiForgeryToken()
-                            @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
                             <div class="container-fluid">
                                 <div class="row">
