@@ -1162,7 +1162,9 @@ namespace Gateway.Web.Services
         {
             var serverResponse = Fetch("health/info");
 
-            if (serverResponse == null || !serverResponse.Document.Descendants().Any())
+            if (serverResponse == null || 
+                serverResponse.Document == null ||
+                !serverResponse.Document.Descendants().Any())
                 return new GatewayInfo();
 
             var xmlElement = serverResponse.Document.Descendants().First();

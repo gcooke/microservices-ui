@@ -15,16 +15,17 @@
 
             <table style="width: 100%; white-space: nowrap" class="datatable table">
                 <thead>
-                    <tr>
-                        <td>Name</td>
-                        <td colspan="2">
-                            Description
-                            <a class="btn btn-default btn-xs glyphicon glyphicon-plus pull-right"
-                               data-target=".add-modal"
-                               data-toggle="modal">
-                            </a>
-                        </td>
-                    </tr>
+                <tr>
+                    <td></td>
+                    <td>Name</td>
+                    <td>
+                        Description
+                        <a class="btn btn-default btn-xs glyphicon glyphicon-plus pull-right"
+                           data-target=".add-modal"
+                           data-toggle="modal">
+                        </a>
+                    </td>
+                </tr>
                 </thead>
                 @foreach (GroupModel item in Model.UserGroups)
                 {
