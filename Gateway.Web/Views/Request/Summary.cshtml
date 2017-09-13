@@ -61,7 +61,11 @@
             </tr>
             <tr>
                 <td class="columnheader">Resource</td>
-                <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">@Model.Resource</td>
+                <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
+                    <div data-toggle="tooltip" title="@Model.Resource">
+                        @Model.Resource
+                    </div>
+                </td>
                 <td class="columnheader">Request Type</td>
                 <td>@Model.RequestType</td>
             </tr>
