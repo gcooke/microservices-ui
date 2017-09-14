@@ -17,7 +17,7 @@
     <AssemblyName>Gateway.Web</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort>443</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
@@ -380,6 +380,7 @@
     <Compile Include="Utils\Compression.cs" />
     <Compile Include="Utils\Constants.cs" />
     <Compile Include="Utils\DataContractSerializationEx.cs" />
+    <Compile Include="Utils\ReportsModelEx.cs" />
     <Compile Include="Utils\RestResponseEx.cs" />
     <Compile Include="Utils\SerializationEx.cs" />
     <Compile Include="Utils\SessionEx.cs" />

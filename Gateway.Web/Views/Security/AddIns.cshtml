@@ -7,17 +7,23 @@
 @using Gateway.Web.Utils
 @using Newtonsoft.Json
 @using Version = Gateway.Web.Models.Controller.Version
+@model AddInsModel
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
     ViewBag.Title = "Security";
     ViewBag.Current = "AddIns";
 }
-@{ Html.RenderPartial("_SecurityNav", (AddInsModel)@Model); }
+@{ Html.RenderPartial("_SecurityNav", Model); }
 
 <div id="page-content-wrapper">
     <div class="hero-unit">
         <br />
         <div id="containerx bulk">
+            @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+            <!-- Table of all add-in types -->
+            <h3 style="margin-bottom: 0px">Add Ins</h3>
+            <p>All configured add-ins</p>
             <table style="width: 100%; white-space: nowrap" class="datatable">
                 <thead>
                     <tr>
@@ -33,8 +39,8 @@
                     </tr>
                 </thead>
                 @foreach (AddInModel item in Model.Items)
-            {
-                    <tr data-href="@(Url.Action("Details", "AddIn", new { id = item.Id }))">
+                {
+                    <tr data-href="@(Url.Action("Details", "AddIn", new {id = item.Id}))">
                         <td>@item.Name</td>
                         <td>@item.FriendlyName</td>
                         <td>@item.Description</td>
@@ -46,9 +52,35 @@
             </table>
             <br />
 
+            <!-- Table of all add-ins assigned to groups/users -->
+            <h3 style="margin-bottom: 0px">Active Versions</h3>
+            <p>All versions that are currently assigned to groups or users</p>
+            <table style="width: 100%; white-space: nowrap" class="datatable">
+                <thead>
+                    <tr>
+                        <td>Add-In</td>
+                        <td>Version
+                            <a class="btn btn-default btn-xs glyphicon glyphicon-transfer pull-right"
+                               data-target=".upgrade-modal"
+                               data-toggle="modal">
+                            </a></td>
+                    </tr>
+                </thead>
+                @foreach (var row in Model.ActiveVersions.Rows)
+                {
+                    <tr>
+                        @foreach (string val in row.Values)
+                        {
+                            <td>@val</td>
+                        }
+                    </tr>
+                }
+            </table>
+            <br />
         </div>
         <br />
 
+        <!-- Add Add-In Form -->
         @using (Html.BeginForm("InsertAddIn", "Security", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
             @*<a class="btn btn-default btn-sm" data-toggle="collapse" href="#collapsePanel" aria-expanded="false" aria-controls="collapsePanel">
@@ -71,7 +103,6 @@
                         <div class="modal-body">
 
                             @Html.AntiForgeryToken()
-                            @Html.ValidationSummary(false, "", new {@class = "text-danger"})
 
                             <div class="container-fluid">
                                 <div class="row">
@@ -79,7 +110,7 @@
                                         <label class="control-label">Name</label>
                                     </div>
                                     <div class="col-md-4">
-                                        @Html.TextBox("_name", "", new {@class = "form-control"})
+                                        @Html.TextBox("_name", "", new { @class = "form-control" })
                                     </div>
                                 </div>
                                 <div class="row">
@@ -87,7 +118,7 @@
                                         <label class="control-label">Friendly Name</label>
                                     </div>
                                     <div class="col-md-4">
-                                        @Html.TextBox("_friendly", "", new {@class = "form-control"})
+                                        @Html.TextBox("_friendly", "", new { @class = "form-control" })
                                     </div>
                                 </div>
                                 <div class="row">
@@ -95,7 +126,7 @@
                                         <label class="control-label">Description</label>
                                     </div>
                                     <div class="col-md-4">
-                                        @Html.TextBox("_description", "", new {@class = "form-control"})
+                                        @Html.TextBox("_description", "", new { @class = "form-control" })
                                     </div>
                                 </div>
 
@@ -104,6 +135,54 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-default">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <!-- Upgrade Add-In Form  -->
+        @using (Html.BeginForm("UpgradeAddIn", "Security", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            <div class="modal fade upgrade-modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel">Upgrade Version Assignments</h4>
+                            <p>This function updates all groups and users that are assigned a particular version to a new version</p>
+                        </div>
+
+                        <div class="modal-body">
+
+                            @Html.AntiForgeryToken()
+
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label class="control-label">From</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        @Html.DropDownList("_from", Model.From, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label class="control-label">To</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        @Html.DropDownList("_to", Model.To, new { @class = "form-control" })
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-default">Assign</button>
                         </div>
                     </div>
                 </div>
