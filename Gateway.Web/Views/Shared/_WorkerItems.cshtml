@@ -1,5 +1,4 @@
-﻿
-<div id="page-content-wrapper">
+﻿<div id="page-content-wrapper">
     <h3 class="text-lowercase">
         Workers
     </h3>
@@ -11,7 +10,7 @@
             <div class="col-sm-1 text-center">PID</div>
             <div class="col-sm-3 text-center">Output</div>
             <div class="col-sm-offset-2">
-                <a href="~/Controllers/KillAll/" title="Kill all workers">
+                <a href="~/Controllers/KillAll/" title="Kill all workers" class="@(Model.Workers != null ? "block" : "hidden")">
                     <span class="btn btn-danger btn-xs glyphicon glyphicon-remove pull-right"></span>
                 </a>
             </div>
@@ -47,7 +46,7 @@
                                 <small class="btn btn-danger btn-xs glyphicon glyphicon-remove pull-right"></small>
                             </a>
                         </div>
-                        <div class="col-sm-offset-1 col-sm-1">@worker.Version</div>
+                        <div class="col-sm-1 @(worker.State ? "col-sm-offset-1" : "")">@worker.Version</div>
                         <div class="col-sm-2">@worker.Node</div>
                         <div class="col-sm-1">@worker.Pid</div>
                         <div class="col-sm-3">@worker.Output</div>

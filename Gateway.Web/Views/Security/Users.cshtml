@@ -10,13 +10,14 @@
 <div id="page-content-wrapper">
     <div class="hero-unit">
         <br />
+        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
         <p>
             <strong>Please Note:</strong>
              users can have access without appearing in this list through Active Directory membership to groups. To view effective permissions for a user, please click on the report links in the left hand navigation panel.
         </p>
 
         <div id="containerx bulk">
-
             <table style="width: 100%; white-space: nowrap" class="datatable table">
                 <thead>
                     <tr>
@@ -41,7 +42,7 @@
             </table>
             <br />
         </div>
-        @using (Html.BeginForm("InsertUser", "User", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        @using (Html.BeginForm("InsertUser", "Security", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
             <div class="modal fade add-modal" tabindex="-1" role="dialog">
                 <div class="modal-dialog modal-lg" role="document">
@@ -57,7 +58,6 @@
                         <div class="modal-body">
 
                             @Html.AntiForgeryToken()
-                            @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
                             <div class="container-fluid">
                                 <div class="row">

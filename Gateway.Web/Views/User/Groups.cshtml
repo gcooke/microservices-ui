@@ -12,19 +12,21 @@
     <div class="hero-unit">
         <br />
         <div id="containerx bulk">
+            @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
             <table style="width: 100%; white-space: nowrap" class="datatable table">
                 <thead>
-                    <tr>
-                        <td>Name</td>
-                        <td colspan="2">
-                            Description
-                            <a class="btn btn-default btn-xs glyphicon glyphicon-plus pull-right"
-                               data-target=".add-modal"
-                               data-toggle="modal">
-                            </a>
-                        </td>
-                    </tr>
+                <tr>
+                    <td></td>
+                    <td>Name</td>
+                    <td>
+                        Description
+                        <a class="btn btn-default btn-xs glyphicon glyphicon-plus pull-right"
+                           data-target=".add-modal"
+                           data-toggle="modal">
+                        </a>
+                    </td>
+                </tr>
                 </thead>
                 @foreach (GroupModel item in Model.UserGroups)
                 {
@@ -55,7 +57,6 @@
 
                         <div class="modal-body">
                             @Html.AntiForgeryToken()
-                            @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
                             <!-- Hidden Id Field -->
                             @Html.TextBox("_id", Model.Id, new { @class = "form-control", @style = "display:none" })

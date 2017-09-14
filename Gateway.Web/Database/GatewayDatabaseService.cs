@@ -227,6 +227,18 @@ namespace Gateway.Web.Database
                     result.Items.Add(new PayloadModel(item));
                 }
             }
+
+            if (result.Items.Count < 2)
+            {
+                if (result.Items.All(i => i.Direction != "Response"))
+                {
+                    result.Items.Add(new PayloadModel("Response"));
+                }
+                if (result.Items.All(i => i.Direction != "Request"))
+                {
+                    result.Items.Insert(0, new PayloadModel("Request"));
+                }
+            }
             return result;
         }
 

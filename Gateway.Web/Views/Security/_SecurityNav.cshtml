@@ -48,6 +48,12 @@
 
     <ul class="sidebar-nav">
         <li>
+            <a href="~/Security/Reports/Audit"
+               class="@(ViewBag.Report == "Audit" ? "active" : "")">
+                <span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;Audit
+            </a>
+        </li>
+        <li>
             <a href="~/Security/Reports/EffectivePermissions/null"
                class="@(ViewBag.Report == "EffectivePermissions" ? "active" : "")">
                 <span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;Effective Permissions

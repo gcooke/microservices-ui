@@ -30,6 +30,13 @@ namespace Gateway.Web.Models.Request
 
     public class PayloadModel
     {
+        public PayloadModel(string direction)
+        {
+            Id = 0;
+            Data = "None";
+            Direction = direction;
+        }
+
         public PayloadModel(spGetPayloads_Result payload)
         {
             Id = payload.Id;

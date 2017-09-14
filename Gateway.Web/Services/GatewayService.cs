@@ -379,6 +379,11 @@ namespace Gateway.Web.Services
                 result.Items.AddRange(interim.OrderBy(v => v.Name));
             }
 
+            // Get active add-ins
+            result.From = GetAvailableReferencedAddInVersions().ToList();
+            result.To = GetAvailableAddInVersions().ToList();
+            result.ActiveVersions = result.From.ConvertToReportTable();
+
             return result;
         }
 
@@ -406,13 +411,9 @@ namespace Gateway.Web.Services
             if (response.Successfull)
             {
                 var element = response.Content.GetPayloadAsXElement();
-                foreach (var item in element.Descendants("AddInVersion"))
+                foreach (var model in DeserializeVersionItems(element).OrderByDescending(v => v.ActualVersion))
                 {
-                    result.Add(new AddInVersionModel
-                    {
-                        AddIn=item.Element("AddIn").Value,
-                        Version = item.Element("Version").Value
-                    });
+                    result.Add(model);
                 }
             }
 
@@ -717,7 +718,7 @@ namespace Gateway.Web.Services
 
             PopulateAvailableAddIns(result);
 
-            var availableVersions = PopulateAvailableVersions();
+            var availableVersions = GetAvailableAddInVersions();
             result.AvailableVersions.AddRange(availableVersions.OrderBy(v => v.Text));
 
             return result;
@@ -740,6 +741,20 @@ namespace Gateway.Web.Services
         {
             var query = string.Format("groups/{0}/addins/{1}", groupId, id);
             var response = _gatewayRestService.Delete("Security", "latest", query, string.Empty);
+
+            if (response.Successfull)
+            {
+                return null;
+            }
+
+            return new[] { response.Content.Message };
+        }
+
+        public string[] UpdateAssignedAddInVersions(string @from, string to)
+        {
+            var query = "addins/reassign";
+            var payload = string.Format("{0}|{1}", @from, @to);
+            var response = _gatewayRestService.Put("Security", "latest", query, payload);
 
             if (response.Successfull)
             {
@@ -901,7 +916,7 @@ namespace Gateway.Web.Services
                 var element = response.Content.GetPayloadAsXElement();
                 var model = element.Deserialize<Models.User.AddInsModel>();
 
-                var availableVersions = PopulateAvailableVersions();
+                var availableVersions = GetAvailableAddInVersions();
                 model.AvailableAddInVersions.AddRange(availableVersions.OrderBy(v => v.Text));
                 return model;
             }
@@ -1134,35 +1149,59 @@ namespace Gateway.Web.Services
             }
         }
 
-        private List<SelectListItem> PopulateAvailableVersions()
+        private IEnumerable<SelectListItem> GetAvailableAddInVersions()
         {
-            var selectListItems = new List<SelectListItem>();
             var response = _gatewayRestService.Get("Security", "latest", "addins/versions");
 
             if (response.Successfull)
             {
                 var element = response.Content.GetPayloadAsXElement();
-                foreach (var item in element.Descendants("AddInVersion"))
+                foreach (var model in DeserializeVersionItems(element).OrderByDescending(v => v.ActualVersion))
                 {
-                    var model = item.Deserialize<AddInVersionModel>();
-                    if (string.Equals(model.AddIn, "ExcelTools", StringComparison.CurrentCultureIgnoreCase)) continue;
-
-                    var foo = new SelectListItem
+                    yield return new SelectListItem
                     {
                         Text = string.Format("{0} - {1}", model.AddIn, model.Version),
                         Value = string.Format("{0}|{1}", model.AddIn, model.Version)
                     };
-                    selectListItems.Add(foo);
                 }
             }
-            return selectListItems;
+        }
+
+        private IEnumerable<SelectListItem> GetAvailableReferencedAddInVersions()
+        {
+            var response = _gatewayRestService.Get("Security", "latest", "addins/versions/referenced");
+
+            if (response.Successfull)
+            {
+                var element = response.Content.GetPayloadAsXElement();
+                foreach (var model in DeserializeVersionItems(element).OrderByDescending(v => v.ActualVersion))
+                {
+                    yield return new SelectListItem
+                    {
+                        Text = string.Format("{0} - {1}", model.AddIn, model.Version),
+                        Value = string.Format("{0}|{1}", model.AddIn, model.Version)
+                    };
+                }
+            }
+        }
+
+        private IEnumerable<AddInVersionModel> DeserializeVersionItems(XElement element)
+        {
+            foreach (var item in element.Descendants("AddInVersion"))
+            {
+                var model = item.Deserialize<AddInVersionModel>();
+                if (string.Equals(model.AddIn, "ExcelTools", StringComparison.CurrentCultureIgnoreCase)) continue;
+                yield return model;
+            }
         }
 
         private GatewayInfo GetGatewayInfo()
         {
             var serverResponse = Fetch("health/info");
 
-            if (serverResponse == null || !serverResponse.Document.Descendants().Any())
+            if (serverResponse == null || 
+                serverResponse.Document == null ||
+                !serverResponse.Document.Descendants().Any())
                 return new GatewayInfo();
 
             var xmlElement = serverResponse.Document.Descendants().First();

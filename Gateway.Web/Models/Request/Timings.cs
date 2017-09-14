@@ -51,16 +51,13 @@ namespace Gateway.Web.Models.Request
             // Calculate total time -  it is not necessarily the first request item (although it should be).
             EntireTree = GetAllChildren(Root).ToArray();
 
-            var start = EntireTree.Where(t => !string.IsNullOrEmpty(t.StartUtc)).Min(t => DateTime.Parse(t.StartUtc));
+            var items = EntireTree
+                        .Where(t => !string.IsNullOrEmpty(t.EndUtc))
+                        .DefaultIfEmpty(new RequestPayload { EndUtc = DateTime.MinValue.ToString(), StartUtc = DateTime.MinValue.ToString() })
+                        .ToList();
 
-            var end = EntireTree.Where(t => !string.IsNullOrEmpty(t.EndUtc))
-             .DefaultIfEmpty(
-                                new RequestPayload
-                                {
-                                    EndUtc = DateTime.MinValue.ToString(),
-                                    StartUtc = DateTime.MinValue.ToString()
-                                })
-                .Max(t => DateTime.Parse(t.EndUtc));
+            var start = items.Min(t => DateTime.Parse(t.StartUtc));
+            var end = items.Max(t => DateTime.Parse(t.EndUtc));
 
             var totalTime = (end - start);
             WallClock = totalTime.Humanize();

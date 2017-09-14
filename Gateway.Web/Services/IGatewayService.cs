@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 using System.Xml.Linq;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
 using Gateway.Web.Models.AddIn;
@@ -105,6 +106,8 @@ namespace Gateway.Web.Services
         string[] InsertGroupAddInVersion(long groupId, AddInVersionModel addInVersion);
 
         string[] DeleteGroupAddInVersion(long id, long groupId);
+
+        string[] UpdateAssignedAddInVersions(string from, string to);
 
         #region User Security Configuration
         string[] RemoveUser(long id);

@@ -21,7 +21,10 @@
             <br />
             <h4>
                 @payload.Direction
-                @Html.ActionLink(" ", "Download", "Request", new {correlationId = Model.CorrelationId, payloadId = payload.Id}, new {@class = "glyphicon glyphicon-download hoverlink"})
+                @if (payload.Id != 0)
+                {
+                    @Html.ActionLink(" ", "Download", "Request", new {correlationId = Model.CorrelationId, payloadId = payload.Id}, new {@class = "glyphicon glyphicon-download hoverlink"})
+                }
             </h4>
             <pre>@payload.Data</pre>
             <br />

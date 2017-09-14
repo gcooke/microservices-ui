@@ -20,6 +20,7 @@
 
         <br />
         <div id="containerx bulk">
+            @Html.ValidationSummary(false, "", new {@class = "text-danger"})
 
             <table style="width: 100%; white-space: nowrap" class="datatable">
                 <thead>
@@ -61,7 +62,6 @@
 
                         <div class="modal-body">
                             @Html.AntiForgeryToken()
-                            @Html.ValidationSummary(false, "", new {@class = "text-danger"})
 
                             <!-- Hidden Id Field -->
                             @Html.TextBox("_id", Model.Id, new {@class = "form-control", @style = "display:none"})

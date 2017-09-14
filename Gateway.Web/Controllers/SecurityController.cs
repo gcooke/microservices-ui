@@ -1,9 +1,11 @@
-﻿using System.Web.Mvc;
+﻿using System.Globalization;
+using System.Web.Mvc;
 using Bagl.Cib.MIT.Logging;
 using Gateway.Web.Authorization;
 using Gateway.Web.Models.Group;
 using Gateway.Web.Models.Permission;
 using Gateway.Web.Models.Shared;
+using Gateway.Web.Models.User;
 using Gateway.Web.Services;
 using Gateway.Web.Utils;
 namespace Gateway.Web.Controllers
@@ -13,7 +15,7 @@ namespace Gateway.Web.Controllers
     {
         private readonly IGatewayService _gateway;
 
-        public SecurityController(IGatewayService gateway, ILoggingService loggingService) 
+        public SecurityController(IGatewayService gateway, ILoggingService loggingService)
             : base(loggingService)
         {
             _gateway = gateway;
@@ -33,7 +35,7 @@ namespace Gateway.Web.Controllers
         public ActionResult Users()
         {
             var model = _gateway.GetUsers();
-            return View(model);
+            return View("Users", model);
         }
 
         public ActionResult AddIns()
@@ -197,6 +199,89 @@ namespace Gateway.Web.Controllers
                 return Redirect("~/Security/Permissions/");
 
             return Permissions();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [RoleBasedAuthorize(Roles = "Security.Modify")]
+        public ActionResult InsertUser(FormCollection collection)
+        {
+            ModelState.Clear();
+
+            // Validate parameters
+            var login = collection["_login"];
+            var domain = collection["_domain"];
+            var fullName = collection["_fullName"];
+
+            if (string.IsNullOrEmpty(domain))
+                ModelState.AddModelError("Domain", "Domain cannot be empty");
+
+            if (string.IsNullOrEmpty(fullName))
+                ModelState.AddModelError("_fullName", "Full name cannot be empty");
+
+            if (string.IsNullOrEmpty(login))
+                ModelState.AddModelError("_login", "User name cannot be empty");
+
+            // Post instruction to security controller
+            var model = new UserModel
+            {
+                Login = login.ToLower(),
+                Domain = domain.ToUpper(),
+                FullName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(fullName)
+            };
+
+            if (ModelState.IsValid)
+            {
+                var result = _gateway.Create(model);
+                if (result != null)
+                    foreach (var item in result)
+                    {
+                        ModelState.AddModelError("Remote", item);
+                    }
+            }
+
+            //Setup next view
+            if (ModelState.IsValid)
+                return Redirect("~/Security/Users");
+
+            return Users();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [RoleBasedAuthorize(Roles = "Security.Modify")]
+        public ActionResult UpgradeAddIn(FormCollection collection)
+        {
+            ModelState.Clear();
+
+            // Validate parameters
+            var fromVersion = collection["_from"];
+            var toVersion = collection["_to"];
+
+            if (string.IsNullOrEmpty(fromVersion))
+                ModelState.AddModelError("From", "From cannot be empty");
+
+            if (string.IsNullOrEmpty(toVersion))
+                ModelState.AddModelError("To", "To cannot be empty");
+
+            if (fromVersion == toVersion)
+                ModelState.AddModelError("Versions", "Cannot re-assign the same version");
+
+            if (ModelState.IsValid)
+            {
+                var result = _gateway.UpdateAssignedAddInVersions(fromVersion, toVersion);
+                if (result != null)
+                {
+                    foreach(var item in result)
+                        ModelState.AddModelError("Remote", item);
+                }
+            }
+
+            //Setup next view
+            if (ModelState.IsValid)
+                return Redirect("~/Security/AddIns/");
+
+            return AddIns();
         }
     }
 }
