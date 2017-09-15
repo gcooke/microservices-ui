@@ -28,7 +28,7 @@ namespace Gateway.Web.Controllers
         public ActionResult Details(string id)
         {
             var model = _gateway.GetGroup(id.ToLongOrDefault());
-            TempData["GroupName"]= model.Name;
+            TempData["GroupName"] = model.Name;
             return View("Details", model);
         }
 
@@ -217,7 +217,7 @@ namespace Gateway.Web.Controllers
                 return Redirect(string.Format("~/Group/Portfolios/{0}", groupId));
 
             return Portfolios(groupId);
-        }        
+        }
         #endregion
 
         #region Sites
@@ -364,6 +364,36 @@ namespace Gateway.Web.Controllers
             return AddIns(groupId);
         }
         #endregion
+
+        [RoleBasedAuthorize(Roles = "Security.Delete")]
+        public ActionResult RemovePermission(string id, string groupId)
+        {
+            ModelState.Clear();
+
+            // Validate parameters
+            if (string.IsNullOrEmpty(id))
+                ModelState.AddModelError("Id", "Id cannot be empty");
+
+            if (string.IsNullOrEmpty(groupId))
+                ModelState.AddModelError("GroupId", "GroupId cannot be empty");
+
+            // Post instruction to security controller
+            if (ModelState.IsValid)
+            {
+                var result = _gateway.DeleteGroupPermission(id.ToLongOrDefault(), groupId.ToLongOrDefault());
+                if (result != null)
+                    foreach (var item in result)
+                    {
+                        ModelState.AddModelError("Remote", item);
+                    }
+            }
+
+            //Setup next view
+            if (ModelState.IsValid)
+                return Redirect(string.Format("~/Group/Permissions/{0}", groupId));
+
+            return Permissions(groupId.ToString());
+        }
 
         private void SetName(IGroupModel model)
         {

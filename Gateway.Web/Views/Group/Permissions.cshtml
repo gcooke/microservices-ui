@@ -38,9 +38,8 @@
             {
                     <tr>
                         <td>
-                            @Html.ActionLink(" ", "RemovePermission", "Permission", new { groupId = @Model.Id, id = item.Id }, new { @class = "text-center glyphicon glyphicon-trash" })
+                            @Html.ActionLink(" ", "RemovePermission", "Group", new { id = item.Id, groupId = @Model.Id }, new { @class = "text-center glyphicon glyphicon-trash" })
                         </td>
-
                         <td>@item.SystemName</td>
                         <td>@item.Name</td>
                     </tr>
