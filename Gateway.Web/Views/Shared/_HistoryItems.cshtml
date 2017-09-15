@@ -7,7 +7,7 @@
     var action = (string)ViewBag.Action ?? "History";
 }
 
-<table style="width: 100%; white-space: nowrap" class="datatable table">
+<table style="width: 100%; white-space: nowrap" class="datatable table" id="searchable-table">
     <thead>
         <tr>
             <td>
@@ -101,44 +101,57 @@
                     }
                 </b>
             </td>
-            @*<td><b>Action</b></td>*@
+        </tr>
+        <tr>
+            <td colspan="7">
+                <div class="form-group">
+                    <input class="form-control col-sm-11"
+                           placeholder="search for request..."
+                           data-input="quick-search"
+                           data-search-target="#searchable-table tbody > tr"
+                           name="quick-search"
+                           type="text">
+                    <span class="col-sm-1 form-control-feedback form-action-clear glyphicon glyphicon-remove form-control input-group-addon"
+                          aria-hidden="true"></span>
+                </div>
+            </td>
         </tr>
     </thead>
-
-    @foreach (var history in items)
-    {
-        <tr data-href="@(Url.Action("Summary", "Request", new { correlationId = history.CorrelationId }))">
-            <td>
-                <a href="~/Controller/History/@history.Controller" class="hoverlink">@history.Controller</a>
-            </td>
-            <td>
-                <a href="~/Controller/Versions/@history.Controller" class="hoverlink">@history.Version</a>
-            </td>
-            <td style="max-width: 100px; overflow: hidden; text-overflow: ellipsis;">
-                <a href="~/User/History?id=0&login=@history.UserFormatted" class="hoverlink">@history.UserFormatted</a>
-            </td>
-            <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
-                <div data-toggle="tooltip" title="@history.Resource">
-                    @history.Resource
-                </div>
-            </td>
-            <td>@history.StartFormatted</td>
-            <td>
-                <div style="width: @history.RelativePercentage%; background: rgb(128, 177, 133); overflow: visible;">
-                    @history.TimeTakenFormatted
-                </div>
-            </td>
-            <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
-                @if (history.IsComplete)
+    <tbody>
+        @foreach (var history in items)
+        {
+            <tr data-href="@(Url.Action("Summary", "Request", new { correlationId = history.CorrelationId }))">
+                <td>
+                    <a href="~/Controller/History/@history.Controller" class="hoverlink">@history.Controller</a>
+                </td>
+                <td>
+                    <a href="~/Controller/Versions/@history.Controller" class="hoverlink">@history.Version</a>
+                </td>
+                <td style="max-width: 100px; overflow: hidden; text-overflow: ellipsis;">
+                    <a href="~/User/History?id=0&login=@history.UserFormatted" class="hoverlink">@history.UserFormatted</a>
+                </td>
+                <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
+                    <div data-toggle="tooltip" title="@history.Resource">
+                        @history.Resource
+                    </div>
+                </td>
+                <td>@history.StartFormatted</td>
+                <td>
+                    <div style="width: @history.RelativePercentage%; background: rgb(128, 177, 133); overflow: visible;">
+                        @history.TimeTakenFormatted
+                    </div>
+                </td>
+                <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
+                    @if (history.IsComplete)
                 {
-                    @history.ResultFormatted
-                }
-                else
-                {
-                    <div style="color: #F78A09">@history.ResultFormatted</div>
-                }
-            </td>
-        </tr>
-    }
-
+                        @history.ResultFormatted
+                    }
+                    else
+                    {
+                        <div style="color: #F78A09">@history.ResultFormatted</div>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>
