@@ -15,7 +15,7 @@
         <div id="containerx bulk">
             @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
-            <table style="width: 100%; white-space: nowrap" class="datatable table">
+            <table style="width: 100%; white-space: nowrap" class="datatable table" id="searchable-table">
                 <thead>
                     <tr>
                         <td>Group</td>
@@ -26,14 +26,30 @@
                                data-toggle="modal"></a>
                         </td>
                     </tr>
-                </thead>
-                @foreach (GroupModel group in Model.Items)
-                {
-                    <tr data-href="@(Url.Action("Details", "Group", new { id = group.Id }))">
-                        <td>@group.Name</td>
-                        <td colspan="2">@group.Description</td>
+                    <tr>
+                        <td colspan="2">
+                            <div class="form-group">
+                                <input class="form-control col-sm-11"
+                                       placeholder="search for group..."
+                                       data-input="quick-search"
+                                       data-search-target="#searchable-table tbody > tr"
+                                       name="quick-search"
+                                       type="text">
+                                <span class="col-sm-1 form-control-feedback form-action-clear glyphicon glyphicon-remove form-control input-group-addon"
+                                      aria-hidden="true"></span>
+                            </div>
+                        </td>
                     </tr>
-                }
+                </thead>
+                <tbody>
+                    @foreach (GroupModel group in Model.Items)
+                    {
+                        <tr data-href="@(Url.Action("Details", "Group", new { id = group.Id }))">
+                            <td>@group.Name</td>
+                            <td colspan="2">@group.Description</td>
+                        </tr>
+                    }
+                </tbody>
             </table>
             <br />
         </div>

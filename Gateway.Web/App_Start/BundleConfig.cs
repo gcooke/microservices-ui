@@ -20,7 +20,8 @@ namespace Gateway.Web
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                 "~/Content/js/bootstrap.js",
-                "~/Content/js/respond.js"));
+                "~/Content/js/respond.js",
+                "~/Content/js/bootstrap-quick-search.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/spinner").Include(
                 "~/Content/js/spinner.js",
@@ -33,7 +34,8 @@ namespace Gateway.Web
                 "~/Content/css/simple-sidebar.css",
                 "~/Content/css/datatable.css",
                 "~/Content/css/treeview.css",
-                "~/Content/css/Site.css"
+                "~/Content/css/Site.css",
+                "~/Content/css/bootstrap-quick-search.css"
                 ));
         }
     }

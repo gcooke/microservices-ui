@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Web.Security;
+using Bagl.Cib.MIT.Logging;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
 using Microsoft.Practices.ServiceLocation;
 
@@ -8,10 +9,15 @@ namespace Gateway.Web.Authorization
     public class AuthorizedRoleProvider : RoleProvider
     {
         private readonly IRoleService _roleService;
+        private readonly ILogger _logger;
+
         public AuthorizedRoleProvider()
         {
             _roleService = ServiceLocator.Current.GetInstance<IRoleService>();
+            var loggingService = ServiceLocator.Current.GetInstance<ILoggingService>();;
+            _logger = loggingService.GetLogger(this);
         }
+
         public override bool IsUserInRole(string username, string roleName)
         {
             var userDetail = _roleService.GetUserDetail(username);
@@ -30,6 +36,10 @@ namespace Gateway.Web.Authorization
                 return userDetail.Roles
                     .Where(r => r.SystemName == "Redstone Dashboard")
                     .Select(r => r.Name).ToArray();
+            }
+            else
+            {
+                _logger.ErrorFormat("User {0} does not have roles defined for Dashboard access.", username);
             }
             return new string[] { };
         }
@@ -76,4 +86,4 @@ namespace Gateway.Web.Authorization
 
         public override string ApplicationName { get; set; }
     }
-}
+};

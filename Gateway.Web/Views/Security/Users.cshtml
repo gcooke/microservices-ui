@@ -14,11 +14,11 @@
 
         <p>
             <strong>Please Note:</strong>
-             users can have access without appearing in this list through Active Directory membership to groups. To view effective permissions for a user, please click on the report links in the left hand navigation panel.
+            users can have access without appearing in this list through Active Directory membership to groups. To view effective permissions for a user, please click on the report links in the left hand navigation panel.
         </p>
 
         <div id="containerx bulk">
-            <table style="width: 100%; white-space: nowrap" class="datatable table">
+            <table style="white-space: nowrap" class="datatable table" id="searchable-table">
                 <thead>
                     <tr>
                         <td>Domain</td>
@@ -30,15 +30,31 @@
                                data-toggle="modal"></a>
                         </td>
                     </tr>
-                </thead>
-                @foreach (UserModel user in Model.Items)
-                {
-                    <tr data-href="@(Url.Action("Details", "User", new { id = user.Id }))">
-                        <td>@user.Domain</td>
-                        <td>@user.Login</td>
-                        <td>@user.FullName</td>
+                    <tr>
+                        <td colspan="3">
+                            <div class="form-group">
+                                <input class="form-control col-sm-11"
+                                       placeholder="search for user..."
+                                       data-input="quick-search"
+                                       data-search-target="#searchable-table tbody > tr"
+                                       name="quick-search"
+                                       type="text">
+                                <span class="col-sm-1 form-control-feedback form-action-clear glyphicon glyphicon-remove form-control input-group-addon"
+                                      aria-hidden="true"></span>
+                            </div>
+                        </td>
                     </tr>
-                }
+                </thead>
+                <tbody>
+                    @foreach (UserModel user in Model.Items)
+                    {
+                        <tr data-href="@(Url.Action("Details", "User", new { id = user.Id }))">
+                            <td>@user.Domain</td>
+                            <td>@user.Login</td>
+                            <td>@user.FullName</td>
+                        </tr>
+                    }
+                </tbody>
             </table>
             <br />
         </div>
@@ -65,7 +81,7 @@
                                         <label class="control-label">Domain</label>
                                     </div>
                                     <div class="col-md-4">
-                                        @Html.TextBox("_domain", "", new {@class = "form-control"})
+                                        @Html.TextBox("_domain", "", new { @class = "form-control" })
                                     </div>
                                 </div>
 
@@ -74,7 +90,7 @@
                                         <label class="control-label">Login</label>
                                     </div>
                                     <div class="col-md-4">
-                                        @Html.TextBox("_login", "", new {@class = "form-control"})
+                                        @Html.TextBox("_login", "", new { @class = "form-control" })
                                     </div>
                                 </div>
 
@@ -83,7 +99,7 @@
                                         <label class="control-label">Full Name</label>
                                     </div>
                                     <div class="col-md-4">
-                                        @Html.TextBox("_fullName", "", new {@class = "form-control"})
+                                        @Html.TextBox("_fullName", "", new { @class = "form-control" })
                                     </div>
                                 </div>
 

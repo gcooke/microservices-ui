@@ -1,6 +1,6 @@
-﻿using System.Web.Mvc;
+﻿using System.Threading;
+using System.Web.Mvc;
 using Bagl.Cib.MIT.Logging;
-using Bagl.Cib.MSF.Contracts.Utils;
 
 namespace Gateway.Web.Controllers
 {
@@ -36,6 +36,7 @@ namespace Gateway.Web.Controllers
         public ActionResult Unauthorized()
         {
             Response.StatusCode = 200;
+            _logger.ErrorFormat("User {0} does not have access.", Thread.CurrentPrincipal.Identity.Name);
             return View("Unauthorized");
         }
     }
