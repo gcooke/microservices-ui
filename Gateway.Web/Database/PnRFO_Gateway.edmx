@@ -18,6 +18,7 @@
           <Property Name="ScalingStrategy" Type="nvarchar" MaxLength="10" Nullable="false" />
           <Property Name="Weighting" Type="int" Nullable="false" />
           <Property Name="MaxInstances" Type="int" Nullable="false" />
+          <Property Name="TimeoutMilliSec" Type="int" />
         </EntityType>
         <EntityType Name="Payload">
           <Key>
@@ -222,6 +223,7 @@
           <Property Name="Weighting" Type="Int32" Nullable="false" />
           <Property Name="MaxInstances" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Versions" Relationship="Self.FK_Version_Controller" FromRole="Controller" ToRole="Version" />
+          <Property Name="TimeoutMilliSec" Type="Int32" />
         </EntityType>
         <EntityType Name="Request">
           <Key>
@@ -567,6 +569,7 @@
           <EntitySetMapping Name="Controllers">
             <EntityTypeMapping TypeName="GatewayModel.Controller">
               <MappingFragment StoreEntitySet="Controller">
+                <ScalarProperty Name="TimeoutMilliSec" ColumnName="TimeoutMilliSec" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Type" ColumnName="Type" />
