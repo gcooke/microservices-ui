@@ -49,7 +49,7 @@
                 </div>
             </div>
         </div>
-
+        
         <div class="row">
             <div class="col-md-3">
                 @Html.LabelFor(m => m.TimeToLiveSec, new { @class = "control-label" })
@@ -67,6 +67,31 @@
 
                         <span class="input-group-btn">
                             <button type="button" class="btn btn-spinner btn-number" data-type="plus" data-field="TimeToLiveSec">
+                                <span class="glyphicon glyphicon-plus"></span>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-3">
+                @Html.LabelFor(m => m.TimeoutMilliSec, new { @class = "control-label" })
+            </div>
+            <div class="col-md-3">
+                <div class="input-group spinner">
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-spinner btn-number" data-type="minus" data-field="TimeoutMilliSec">
+                                <span class="glyphicon glyphicon-minus"></span>
+                            </button>
+                        </span>
+
+                        @Html.TextBoxFor(m => m.TimeoutMilliSec, new { @name = "TimeoutMilliSec", @class = "number-spinner input-number", @min = "1", @max = int.MaxValue })
+
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-spinner btn-number" data-type="plus" data-field="TimeoutMilliSec">
                                 <span class="glyphicon glyphicon-plus"></span>
                             </button>
                         </span>
