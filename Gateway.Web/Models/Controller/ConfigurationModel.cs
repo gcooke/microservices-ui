@@ -31,6 +31,11 @@ namespace Gateway.Web.Models.Controller
         public int? TimeToLiveSec { get; set; }
 
         [XmlElement]
+        [Display(Name = "Timeout")]
+        [Range(1, int.MaxValue, ErrorMessage = "Please enter the timeout.")]
+        public int? TimeoutMilliSec { get; set; }
+
+        [XmlElement]
         [Required]
         [Display(Name = "Scaling Strategy")]
         public ScalingStrategies ScalingStrategy { get; set; }
