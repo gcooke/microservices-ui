@@ -29,6 +29,7 @@ namespace Gateway.Web.Database
         public string ScalingStrategy { get; set; }
         public int Weighting { get; set; }
         public int MaxInstances { get; set; }
+        public Nullable<int> TimeoutMilliSec { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Version> Versions { get; set; }
