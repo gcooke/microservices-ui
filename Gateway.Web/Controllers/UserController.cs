@@ -310,20 +310,24 @@ namespace Gateway.Web.Controllers
 
         public ActionResult History(long id, string login, string sortOrder)
         {
+            if (id <= 0 && string.IsNullOrEmpty(login))
+                throw new Exception("Insufficient details received to resolve login.");
+
             if (string.IsNullOrEmpty(sortOrder))
             {
                 Session.RegisterLastHistoryLocation(Request.Url);
                 sortOrder = "time_desc";
             }
 
-            var domain = "INTRANET";
-            if (id >= 1 && string.IsNullOrEmpty(login))
+            string domain;
+
+            if (id > 0)
             {
                 var user = _gateway.GetUser(id.ToString());
                 domain = user.Domain;
                 login = user.Login;
             }
-            if (id < 1)
+            else
             {
                 var user = _gateway.GetUser(login);
                 domain = user.Domain;
