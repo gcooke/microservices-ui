@@ -523,8 +523,6 @@
     <Content Include="Views\Controllers\Versions.cshtml" />
     <Content Include="Views\Shared\_WorkerItems.cshtml" />
     <Content Include="Views\Controllers\Actions.cshtml" />
-    <Content Include="Views\Controllers\_ControllersCharacterNav.cshtml" />
-    <Content Include="Views\Controllers\_ControllersGridList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />
@@ -577,7 +575,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>9895</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:9895/</IISUrl>
+          <IISUrl>http://localhost/Gateway.Web/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
