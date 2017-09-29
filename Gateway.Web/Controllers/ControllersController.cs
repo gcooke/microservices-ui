@@ -97,12 +97,11 @@ namespace Gateway.Web.Controllers
 
         public ActionResult Queues()
         {
-            var model = new QueuesModel();
-            model.Queues = _dataService.GetControllerQueueSummary(model.HistoryStartTime);
-            foreach (var item in _gateway.GetCurrentQueues())
+            var model = new QueuesModel
             {
-                model.Current.Add(item);
-            }
+                Controllers = _dataService.GetControllerNames()
+            };
+
             return View(model);
         }
 
@@ -117,16 +116,6 @@ namespace Gateway.Web.Controllers
         public ActionResult UsageReport()
         {
             var model = _dataService.GetUsage();
-            return View(model);
-        }
-
-        public ActionResult QueueChart(string date)
-        {
-            DateTime start;
-            if (!DateTime.TryParseExact(date, "yyyyMMdd", CultureInfo.CurrentCulture, DateTimeStyles.None, out start))
-                start = DateTime.Today.AddDays(-1);
-
-            var model = _dataService.GetControllerQueueSummary(start);
             return View(model);
         }
 
@@ -265,6 +254,26 @@ namespace Gateway.Web.Controllers
             var query = string.Format("worker/{0}/{1}/{2}", name, version, pid);
             _basicRestService.Delete(node, query, new CancellationToken());
             return RedirectToAction("Workers");
+        }
+
+        [HttpGet]
+        public JsonResult CurrentQueueData(string[] controllers)
+        {
+            var data = controllers != null && controllers.Any()
+                ? _dataService.GetCurrentControllerQueueSize(DateTime.Now, controllers.ToList())
+                : _dataService.GetCurrentControllerQueueSize(DateTime.Now);
+
+            return Json(data.All(x => x.Value == 0) ? new Dictionary<string, int>() : data, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult HistoricalQueueData(string[] controllers)
+        {
+            var data = controllers != null && controllers.Any()
+                ? _dataService.GetHistoricalControllerQueueSizes(DateTime.Now, controllers.ToList())
+                : _dataService.GetHistoricalControllerQueueSizes(DateTime.Now);
+
+            return Json(data, JsonRequestBehavior.AllowGet);
         }
     }
 }

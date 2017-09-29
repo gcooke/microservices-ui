@@ -10,16 +10,10 @@
 namespace Gateway.Web.Database
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class StatusChange
+    public partial class spGetCurrentControllerQueueCounts_Result
     {
-        public int Id { get; set; }
-        public long ControllerId { get; set; }
-        public long VersionId { get; set; }
-        public string Status { get; set; }
-        public string Alias { get; set; }
-        public string User { get; set; }
-        public System.DateTime Date { get; set; }
+        public string Controller { get; set; }
+        public Nullable<int> CurrentQueueCount { get; set; }
     }
 }

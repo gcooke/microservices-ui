@@ -29,6 +29,29 @@ namespace Gateway.Web
                 "~/Content/js/loading.js"
                 ));
 
+            bundles.Add(new ScriptBundle("~/bundles/charts").Include(
+                "~/Content/js/d3.js",
+                "~/Content/js/c3.js"
+                ));
+
+            bundles.Add(new ScriptBundle("~/bundles/datetime").Include(
+                "~/Content/js/moment.js"
+                ));
+
+            bundles.Add(new ScriptBundle("~/bundles/customQueueCharts").Include(
+                "~/Scripts/Queues/Shared/SelectionFilter.js",
+                "~/Scripts/Queues/Shared/ChartRenderer.js"
+                ));
+
+            bundles.Add(new ScriptBundle("~/bundles/controllerCharts").Include(
+                "~/Scripts/Queues/ControllerQueueCharts.js"
+                ));
+
+            bundles.Add(new ScriptBundle("~/bundles/controllersCharts").Include(
+                "~/Scripts/Queues/ControllersQueueCharts.js"
+                ));
+
+
             bundles.Add(new StyleBundle("~/styles/css").Include(
                 "~/Content/css/bootstrap.css",
                 "~/Content/css/simple-sidebar.css",
@@ -37,6 +60,11 @@ namespace Gateway.Web
                 "~/Content/css/Site.css",
                 "~/Content/css/bootstrap-quick-search.css"
                 ));
+
+            bundles.Add(new StyleBundle("~/styles/charts").Include(
+                "~/Content/css/c3.css"
+                ));
+
         }
     }
 }

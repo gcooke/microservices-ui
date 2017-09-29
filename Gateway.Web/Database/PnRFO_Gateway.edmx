@@ -103,7 +103,8 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ControllerId" Type="bigint" Nullable="false" />
           <Property Name="VersionId" Type="bigint" Nullable="false" />
-          <Property Name="StatusId" Type="int" Nullable="false" />
+          <Property Name="Status" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Alias" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="User" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="Date" Type="datetime" Nullable="false" />
         </EntityType>
@@ -143,6 +144,9 @@
         </Association>
         <Function Name="spGetChildRequests" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="correlationId" Type="uniqueidentifier" Mode="In" />
+        </Function>
+        <Function Name="spGetCurrentControllerQueueCounts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Time" Type="datetime" Mode="In" />
         </Function>
         <Function Name="spGetPayloads" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CorrelationId" Type="uniqueidentifier" Mode="In" />
@@ -258,17 +262,6 @@
           <Property Name="Size" Type="Int32" />
           <Property Name="SizeUnit" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
         </EntityType>
-        <EntityType Name="StatusChange">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ControllerId" Type="Int64" Nullable="false" />
-          <Property Name="VersionId" Type="Int64" Nullable="false" />
-          <Property Name="StatusId" Type="Int32" Nullable="false" />
-          <Property Name="User" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
-        </EntityType>
         <EntityType Name="Version">
           <Key>
             <PropertyRef Name="Id" />
@@ -297,7 +290,6 @@
           <EntitySet Name="Controllers" EntityType="Self.Controller" />
           <EntitySet Name="Requests" EntityType="Self.Request" />
           <EntitySet Name="Responses" EntityType="Self.Response" />
-          <EntitySet Name="StatusChanges" EntityType="Self.StatusChange" />
           <EntitySet Name="Versions" EntityType="Self.Version" />
           <AssociationSet Name="FK_Version_Controller" Association="Self.FK_Version_Controller">
             <End Role="Controller" EntitySet="Controllers" />
@@ -354,8 +346,12 @@
             <Parameter Name="User" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="spGetUserReport" ReturnType="Collection(GatewayModel.spGetUserReport_Result)">
-            <Parameter Name="Start" Mode="In" Type="DateTime" />
+          <Parameter Name="Start" Mode="In" Type="DateTime" />
           </FunctionImport>
+          <FunctionImport Name="spGetCurrentControllerQueueCounts" ReturnType="Collection(GatewayModel.spGetCurrentControllerQueueCounts_Result)">
+          <Parameter Name="Time" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <EntitySet Name="StatusChanges" EntityType="GatewayModel.StatusChange" />
         </EntityContainer>
         <ComplexType Name="spGetRequestStats_Result">
           <Property Type="DateTime" Name="Date" Nullable="true" />
@@ -560,6 +556,22 @@
           <Property Type="String" Name="User" Nullable="false" MaxLength="100" />
           <Property Type="Int32" Name="Count" Nullable="true" />
         </ComplexType>
+        <ComplexType Name="spGetCurrentControllerQueueCounts_Result">
+          <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="CurrentQueueCount" Nullable="true" />
+        </ComplexType>
+        <EntityType Name="StatusChange">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ControllerId" Type="Int64" Nullable="false" />
+          <Property Name="VersionId" Type="Int64" Nullable="false" />
+          <Property Name="Status" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Alias" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="User" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -614,18 +626,6 @@
                 <ScalarProperty Name="ResultCode" ColumnName="ResultCode" />
                 <ScalarProperty Name="ResultMessage" ColumnName="ResultMessage" />
                 <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="StatusChanges">
-            <EntityTypeMapping TypeName="GatewayModel.StatusChange">
-              <MappingFragment StoreEntitySet="StatusChange">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="ControllerId" ColumnName="ControllerId" />
-                <ScalarProperty Name="VersionId" ColumnName="VersionId" />
-                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
-                <ScalarProperty Name="User" ColumnName="User" />
-                <ScalarProperty Name="Date" ColumnName="Date" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -886,6 +886,27 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetCurrentControllerQueueCounts" FunctionName="GatewayModel.Store.spGetCurrentControllerQueueCounts">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GatewayModel.spGetCurrentControllerQueueCounts_Result">
+                <ScalarProperty Name="Controller" ColumnName="Controller" />
+                <ScalarProperty Name="CurrentQueueCount" ColumnName="CurrentQueueCount" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="StatusChanges">
+            <EntityTypeMapping TypeName="GatewayModel.StatusChange">
+              <MappingFragment StoreEntitySet="StatusChange">
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="User" ColumnName="User" />
+                <ScalarProperty Name="Alias" ColumnName="Alias" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="VersionId" ColumnName="VersionId" />
+                <ScalarProperty Name="ControllerId" ColumnName="ControllerId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

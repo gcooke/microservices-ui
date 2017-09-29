@@ -30,12 +30,12 @@ namespace Gateway.Web.Database
         public virtual DbSet<Controller> Controllers { get; set; }
         public virtual DbSet<Request> Requests { get; set; }
         public virtual DbSet<Response> Responses { get; set; }
-        public virtual DbSet<StatusChange> StatusChanges { get; set; }
         public virtual DbSet<Version> Versions { get; set; }
         public virtual DbSet<QueueSize> QueueSizes { get; set; }
         public virtual DbSet<Payload> Payloads { get; set; }
         public virtual DbSet<Status> Status { get; set; }
         public virtual DbSet<RequestChange> RequestChanges { get; set; }
+        public virtual DbSet<StatusChange> StatusChanges { get; set; }
     
         public virtual ObjectResult<spGetRequestStats_Result> spGetRequestStats(Nullable<System.DateTime> start, string controller)
         {
@@ -176,6 +176,15 @@ namespace Gateway.Web.Database
                 new ObjectParameter("Start", typeof(System.DateTime));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetUserReport_Result>("spGetUserReport", startParameter);
+        }
+    
+        public virtual ObjectResult<spGetCurrentControllerQueueCounts_Result> spGetCurrentControllerQueueCounts(Nullable<System.DateTime> time)
+        {
+            var timeParameter = time.HasValue ?
+                new ObjectParameter("Time", time) :
+                new ObjectParameter("Time", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetCurrentControllerQueueCounts_Result>("spGetCurrentControllerQueueCounts", timeParameter);
         }
     }
 }
