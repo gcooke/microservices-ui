@@ -145,9 +145,6 @@
         <Function Name="spGetChildRequests" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="correlationId" Type="uniqueidentifier" Mode="In" />
         </Function>
-        <Function Name="spGetCurrentControllerQueueCounts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="Time" Type="datetime" Mode="In" />
-        </Function>
         <Function Name="spGetPayloads" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CorrelationId" Type="uniqueidentifier" Mode="In" />
         </Function>
@@ -347,9 +344,6 @@
           </FunctionImport>
           <FunctionImport Name="spGetUserReport" ReturnType="Collection(GatewayModel.spGetUserReport_Result)">
           <Parameter Name="Start" Mode="In" Type="DateTime" />
-          </FunctionImport>
-          <FunctionImport Name="spGetCurrentControllerQueueCounts" ReturnType="Collection(GatewayModel.spGetCurrentControllerQueueCounts_Result)">
-          <Parameter Name="Time" Mode="In" Type="DateTime" />
           </FunctionImport>
           <EntitySet Name="StatusChanges" EntityType="GatewayModel.StatusChange" />
         </EntityContainer>
@@ -555,10 +549,6 @@
           <Property Type="String" Name="Hour" Nullable="true" MaxLength="33" />
           <Property Type="String" Name="User" Nullable="false" MaxLength="100" />
           <Property Type="Int32" Name="Count" Nullable="true" />
-        </ComplexType>
-        <ComplexType Name="spGetCurrentControllerQueueCounts_Result">
-          <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
-          <Property Type="Int32" Name="CurrentQueueCount" Nullable="true" />
         </ComplexType>
         <EntityType Name="StatusChange">
           <Key>
@@ -883,14 +873,6 @@
                 <ScalarProperty Name="Hour" ColumnName="Hour" />
                 <ScalarProperty Name="User" ColumnName="User" />
                 <ScalarProperty Name="Count" ColumnName="Count" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="spGetCurrentControllerQueueCounts" FunctionName="GatewayModel.Store.spGetCurrentControllerQueueCounts">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="GatewayModel.spGetCurrentControllerQueueCounts_Result">
-                <ScalarProperty Name="Controller" ColumnName="Controller" />
-                <ScalarProperty Name="CurrentQueueCount" ColumnName="CurrentQueueCount" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

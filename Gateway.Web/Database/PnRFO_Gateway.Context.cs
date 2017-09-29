@@ -177,14 +177,5 @@ namespace Gateway.Web.Database
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetUserReport_Result>("spGetUserReport", startParameter);
         }
-    
-        public virtual ObjectResult<spGetCurrentControllerQueueCounts_Result> spGetCurrentControllerQueueCounts(Nullable<System.DateTime> time)
-        {
-            var timeParameter = time.HasValue ?
-                new ObjectParameter("Time", time) :
-                new ObjectParameter("Time", typeof(System.DateTime));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetCurrentControllerQueueCounts_Result>("spGetCurrentControllerQueueCounts", timeParameter);
-        }
     }
 }
