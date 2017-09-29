@@ -28,7 +28,7 @@ function displayHistoricalQueueChart() {
     var options = {
         element: chartElementId,
         type: "bar",
-        dataUrl: "Controller/GetHistoricalQueueData?controllerName=" + controller + "&" + getFiltersQueryStringParameters("selected-versions-" + controller, "versions"),
+        dataUrl: "../../Controller/GetHistoricalQueueData?controllerName=" + controller + "&" + getFiltersQueryStringParameters("selected-versions-" + controller, "versions"),
         dataFormatFunction: function(data) {
             return formatDataFunction(data.Data);
         },
@@ -92,7 +92,7 @@ function displayLiveQueueChart() {
     var options = {
         element: chartElementId,
         type: "line",
-        dataUrl: "Controller/GetLiveQueueData?startDateTime=" + startTime + "&endDateTime=" + endTime + "&controllerName=" + controller + "&" + getFiltersQueryStringParameters("selected-versions-" + controller, "versions"),
+        dataUrl: "../../Controller/GetLiveQueueData?startDateTime=" + startTime + "&endDateTime=" + endTime + "&controllerName=" + controller + "&" + getFiltersQueryStringParameters("selected-versions-" + controller, "versions"),
         dataFormatFunction: function (data) {
             var result = formatDataFunction(data.Data);
             return result;
