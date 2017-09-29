@@ -24,7 +24,7 @@ namespace Gateway.Web.Controllers
         public ControllerController(
             IGatewayDatabaseService dataService,
             IGatewayService gateway,
-            IGatewayRestService gatewayRestService, ILoggingService loggingService) 
+            IGatewayRestService gatewayRestService, ILoggingService loggingService)
             : base(loggingService)
         {
             _dataService = dataService;
@@ -44,8 +44,7 @@ namespace Gateway.Web.Controllers
 
         public ActionResult Queues(string id)
         {
-            var model = new QueuesModel(id);
-            model.Queues = _dataService.GetControllerQueueSummary(id, model.HistoryStartTime);
+            var model = new QueuesModel(id) { Versions = _dataService.GetActiveVersions(id).ToList() };
             foreach (var item in _gateway.GetCurrentQueues(id))
             {
                 model.Current.Add(item);
@@ -200,14 +199,26 @@ namespace Gateway.Web.Controllers
             return View(model);
         }
 
-        public ActionResult QueueChart(string id, string date)
+        [HttpGet]
+        public JsonResult GetHistoricalQueueData(string controllerName, string[] versions)
         {
-            DateTime start;
-            if (!DateTime.TryParseExact(date, "yyyyMMdd", CultureInfo.CurrentCulture, DateTimeStyles.None, out start))
-                start = DateTime.Today.AddDays(-1);
+            var data = versions != null && versions.Any()
+                ? _dataService.GetHistoricalControllerVersionQueueSizes(DateTime.Now, controllerName.ToLower(), versions)
+                : _dataService.GetHistoricalControllerVersionQueueSizes(DateTime.Now, controllerName.ToLower());
 
-            var model = _dataService.GetControllerQueueSummary(id, start);
-            return View(model);
+            return Json(data, JsonRequestBehavior.AllowGet);
         }
+
+        [HttpGet]
+        public JsonResult GetLiveQueueData(DateTime startDateTime, DateTime? endDateTime, string controllerName, string[] versions)
+        {
+            var data = versions != null && versions.Any()
+                ? _dataService.GetLiveControllerVersionQueueSizes(startDateTime, endDateTime, controllerName.ToLower(), versions)
+                : _dataService.GetLiveControllerVersionQueueSizes(startDateTime, endDateTime, controllerName.ToLower());
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+
     }
 }

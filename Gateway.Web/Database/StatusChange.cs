@@ -17,7 +17,8 @@ namespace Gateway.Web.Database
         public int Id { get; set; }
         public long ControllerId { get; set; }
         public long VersionId { get; set; }
-        public int StatusId { get; set; }
+        public string Status { get; set; }
+        public string Alias { get; set; }
         public string User { get; set; }
         public System.DateTime Date { get; set; }
     }

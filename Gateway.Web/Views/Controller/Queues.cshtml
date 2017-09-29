@@ -8,60 +8,115 @@
 
 <div id="page-content-wrapper">
     <div class="hero-unit">
-        <h3 class="text-lowercase">Current Queues</h3>
-        <br />
-        <div class="container-fluid alert alert-redstone">
-            <div class="col-sm-1">Server</div>
-            <div class="col-sm-3 text-center">Version</div>
-            <div class="col-sm-3 text-center">Last Enqueue</div>
-            <div class="col-sm-3 text-center">Last Dequeue</div>
-            <div class="col-sm-1 text-center">Count</div>
-            <div class="col-sm-1 text-center">Workers</div>
-        </div>
 
-        @foreach (QueueModel version in Model.Current)
-        {
-            <div class="container-fluid">
-
-                <div class="col-sm-1">@version.Server</div>
-                <div class="col-sm-3 text-center">@version.Version</div>
-                <div class="col-sm-3 text-center">@version.LastEnqueue</div>
-                <div class="col-sm-3 text-center">@version.LastDequeue</div>
-                <div class="col-sm-1 text-center">@version.Length</div>
-                <div class="col-sm-1 text-center">@version.Workers</div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <h3 class="text-lowercase">Queues</h3>
             </div>
-        }
-        <br />
-        <br />
-        <br />
-        <h3 class="text-lowercase">History</h3>
-        <br />
-        <div>
-            <img src="~/Controller/QueueChart?id=@Model.Name&date=@Model.HistoryStartTime.ToString("yyyyMMdd")" />
-        </div>
-        <br />
-
-        <div class="container-fluid alert alert-redstone">
-
-            <div class="col-sm-1">Version</div>
-            <div class="col-sm-3 text-center">Time</div>
-            <div class="col-sm-3 text-center">Last Enqueue</div>
-            <div class="col-sm-3 text-center">Last Dequeue</div>
-            <div class="col-sm-2 text-center">Count</div>
-
         </div>
 
-        @foreach (QueueCount version in Model.Queues.AllItems)
-        {
-            <div class="container-fluid">
-
-                <div class="col-sm-1">@version.Version</div>
-                <div class="col-sm-3 text-center">@version.Time</div>
-                <div class="col-sm-3 text-center">@version.LastEnqueue</div>
-                <div class="col-sm-3 text-center">@version.LastDequeue</div>
-                <div class="col-sm-2 text-center">@version.Count</div>
-
+        <div class="row selection-filter selection-filter-main" data-storage-key="selected-versions-@Model.Name">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <span id="selection-filter-viewing-label">Viewing </span>
+                <span class="label label-primary" id="selection-filter-0"></span>
+                <span class="label label-primary" id="selection-filter-1"></span>
+                <span class="label label-primary" id="selection-filter-2"></span>
+                <span class="label label-primary" id="selection-filter-3"></span>
+                <span class="label label-primary" id="selection-filter-4"></span>
+                <span class="label label-default selection-filter-button" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">Change Selection</span>
+                <span class="label label-default selection-filter-button" id="selection-filter-clear">Clear Selection</span>
             </div>
-        }
+        </div>
+
+        <div class="row selection-filter">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="collapse" id="collapseExample">
+                    <div class="well">
+                        <div class="row">
+                            @foreach (var version in Model.Versions)
+                            {
+                                <div class="col-md-3">
+                                    <span class="label label-info selection-filter-label" data-value="@version">@version</span>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Live Queue Sizes
+                        <span class="badge pull-right" id="live-version-queue-chart-last-updated"></span>
+                    </div>
+                    <div class="panel-body">
+                        <div id="live-version-queues-chart" data-controller="@Model.Name"></div>
+                        <div class="row" id="live-version-queues-chart-progress">
+                            <div class="col-xs-12 chart-progress-bar">
+                                <img src="../../Content/img/ajax-loader.gif" alt="progress"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Historical Queue Sizes
+                        <span class="badge pull-right" id="historical-version-queue-chart-last-updated"></span>
+                    </div>
+                    <div class="panel-body">
+                        <div id="historical-version-queues-chart" data-controller="@Model.Name"></div>
+                        <div class="row" id="historical-version-queues-chart-progress">
+                            <div class="col-xs-12 chart-progress-bar">
+                                <img src="../../Content/img/ajax-loader.gif" alt="progress"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            @foreach (var version in Model.Current)
+            {
+                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            @version.Version
+                            <span class="badge pull-right">@version.Server</span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-6">Request Count</div>
+                                <div class="col-md-6">@version.Length</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">Last Enqueue</div>
+                                <div class="col-md-6">@version.LastEnqueue.ToString("dd MMM yyyy HH:mm:ss")</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">Last Dequeue</div>
+                                <div class="col-md-6">@version.LastDequeue.ToString("dd MMM yyyy HH:mm:ss")</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">Worker</div>
+                                <div class="col-md-6">@version.Workers</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
     </div>
 </div>
+
+

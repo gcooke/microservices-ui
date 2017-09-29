@@ -17,7 +17,7 @@
     <AssemblyName>Gateway.Web</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort>443</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
@@ -301,6 +301,7 @@
     <Compile Include="Models\Controllers\UsageModel.cs" />
     <Compile Include="Models\Controllers\VersionsModel.cs" />
     <Compile Include="Models\Controllers\Catalogue.cs" />
+    <Compile Include="Models\Controller\ControllerQueueChartModel.cs" />
     <Compile Include="Models\Controller\HistoryItem.cs" />
     <Compile Include="Models\Controller\HistoryModel.cs" />
     <Compile Include="Models\Controller\QueueModel.cs" />
@@ -322,7 +323,6 @@
     <Compile Include="Models\Request\Payloads.cs" />
     <Compile Include="Models\Request\RequestPayload.cs" />
     <Compile Include="Models\Request\Summary.cs" />
-    <Compile Include="Models\Controller\QueueChartModel.cs" />
     <Compile Include="Models\Controller\TimeChartModel.cs" />
     <Compile Include="Models\Controller\VersionsModel.cs" />
     <Compile Include="Models\Controller\WorkersModel.cs" />
@@ -394,6 +394,7 @@
     <Content Include="Content\css\bootstrap-quick-search.min.css" />
     <Content Include="Content\css\bootstrap.css" />
     <Content Include="Content\css\bootstrap.min.css" />
+    <Content Include="Content\css\c3.css" />
     <Content Include="Content\css\datatable.css" />
     <Content Include="Content\css\simple-sidebar.css" />
     <Content Include="Content\css\treeview.css" />
@@ -413,8 +414,11 @@
     <Content Include="Content\img\Redstone.UAT.png" />
     <Content Include="Content\js\bootstrap-quick-search.js" />
     <Content Include="Content\js\bootstrap-quick-search.min.js" />
+    <Content Include="Content\js\c3.js" />
     <Content Include="Content\js\checkall.js" />
+    <Content Include="Content\js\d3.js" />
     <Content Include="Content\js\loading.js" />
+    <Content Include="Content\js\moment.js" />
     <Content Include="Content\js\row-click.js" />
     <Content Include="Content\js\spinner.js" />
     <Content Include="Database\PnRFO_Gateway.Context.tt">
@@ -450,6 +454,10 @@
     <Content Include="Content\js\respond.js" />
     <Content Include="Content\js\respond.min.js" />
     <Content Include="Content\js\_references.js" />
+    <Content Include="Scripts\Queues\ControllerQueueCharts.js" />
+    <Content Include="Scripts\Queues\Shared\ChartRenderer.js" />
+    <Content Include="Scripts\Queues\ControllersQueueCharts.js" />
+    <Content Include="Scripts\Queues\Shared\SelectionFilter.js" />
     <Content Include="Views\Controllers\Create.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -517,6 +525,8 @@
     <Content Include="Views\Controllers\Versions.cshtml" />
     <Content Include="Views\Shared\_WorkerItems.cshtml" />
     <Content Include="Views\Controllers\Actions.cshtml" />
+    <Content Include="Views\Controllers\_ControllersCharacterNav.cshtml" />
+    <Content Include="Views\Controllers\_ControllersGridList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />
@@ -569,7 +579,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>9895</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost/Gateway.Web</IISUrl>
+          <IISUrl>http://localhost:9895/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

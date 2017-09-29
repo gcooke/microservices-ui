@@ -4,12 +4,15 @@ using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Controllers;
 using Gateway.Web.Models.Request;
 using Gateway.Web.Models.Security;
+using QueueChartModel = Gateway.Web.Models.Controller.QueueChartModel;
 
 namespace Gateway.Web.Database
 {
     public interface IGatewayDatabaseService
     {
         List<ControllerStats> GetControllerStatistics(DateTime start);
+
+        List<string> GetControllerNames();
 
         List<HistoryItem> GetRecentRequests(DateTime start);
 
@@ -37,12 +40,31 @@ namespace Gateway.Web.Database
 
         ReportsModel GetUsage();
 
-        Models.Controller.QueueChartModel GetControllerQueueSummary(string name, DateTime start);
+        IDictionary<string, int> GetCurrentControllerQueueSize(DateTime endDateTime, IList<string> controllers);
 
-        Models.Controllers.QueueChartModel GetControllerQueueSummary(DateTime start);
+        IDictionary<string, int> GetCurrentControllerQueueSize(DateTime endDateTime);
+
+        QueueChartModel GetHistoricalControllerQueueSizes(DateTime endDateTime);
+
+        QueueChartModel GetHistoricalControllerQueueSizes(DateTime endDateTime, IList<string> controllers);
+
+        QueueChartModel GetHistoricalControllerVersionQueueSizes(DateTime endDateTime, string controller);
+
+        QueueChartModel GetHistoricalControllerVersionQueueSizes(DateTime endDateTime, string controller, string[] versions);
+
+        LiveQueueChartModel GetLiveControllerVersionQueueSizes(DateTime startDateTime, DateTime? endDateTime, string controllerName);
+
+        LiveQueueChartModel GetLiveControllerVersionQueueSizes(DateTime startDateTime, DateTime? endDateTime, string controller, string[] versions);
 
         IEnumerable<Status> GetVersionStatuses();
 
+        IEnumerable<string> GetVersions(string controllerName);
+
+        IEnumerable<string> GetActiveVersions(string controllerName);
+
+        IEnumerable<string> GetActiveVersions();
+
         bool HasStatusChanged(string controller, string version, string status, string alias);
+
     }
 }

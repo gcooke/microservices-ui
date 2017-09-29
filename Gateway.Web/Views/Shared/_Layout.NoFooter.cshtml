@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Redstone</title>
     @Styles.Render("~/styles/css")
+    @Styles.Render("~/styles/charts")
     @Scripts.Render("~/bundles/modernizr")
     <link rel="icon" type="image/x-icon" href="@Url.Content(MvcApplication.FavIcon)" />
     <link rel="shortcut icon" type="image/x-icon" href="@Url.Content(MvcApplication.FavIcon)" />
@@ -20,6 +21,9 @@
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/spinner")
+    @Scripts.Render("~/bundles/charts")
+    @Scripts.Render("~/bundles/datetime")
+    @Scripts.Render("~/bundles/customQueueCharts")
     @RenderSection("scripts", false)
 </body>
 </html>

@@ -8,7 +8,6 @@
         <EntityTypeShape EntityType="GatewayModel.Controller" Width="1.5" PointX="0.75" PointY="1" IsExpanded="true" />
         <EntityTypeShape EntityType="GatewayModel.Request" Width="1.5" PointX="4.75" PointY="4.75" IsExpanded="true" />
         <EntityTypeShape EntityType="GatewayModel.Response" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="GatewayModel.StatusChange" Width="1.5" PointX="6.75" PointY="4.75" IsExpanded="true" />
         <EntityTypeShape EntityType="GatewayModel.Version" Width="1.5" PointX="3" PointY="1.25" IsExpanded="true" />
         <AssociationConnector Association="GatewayModel.FK_Version_Controller" ManuallyRouted="false" />
         <EntityTypeShape EntityType="GatewayModel.QueueSize" Width="1.5" PointX="7.375" PointY="7.75" />
@@ -16,6 +15,7 @@
         <EntityTypeShape EntityType="GatewayModel.Status" Width="1.5" PointX="0.75" PointY="4.875" />
         <AssociationConnector Association="GatewayModel.FK_Version_Status" />
         <EntityTypeShape EntityType="GatewayModel.RequestChange" Width="1.5" PointX="0.75" PointY="7.75" />
+        <EntityTypeShape EntityType="GatewayModel.StatusChange" Width="1.5" PointX="3.375" PointY="9.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
