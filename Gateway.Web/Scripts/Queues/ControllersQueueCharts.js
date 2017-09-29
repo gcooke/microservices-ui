@@ -27,7 +27,7 @@ function displayCurrentQueueChart() {
     var options = {
         element: chartElementId,
         type: "donut",
-        dataUrl: "../Controllers/CurrentQueueData?" + getFiltersQueryStringParameters("selected-controllers", "controllers"),
+        dataUrl: "../../Controllers/CurrentQueueData?" + getFiltersQueryStringParameters("selected-controllers", "controllers"),
         dataFormatFunction: dataFormatFunction,
         additionalOptions: {
             donut: {
@@ -75,7 +75,7 @@ function displayHistorialQueueChart() {
     var options = {
         element: chartElementId,
         type: "bar",
-        dataUrl: "../Controllers/HistoricalQueueData?" + getFiltersQueryStringParameters("selected-controllers", "controllers"),
+        dataUrl: "../../Controllers/HistoricalQueueData?" + getFiltersQueryStringParameters("selected-controllers", "controllers"),
         dataFormatFunction: function(data) {
             return formatDataFunction(data.Data);
         },
