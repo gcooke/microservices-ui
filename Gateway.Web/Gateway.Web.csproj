@@ -502,7 +502,6 @@
     <Content Include="Views\Controller\TimeChart.cshtml" />
     <Content Include="Views\Error\InternalServer.cshtml" />
     <Content Include="Views\Error\NotFound.cshtml" />
-    <Content Include="Views\Controllers\QueueChart.cshtml" />
     <Content Include="Views\Shared\_HistoryItems.cshtml" />
     <Content Include="Views\Request\_RequestNav.cshtml" />
     <Content Include="Views\User\History.cshtml" />
