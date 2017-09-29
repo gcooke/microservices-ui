@@ -40,17 +40,10 @@ namespace Gateway.Web
 
             bundles.Add(new ScriptBundle("~/bundles/customQueueCharts").Include(
                 "~/Scripts/Queues/Shared/SelectionFilter.js",
-                "~/Scripts/Queues/Shared/ChartRenderer.js"
-                ));
-
-            bundles.Add(new ScriptBundle("~/bundles/controllerCharts").Include(
-                "~/Scripts/Queues/ControllerQueueCharts.js"
-                ));
-
-            bundles.Add(new ScriptBundle("~/bundles/controllersCharts").Include(
+                "~/Scripts/Queues/Shared/ChartRenderer.js",
+                "~/Scripts/Queues/ControllerQueueCharts.js",
                 "~/Scripts/Queues/ControllersQueueCharts.js"
                 ));
-
 
             bundles.Add(new StyleBundle("~/styles/css").Include(
                 "~/Content/css/bootstrap.css",
