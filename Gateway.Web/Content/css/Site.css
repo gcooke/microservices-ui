@@ -292,3 +292,30 @@ input, textarea {
 .clickableheader {
     color: white;
 }
+
+.selection-filter-main {
+    margin-top: 20px;
+}
+
+.selection-filter-button {
+    cursor: pointer;
+}
+
+.selection-filter {
+    margin-top: 10px;
+}
+
+.selection-filter-label {
+    cursor: pointer;
+}
+
+.chart-panel {
+    margin-top: 30px
+}
+
+.chart-progress-bar {
+    min-height: 320px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+}

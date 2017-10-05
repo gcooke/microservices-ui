@@ -154,6 +154,7 @@
     <Compile Include="Extensions\TimeSpanTests.cs" />
     <Compile Include="Models\Controllers\CatalogueTest.cs" />
     <Compile Include="Models\Controllers\GatewayInfoTests.cs" />
+    <Compile Include="Models\Controllers\QueueChartModelTest.cs" />
     <Compile Include="Models\Controllers\QueueModelTest.cs" />
     <Compile Include="Models\Request\TimingTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
