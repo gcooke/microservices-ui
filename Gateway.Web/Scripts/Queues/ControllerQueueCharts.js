@@ -37,9 +37,8 @@ function displayHistoricalQueueChart() {
                 x: {
                     type: "category",
                     categories: getHistoricalCategories(),
-                    label: {
-                        text: "Time (Past 24 Hours)",
-                        position: "outer-center"
+                    tick: {
+                        rotate: 90
                     }
                 },
                 y: {
@@ -48,9 +47,6 @@ function displayHistoricalQueueChart() {
                         position: "outer-middle"
                     }
                 }
-            },
-            padding: {
-                right: 30
             },
             size: {
                 height: 480
@@ -88,32 +84,39 @@ function displayLiveQueueChart() {
     var controller = chartElement.data("controller");
     var startTime = moment().format("YYYY-MM-DDTHH:00:00");
     var endTime = moment(startTime).add(1, "hours").format("YYYY-MM-DDTHH:00:00");
-
+    
     var options = {
         element: chartElementId,
         type: "line",
         dataUrl: "../../Controller/GetLiveQueueData?startDateTime=" + startTime + "&endDateTime=" + endTime + "&controllerName=" + controller + "&" + getFiltersQueryStringParameters("selected-versions-" + controller, "versions"),
         dataFormatFunction: function (data) {
-            var result = formatDataFunction(data.Data);
-            return result;
+            return formatDataFunction(data.Data);
         },
         additionalOptions: {
             axis: {
                 x: {
-                    label: {
-                        text: "Time",
-                        position: "outer-middle"
-                    },
                     tick: {
-                        count: 4
+                        count: 1
+                    },
+                    padding: {
+                        left: 0,
+                        right: 5
                     }
                 },
                 y: {
+                    min: 0,
                     label: {
                         text: "Number of Requests",
                         position: "outer-middle"
+                    },
+                    tick: {
+                        count: 4,
+                        format: d3.format(".0f")
                     }
                 }
+            },
+            point: {
+                show: false
             }
         },
         onChartRenderStarted: function () {
