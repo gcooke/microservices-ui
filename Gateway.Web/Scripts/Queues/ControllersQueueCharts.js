@@ -84,9 +84,8 @@ function displayHistorialQueueChart() {
                 x: {
                     type: "category",
                     categories: getHistoricalCategories(),
-                    label: {
-                        text: "Time (Past 24 Hours)",
-                        position: "outer-center",
+                    tick: {
+                        rotate: 90
                     }
                 },
                 y: {
@@ -95,9 +94,6 @@ function displayHistorialQueueChart() {
                         position: "outer-middle"
                     }
                 }
-            },
-            padding: {
-                right: 30
             },
             size: {
                 height: 480
