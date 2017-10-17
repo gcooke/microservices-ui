@@ -365,6 +365,18 @@ namespace Gateway.Web.Controllers
         }
         #endregion
 
+        #region Users
+
+        public ActionResult Users(string id)
+        {
+            var model = _gateway.GetGroupUsers(id.ToLongOrDefault());
+            SetName(model);
+            return View("Users", model);
+        }
+
+
+        #endregion
+
         [RoleBasedAuthorize(Roles = "Security.Delete")]
         public ActionResult RemovePermission(string id, string groupId)
         {

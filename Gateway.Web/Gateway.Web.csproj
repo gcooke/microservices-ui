@@ -18,7 +18,7 @@
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
-    <IISExpressSSLPort>443</IISExpressSSLPort>
+    <IISExpressSSLPort>42001</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
     <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
@@ -312,6 +312,7 @@
     <Compile Include="Models\Group\GroupAddInVersionModel.cs" />
     <Compile Include="Models\Group\IGroupModel.cs" />
     <Compile Include="Models\Group\PermissionsModel.cs" />
+    <Compile Include="Models\Group\UsersModel.cs" />
     <Compile Include="Models\Shared\AddInModel.cs" />
     <Compile Include="Models\Shared\EntityAddInVersionModel.cs" />
     <Compile Include="Models\Shared\PortfolioModel.cs" />
@@ -523,6 +524,7 @@
     <Content Include="Views\Controllers\Versions.cshtml" />
     <Content Include="Views\Shared\_WorkerItems.cshtml" />
     <Content Include="Views\Controllers\Actions.cshtml" />
+    <Content Include="Views\Group\Users.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />

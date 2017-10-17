@@ -96,6 +96,7 @@ namespace Gateway.Web.Services
         Models.Group.PortfoliosModel GetGroupPortfolios(long groupId);
 
         Models.Group.SitesModel GetGroupSites(long groupId);
+        Models.Group.UsersModel GetGroupUsers(long groupId);
 
         string[] DeleteGroupSite(long id, long groupId);
 
