@@ -23,6 +23,12 @@
             </a>
         </li>
         <li>
+            <a href="~/Group/Users/@Model.Id/"
+               class="@(ViewBag.Current == "Users" ? "active" : "")">
+                <span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Users
+            </a>
+        </li>
+        <li>
             <a href="~/Group/ADGRoups/@Model.Id/"
                class="@(ViewBag.Current == "ADGroups" ? "active" : "")">
                 <span class="glyphicon glyphicon-inbox"></span>&nbsp;&nbsp;AD Groups
