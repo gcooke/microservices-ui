@@ -1,0 +1,111 @@
+﻿
+@using Gateway.Web.Models.Group
+@using Gateway.Web.Models.User
+
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = @Model.Name;
+    ViewBag.Current = "Users";
+}
+@{ Html.RenderPartial("_GroupNav", (UsersModel)@Model); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+        <br />
+        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+        <div id="containerx bulk">
+            <table style="white-space: nowrap" class="datatable table" id="searchable-table">
+                <thead>
+                    <tr>
+                        <td>Domain</td>
+                        <td>Login</td>
+                        <td>Full Name</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <div class="form-group">
+                                <input class="form-control col-sm-11"
+                                       placeholder="search for user..."
+                                       data-input="quick-search"
+                                       data-search-target="#searchable-table tbody > tr"
+                                       name="quick-search"
+                                       type="text">
+                                <span class="col-sm-1 form-control-feedback form-action-clear glyphicon glyphicon-remove form-control input-group-addon"
+                                      aria-hidden="true"></span>
+                            </div>
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (UserModel user in Model.Items)
+                    {
+                        <tr data-href="@(Url.Action("Details", "User", new { id = user.Id }))">
+                            <td>@user.Domain</td>
+                            <td>@user.Login</td>
+                            <td>@user.FullName</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <br />
+        </div>
+        @*@using (Html.BeginForm("InsertUser", "Security", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            <div class="modal fade add-modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel">Add Redstone User</h4>
+                        </div>
+
+                        <div class="modal-body">
+
+                            @Html.AntiForgeryToken()
+
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label class="control-label">Domain</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        @Html.TextBox("_domain", "", new { @class = "form-control" })
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label class="control-label">Login</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        @Html.TextBox("_login", "", new { @class = "form-control" })
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label class="control-label">Full Name</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        @Html.TextBox("_fullName", "", new { @class = "form-control" })
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-default">Add</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        }*@
+    </div>
+</div>

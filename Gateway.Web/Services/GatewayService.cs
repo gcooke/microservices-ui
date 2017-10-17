@@ -26,6 +26,7 @@ using GroupsModel = Gateway.Web.Models.Security.GroupsModel;
 using PermissionsModel = Gateway.Web.Models.Security.PermissionsModel;
 using PortfoliosModel = Gateway.Web.Models.Group.PortfoliosModel;
 using SitesModel = Gateway.Web.Models.Group.SitesModel;
+using UsersModel = Gateway.Web.Models.Security.UsersModel;
 using Version = Gateway.Web.Models.Controller.Version;
 using VersionsModel = Gateway.Web.Models.Controller.VersionsModel;
 
@@ -670,6 +671,25 @@ namespace Gateway.Web.Services
             }
 
             PopulateAvailableSites(result);
+            return result;
+        }
+
+        public Models.Group.UsersModel GetGroupUsers(long groupId)
+        {
+            var query = string.Format("groups/{0}/users", groupId);
+            var response = _gatewayRestService.Get("Security", "latest", query);
+
+            var result = new Models.Group.UsersModel();
+            if (response.Successfull)
+            {
+                var element = response.Content.GetPayloadAsXElement();
+                var interim = new List<UserModel>();
+                foreach (var item in element.Descendants("User"))
+                {
+                    interim.Add(item.Deserialize<UserModel>());
+                }
+                result.Items.AddRange(interim.OrderBy(v => v.FullName));
+            }
             return result;
         }
 
