@@ -12,15 +12,16 @@ namespace Gateway.Web.Controllers
     public class DownloadsController : BaseController
     {
         private const string RemoteAppsDirectory = @"\\Intranet.barcapint.com\dfs-emea\Group\Jhb\IT_Pricing_Risk\Builds\Redstone\Apps";
-        private const string LocalAppsDirectory = "~\\Content\\Downloads\\";
 
         private readonly IGatewayService _gateway;
+        private readonly IDifferentialDownloadService _differentialDownloadService;
         private readonly ILogger _logger;
 
-        public DownloadsController(IGatewayService gateway, ILoggingService loggingService)
+        public DownloadsController(IGatewayService gateway, IDifferentialDownloadService differentialDownloadService, ILoggingService loggingService)
             : base(loggingService)
         {
             _gateway = gateway;
+            _differentialDownloadService = differentialDownloadService;
             _logger = loggingService.GetLogger(this);
         }
 
@@ -42,34 +43,30 @@ namespace Gateway.Web.Controllers
                 return HttpNotFound(string.Format("Could not find application {0} with version {1}", app, version));
 
             var contentType = System.Net.Mime.MediaTypeNames.Application.Octet;
-            return File(path, contentType, fileName);
-
-
-            // This was an attempt to speed up downloads - worked in UAT but not in PROD
-
-            //path = GetLocalAppVersionPath(app, version, path, fileName);
-            //var stream = System.IO.File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            //var result = new FileStreamResult(stream, System.Net.Mime.MediaTypeNames.Application.Octet);
-            //result.FileDownloadName = fileName;
-            //return result;
+            return File(path, contentType, fileName);            
         }
 
-        private string GetLocalAppVersionPath(string app, string version, string remotePath, string fileName)
+        [HttpGet]
+        [Route("upgrade/{app}/from/{from}/to/{to}")]
+        [AllowAnonymous]
+        public ActionResult DownloadDiff(string app, string from, string to)
         {
-            // Check if local path exists.
-            var path = Server.MapPath(LocalAppsDirectory);
-            path = System.IO.Path.Combine(path, app, version);
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
+            _logger.InfoFormat("A user located at {0} is attempting to download a diff of {1} from version {2} to version {3}", Request.UserHostAddress, app, from, to);
 
-            var localFileName = Path.Combine(path, fileName);
-            if (System.IO.File.Exists(localFileName)) return localFileName;
+            // Check that the passed parameters conform to expectations to prevent injection attacks.
+            if (!IsValidAppParameter(app))
+                throw new InvalidOperationException("Invalid parameter (app): " + app);
+            if (!IsValidVersionParameter(from))
+                throw new InvalidOperationException("Invalid parameter (version): " + from);
+            if (!IsValidVersionParameter(to))
+                throw new InvalidOperationException("Invalid parameter (version): " + to);
 
-            // Copy binary locally.
-            _logger.InfoFormat("Copying package locally to speed up future downloads: {0}", localFileName);
-            System.IO.File.Copy(remotePath, localFileName, true);
+            var differential = _differentialDownloadService.Get(app, from, to);
+            if (!differential.IsValid)
+                return HttpNotFound(string.Format("Could not find upgrade of {0} from version {1} to {2}", app, from, to));
 
-            return path;
+            var contentType = System.Net.Mime.MediaTypeNames.Application.Octet;
+            return File(differential.FullName, contentType, differential.Name);
         }
 
         private bool GetRemoteAppVersionPath(string app, string version, out string path, out string fileName)
