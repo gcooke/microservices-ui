@@ -44,8 +44,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Bagl.Cib.MIT.IO, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Bagl.Cib.MIT.IO.1.0.3\lib\net452\Bagl.Cib.MIT.IO.dll</HintPath>
+    <Reference Include="Bagl.Cib.MIT.IO, Version=1.0.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bagl.Cib.MIT.IO.1.0.7\lib\net452\Bagl.Cib.MIT.IO.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Bagl.Cib.MIT.IoC, Version=1.0.31.0, Culture=neutral, processorArchitecture=MSIL">
@@ -365,7 +365,9 @@
     <Compile Include="Models\User\HistoryModel.cs" />
     <Compile Include="Registrations.cs" />
     <Compile Include="Services\BasicRestService.cs" />
+    <Compile Include="Services\DifferentialDownloadService.cs" />
     <Compile Include="Services\GatewayService.cs" />
+    <Compile Include="Services\IDifferentialDownloadService.cs" />
     <Compile Include="Services\IGatewayService.cs" />
     <Compile Include="Services\ProcessInformation.cs" />
     <Compile Include="Services\QueueInformation.cs" />

@@ -1,5 +1,7 @@
 ﻿using System;
 using Bagl.Cib.MIT.IoC;
+using Bagl.Cib.MIT.IO;
+using Bagl.Cib.MIT.IO.Impl;
 using Bagl.Cib.MIT.Logging;
 using Bagl.Cib.MIT.Logging.Impl;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
@@ -21,6 +23,9 @@ namespace Gateway.Web
             information.RegisterType<IGatewayRestService, GatewayRestService>(Scope.Singleton);
             information.RegisterType<IBasicRestService, BasicRestService>(Scope.Singleton);
             information.RegisterType<IRoleService, RoleService>(Scope.Singleton);
+            information.RegisterType<IFileService, FileService>(Scope.Singleton);
+            information.RegisterType<IDifferentialArchiveService, DifferentialArchiveService>(Scope.Singleton);
+            information.RegisterType<IDifferentialDownloadService, DifferentialDownloadService>(Scope.Singleton);
         }
 
         private static void SetupLogging(ISystemInformation information)
