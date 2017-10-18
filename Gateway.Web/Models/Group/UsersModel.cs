@@ -5,8 +5,9 @@ namespace Gateway.Web.Models.Group
 {
     public class UsersModel : IGroupModel
     {
-        public UsersModel()
+        public UsersModel(long id)
         {
+            Id = id;
             Items = new List<UserModel>();
         }
         public long Id { get; set; }

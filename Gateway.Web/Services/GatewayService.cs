@@ -679,7 +679,7 @@ namespace Gateway.Web.Services
             var query = string.Format("groups/{0}/users", groupId);
             var response = _gatewayRestService.Get("Security", "latest", query);
 
-            var result = new Models.Group.UsersModel();
+            var result = new Models.Group.UsersModel(groupId);
             if (response.Successfull)
             {
                 var element = response.Content.GetPayloadAsXElement();
