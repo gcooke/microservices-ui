@@ -10,6 +10,7 @@ namespace Gateway.Web.Services
 {
     public class DifferentialDownloadService : IDifferentialDownloadService
     {
+        private const string DifferentialDirectory = @"D:\Services\Redstone\Differentials";
         private const string RemoteAppsDirectory = @"\\Intranet.barcapint.com\dfs-emea\Group\Jhb\IT_Pricing_Risk\Builds\Redstone\Apps";
 
         private readonly IFileService _fileService;
@@ -57,6 +58,9 @@ namespace Gateway.Web.Services
 
         private void CreateDifferential(Differential result)
         {
+            if(!DifferentialDirectoryExists())
+                throw new InvalidOperationException("Differential directory does not exist: " + DifferentialDirectory);
+
             _logger.InfoFormat("Creating differential of {0} from {1} to {2}", result.App, result.From, result.To);
 
             var fromZip = GetRemoteAppVersionPath(result.App, result.From);
@@ -87,7 +91,10 @@ namespace Gateway.Web.Services
 
                 // Copy differential to final location
                 if (!File.Exists(result.FullName))
+                {
+                    _fileService.EnsureDirectoryExists(Path.GetDirectoryName(result.FullName));
                     _fileService.CopyFile(tempFile, result.FullName);
+                }
 
                 Thread.Sleep(1000);
                 result.IsValid = true;
@@ -111,9 +118,14 @@ namespace Gateway.Web.Services
                 _fileService.DeleteFile(path);
         }
 
+        private bool DifferentialDirectoryExists()
+        {
+            return Directory.Exists(DifferentialDirectory);
+        }
+
         private string GetDifferentialPath(string app, string @from, string to)
         {
-            var path = string.Format("{0}\\{1}\\{2}\\", RemoteAppsDirectory, app, to);
+            var path = string.Format("{0}\\{1}\\{2}\\", DifferentialDirectory, app, to);
             return Path.Combine(path, string.Format("Differential_{0}_to_{1}.zip", from, to));
         }
 
