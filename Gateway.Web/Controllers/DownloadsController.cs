@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
@@ -26,6 +27,24 @@ namespace Gateway.Web.Controllers
         }
 
         [HttpGet]
+        [Route("latest/{app}")]
+        [AllowAnonymous]
+        public ActionResult GetLatest(string app)
+        {
+            _logger.InfoFormat("A user located at {0} is trying to determine the latest version of {1}", Request.UserHostAddress, app);
+
+            // Check that the passed parameters conform to expectations to prevent injection attacks.
+            if (!IsValidAppParameter(app))
+                throw new InvalidOperationException("Invalid parameter (app): " + app);
+
+            var latest = GetLatestRemoteAppVersion(app);
+            var content = latest != null ? latest.ToString() : string.Empty;
+
+            var contentType = System.Net.Mime.MediaTypeNames.Text.Plain;
+            return Content(content, contentType);
+        }
+
+        [HttpGet]
         [Route("{app}/{version}")]
         [AllowAnonymous]
         public ActionResult Downloads(string app, string version)
@@ -35,6 +54,14 @@ namespace Gateway.Web.Controllers
             // Check that the passed parameters conform to expectations to prevent injection attacks.
             if (!IsValidAppParameter(app))
                 throw new InvalidOperationException("Invalid parameter (app): " + app);
+
+            // Allow for resolution of latest
+            if (string.Equals(version, "latest", StringComparison.CurrentCultureIgnoreCase))
+            {
+                var latest = GetLatestRemoteAppVersion(app);
+                version = latest != null ? latest.ToString() : "latest";
+            }
+
             if (!IsValidVersionParameter(version))
                 throw new InvalidOperationException("Invalid parameter (version): " + version);
 
@@ -43,7 +70,7 @@ namespace Gateway.Web.Controllers
                 return HttpNotFound(string.Format("Could not find application {0} with version {1}", app, version));
 
             var contentType = System.Net.Mime.MediaTypeNames.Application.Octet;
-            return File(path, contentType, fileName);            
+            return File(path, contentType, fileName);
         }
 
         [HttpGet]
@@ -67,6 +94,30 @@ namespace Gateway.Web.Controllers
 
             var contentType = System.Net.Mime.MediaTypeNames.Application.Octet;
             return File(differential.FullName, contentType, differential.Name);
+        }
+
+        private Version GetLatestRemoteAppVersion(string app)
+        {
+            var versions = GetRemoteAppVersions(app);
+            return versions.OrderBy(v => v).LastOrDefault();
+        }
+
+        private IEnumerable<Version> GetRemoteAppVersions(string app)
+        {
+            // Determine if path is valid.
+            var path = string.Format("{0}\\{1}\\", RemoteAppsDirectory, app);
+            var directories = Directory.GetDirectories(path);
+            var versions = new List<Version>();
+
+            foreach (var directory in directories)
+            {
+                Version version;
+                var info = new DirectoryInfo(directory);
+                if (Version.TryParse(info.Name, out version))
+                    versions.Add(version);
+            }
+
+            return versions;
         }
 
         private bool GetRemoteAppVersionPath(string app, string version, out string path, out string fileName)
