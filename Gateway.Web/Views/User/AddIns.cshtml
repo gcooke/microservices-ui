@@ -35,7 +35,7 @@
                 @foreach (var item in Model.Applications)
             {
                     <tr>
-                        <td>@Html.ActionLink(" ", "RemoveApplicationVersion", "User", new { id = item.ApplicationVersionId, groupId = Model.Id }, new { @class = " text-center glyphicon glyphicon-trash" })</td>
+                        <td>@Html.ActionLink(" ", "RemoveApplicationVersion", "User", new { id = item.ApplicationVersionId, userId = Model.Id }, new { @class = " text-center glyphicon glyphicon-trash" })</td>
                         <td>@item.Name</td>
                         <td>@item.FriendlyName</td>
                         <td>@item.Version</td>
@@ -64,7 +64,7 @@
                 @foreach (var item in Model.AddIns)
             {
                     <tr>
-                        <td>@Html.ActionLink(" ", "RemoveAddInVersion", "User", new { id = item.ExcelAddInVersionId, groupId = Model.Id }, new { @class = " text-center glyphicon glyphicon-trash" })</td>
+                        <td>@Html.ActionLink(" ", "RemoveAddInVersion", "User", new { id = item.ExcelAddInVersionId, userId = Model.Id }, new { @class = " text-center glyphicon glyphicon-trash" })</td>
                         <td>@item.Name</td>
                         <td>@item.FriendlyName</td>
                         <td>@item.Version</td>
