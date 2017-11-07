@@ -63,7 +63,7 @@ namespace Gateway.Web.Controllers
         public ActionResult Groups(long id)
         {
             var model = _gateway.GetUserGroups(id);
-            return View(model);
+            return View("Groups", model);
         }
 
         [RoleBasedAuthorize(Roles = "Security.Delete")]
@@ -90,8 +90,11 @@ namespace Gateway.Web.Controllers
                     }
             }
 
-            //TODO: Show errors
-            return Redirect(string.Format("~/User/Groups/{0}", userId));
+            //Setup next view
+            if (ModelState.IsValid)
+                return Redirect(string.Format("~/User/Groups/{0}", userId));
+
+            return Groups(groupId.ToLongOrDefault());
         }
 
         [HttpPost]
@@ -118,8 +121,11 @@ namespace Gateway.Web.Controllers
                     }
             }
 
-            //TODO: Show errors
-            return Redirect(string.Format("~/User/Groups/{0}", userId));
+            //Setup next view
+            if (ModelState.IsValid)
+                return Redirect(string.Format("~/User/Groups/{0}", userId));
+
+            return Groups(groupId.ToLongOrDefault());
         }
         #endregion
 
@@ -127,7 +133,7 @@ namespace Gateway.Web.Controllers
         public ActionResult Portfolios(long id)
         {
             var model = _gateway.GetUserPortfolios(id);
-            return View(model);
+            return View("Portfolios", model);
         }
 
 
@@ -156,8 +162,11 @@ namespace Gateway.Web.Controllers
                     }
             }
 
-            //TODO: Show errors
-            return Redirect(string.Format("~/User/Portfolios/{0}", userId));
+            //Setup next view
+            if (ModelState.IsValid)
+                return Redirect(string.Format("~/User/Portfolios/{0}", userId));
+
+            return Portfolios(userId.ToLongOrDefault());
         }
 
         [RoleBasedAuthorize(Roles = "Security.Delete")]
@@ -179,8 +188,11 @@ namespace Gateway.Web.Controllers
                     }
             }
 
-            //TODO: Show errors
-            return Redirect(string.Format("~/User/Portfolios/{0}", userId));
+            //Setup next view
+            if (ModelState.IsValid)
+                return Redirect(string.Format("~/User/Portfolios/{0}", userId));
+
+            return Portfolios(userId.ToLongOrDefault());
         }
         #endregion
 
@@ -188,7 +200,7 @@ namespace Gateway.Web.Controllers
         public ActionResult Sites(string id)
         {
             var model = _gateway.GetUserSites(id.ToLongOrDefault());
-            return View(model);
+            return View("Sites", model);
         }
 
         [HttpPost]
@@ -216,8 +228,11 @@ namespace Gateway.Web.Controllers
                     }
             }
 
-            //TODO: Show errors
-            return Redirect(string.Format("~/User/Sites/{0}", userId));
+            //Setup next view
+            if (ModelState.IsValid)
+                return Redirect(string.Format("~/User/Sites/{0}", userId));
+
+            return Sites(userId);
         }
 
         [RoleBasedAuthorize(Roles = "Security.Delete")]
@@ -239,8 +254,11 @@ namespace Gateway.Web.Controllers
                     }
             }
 
-            //TODO: Show errors
-            return Redirect(string.Format("~/User/Sites/{0}", userId));
+            //Setup next view
+            if (ModelState.IsValid)
+                return Redirect(string.Format("~/User/Sites/{0}", userId));
+
+            return Sites(userId);
         }
         #endregion
 
@@ -248,7 +266,7 @@ namespace Gateway.Web.Controllers
         public ActionResult AddIns(string id)
         {
             var model = _gateway.GetUserAddInVersions(id.ToLongOrDefault());
-            return View(model);
+            return View("AddIns", model);
         }
 
         [HttpPost]
@@ -280,8 +298,11 @@ namespace Gateway.Web.Controllers
                     }
             }
 
-            //TODO: Show errors
-            return Redirect(string.Format("~/User/AddIns/{0}", userId));
+            //Setup next view
+            if (ModelState.IsValid)
+                return Redirect(string.Format("~/User/AddIns/{0}", userId));
+
+            return AddIns(userId);
         }
 
         [HttpPost]
@@ -313,22 +334,25 @@ namespace Gateway.Web.Controllers
                     }
             }
 
-            //TODO: Show errors
-            return Redirect(string.Format("~/User/AddIns/{0}", userId));
+            //Setup next view
+            if (ModelState.IsValid)
+                return Redirect(string.Format("~/User/AddIns/{0}", userId));
+
+            return AddIns(userId);
         }
 
         [RoleBasedAuthorize(Roles = "Security.Delete")]
-        public ActionResult RemoveAddInVersion(string userId, string addInVersionId)
+        public ActionResult RemoveAddInVersion(string id, string userId)
         {
             ModelState.Clear();
 
-            if (string.IsNullOrEmpty(addInVersionId))
-                ModelState.AddModelError("AddIns", "AddIns cannot be empty");
+            if (string.IsNullOrEmpty(id))
+                ModelState.AddModelError("Id", "Id cannot be empty");
 
             // Post instruction to security controller
             if (ModelState.IsValid)
             {
-                var result = _gateway.DeleteUserAddInVersions(userId.ToLongOrDefault(), addInVersionId.ToLongOrDefault());
+                var result = _gateway.DeleteUserAddInVersions(userId.ToLongOrDefault(), id.ToLongOrDefault());
                 if (result != null)
                     foreach (var item in result)
                     {
@@ -336,22 +360,25 @@ namespace Gateway.Web.Controllers
                     }
             }
 
-            //TODO: Show errors
-            return Redirect(string.Format("~/User/AddIns/{0}", userId));
+            //Setup next view
+            if (ModelState.IsValid)
+                return Redirect(string.Format("~/User/AddIns/{0}", userId));
+
+            return AddIns(userId);
         }
 
         [RoleBasedAuthorize(Roles = "Security.Delete")]
-        public ActionResult RemoveApplicationVersion(string userId, string applicationVersionId)
+        public ActionResult RemoveApplicationVersion(string id, string userId)
         {
             ModelState.Clear();
 
-            if (string.IsNullOrEmpty(applicationVersionId))
-                ModelState.AddModelError("VersionId", "Id cannot be empty");
+            if (string.IsNullOrEmpty(id))
+                ModelState.AddModelError("Id", "Id cannot be empty");
 
             // Post instruction to security controller
             if (ModelState.IsValid)
             {
-                var result = _gateway.DeleteUserApplicationVersions(userId.ToLongOrDefault(), applicationVersionId.ToLongOrDefault());
+                var result = _gateway.DeleteUserApplicationVersions(userId.ToLongOrDefault(), id.ToLongOrDefault());
                 if (result != null)
                     foreach (var item in result)
                     {
@@ -359,8 +386,11 @@ namespace Gateway.Web.Controllers
                     }
             }
 
-            //TODO: Show errors
-            return Redirect(string.Format("~/User/AddIns/{0}", userId));
+            //Setup next view
+            if (ModelState.IsValid)
+                return Redirect(string.Format("~/User/AddIns/{0}", userId));
+
+            return AddIns(userId);
         }
         #endregion
 
@@ -399,7 +429,7 @@ namespace Gateway.Web.Controllers
             var model = new HistoryModel(id, login);
             model.Requests.AddRange(items, sortOrder);
             model.Requests.SetRelativePercentages();
-            return View(model);
+            return View("History", model);
         }
     }
 }
