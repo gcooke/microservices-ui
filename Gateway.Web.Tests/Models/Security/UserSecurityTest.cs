@@ -125,45 +125,6 @@ namespace Gateway.Web.Tests.Models.Security
             Assert.AreNotEqual(site.Id, 0, "Does not load 'Id' of SiteModel correctly.");
 
             Assert.IsNotEmpty(site.Name, "Does not load 'Domain' of SiteModel correctly.");
-        }
-
-        [Test]
-        public void Can_load_addIns_model()
-        {
-            Assert.DoesNotThrow(() =>
-            {
-                var result = GetPayload<AddInsModel>("Gateway.Web.Tests.Resources.UserAddInVersionPayload.xml");
-            });
-        }
-
-        [Test]
-        public void Can_load_addIns_correctly()
-        {
-            var result = GetPayload<AddInsModel>("Gateway.Web.Tests.Resources.UserAddInVersionPayload.xml");
-
-            Assert.IsNotEmpty(result.Login, "Does not load 'Domain' of SitesModel correctly.");
-
-            Assert.AreNotEqual(result.Id, 0, "Does not load 'Id' of SitesModel correctly.");
-
-            Assert.AreEqual(result.ExcelAddInVersions.Count, 1, "Does not load list of sites correctly.");
-
-            Assert.AreEqual(result.GroupExcelAddInVersions.Count, 1, "Does not load list of inherited correctly.");
-        }
-
-        [Test]
-        public void Can_load_addIn_correctly()
-        {
-            var result = GetPayload<AddInsModel>("Gateway.Web.Tests.Resources.UserAddInVersionPayload.xml");
-
-            var addInVersion = result.ExcelAddInVersions.First();
-
-            Assert.AreNotEqual(addInVersion.ExcelAddInVersionId, 0, "Does not load 'ExcelAddInVersionId' of UserAddInVersion correctly.");
-
-            Assert.IsNotEmpty(addInVersion.Name, "Does not load 'Name' of UserAddInVersion correctly.");
-
-            Assert.IsNotEmpty(addInVersion.FriendlyName, "Does not load 'FriendlyName' of UserAddInVersion correctly.");
-
-            Assert.IsNotEmpty(addInVersion.Version, "Does not load 'Version' of UserAddInVersion correctly.");
-        }
+        }        
     }
 }

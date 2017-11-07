@@ -284,6 +284,39 @@ namespace Gateway.Web.Controllers
             return Redirect(string.Format("~/User/AddIns/{0}", userId));
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [RoleBasedAuthorize(Roles = "Security.Modify")]
+        public ActionResult Applications(FormCollection collection)
+        {
+            ModelState.Clear();
+
+            // Validate parameters
+            var userId = collection["_id"];
+            var version = collection["_version"];
+
+            if (string.IsNullOrEmpty(version))
+                ModelState.AddModelError("Version", "Version cannot be empty");
+
+            var application = version.Split('|')[0];
+            var versionName = version.Split('|')[1];
+
+            // Post instruction to security controller
+            if (ModelState.IsValid)
+            {
+                var addInVersion = new ApplicationVersionModel() { Application = application, Version = versionName };
+                var result = _gateway.InsertUserApplicationVersions(userId.ToLongOrDefault(), addInVersion);
+                if (result != null)
+                    foreach (var item in result)
+                    {
+                        ModelState.AddModelError("Remote", item);
+                    }
+            }
+
+            //TODO: Show errors
+            return Redirect(string.Format("~/User/AddIns/{0}", userId));
+        }
+
         [RoleBasedAuthorize(Roles = "Security.Delete")]
         public ActionResult RemoveAddInVersion(string userId, string addInVersionId)
         {
@@ -296,6 +329,29 @@ namespace Gateway.Web.Controllers
             if (ModelState.IsValid)
             {
                 var result = _gateway.DeleteUserAddInVersions(userId.ToLongOrDefault(), addInVersionId.ToLongOrDefault());
+                if (result != null)
+                    foreach (var item in result)
+                    {
+                        ModelState.AddModelError("Remote", item);
+                    }
+            }
+
+            //TODO: Show errors
+            return Redirect(string.Format("~/User/AddIns/{0}", userId));
+        }
+
+        [RoleBasedAuthorize(Roles = "Security.Delete")]
+        public ActionResult RemoveApplicationVersion(string userId, string applicationVersionId)
+        {
+            ModelState.Clear();
+
+            if (string.IsNullOrEmpty(applicationVersionId))
+                ModelState.AddModelError("VersionId", "Id cannot be empty");
+
+            // Post instruction to security controller
+            if (ModelState.IsValid)
+            {
+                var result = _gateway.DeleteUserApplicationVersions(userId.ToLongOrDefault(), applicationVersionId.ToLongOrDefault());
                 if (result != null)
                     foreach (var item in result)
                     {

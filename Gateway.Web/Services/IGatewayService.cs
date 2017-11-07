@@ -63,11 +63,15 @@ namespace Gateway.Web.Services
 
         Models.User.UserModel GetUser(string id);
 
-        Models.Security.AddInsModel GetAddIns();
+        Models.Security.ApplicationsModel GetApplications();
 
         AddInModel GetAddIn(long id);
 
+        IEnumerable<ApplicationVersionModel> GetApplicationVersions();
+
         IEnumerable<AddInVersionModel> GetAddInVersions();
+
+        string[] Create(ApplicationModel model);
 
         string[] Create(AddInModel model);
 
@@ -106,7 +110,13 @@ namespace Gateway.Web.Services
 
         string[] InsertGroupAddInVersion(long groupId, AddInVersionModel addInVersion);
 
+        string[] InsertGroupApplicationVersion(long groupId, ApplicationVersionModel addInVersion);
+
         string[] DeleteGroupAddInVersion(long id, long groupId);
+
+        string[] DeleteGroupApplicationVersion(long id, long groupId);
+
+        string[] UpdateAssignedApplicationVersions(string from, string to);
 
         string[] UpdateAssignedAddInVersions(string from, string to);
 
@@ -145,7 +155,11 @@ namespace Gateway.Web.Services
 
         string[] DeleteUserAddInVersions(long userId, long addInVersionId);
 
+        string[] DeleteUserApplicationVersions(long userId, long applicationVersionId);
+
         string[] InsertUserAddInVersions(long groupId, AddInVersionModel addInVersion);
+
+        string[] InsertUserApplicationVersions(long groupId, ApplicationVersionModel version);
 
         #endregion
     }

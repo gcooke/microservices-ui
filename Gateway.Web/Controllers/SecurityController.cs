@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Web.Mvc;
 using Bagl.Cib.MIT.Logging;
 using Gateway.Web.Authorization;
@@ -40,8 +41,8 @@ namespace Gateway.Web.Controllers
 
         public ActionResult AddIns()
         {
-            var model = _gateway.GetAddIns();
-            return View("AddIns", model);
+            var model = _gateway.GetApplications();
+            return View("Applications", model);
         }
 
         public ActionResult Permissions()
@@ -87,6 +88,7 @@ namespace Gateway.Web.Controllers
             var name = collection["_name"];
             var friendly = collection["_friendly"];
             var description = collection["_description"];
+            var type = collection["_type"];
 
             if (string.IsNullOrEmpty(name))
                 ModelState.AddModelError("Name", "Name cannot be empty");
@@ -97,11 +99,28 @@ namespace Gateway.Web.Controllers
             if (string.IsNullOrEmpty(description))
                 ModelState.AddModelError("Description", "Description cannot be empty");
 
+            if (string.IsNullOrEmpty(type))
+                ModelState.AddModelError("Type", "Type cannot be empty");
+
             // Post instruction to security controller
-            var model = new AddInModel()
+            if(string.Equals("Application", type, StringComparison.CurrentCultureIgnoreCase))
+                AddApplication(name, friendly, description);
+            else
+                AddAddIn(name, friendly, description);
+
+            //Setup next view
+            if (ModelState.IsValid)
+                return Redirect("~/Security/AddIns/");
+
+            return AddIns();
+        }
+
+        private void AddApplication(string name, string friendlyName, string description)
+        {
+            var model = new ApplicationModel()
             {
                 Name = name,
-                FriendlyName = friendly,
+                FriendlyName = friendlyName,
                 Description = description
             };
             if (ModelState.IsValid)
@@ -113,12 +132,25 @@ namespace Gateway.Web.Controllers
                         ModelState.AddModelError("Remote", item);
                     }
             }
+        }
 
-            //Setup next view
+        private void AddAddIn(string name, string friendlyName, string description)
+        {
+            var model = new AddInModel()
+            {
+                Name = name,
+                FriendlyName = friendlyName,
+                Description = description
+            };
             if (ModelState.IsValid)
-                return Redirect("~/Security/AddIns/");
-
-            return AddIns();
+            {
+                var result = _gateway.Create(model);
+                if (result != null)
+                    foreach (var item in result)
+                    {
+                        ModelState.AddModelError("Remote", item);
+                    }
+            }
         }
 
         [HttpPost]
@@ -257,6 +289,8 @@ namespace Gateway.Web.Controllers
             // Validate parameters
             var fromVersion = collection["_from"];
             var toVersion = collection["_to"];
+            var fromType = StripApplicationType(ref fromVersion);
+            var toType = StripApplicationType(ref toVersion);
 
             if (string.IsNullOrEmpty(fromVersion))
                 ModelState.AddModelError("From", "From cannot be empty");
@@ -267,12 +301,20 @@ namespace Gateway.Web.Controllers
             if (fromVersion == toVersion)
                 ModelState.AddModelError("Versions", "Cannot re-assign the same version");
 
+            if (fromType != toType)
+                ModelState.AddModelError("Versions", "Cannot re-assign to a named application");
+
             if (ModelState.IsValid)
             {
-                var result = _gateway.UpdateAssignedAddInVersions(fromVersion, toVersion);
+                string[] result;
+                if (fromType == "Application")
+                    result = _gateway.UpdateAssignedApplicationVersions(fromVersion, toVersion);
+                else
+                    result = _gateway.UpdateAssignedAddInVersions(fromVersion, toVersion);
+
                 if (result != null)
                 {
-                    foreach(var item in result)
+                    foreach (var item in result)
                         ModelState.AddModelError("Remote", item);
                 }
             }
@@ -282,6 +324,16 @@ namespace Gateway.Web.Controllers
                 return Redirect("~/Security/AddIns/");
 
             return AddIns();
+        }
+
+        private string StripApplicationType(ref string input)
+        {
+            var index = input.LastIndexOf("|", StringComparison.Ordinal);
+            if (index <= 0) return input;
+
+            var result = input.Substring(index + 1);
+            input = input.Substring(0, index);
+            return result;
         }
     }
 }

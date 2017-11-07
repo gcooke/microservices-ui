@@ -328,6 +328,36 @@ namespace Gateway.Web.Controllers
             return AddIns(groupId);
         }
 
+        [RoleBasedAuthorize(Roles = "Security.Delete")]
+        public ActionResult RemoveApplicationVersion(string id, string groupId)
+        {
+            ModelState.Clear();
+
+            // Validate parameters
+            if (string.IsNullOrEmpty(id))
+                ModelState.AddModelError("Id", "Id cannot be empty");
+
+            if (string.IsNullOrEmpty(groupId))
+                ModelState.AddModelError("GroupId", "GroupId cannot be empty");
+
+            // Post instruction to security controller
+            if (ModelState.IsValid)
+            {
+                var result = _gateway.DeleteGroupApplicationVersion(id.ToLongOrDefault(), groupId.ToLongOrDefault());
+                if (result != null)
+                    foreach (var item in result)
+                    {
+                        ModelState.AddModelError("Remote", item);
+                    }
+            }
+
+            //Setup next view
+            if (ModelState.IsValid)
+                return Redirect(string.Format("~/Group/AddIns/{0}", groupId));
+
+            return AddIns(groupId);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [RoleBasedAuthorize(Roles = "Security.Modify")]
@@ -350,6 +380,42 @@ namespace Gateway.Web.Controllers
             {
                 var addInVersion = new AddInVersionModel() { AddIn = addInName, Version = versionName };
                 var result = _gateway.InsertGroupAddInVersion(groupId.ToLongOrDefault(), addInVersion);
+                if (result != null)
+                    foreach (var item in result)
+                    {
+                        ModelState.AddModelError("Remote", item);
+                    }
+            }
+
+            //Setup next view
+            if (ModelState.IsValid)
+                return Redirect("~/Group/AddIns/" + groupId);
+
+            return AddIns(groupId);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [RoleBasedAuthorize(Roles = "Security.Modify")]
+        public ActionResult InsertApplicationVersion(FormCollection collection)
+        {
+            ModelState.Clear();
+
+            // Validate parameters
+            var groupId = collection["_id"];
+            var version = collection["_version"];
+
+            if (string.IsNullOrEmpty(version))
+                ModelState.AddModelError("Version", "Version cannot be empty");
+
+            var applicationName = version.Split('|')[0];
+            var versionName = version.Split('|')[1];
+
+            // Post instruction to security controller
+            if (ModelState.IsValid)
+            {
+                var applicationVersion = new ApplicationVersionModel() { Application = applicationName, Version = versionName };
+                var result = _gateway.InsertGroupApplicationVersion(groupId.ToLongOrDefault(), applicationVersion);
                 if (result != null)
                     foreach (var item in result)
                     {

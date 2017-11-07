@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
-using Gateway.Web.Models.Shared;
 
 namespace Gateway.Web.Models.Group
 {
@@ -9,15 +8,20 @@ namespace Gateway.Web.Models.Group
         public AddInsModel(long id)
         {
             Id = id;
-            Items = new List<GroupAddInVersionModel>();
-            AvailableAddIns = new List<AddInModel>();
-            AvailableVersions = new List<SelectListItem>();
+            AddIns = new List<GroupAddInVersionModel>();
+            AvailableAddInVersions = new List<SelectListItem>();
+
+            Applications = new List<GroupApplicationVersionModel>();
+            AvailableApplicationVersions = new List<SelectListItem>();
         }
 
         public long Id { get; set; }
-        public List<GroupAddInVersionModel> Items { get; private set; }
-        public List<AddInModel> AvailableAddIns { get; private set; }
-        public List<SelectListItem> AvailableVersions { get; private set; }
+        public List<GroupAddInVersionModel> AddIns { get; private set; }
+        public List<SelectListItem> AvailableAddInVersions { get; private set; }
+
+        public List<GroupApplicationVersionModel> Applications { get; private set; }
+        public List<SelectListItem> AvailableApplicationVersions { get; private set; }
+
         public string Name { get; set; }
     }
 }

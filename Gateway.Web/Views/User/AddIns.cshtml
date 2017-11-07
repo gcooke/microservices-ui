@@ -11,58 +11,97 @@
 <div id="page-content-wrapper">
 
     <div class="hero-unit">
-        <h3 class="text-lowercase">User Add-in Version</h3>
 
-    <div class="containerx bulk">
-        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+        <div class="containerx bulk">
+            @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
-        <table style="white-space: nowrap; width: 100%;" class="datatable">
-            <thead>
-            <tr>
-                <td></td>
-                <td>Name</td>
-                <td>Friendly Name</td>
-                <td colspan="2">
-                    Version
-                    <a class="btn btn-default btn-xs glyphicon glyphicon-plus pull-right"
-                       data-target=".add-modal"
-                       data-toggle="modal">
-                    </a>
-                </td>
-            </tr>
-            </thead>
-            @foreach (var item in Model.ExcelAddInVersions)
+            <h3 style="margin-bottom: 0px">applications</h3>
+            <p>All assigned applications</p>
+            <table style="width: 100%; white-space: nowrap" class="datatable">
+                <thead>
+                    <tr>
+                        <td></td>
+                        <td>Name</td>
+                        <td>Friendly Name</td>
+                        <td colspan="2">
+                            Version
+                            <a class="btn btn-default btn-xs glyphicon glyphicon-plus pull-right"
+                               data-target=".add-app-modal"
+                               data-toggle="modal">
+                            </a>
+                        </td>
+                    </tr>
+                </thead>
+                @foreach (var item in Model.Applications)
             {
-                <tr>
-                    <td>
-                        @Html.ActionLink(" ", "RemoveAddInVersion", "User", new { userId = @Model.Id, addInVersionId = item.ExcelAddInVersionId }, new { @class = "text-center glyphicon glyphicon-trash" })
-                    </td>
-                    <td>@item.Name</td>
-                    <td>@item.FriendlyName</td>
-                    <td>@item.Version</td>
-                </tr>
-            }
-        </table>
-        <br />
-    </div>
-    
-    <div class="hero-unit">
-        <h3 class="text-lowercase">Add-in versions inherited from groups</h3>
-    </div>
+                    <tr>
+                        <td>@Html.ActionLink(" ", "RemoveApplicationVersion", "User", new { id = item.ApplicationVersionId, groupId = Model.Id }, new { @class = " text-center glyphicon glyphicon-trash" })</td>
+                        <td>@item.Name</td>
+                        <td>@item.FriendlyName</td>
+                        <td>@item.Version</td>
+                    </tr>
+                }
+            </table>
+            <br />
+
+            <h3 style="margin-bottom: 0px">add-ins</h3>
+            <p>All assigned add-ins</p>
+            <table style="width: 100%; white-space: nowrap" class="datatable">
+                <thead>
+                    <tr>
+                        <td></td>
+                        <td>Name</td>
+                        <td>Friendly Name</td>
+                        <td colspan="2">
+                            Version
+                            <a class="btn btn-default btn-xs glyphicon glyphicon-plus pull-right"
+                               data-target=".add-in-modal"
+                               data-toggle="modal">
+                            </a>
+                        </td>
+                    </tr>
+                </thead>
+                @foreach (var item in Model.AddIns)
+            {
+                    <tr>
+                        <td>@Html.ActionLink(" ", "RemoveAddInVersion", "User", new { id = item.ExcelAddInVersionId, groupId = Model.Id }, new { @class = " text-center glyphicon glyphicon-trash" })</td>
+                        <td>@item.Name</td>
+                        <td>@item.FriendlyName</td>
+                        <td>@item.Version</td>
+                    </tr>
+                }
+            </table>
+            <br />
+        </div>
+
+        <div class="hero-unit">
+            <h3 class="text-lowercase">inherited applications</h3>
+        </div>
 
         <div class="containerx bulk">
 
             <table style="white-space: nowrap; width: 100%;" class="datatable">
                 <thead>
-                <tr>
-                    <td>Name</td>
-                    <td>Friendly Name</td>
-                    <td>Version</td>
-                </tr>
+                    <tr>
+                        <td>Group</td>
+                        <td>Name</td>
+                        <td>Friendly Name</td>
+                        <td>Version</td>
+                    </tr>
                 </thead>
                 @foreach (var item in Model.GroupExcelAddInVersions)
                 {
                     <tr>
+                        <td>@item.GroupName</td>
+                        <td>@item.Name</td>
+                        <td>@item.FriendlyName</td>
+                        <td>@item.Version</td>
+                    </tr>
+                }
+                @foreach (var item in Model.GroupApplicationVersions)
+                {
+                    <tr>
+                        <td>@item.GroupName</td>
                         <td>@item.Name</td>
                         <td>@item.FriendlyName</td>
                         <td>@item.Version</td>
@@ -73,42 +112,80 @@
         </div>
         <br />
 
-    @using (Html.BeginForm("AddIns", "User", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-    {
-        <div class="modal fade add-modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        <h4 class="modal-title" id="myModalLabel">Add Add-Ins</h4>
-                    </div>
+        @using (Html.BeginForm("Applications", "User", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            <div class="modal fade add-app-modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel">Add Application</h4>
+                        </div>
 
-                    <div class="modal-body">
-                        @Html.AntiForgeryToken()
+                        <div class="modal-body">
+                            @Html.AntiForgeryToken()
 
-                        <!-- Hidden Id Field -->
-                        @Html.TextBox("_id", Model.Id, new { @class = "form-control", @style = "display:none" })
+                            <!-- Hidden Id Field -->
+                            @Html.TextBox("_id", Model.Id, new { @class = "form-control", @style = "display:none" })
 
-                        <div class="container-fluid">
-                            <div class="row">
-                                <div class="col-md-2">
-                                    <label class="control-label">Version</label>
-                                </div>
-                                <div class="col-md-4">
-                                    @Html.DropDownList("_version", Model.AvailableAddInVersions, new { @class = "form-control" })
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label class="control-label">Version</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        @Html.DropDownList("_version", Model.AvailableApplicationVersions, new { @class = "form-control" })
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-default">Add</button>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-default">Add</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    }
+        }
+
+        @using (Html.BeginForm("AddIns", "User", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            <div class="modal fade add-in-modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel">Add Add-In</h4>
+                        </div>
+
+                        <div class="modal-body">
+                            @Html.AntiForgeryToken()
+
+                            <!-- Hidden Id Field -->
+                            @Html.TextBox("_id", Model.Id, new { @class = "form-control", @style = "display:none" })
+
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label class="control-label">Version</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        @Html.DropDownList("_version", Model.AvailableAddInVersions, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-default">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
     </div>
 </div>
