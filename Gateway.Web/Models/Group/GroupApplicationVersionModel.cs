@@ -3,8 +3,8 @@ using Gateway.Web.Models.Shared;
 
 namespace Gateway.Web.Models.Group
 {
-    [XmlType("GroupAddInVersion")]
-    public class GroupAddInVersionModel : EntityAddInVersionModel, IGroupModel
+    [XmlType("GroupApplicationVersion")]
+    public class GroupApplicationVersionModel : EntityApplicationVersionModel, IGroupModel
     {
         public long GroupId { get; set; }
         public string GroupName { get; set; }

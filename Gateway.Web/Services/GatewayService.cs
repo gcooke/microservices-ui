@@ -21,7 +21,7 @@ using Gateway.Web.Models.Shared;
 using Gateway.Web.Models.User;
 using Gateway.Web.Utils;
 using WebGrease.Css.Extensions;
-using AddInsModel = Gateway.Web.Models.Security.AddInsModel;
+using ApplicationsModel = Gateway.Web.Models.Security.ApplicationsModel;
 using GroupsModel = Gateway.Web.Models.Security.GroupsModel;
 using PermissionsModel = Gateway.Web.Models.Security.PermissionsModel;
 using PortfoliosModel = Gateway.Web.Models.Group.PortfoliosModel;
@@ -364,11 +364,24 @@ namespace Gateway.Web.Services
             return result;
         }
 
-        public AddInsModel GetAddIns()
+        public ApplicationsModel GetApplications()
+        {
+            var result = new ApplicationsModel();
+
+            PopulateAddIns(result);
+            PopulateApplications(result);
+
+            // Get active add-ins
+            result.From = GetAvailableReferencedAddInVersions().Union(GetAvailableReferencedApplicationVersions()).ToList();
+            result.To = GetAvailableAddInVersions().Union(GetAvailableApplicationVersions()).ToList();
+            result.ActiveItems = result.From.ConvertToReportTable();
+
+            return result;
+        }
+
+        private void PopulateAddIns(ApplicationsModel target)
         {
             var response = _gatewayRestService.Get("Security", "latest", "addins");
-
-            var result = new AddInsModel();
             if (response.Successfull)
             {
                 var element = response.Content.GetPayloadAsXElement();
@@ -377,15 +390,23 @@ namespace Gateway.Web.Services
                 {
                     interim.Add(item.Deserialize<AddInModel>());
                 }
-                result.Items.AddRange(interim.OrderBy(v => v.Name));
+                target.Items.AddRange(interim.OrderBy(v => v.Name));
             }
+        }
 
-            // Get active add-ins
-            result.From = GetAvailableReferencedAddInVersions().ToList();
-            result.To = GetAvailableAddInVersions().ToList();
-            result.ActiveVersions = result.From.ConvertToReportTable();
-
-            return result;
+        private void PopulateApplications(ApplicationsModel target)
+        {
+            var response = _gatewayRestService.Get("Security", "latest", "applications");
+            if (response.Successfull)
+            {
+                var element = response.Content.GetPayloadAsXElement();
+                var interim = new List<ApplicationModel>();
+                foreach (var item in element.Descendants("Application"))
+                {
+                    interim.Add(item.Deserialize<ApplicationModel>());
+                }
+                target.Items.AddRange(interim.OrderBy(v => v.Name));
+            }
         }
 
         public AddInModel GetAddIn(long id)
@@ -398,6 +419,24 @@ namespace Gateway.Web.Services
             {
                 var element = response.Content.GetPayloadAsXElement();
                 result = element.Deserialize<AddInModel>();
+            }
+
+            return result;
+        }
+
+        public IEnumerable<ApplicationVersionModel> GetApplicationVersions()
+        {
+            var query = "applications/versions";
+            var response = _gatewayRestService.Get("Security", "latest", query);
+
+            var result = new List<ApplicationVersionModel>();
+            if (response.Successfull)
+            {
+                var element = response.Content.GetPayloadAsXElement();
+                foreach (var model in DeserializeApplicationVersionItems(element).OrderByDescending(v => v.ActualVersion))
+                {
+                    result.Add(model);
+                }
             }
 
             return result;
@@ -419,6 +458,19 @@ namespace Gateway.Web.Services
             }
 
             return result;
+        }
+
+        public string[] Create(ApplicationModel model)
+        {
+            var query = "applications";
+            var response = _gatewayRestService.Put("Security", "latest", query, model.Serialize());
+
+            if (response.Successfull)
+            {
+                return null;
+            }
+
+            return new[] { response.Message };
         }
 
         public string[] Create(AddInModel model)
@@ -721,10 +773,21 @@ namespace Gateway.Web.Services
 
         public Models.Group.AddInsModel GetGroupAddIns(long groupId)
         {
+            var result = new Models.Group.AddInsModel(groupId);
+
+            PopulateAddInVersions(result, groupId);
+            PopulateApplicationVersions(result, groupId);
+
+            result.AvailableAddInVersions.AddRange(GetAvailableAddInVersions().OrderBy(v => v.Text));
+            result.AvailableApplicationVersions.AddRange(GetAvailableApplicationVersions().OrderBy(v => v.Text));
+
+            return result;
+        }
+
+        private void PopulateAddInVersions(Models.Group.AddInsModel target, long groupId)
+        {
             var query = string.Format("groups/{0}/addins", groupId);
             var response = _gatewayRestService.Get("Security", "latest", query);
-
-            var result = new Models.Group.AddInsModel(groupId);
             if (response.Successfull)
             {
                 var element = response.Content.GetPayloadAsXElement();
@@ -733,15 +796,24 @@ namespace Gateway.Web.Services
                 {
                     interim.Add(item.Deserialize<GroupAddInVersionModel>());
                 }
-                result.Items.AddRange(interim.OrderBy(v => v.Name));
+                target.AddIns.AddRange(interim.OrderBy(v => v.Name));
             }
+        }
 
-            PopulateAvailableAddIns(result);
-
-            var availableVersions = GetAvailableAddInVersions();
-            result.AvailableVersions.AddRange(availableVersions.OrderBy(v => v.Text));
-
-            return result;
+        private void PopulateApplicationVersions(Models.Group.AddInsModel target, long groupId)
+        {
+            var query = string.Format("groups/{0}/applications", groupId);
+            var response = _gatewayRestService.Get("Security", "latest", query);
+            if (response.Successfull)
+            {
+                var element = response.Content.GetPayloadAsXElement();
+                var interim = new List<GroupApplicationVersionModel>();
+                foreach (var item in element.Descendants("GroupApplicationVersion"))
+                {
+                    interim.Add(item.Deserialize<GroupApplicationVersionModel>());
+                }
+                target.Applications.AddRange(interim.OrderBy(v => v.Name));
+            }
         }
 
         public string[] InsertGroupAddInVersion(long groupId, AddInVersionModel addInVersion)
@@ -757,10 +829,50 @@ namespace Gateway.Web.Services
             return new[] { response.Message };
         }
 
+        public string[] InsertGroupApplicationVersion(long groupId, ApplicationVersionModel addInVersion)
+        {
+            var query = string.Format("groups/{0}/applications", groupId);
+            var response = _gatewayRestService.Put("Security", "latest", query, addInVersion.Serialize());
+
+            if (response.Successfull)
+            {
+                return null;
+            }
+
+            return new[] { response.Message };
+        }
+
         public string[] DeleteGroupAddInVersion(long id, long groupId)
         {
             var query = string.Format("groups/{0}/addins/{1}", groupId, id);
             var response = _gatewayRestService.Delete("Security", "latest", query, string.Empty);
+
+            if (response.Successfull)
+            {
+                return null;
+            }
+
+            return new[] { response.Content.Message };
+        }
+
+        public string[] DeleteGroupApplicationVersion(long id, long groupId)
+        {
+            var query = string.Format("groups/{0}/applications/{1}", groupId, id);
+            var response = _gatewayRestService.Delete("Security", "latest", query, string.Empty);
+
+            if (response.Successfull)
+            {
+                return null;
+            }
+
+            return new[] { response.Content.Message };
+        }
+
+        public string[] UpdateAssignedApplicationVersions(string @from, string to)
+        {
+            var query = "applications/reassign";
+            var payload = string.Format("{0}|{1}", @from, @to);
+            var response = _gatewayRestService.Put("Security", "latest", query, payload);
 
             if (response.Successfull)
             {
@@ -928,20 +1040,65 @@ namespace Gateway.Web.Services
 
         public Models.User.AddInsModel GetUserAddInVersions(long userId)
         {
+            var result = new Models.User.AddInsModel(userId);
+
+            PopulateAddInVersions(result, userId);
+            PopulateApplicationVersions(result, userId);
+
+            result.AvailableAddInVersions.AddRange(GetAvailableAddInVersions().OrderBy(v => v.Text));
+            result.AvailableApplicationVersions.AddRange(GetAvailableApplicationVersions().OrderBy(v => v.Text));
+
+            return result;
+        }
+
+        private void PopulateAddInVersions(Models.User.AddInsModel target, long userId)
+        {
             var query = string.Format("users/{0}/addins", userId);
             var response = _gatewayRestService.Get("Security", "latest", query);
 
             if (response.Successfull)
             {
                 var element = response.Content.GetPayloadAsXElement();
-                var model = element.Deserialize<Models.User.AddInsModel>();
+                target.Login = element.Descendants("Login").First().Value;
 
-                var availableVersions = GetAvailableAddInVersions();
-                model.AvailableAddInVersions.AddRange(availableVersions.OrderBy(v => v.Text));
-                return model;
+                var interim = new List<UserAddInVersionModel>();
+                foreach (var item in element.Descendants("UserAddInVersion"))
+                {
+                    interim.Add(item.Deserialize<UserAddInVersionModel>());
+                }
+                target.AddIns.AddRange(interim.OrderBy(v => v.Name));
+
+                var groupValues = new List<GroupAddInVersionModel>();
+                foreach (var item in element.Descendants("GroupAddInVersion"))
+                {
+                    groupValues.Add(item.Deserialize<GroupAddInVersionModel>());
+                }
+                target.GroupExcelAddInVersions.AddRange(groupValues.OrderBy(v => v.Name));
             }
+        }
 
-            return null;
+        private void PopulateApplicationVersions(Models.User.AddInsModel target, long userId)
+        {
+            var query = string.Format("users/{0}/applications", userId);
+            var response = _gatewayRestService.Get("Security", "latest", query);
+
+            if (response.Successfull)
+            {
+                var element = response.Content.GetPayloadAsXElement();
+                var interim = new List<UserApplicationVersionModel>();
+                foreach (var item in element.Descendants("UserApplicationVersion"))
+                {
+                    interim.Add(item.Deserialize<UserApplicationVersionModel>());
+                }
+                target.Applications.AddRange(interim.OrderBy(v => v.Name));
+
+                var groupValues = new List<GroupApplicationVersionModel>();
+                foreach (var item in element.Descendants("GroupApplicationVersion"))
+                {
+                    groupValues.Add(item.Deserialize<GroupApplicationVersionModel>());
+                }
+                target.GroupApplicationVersions.AddRange(groupValues.OrderBy(v => v.Name));
+            }
         }
 
         public string[] DeleteUserAddInVersions(long userId, long addInVersionId)
@@ -957,10 +1114,36 @@ namespace Gateway.Web.Services
             return new[] { response.Content.Message };
         }
 
+        public string[] DeleteUserApplicationVersions(long userId, long applicationVersionId)
+        {
+            var query = string.Format("users/{0}/applications/{1}", userId, applicationVersionId);
+            var response = _gatewayRestService.Delete("Security", "latest", query, string.Empty);
+
+            if (response.Successfull)
+            {
+                return null;
+            }
+
+            return new[] { response.Content.Message };
+        }
+
         public string[] InsertUserAddInVersions(long groupId, AddInVersionModel addInVersion)
         {
             var query = string.Format("users/{0}/addins", groupId);
             var response = _gatewayRestService.Put("Security", "latest", query, addInVersion.Serialize());
+
+            if (response.Successfull)
+            {
+                return null;
+            }
+
+            return new[] { response.Content.Message };
+        }
+
+        public string[] InsertUserApplicationVersions(long groupId, ApplicationVersionModel version)
+        {
+            var query = string.Format("users/{0}/applications", groupId);
+            var response = _gatewayRestService.Put("Security", "latest", query, version.Serialize());
 
             if (response.Successfull)
             {
@@ -1153,18 +1336,39 @@ namespace Gateway.Web.Services
                 target.AvailableSites.AddRange(interim.OrderBy(v => v.Text));
             }
         }
-
-        private void PopulateAvailableAddIns(Models.Group.AddInsModel target)
+        
+        private IEnumerable<SelectListItem> GetAvailableApplicationVersions()
         {
-            var response = _gatewayRestService.Get("Security", "latest", "addins");
+            var response = _gatewayRestService.Get("Security", "latest", "applications/versions");
 
             if (response.Successfull)
             {
                 var element = response.Content.GetPayloadAsXElement();
-                foreach (var item in element.Descendants("AddIn"))
+                foreach (var model in DeserializeApplicationVersionItems(element).OrderByDescending(v => v.ActualVersion))
                 {
-                    var model = item.Deserialize<AddInModel>();
-                    target.AvailableAddIns.Add(model);
+                    yield return new SelectListItem
+                    {
+                        Text = string.Format("{0} - {1}", model.Application, model.Version),
+                        Value = string.Format("{0}|{1}|Application", model.Application, model.Version)
+                    };
+                }
+            }
+        }
+
+        private IEnumerable<SelectListItem> GetAvailableReferencedApplicationVersions()
+        {
+            var response = _gatewayRestService.Get("Security", "latest", "applications/versions/referenced");
+
+            if (response.Successfull)
+            {
+                var element = response.Content.GetPayloadAsXElement();
+                foreach (var model in DeserializeApplicationVersionItems(element).OrderByDescending(v => v.ActualVersion))
+                {
+                    yield return new SelectListItem
+                    {
+                        Text = string.Format("{0} - {1}", model.Application, model.Version),
+                        Value = string.Format("{0}|{1}|Application", model.Application, model.Version)
+                    };
                 }
             }
         }
@@ -1181,7 +1385,7 @@ namespace Gateway.Web.Services
                     yield return new SelectListItem
                     {
                         Text = string.Format("{0} - {1}", model.AddIn, model.Version),
-                        Value = string.Format("{0}|{1}", model.AddIn, model.Version)
+                        Value = string.Format("{0}|{1}|Add-In", model.AddIn, model.Version)
                     };
                 }
             }
@@ -1199,7 +1403,7 @@ namespace Gateway.Web.Services
                     yield return new SelectListItem
                     {
                         Text = string.Format("{0} - {1}", model.AddIn, model.Version),
-                        Value = string.Format("{0}|{1}", model.AddIn, model.Version)
+                        Value = string.Format("{0}|{1}|Add-In", model.AddIn, model.Version)
                     };
                 }
             }
@@ -1211,6 +1415,16 @@ namespace Gateway.Web.Services
             {
                 var model = item.Deserialize<AddInVersionModel>();
                 if (string.Equals(model.AddIn, "ExcelTools", StringComparison.CurrentCultureIgnoreCase)) continue;
+                yield return model;
+            }
+        }
+
+        private IEnumerable<ApplicationVersionModel> DeserializeApplicationVersionItems(XElement element)
+        {
+            foreach (var item in element.Descendants("ApplicationVersion"))
+            {
+                var model = item.Deserialize<ApplicationVersionModel>();
+                if (string.Equals(model.Application, "ExcelTools", StringComparison.CurrentCultureIgnoreCase)) continue;
                 yield return model;
             }
         }

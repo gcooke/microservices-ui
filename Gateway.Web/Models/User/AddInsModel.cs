@@ -11,19 +11,26 @@ namespace Gateway.Web.Models.User
         public AddInsModel(long id)
         {
             Id = id;
+
+            AddIns = new List<UserAddInVersionModel>();
+            AvailableAddInVersions = new List<SelectListItem>();
+            GroupExcelAddInVersions = new List<GroupAddInVersionModel>();
+
+            Applications = new List<UserApplicationVersionModel>();
+            AvailableApplicationVersions = new List<SelectListItem>();
+            GroupApplicationVersions = new List<GroupApplicationVersionModel>();
         }
 
-        public AddInsModel()
-        {
-        }
+        public long Id { get; private set; }
 
-        public long Id { get; set; }
+        public List<UserAddInVersionModel> AddIns { get; private set; }
+        public List<SelectListItem> AvailableAddInVersions { get; private set; }
 
-        public List<UserAddInVersionModel> ExcelAddInVersions { get; set; }
+        public List<UserApplicationVersionModel> Applications { get; private set; }
+        public List<SelectListItem> AvailableApplicationVersions { get; private set; }
 
-        public List<GroupAddInVersionModel> GroupExcelAddInVersions { get; set; }
-
-        public List<SelectListItem> AvailableAddInVersions { get; set; }
+        public List<GroupAddInVersionModel> GroupExcelAddInVersions { get; private set; }
+        public List<GroupApplicationVersionModel> GroupApplicationVersions { get; private set; }
 
         public string Login { get; set; }
     }

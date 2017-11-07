@@ -7,11 +7,11 @@
 @using Gateway.Web.Utils
 @using Newtonsoft.Json
 @using Version = Gateway.Web.Models.Controller.Version
-@model AddInsModel
+@model ApplicationsModel
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
     ViewBag.Title = "Security";
-    ViewBag.Current = "AddIns";
+    ViewBag.Current = "Applications";
 }
 @{ Html.RenderPartial("_SecurityNav", Model); }
 
@@ -22,15 +22,16 @@
             @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
             <!-- Table of all add-in types -->
-            <h3 style="margin-bottom: 0px">Add Ins</h3>
-            <p>All configured add-ins</p>
-            <table style="width: 100%; white-space: nowrap" class="datatable">
+            <h3 style="margin-bottom: 0px">Applications</h3>
+            <p>All configured applications</p>
+            <table style="width: 100%; white-space: nowrap" class="datatable table">
                 <thead>
                     <tr>
                         <td>Name</td>
                         <td>Friendly Name</td>
+                        <td>Description</td>
                         <td>
-                            Description
+                            Type
                             <a class="btn btn-default btn-xs glyphicon glyphicon-plus pull-right"
                                data-target=".add-modal"
                                data-toggle="modal">
@@ -38,15 +39,14 @@
                         </td>
                     </tr>
                 </thead>
-                @foreach (AddInModel item in Model.Items)
+                @foreach (var item in Model.Items)
                 {
-                    <tr data-href="@(Url.Action("Details", "AddIn", new {id = item.Id}))">
+                    //data-href="@(Url.Action("Details", "AddIn", new {id = item.Id, type=item.Type}))"
+                    <tr>
                         <td>@item.Name</td>
                         <td>@item.FriendlyName</td>
                         <td>@item.Description</td>
-                        @*<td>
-                                @Html.ActionLink("View", "Details", "AddIn", new { id = item.Id }, new { @class = "hoverlink" })
-                            </td>*@
+                        <td>@item.Type</td>
                     </tr>
                 }
             </table>
@@ -66,7 +66,7 @@
                             </a></td>
                     </tr>
                 </thead>
-                @foreach (var row in Model.ActiveVersions.Rows)
+                @foreach (var row in Model.ActiveItems.Rows)
                 {
                     <tr>
                         @foreach (string val in row.Values)
@@ -97,7 +97,7 @@
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
-                            <h4 class="modal-title" id="myModalLabel">Add Excel Add-In</h4>
+                            <h4 class="modal-title" id="myModalLabel">Add Application</h4>
                         </div>
 
                         <div class="modal-body">
@@ -129,7 +129,14 @@
                                         @Html.TextBox("_description", "", new { @class = "form-control" })
                                     </div>
                                 </div>
-
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label class="control-label">Type</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        @Html.DropDownList("_type", Model.Types, new { @class = "form-control" })
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="modal-footer">

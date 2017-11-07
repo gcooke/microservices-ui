@@ -18,7 +18,7 @@
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
-    <IISExpressSSLPort>42001</IISExpressSSLPort>
+    <IISExpressSSLPort>443</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
     <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
@@ -292,6 +292,7 @@
     <Compile Include="Database\UserRecentRequest.cs" />
     <Compile Include="Helpers\TreeView.cs" />
     <Compile Include="Models\AddIn\AddInVersionModel.cs" />
+    <Compile Include="Models\AddIn\ApplicationVersionModel.cs" />
     <Compile Include="Models\Controllers\AliasesModel.cs" />
     <Compile Include="Models\Controllers\GatewayInfo.cs" />
     <Compile Include="Models\Controllers\HistoryModel.cs" />
@@ -310,11 +311,16 @@
     <Compile Include="Models\Group\ADGroupsModel.cs" />
     <Compile Include="Models\Group\GroupActiveDirectory.cs" />
     <Compile Include="Models\Group\GroupAddInVersionModel.cs" />
+    <Compile Include="Models\Group\GroupApplicationVersionModel.cs" />
     <Compile Include="Models\Group\IGroupModel.cs" />
     <Compile Include="Models\Group\PermissionsModel.cs" />
     <Compile Include="Models\Group\UsersModel.cs" />
     <Compile Include="Models\Shared\AddInModel.cs" />
+    <Compile Include="Models\Shared\ApplicationModel.cs" />
     <Compile Include="Models\Shared\EntityAddInVersionModel.cs" />
+    <Compile Include="Models\Shared\EntityApplicationVersionModel.cs" />
+    <Compile Include="Models\Shared\EntityVersionModel.cs" />
+    <Compile Include="Models\Shared\ManifestModel.cs" />
     <Compile Include="Models\Shared\PortfolioModel.cs" />
     <Compile Include="Models\Group\PortfoliosModel.cs" />
     <Compile Include="Models\Shared\SiteModel.cs" />
@@ -346,7 +352,7 @@
     <Compile Include="Models\Controller\Version.cs" />
     <Compile Include="Models\Home\IndexModel.cs" />
     <Compile Include="Models\Request\Timings.cs" />
-    <Compile Include="Models\Security\AddInsModel.cs" />
+    <Compile Include="Models\Security\ApplicationsModel.cs" />
     <Compile Include="Models\Group\GroupModel.cs" />
     <Compile Include="Models\Security\GroupsModel.cs" />
     <Compile Include="Models\Permission\PermissionModel.cs" />
@@ -360,6 +366,7 @@
     <Compile Include="Models\User\GroupsModel.cs" />
     <Compile Include="Models\User\PortfoliosModel.cs" />
     <Compile Include="Models\User\SitesModel.cs" />
+    <Compile Include="Models\User\UserApplicationVersionModel.cs" />
     <Compile Include="Models\User\UserModel.cs" />
     <Compile Include="Models\Security\UsersModel.cs" />
     <Compile Include="Models\User\HistoryModel.cs" />
@@ -530,7 +537,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />
-    <Content Include="Views\Security\AddIns.cshtml" />
+    <Content Include="Views\Security\Applications.cshtml" />
     <Content Include="Views\Group\Details.cshtml" />
     <Content Include="Views\Group\_GroupNav.cshtml" />
     <Content Include="Views\Permission\_PermissionNav.cshtml" />
