@@ -192,6 +192,42 @@ namespace Gateway.Web.Database
             }
         }
 
+        public LinksModel GetLinks()
+        {
+            var result = new LinksModel();
+            using (var database = new GatewayEntities())
+            {
+                var items = database.Links.ToArray().Select(l => l.ToModel());
+                result.Items.AddRange(items);
+            }
+            return result;
+        }
+
+        public void DeleteLink(long id)
+        {
+            using (var database = new GatewayEntities())
+            {
+                var item = database.Links.FirstOrDefault(l => l.Id == id);
+                if (item != null)
+                    database.Links.Remove(item);
+                database.SaveChanges();
+            }
+        }
+
+        public void AddLink(LinkModel link)
+        {
+            using (var database = new GatewayEntities())
+            {
+                var target = database.Links.Create();
+                target.Name = link.Name;
+                target.Type = link.Type;
+                target.Glyph = link.Glyph;
+                target.AdditionalData = link.AdditionalData;
+                database.Links.Add(target);
+                database.SaveChanges();
+            }
+        }
+
         public Summary GetRequestSummary(string correlationId)
         {
             var result = new Summary();

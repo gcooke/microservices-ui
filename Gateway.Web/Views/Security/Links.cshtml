@@ -1,0 +1,123 @@
+﻿@using Gateway.Web.Models.Permission
+@using Gateway.Web.Models.Security
+@model LinksModel
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "Security";
+    ViewBag.Current = "Links";
+}
+@{ Html.RenderPartial("_SecurityNav", (LinksModel)@Model); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+
+        <br />
+        <div id="containerx bulk">
+            @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+            <table style="width: 100%; white-space: nowrap" class="datatable table">
+                <thead>
+                    <tr>
+                        <td></td>
+                        <td>Name</td>
+                        <td>Glyph</td>
+                        <td>Type</td>
+                        <td>
+                            Data
+                            <a class="btn btn-default btn-xs glyphicon glyphicon-plus pull-right"
+                               data-target=".add-modal"
+                               data-toggle="modal">
+                            </a>
+                        </td>
+                    </tr>
+                </thead>
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td style="display: none;">@item.Id</td>
+                        <td>
+                            @Html.ActionLink(" ", "RemoveLink", "Security", new { id = item.Id }, new { @class = "text-center glyphicon glyphicon-trash" })
+                        </td>
+                        <td>@item.Name</td>
+                        <td><span class="fa">@item.GlyphValue</span></td>
+                        <td>@item.Type</td>
+                        <td>@item.AdditionalData</td>
+                    </tr>
+                }
+            </table>
+            <br />
+        </div>
+        <br />
+        <a href="http://fontawesome.io/cheatsheet/" target="none">View all available glyphs</a>
+
+        @using (Html.BeginForm("AddLink", "Security", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            <div class="modal fade add-modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel">Add Link</h4>
+                        </div>
+
+                        <div class="modal-body">
+                            @Html.AntiForgeryToken()
+
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label class="control-label">Name</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        @Html.TextBox("_name", "", new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label class="control-label">Type</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        @Html.DropDownList("_type", Model.AvailableTypes, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label class="control-label">Glyph</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        @Html.TextBox("_glyph", "0xf1cd", new {@class = "form-control"})
+                                        <small>must start with 0x</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label class="control-label">Data</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        @Html.TextBox("_data", "", new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-default">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

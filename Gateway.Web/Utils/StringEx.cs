@@ -5,6 +5,15 @@ namespace Gateway.Web.Utils
 {
     public static class StringEx
     {
+        public static int ToIntOrDefault(this string input, int defaultValue = 0)
+        {
+            int result;
+            if (int.TryParse(input, out result))
+                return result;
+
+            return defaultValue;
+        }
+
         public static long ToLongOrDefault(this string input, long defaultValue = 0)
         {
             long result;

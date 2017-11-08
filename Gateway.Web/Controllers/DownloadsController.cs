@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web.Mvc;
 using Bagl.Cib.MIT.Logging;
+using Bagl.Cib.MSF.Contracts.Utils;
+using Gateway.Web.Database;
 using Gateway.Web.Services;
 using Controller = System.Web.Mvc.Controller;
+using Version = System.Version;
 
 namespace Gateway.Web.Controllers
 {
@@ -15,14 +19,16 @@ namespace Gateway.Web.Controllers
         private const string RemoteAppsDirectory = @"\\Intranet.barcapint.com\dfs-emea\Group\Jhb\IT_Pricing_Risk\Builds\Redstone\Apps";
 
         private readonly IGatewayService _gateway;
+        private readonly IGatewayDatabaseService _database;
         private readonly IDifferentialDownloadService _differentialDownloadService;
         private readonly ILogger _logger;
 
-        public DownloadsController(IGatewayService gateway, IDifferentialDownloadService differentialDownloadService, ILoggingService loggingService)
+        public DownloadsController(IGatewayService gateway, IDifferentialDownloadService differentialDownloadService, IGatewayDatabaseService database, ILoggingService loggingService)
             : base(loggingService)
         {
             _gateway = gateway;
             _differentialDownloadService = differentialDownloadService;
+            _database = database;
             _logger = loggingService.GetLogger(this);
         }
 
@@ -94,6 +100,20 @@ namespace Gateway.Web.Controllers
 
             var contentType = System.Net.Mime.MediaTypeNames.Application.Octet;
             return File(differential.FullName, contentType, differential.Name);
+        }
+
+        [HttpGet]
+        [Route("links")]
+        [AllowAnonymous]
+        public ActionResult GetLinks()
+        {
+            _logger.InfoFormat("A user located at {0} is trying fetch links", Request.UserHostAddress);
+
+            var links = _database.GetLinks();
+            var content = links.Serialize();
+
+            var contentType = System.Net.Mime.MediaTypeNames.Text.Plain;
+            return Content(content, contentType);
         }
 
         private Version GetLatestRemoteAppVersion(string app)
