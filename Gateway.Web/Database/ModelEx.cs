@@ -139,6 +139,17 @@ namespace Gateway.Web.Database
             result.Message = item.Status;
             return result;
         }
+
+        public static Models.Security.LinkModel ToModel(this Link item)
+        {
+            var result = new Models.Security.LinkModel();
+            result.Id = item.Id;
+            result.Name = item.Name;
+            result.Type = item.Type;
+            result.Glyph = item.Glyph;
+            result.AdditionalData = item.AdditionalData;
+            return result;
+        }
     }
 
 }

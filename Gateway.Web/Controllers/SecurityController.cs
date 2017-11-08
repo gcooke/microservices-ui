@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
+using System.Text;
 using System.Web.Mvc;
 using Bagl.Cib.MIT.Logging;
 using Gateway.Web.Authorization;
+using Gateway.Web.Database;
 using Gateway.Web.Models.Group;
 using Gateway.Web.Models.Permission;
+using Gateway.Web.Models.Security;
 using Gateway.Web.Models.Shared;
 using Gateway.Web.Models.User;
 using Gateway.Web.Services;
@@ -15,11 +19,13 @@ namespace Gateway.Web.Controllers
     public class SecurityController : BaseController
     {
         private readonly IGatewayService _gateway;
+        private readonly IGatewayDatabaseService _database;
 
-        public SecurityController(IGatewayService gateway, ILoggingService loggingService)
+        public SecurityController(IGatewayService gateway, ILoggingService loggingService, IGatewayDatabaseService database)
             : base(loggingService)
         {
             _gateway = gateway;
+            _database = database;
         }
 
         public ActionResult Index()
@@ -49,6 +55,13 @@ namespace Gateway.Web.Controllers
         {
             var model = _gateway.GetPermissions();
             return View("Permissions", model);
+        }
+
+        public ActionResult Links()
+        {
+            var model = _database.GetLinks();
+            model.PopulateSelectionLists();
+            return View("Links", model);
         }
 
         [Route("Security/Reports/{report}")]
@@ -103,7 +116,7 @@ namespace Gateway.Web.Controllers
                 ModelState.AddModelError("Type", "Type cannot be empty");
 
             // Post instruction to security controller
-            if(string.Equals("Application", type, StringComparison.CurrentCultureIgnoreCase))
+            if (string.Equals("Application", type, StringComparison.CurrentCultureIgnoreCase))
                 AddApplication(name, friendly, description);
             else
                 AddAddIn(name, friendly, description);
@@ -324,6 +337,70 @@ namespace Gateway.Web.Controllers
                 return Redirect("~/Security/AddIns/");
 
             return AddIns();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [RoleBasedAuthorize(Roles = "Security.Modify")]
+        public ActionResult AddLink(FormCollection collection)
+        {
+            ModelState.Clear();
+
+            // Validate parameters
+            var link = new LinkModel();
+            link.Name = collection["_name"] ?? string.Empty;
+            var glyph = collection["_glyph"] ?? string.Empty;
+
+            if (glyph.StartsWith("0x"))
+            {
+                var value = HexToInt(glyph.Substring(2));
+                link.Glyph = value;
+            }
+            link.Type = collection["_type"] ?? string.Empty;
+            link.AdditionalData = collection["_data"] ?? string.Empty;
+
+            if (string.IsNullOrEmpty(link.Name))
+                ModelState.AddModelError("Name", "Name cannot be empty");
+            if (string.IsNullOrEmpty(link.Type))
+                ModelState.AddModelError("Type", "Type cannot be empty");
+
+            if (ModelState.IsValid)
+            {
+                _database.AddLink(link);
+            }
+
+            //Setup next view
+            if (ModelState.IsValid)
+                return Redirect("~/Security/Links");
+
+            return Links();
+        }
+
+        private int HexToInt(string hexString)
+        {
+            return int.Parse(hexString, System.Globalization.NumberStyles.HexNumber);
+        }
+
+        [RoleBasedAuthorize(Roles = "Security.Delete")]
+        public ActionResult RemoveLink(string id)
+        {
+            ModelState.Clear();
+
+            // Validate parameters
+            if (string.IsNullOrEmpty(id))
+                ModelState.AddModelError("Id", "Id cannot be empty");
+
+            // Post instruction to security controller
+            if (ModelState.IsValid)
+            {
+                _database.DeleteLink(id.ToLongOrDefault());
+            }
+
+            //Setup next view
+            if (ModelState.IsValid)
+                return Redirect("~/Security/Links");
+
+            return Links();
         }
 
         private string StripApplicationType(ref string input)

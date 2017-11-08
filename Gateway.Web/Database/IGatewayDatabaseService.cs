@@ -28,6 +28,12 @@ namespace Gateway.Web.Database
 
         TimeChartModel GetControllerTimeSummary(string name, DateTime start);
 
+        LinksModel GetLinks();
+
+        void DeleteLink(long id);
+
+        void AddLink(LinkModel link);
+
         Summary GetRequestSummary(string correlationId);
 
         List<HistoryItem> GetRequestChildren(Guid correlationId);
