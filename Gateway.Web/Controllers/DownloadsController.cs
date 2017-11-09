@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
+using System.Web.UI;
 using Bagl.Cib.MIT.Logging;
 using Bagl.Cib.MSF.Contracts.Utils;
 using Gateway.Web.Database;
@@ -53,6 +54,7 @@ namespace Gateway.Web.Controllers
         [HttpGet]
         [Route("{app}/{version}")]
         [AllowAnonymous]
+        [OutputCache(Duration = 600, Location = OutputCacheLocation.ServerAndClient, VaryByParam = "app;version")]    // Cache for ten minutes
         public ActionResult Downloads(string app, string version)
         {
             _logger.InfoFormat("A user located at {0} is attempting to download {1} version {2}", Request.UserHostAddress, app, version);
