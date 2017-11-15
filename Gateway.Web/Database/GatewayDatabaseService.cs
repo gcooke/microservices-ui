@@ -223,6 +223,7 @@ namespace Gateway.Web.Database
                 target.Type = link.Type;
                 target.Glyph = link.Glyph;
                 target.AdditionalData = link.AdditionalData;
+                target.Permission = link.Permission;
                 database.Links.Add(target);
                 database.SaveChanges();
             }

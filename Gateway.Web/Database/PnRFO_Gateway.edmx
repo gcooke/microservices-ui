@@ -29,6 +29,7 @@
           <Property Name="Glyph" Type="int" Nullable="false" />
           <Property Name="Type" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="AdditionalData" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="Permission" Type="nvarchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="Payload">
           <Key>
@@ -583,6 +584,7 @@
           <Property Name="Glyph" Type="Int32" Nullable="false" />
           <Property Name="Type" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="AdditionalData" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Permission" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -914,6 +916,7 @@
           <EntitySetMapping Name="Links">
             <EntityTypeMapping TypeName="GatewayModel.Link">
               <MappingFragment StoreEntitySet="Link">
+                <ScalarProperty Name="Permission" ColumnName="Permission" />
                 <ScalarProperty Name="AdditionalData" ColumnName="AdditionalData" />
                 <ScalarProperty Name="Type" ColumnName="Type" />
                 <ScalarProperty Name="Glyph" ColumnName="Glyph" />

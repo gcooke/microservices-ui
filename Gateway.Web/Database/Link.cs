@@ -19,5 +19,6 @@ namespace Gateway.Web.Database
         public int Glyph { get; set; }
         public string Type { get; set; }
         public string AdditionalData { get; set; }
+        public string Permission { get; set; }
     }
 }
