@@ -21,9 +21,9 @@
                         <td></td>
                         <td>Name</td>
                         <td>Glyph</td>
-                        <td>Type</td>
+                        <td>Data</td>
                         <td>
-                            Data
+                            Permission
                             <a class="btn btn-default btn-xs glyphicon glyphicon-plus pull-right"
                                data-target=".add-modal"
                                data-toggle="modal">
@@ -40,8 +40,8 @@
                         </td>
                         <td>@item.Name</td>
                         <td><span class="fa">@item.GlyphValue</span></td>
-                        <td>@item.Type</td>
                         <td>@item.AdditionalData</td>
+                        <td>@item.Permission</td>
                     </tr>
                 }
             </table>
@@ -106,6 +106,18 @@
                                     </div>
                                     <div class="col-md-4">
                                         @Html.TextBox("_data", "", new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label class="control-label">Permission</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        @Html.TextBox("_permission", "", new { @class = "form-control" })
+                                        <small>leave blank if all users should see this item</small>
                                     </div>
                                 </div>
                             </div>

@@ -148,6 +148,7 @@ namespace Gateway.Web.Database
             result.Type = item.Type;
             result.Glyph = item.Glyph;
             result.AdditionalData = item.AdditionalData;
+            result.Permission = item.Permission;
             return result;
         }
     }

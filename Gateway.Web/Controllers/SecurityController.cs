@@ -358,6 +358,7 @@ namespace Gateway.Web.Controllers
             }
             link.Type = collection["_type"] ?? string.Empty;
             link.AdditionalData = collection["_data"] ?? string.Empty;
+            link.Permission = collection["_permission"] ?? string.Empty;
 
             if (string.IsNullOrEmpty(link.Name))
                 ModelState.AddModelError("Name", "Name cannot be empty");
