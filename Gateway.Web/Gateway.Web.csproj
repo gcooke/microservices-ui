@@ -315,9 +315,14 @@
     <Compile Include="Models\Group\GroupActiveDirectory.cs" />
     <Compile Include="Models\Group\GroupAddInVersionModel.cs" />
     <Compile Include="Models\Group\GroupApplicationVersionModel.cs" />
+    <Compile Include="Models\Group\GroupDetailsModel.cs" />
     <Compile Include="Models\Group\IGroupModel.cs" />
     <Compile Include="Models\Group\PermissionsModel.cs" />
     <Compile Include="Models\Group\UsersModel.cs" />
+    <Compile Include="Models\Security\BusinessFunction.cs" />
+    <Compile Include="Models\Security\BusinessFunctionsModel.cs" />
+    <Compile Include="Models\Security\GroupType.cs" />
+    <Compile Include="Models\Security\GroupTypesModel.cs" />
     <Compile Include="Models\Security\LinkModel.cs" />
     <Compile Include="Models\Security\LinksModel.cs" />
     <Compile Include="Models\Shared\AddInModel.cs" />
@@ -397,6 +402,7 @@
     <Compile Include="Utils\DataContractSerializationEx.cs" />
     <Compile Include="Utils\ReportsModelEx.cs" />
     <Compile Include="Utils\RestResponseEx.cs" />
+    <Compile Include="Utils\SelectItemListEx.cs" />
     <Compile Include="Utils\SerializationEx.cs" />
     <Compile Include="Utils\SessionEx.cs" />
     <Compile Include="Utils\StringEx.cs" />
@@ -548,6 +554,8 @@
     <Content Include="Views\Controllers\Actions.cshtml" />
     <Content Include="Views\Group\Users.cshtml" />
     <Content Include="Views\Security\Links.cshtml" />
+    <Content Include="Views\Security\BusinessFunctions.cshtml" />
+    <Content Include="Views\Security\GroupTypes.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />

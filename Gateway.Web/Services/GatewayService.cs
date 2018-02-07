@@ -51,6 +51,7 @@ namespace Gateway.Web.Services
             _logger = loggingService.GetLogger(this);
             var gateways = information.GetSetting("KnownGateways", GetDefaultKnownGateways(information.EnvironmentName));
             _gateways = gateways.Split(';');
+            _gatewayRestService.SetGatewayUrlForService("security","latest", "http://localhost:7001/");
         }
 
         public ServersModel GetServers()
@@ -1151,6 +1152,101 @@ namespace Gateway.Web.Services
             }
 
             return new[] { response.Content.Message };
+        }
+
+        public IEnumerable<BusinessFunction> GetBusinessFunctions()
+        {
+            var query = "businessfunctions";
+            var response = _gatewayRestService.Get("security", "latest", query);
+
+            if (!response.Successfull)
+                return null;
+
+            var element = response.Content.GetPayloadAsXElement();
+
+            return element.Descendants("BusinessFunction")
+                .Select(item => item.Deserialize<BusinessFunction>())
+                .ToList();
+        }
+
+        public string[] Create(BusinessFunction model)
+        {
+            var query = "businessfunctions";
+            var response = _gatewayRestService.Post("security", "latest", query, model.Serialize());
+
+            if (response.Successfull)
+            {
+                return null;
+            }
+
+            return new[] { response.Message };
+        }
+
+        public string[] DeleteBusinessFunction(int id)
+        {
+            var query = string.Format("businessfunctions/{0}", id);
+            var response = _gatewayRestService.Delete("security", "latest", query, string.Empty);
+
+            if (response.Successfull)
+            {
+                return null;
+            }
+
+            return new[] { response.Message };
+        }
+
+        public IEnumerable<GroupType> GetGroupTypes()
+        {
+            var query = "grouptypes";
+            var response = _gatewayRestService.Get("security", "latest", query);
+
+            if (!response.Successfull)
+                return null;
+
+            var element = response.Content.GetPayloadAsXElement();
+
+            return element.Descendants("GroupType")
+                .Select(item => item.Deserialize<GroupType>())
+                .ToList();
+        }
+
+        public string[] Create(GroupType model)
+        {
+            var query = "grouptypes";
+            var response = _gatewayRestService.Post("security", "latest", query, model.Serialize());
+
+            if (response.Successfull)
+            {
+                return null;
+            }
+
+            return new[] { response.Message };
+        }
+
+        public string[] DeleteGroupType(int id)
+        {
+            var query = string.Format("grouptypes/{0}", id);
+            var response = _gatewayRestService.Delete("security", "latest", query, string.Empty);
+
+            if (response.Successfull)
+            {
+                return null;
+            }
+
+            return new[] { response.Message };
+        }
+
+        public string[] UpdateGroupBusinessFunction(string groupId, string businessFunctionId)
+        {
+            var query = string.Format("groups/{0}/businessfunction/{1}", groupId, businessFunctionId);
+            var response = _gatewayRestService.Put("security", "latest", query, null);
+
+            if (response.Successfull)
+            {
+                return null;
+            }
+
+            return new[] { response.Message };
         }
 
         private string GetDefaultKnownGateways(string environment)
