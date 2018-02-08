@@ -120,6 +120,8 @@ namespace Gateway.Web.Services
 
         string[] UpdateAssignedAddInVersions(string from, string to);
 
+        string[] UpdateGroupBusinessFunction(string groupId, string businessFunctionId);
+
         #region User Security Configuration
         string[] RemoveUser(long id);
 
@@ -162,5 +164,18 @@ namespace Gateway.Web.Services
         string[] InsertUserApplicationVersions(long groupId, ApplicationVersionModel version);
 
         #endregion
+
+        #region Business Functions
+        IEnumerable<BusinessFunction> GetBusinessFunctions();
+        string[] Create(BusinessFunction model);
+        string[] DeleteBusinessFunction(int id);
+        #endregion
+
+        #region GroupTypes
+        IEnumerable<GroupType> GetGroupTypes();
+        string[] Create(GroupType model);
+        string[] DeleteGroupType(int id);
+        #endregion
+
     }
 }

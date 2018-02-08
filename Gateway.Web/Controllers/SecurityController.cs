@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -55,6 +56,25 @@ namespace Gateway.Web.Controllers
         {
             var model = _gateway.GetPermissions();
             return View("Permissions", model);
+        }
+
+        public ActionResult BusinessFunctions()
+        {
+            var model = new BusinessFunctionsModel
+            {
+                BusinessFunctions = _gateway.GetBusinessFunctions().ToList(),
+                GroupTypes = _gateway.GetGroupTypes().ToSelectListItems().ToList()
+            };
+            return View("BusinessFunctions", model);
+        }
+
+        public ActionResult GroupTypes()
+        {
+            var model = new GroupTypesModel
+            {
+                GroupTypes = _gateway.GetGroupTypes().ToList()
+            };
+            return View("GroupTypes", model);
         }
 
         public ActionResult Links()
@@ -412,6 +432,140 @@ namespace Gateway.Web.Controllers
             var result = input.Substring(index + 1);
             input = input.Substring(0, index);
             return result;
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [RoleBasedAuthorize(Roles = "Security.Modify")]
+        public ActionResult InsertBusinessFunction(FormCollection collection)
+        {
+            ModelState.Clear();
+
+            // Validate parameters
+            var name = collection["_name"];
+            var groupTypeId = collection["_groupType"];
+
+            if (string.IsNullOrEmpty(name))
+                ModelState.AddModelError("Name", "Name cannot be empty");
+
+            if (string.IsNullOrEmpty(groupTypeId))
+                ModelState.AddModelError("GroupType", "Group Type cannot be empty");
+
+            // Post instruction to security controller
+            var model = new BusinessFunction
+            {
+                Name = name,
+                GroupTypeId = int.Parse(groupTypeId)
+            };
+
+            if (ModelState.IsValid)
+            {
+                var result = _gateway.Create(model);
+                if (result != null)
+                {
+                    foreach (var item in result)
+                        ModelState.AddModelError("Remote", item);
+                }
+
+            }
+
+            //Setup next view
+            if (ModelState.IsValid)
+                return Redirect("~/Security/BusinessFunctions/");
+
+            return BusinessFunctions();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [RoleBasedAuthorize(Roles = "Security.Modify")]
+        public ActionResult InsertGroupType(FormCollection collection)
+        {
+            ModelState.Clear();
+
+            // Validate parameters
+            var name = collection["_name"];
+
+            if (string.IsNullOrEmpty(name))
+                ModelState.AddModelError("Name", "Name cannot be empty");
+
+            // Post instruction to security controller
+            var model = new GroupType
+            {
+                Name = name,
+            };
+
+            if (ModelState.IsValid)
+            {
+                //post to security controller
+                var result = _gateway.Create(model);
+                if (result != null)
+                {
+                    foreach (var item in result)
+                        ModelState.AddModelError("Remote", item);
+                }
+
+            }
+
+            //Setup next view
+            if (ModelState.IsValid)
+                return Redirect("~/Security/GroupTypes/");
+
+            return GroupTypes();
+        }
+
+        [RoleBasedAuthorize(Roles = "Security.Delete")]
+        public ActionResult RemoveBusinessFunction(string id)
+        {
+            ModelState.Clear();
+
+            // Validate parameters
+            if (string.IsNullOrEmpty(id))
+                ModelState.AddModelError("Id", "Id cannot be empty");
+
+            // Post instruction to security controller
+            if (ModelState.IsValid)
+            {
+                var result = _gateway.DeleteBusinessFunction(id.ToIntOrDefault());
+                if (result != null)
+                {
+                    foreach (var item in result)
+                        ModelState.AddModelError("Remote", item);
+                }
+            }
+
+            //Setup next view
+            if (ModelState.IsValid)
+                return Redirect("~/Security/BusinessFunctions");
+
+            return BusinessFunctions();
+        }
+
+        [RoleBasedAuthorize(Roles = "Security.Delete")]
+        public ActionResult RemoveGroupType(string id)
+        {
+            ModelState.Clear();
+
+            // Validate parameters
+            if (string.IsNullOrEmpty(id))
+                ModelState.AddModelError("Id", "Id cannot be empty");
+
+            // Post instruction to security controller
+            if (ModelState.IsValid)
+            {
+                var result = _gateway.DeleteGroupType(id.ToIntOrDefault());
+                if (result != null)
+                {
+                    foreach (var item in result)
+                        ModelState.AddModelError("Remote", item);
+                }
+            }
+
+            //Setup next view
+            if (ModelState.IsValid)
+                return Redirect("~/Security/GroupTypes");
+
+            return GroupTypes();
         }
     }
 }
