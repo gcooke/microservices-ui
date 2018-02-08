@@ -51,7 +51,6 @@ namespace Gateway.Web.Services
             _logger = loggingService.GetLogger(this);
             var gateways = information.GetSetting("KnownGateways", GetDefaultKnownGateways(information.EnvironmentName));
             _gateways = gateways.Split(';');
-            _gatewayRestService.SetGatewayUrlForService("security","latest", "http://localhost:7001/");
         }
 
         public ServersModel GetServers()
