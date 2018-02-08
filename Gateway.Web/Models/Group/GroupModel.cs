@@ -10,5 +10,9 @@ namespace Gateway.Web.Models.Group
         public long Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public int? BusinessFunctionId { get; set; }
+        public int? GroupTypeId { get; set; }
+        public string BusinessFunction { get; set; }
+        public string GroupType { get; set; }
     }
 }

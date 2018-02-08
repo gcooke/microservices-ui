@@ -6,13 +6,13 @@
 @using Gateway.Web.Utils
 @using Newtonsoft.Json
 @using Version = Gateway.Web.Models.Controller.Version
-@model GroupModel
+@model GroupDetailsModel
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
-    ViewBag.Title = @Model.Name;
+    ViewBag.Title = @Model.Group.Name;
     ViewBag.Current = "Details";
 }
-@{ Html.RenderPartial("_GroupNav", (GroupModel)@Model); }
+@{ Html.RenderPartial("_GroupNav", (GroupModel)@Model.Group); }
 
 <div id="page-content-wrapper">
     <div class="hero-unit">
@@ -24,23 +24,75 @@
             <table style="width: 50%; white-space: nowrap" class="datatable">
                 <tr>
                     <td class="columnheader" style="width: 20%">Id</td>
-                    <td style="width: 80%">@Model.Id</td>
+                    <td style="width: 80%">@Model.Group.Id</td>
                 </tr>
                 <tr>
                     <td class="columnheader">Name</td>
-                    <td>@Model.Name</td>
+                    <td>@Model.Group.Name</td>
                 </tr>
                 <tr>
                     <td class="columnheader">Description</td>
-                    <td>@Model.Description</td>
+                    <td>@Model.Group.Description</td>
+                </tr>
+                <tr>
+                    <td class="columnheader">Business Function</td>
+                    <td>@Model.Group.BusinessFunction</td>
+                </tr>
+                <tr>
+                    <td class="columnheader">Group Type</td>
+                    <td>@Model.Group.GroupType</td>
                 </tr>
             </table>
 
         </div>
 
         <br />
-        @Html.ActionLink("Delete", "RemoveGroup", "Group", new { id = Model.Id }, new { @class = "btn btn-default btn-sm" })
-
-
+        <a class="btn btn-default btn-sm"
+           data-target=".change-business-function-modal"
+           data-toggle="modal">
+            Change Business Function
+        </a>
+        @Html.ActionLink("Delete", "RemoveGroup", "Group", new { id = Model.Group.Id }, new { @class = "btn btn-default btn-sm" })
     </div>
 </div>
+
+@using (Html.BeginForm("UpdateBusinessFunction", "Group", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    <div class="modal fade change-business-function-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">Change Business Function</h4>
+                </div>
+
+                <div class="modal-body">
+                    @Html.AntiForgeryToken()
+                    
+                    <!-- Hidden Id Field -->
+                    @Html.Hidden("_id", Model.Group.Id)
+
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label class="control-label">Business Functions</label>
+                            </div>
+                            <div class="col-md-9">
+                                @Html.DropDownList("_businessFunctions", Model.BusinessFunctions, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-default">Change</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}

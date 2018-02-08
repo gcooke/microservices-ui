@@ -1,8 +1,11 @@
-﻿using System.Web.Mvc;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Web.Mvc;
 using Bagl.Cib.MIT.Logging;
 using Gateway.Web.Authorization;
 using Gateway.Web.Models.AddIn;
 using Gateway.Web.Models.Group;
+using Gateway.Web.Models.Security;
 using Gateway.Web.Services;
 using Gateway.Web.Utils;
 using Controller = System.Web.Mvc.Controller;
@@ -29,7 +32,11 @@ namespace Gateway.Web.Controllers
         {
             var model = _gateway.GetGroup(id.ToLongOrDefault());
             TempData["GroupName"] = model.Name;
-            return View("Details", model);
+            return View("Details", new GroupDetailsModel
+            {
+                Group = model,
+                BusinessFunctions = _gateway.GetBusinessFunctions().ToSelectListItems().ToList()
+            });
         }
 
         [RoleBasedAuthorize(Roles = "Security.Delete")]
@@ -138,6 +145,37 @@ namespace Gateway.Web.Controllers
 
             return ADGroups(groupId);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [RoleBasedAuthorize(Roles = "Security.Modify")]
+        public ActionResult UpdateBusinessFunction(FormCollection collection)
+        {
+            ModelState.Clear();
+
+            // Validate parameters
+            var businessFunctionId = collection["_businessFunctions"];
+            var groupId = collection["_id"];
+
+            if (string.IsNullOrEmpty(groupId))
+                ModelState.AddModelError("Group", "Group cannot be empty");
+
+            if (string.IsNullOrEmpty(businessFunctionId))
+                ModelState.AddModelError("BusinessFunction", "Business function cannot be empty");
+
+            if (ModelState.IsValid)
+            {
+                var result = _gateway.UpdateGroupBusinessFunction(groupId, businessFunctionId);
+                if (result != null)
+                    foreach (var item in result)
+                    {
+                        ModelState.AddModelError("Remote", item);
+                    }
+            }
+            
+            return Redirect(string.Format("~/Group/Details/{0}", groupId));
+        }
+
         #endregion
 
         #region Permissions
