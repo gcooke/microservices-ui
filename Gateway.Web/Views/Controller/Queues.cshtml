@@ -64,58 +64,43 @@
             </div>
         </div>
 
+         
 
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div class="panel panel-default">
-                    <div class="panel-heading">
-                        Historical Queue Sizes (Past 24 Hours)
-                        <span class="badge pull-right" id="historical-version-queue-chart-last-updated"></span>
-                    </div>
-                    <div class="panel-body">
-                        <div id="historical-version-queues-chart" data-controller="@Model.Name"></div>
-                        <div class="row" id="historical-version-queues-chart-progress">
-                            <div class="col-xs-12 chart-progress-bar">
-                                <img src="../../Content/img/ajax-loader.gif" alt="progress"/>
+                    @foreach (var version in Model.Current)
+                    {
+                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    @version.Version
+                                    <span class="badge pull-right">@version.Server</span>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-6">Request Count</div>
+                                        <div class="col-md-6">@version.Length</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">Last Enqueue</div>
+                                        <div class="col-md-6">@version.LastEnqueue.ToString("dd MMM yyyy HH:mm:ss")</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">Last Dequeue</div>
+                                        <div class="col-md-6">@version.LastDequeue.ToString("dd MMM yyyy HH:mm:ss")</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">Worker</div>
+                                        <div class="col-md-6">@version.Workers</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    }
                 </div>
             </div>
         </div>
-
-        <div class="row">
-            @foreach (var version in Model.Current)
-            {
-                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            @version.Version
-                            <span class="badge pull-right">@version.Server</span>
-                        </div>
-                        <div class="panel-body">
-                            <div class="row">
-                                <div class="col-md-6">Request Count</div>
-                                <div class="col-md-6">@version.Length</div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">Last Enqueue</div>
-                                <div class="col-md-6">@version.LastEnqueue.ToString("dd MMM yyyy HH:mm:ss")</div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">Last Dequeue</div>
-                                <div class="col-md-6">@version.LastDequeue.ToString("dd MMM yyyy HH:mm:ss")</div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">Worker</div>
-                                <div class="col-md-6">@version.Workers</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            }
-        </div>
-
     </div>
 </div>
 

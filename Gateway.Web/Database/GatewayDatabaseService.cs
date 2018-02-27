@@ -387,6 +387,7 @@ namespace Gateway.Web.Database
             result.Priority = request.Priority;
             result.IsAsync = request.IsAsync;
             result.StartUtc = request.StartUtc;
+            result.Client = string.IsNullOrEmpty(request.ClientID) ? "Unknown" : request.ClientID;
         }
 
         public IEnumerable<string> GetVersions(string controllerName)
