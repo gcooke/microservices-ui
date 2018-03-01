@@ -30,6 +30,7 @@ namespace Gateway.Web.Models.Request
         public int ResultCode { get; set; }
         public string ResultMessage { get; set; }
         public DateTime UpdateTime { get; set; }
+        public string Client { get; set; }
 
         public bool IsBusy
         {
