@@ -344,10 +344,11 @@ namespace Gateway.Web.Database
                 foreach (var line in target.GetAll())
                 {
                     var reportRow = new ReportRows();
-                    var user = line.User;
-                    if (user.Contains("\\"))
-                        user = user.Substring(user.IndexOf("\\") + 1);
-                    var link = string.Format("<a href='../../User/History?id=0&login={0}'>{0}</a>", user);
+                    var fulluser = line.User;
+                    var user = fulluser;
+                    if (fulluser.Contains("\\"))
+                        fulluser = user.Substring(fulluser.IndexOf("\\") + 1);
+                    var link = string.Format("<a href='../../User/History?id=0&login={0}'>{1}</a>", fulluser, user);
 
                     reportRow.Values.Add(link);
                     reportRow.Values.Add(line.Latest.ToString("dd MMM HH:mm:ss"));

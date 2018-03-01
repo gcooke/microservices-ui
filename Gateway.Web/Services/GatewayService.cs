@@ -46,7 +46,7 @@ namespace Gateway.Web.Services
             ILoggingService loggingService
             )
         {
-            _defaultRequestTimeout = TimeSpan.FromSeconds(10);
+            _defaultRequestTimeout = TimeSpan.FromSeconds(300);
             _gatewayRestService = gatewayRestService;
             _logger = loggingService.GetLogger(this);
             var gateways = information.GetSetting("KnownGateways", GetDefaultKnownGateways(information.EnvironmentName));
