@@ -74,6 +74,7 @@
           <Property Name="IsAsync" Type="bit" Nullable="false" />
           <Property Name="StartUtc" Type="datetime" Nullable="false" />
           <Property Name="UpdateTime" Type="datetime" Nullable="false" />
+          <Property Name="ClientID" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="RequestChange">
           <Key>
@@ -97,7 +98,7 @@
           <Property Name="ResultMessage" Type="nvarchar(max)" />
           <Property Name="UpdateTime" Type="datetime" Nullable="false" />
           <Property Name="Size" Type="int" />
-          <Property Name="SizeUnit" Type="varchar" MaxLength="20" />
+          <Property Name="SizeUnit" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="Status">
           <Key>
@@ -255,6 +256,7 @@
           <Property Name="IsAsync" Type="Boolean" Nullable="false" />
           <Property Name="StartUtc" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="UpdateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ClientID" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Response">
           <Key>
@@ -269,7 +271,7 @@
           <Property Name="UpdateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="QueueTimeMs" Type="Int32" Nullable="false" />
           <Property Name="Size" Type="Int32" />
-          <Property Name="SizeUnit" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="SizeUnit" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Version">
           <Key>
@@ -611,6 +613,7 @@
           <EntitySetMapping Name="Requests">
             <EntityTypeMapping TypeName="GatewayModel.Request">
               <MappingFragment StoreEntitySet="Request">
+                <ScalarProperty Name="ClientID" ColumnName="ClientID" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="CorrelationId" ColumnName="CorrelationId" />
                 <ScalarProperty Name="ParentCorrelationId" ColumnName="ParentCorrelationId" />

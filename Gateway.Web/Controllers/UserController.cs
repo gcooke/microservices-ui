@@ -396,7 +396,7 @@ namespace Gateway.Web.Controllers
 
         public ActionResult History(long id, string login, string sortOrder)
         {
-            if (id <= 0 && string.IsNullOrEmpty(login))
+            if (string.IsNullOrEmpty(login))
                 throw new Exception("Insufficient details received to resolve login.");
 
             if (string.IsNullOrEmpty(sortOrder))
@@ -405,27 +405,14 @@ namespace Gateway.Web.Controllers
                 sortOrder = "time_desc";
             }
 
-            string domain;
-
-            if (id > 0)
-            {
-                var user = _gateway.GetUser(id.ToString());
-                domain = user.Domain;
-                login = user.Login;
-            }
-            else
-            {
-                var user = _gateway.GetUser(login);
-                domain = user.Domain;
-                id = user.Id;
-            }
-
             ViewBag.SortColumn = sortOrder;
             ViewBag.SortDirection = sortOrder.EndsWith("_desc") ? "" : "_desc";
             ViewBag.Controller = "User";
 
-            var items = _dataService.GetRecentUserRequests(domain + "\\" + login, DateTime.Today.AddDays(-7));
+            var items = _dataService.GetRecentUserRequests(login, DateTime.Today.AddDays(-7));
 
+            if (login.Contains("\\"))
+                login = login.Substring(login.IndexOf("\\") + 1);
             var model = new HistoryModel(id, login);
             model.Requests.AddRange(items, sortOrder);
             model.Requests.SetRelativePercentages();

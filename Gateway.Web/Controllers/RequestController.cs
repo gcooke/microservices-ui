@@ -89,7 +89,7 @@ namespace Gateway.Web.Controllers
         public ActionResult Download(string correlationId, long payloadId)
         {
             var data = _dataService.GetPayload(payloadId);
-            return File(data.GetBytes(), "text/plain", string.Format("Payload_{0}.txt", payloadId));
+            return File(data.GetBytes(), "text/xml", string.Format("Payload_{0}.txt", payloadId));
         }
 
         public ActionResult Timings(string id)
