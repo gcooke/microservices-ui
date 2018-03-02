@@ -281,25 +281,7 @@ namespace Gateway.Web.Database
                 }
                 foreach (var item in database.spGetPayloads(id))
                 {
-                    try
-                    {
-                        //New format
-                        var payloadTypeValue = (PayloadType)Enum.Parse((typeof(PayloadType)), item.PayloadType);
-                        var converter = DefaultPayloadConverters.GetDefault(payloadTypeValue);
-
-                        result.Items.Add(new PayloadModel(converter.ConvertForDisplay(item.Data)));
-                    }
-                    catch
-                    {
-                        try
-                        {
-                            //old format
-                            result.Items.Add(new PayloadModel(LegacyCompession.DecodeLegacyObject(item.Data)));
-                        }
-                        finally
-                        {
-                        }
-                    }
+                    result.Items.Add(new PayloadModel(item));
                 }
             }
 

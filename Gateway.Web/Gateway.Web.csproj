@@ -424,6 +424,7 @@
     <Compile Include="Utils\Calculations.cs" />
     <Compile Include="Utils\Constants.cs" />
     <Compile Include="Utils\DataContractSerializationEx.cs" />
+    <Compile Include="Utils\LegacyCompession.cs" />
     <Compile Include="Utils\ReportsModelEx.cs" />
     <Compile Include="Utils\RestResponseEx.cs" />
     <Compile Include="Utils\SelectItemListEx.cs" />
