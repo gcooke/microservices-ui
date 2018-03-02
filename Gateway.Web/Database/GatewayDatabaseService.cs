@@ -6,10 +6,13 @@ using System.Data.Entity.Core.Objects;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Web.Mvc;
+using Bagl.Cib.MSF.Contracts.Converters;
+using Bagl.Cib.MSF.Contracts.Model;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Controllers;
 using Gateway.Web.Models.Request;
 using Gateway.Web.Models.Security;
+using Gateway.Web.Utils;
 using RestSharp.Extensions;
 using WebGrease.Css.Ast.Selectors;
 using QueueChartModel = Gateway.Web.Models.Controller.QueueChartModel;
@@ -278,7 +281,25 @@ namespace Gateway.Web.Database
                 }
                 foreach (var item in database.spGetPayloads(id))
                 {
-                    result.Items.Add(new PayloadModel(item));
+                    try
+                    {
+                        //New format
+                        var payloadTypeValue = (PayloadType)Enum.Parse((typeof(PayloadType)), item.PayloadType);
+                        var converter = DefaultPayloadConverters.GetDefault(payloadTypeValue);
+
+                        result.Items.Add(new PayloadModel(converter.ConvertForDisplay(item.Data)));
+                    }
+                    catch
+                    {
+                        try
+                        {
+                            //old format
+                            result.Items.Add(new PayloadModel(LegacyCompession.DecodeLegacyObject(item.Data)));
+                        }
+                        finally
+                        {
+                        }
+                    }
                 }
             }
 
