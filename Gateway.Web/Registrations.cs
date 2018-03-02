@@ -5,6 +5,7 @@ using Bagl.Cib.MIT.IO.Impl;
 using Bagl.Cib.MIT.Logging;
 using Bagl.Cib.MIT.Logging.Impl;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
+using Bagl.Cib.MSF.ClientAPI.Provider;
 using Gateway.Web.Database;
 using Gateway.Web.Services;
 
@@ -26,6 +27,8 @@ namespace Gateway.Web
             information.RegisterType<IFileService, FileService>(Scope.Singleton);
             information.RegisterType<IDifferentialArchiveService, DifferentialArchiveService>(Scope.Singleton);
             information.RegisterType<IDifferentialDownloadService, DifferentialDownloadService>(Scope.Singleton);
+            information.RegisterType<IAuthenticationProvider, AuthenticationProvider>(Scope.Singleton);
+            information.RegisterType<IDateTimeProvider, DateTimeProvider>(Scope.Singleton);
         }
 
         private static void SetupLogging(ISystemInformation information)
