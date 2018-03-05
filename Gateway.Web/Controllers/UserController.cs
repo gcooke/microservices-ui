@@ -35,6 +35,24 @@ namespace Gateway.Web.Controllers
             return View("Details", model);
         }
 
+        [HttpGet]
+        [Route("User/NonUserDetails/{domain}/{login}")]
+        public ActionResult NonUserDetails(string domain, string login)
+        {
+            UserModel Nonuser = new UserModel();
+            if (!string.IsNullOrEmpty(login) && !string.IsNullOrEmpty(domain))
+            {
+                Nonuser.Domain = domain;
+                Nonuser.Login = login;
+                Nonuser.FullName = domain + @"\" + login;
+            }
+
+            //Call AD and get domain and details
+            //var Nonuser = _gateway.GetNonUser(id);
+
+            return View("Details", Nonuser);
+        }
+
         [RoleBasedAuthorize(Roles = "Security.Delete")]
         public ActionResult RemoveUser(long id)
         {
@@ -405,15 +423,42 @@ namespace Gateway.Web.Controllers
                 sortOrder = "time_desc";
             }
 
+            UserModel user;
+            string domain = "";
+
+            if (id > 0)
+            {
+                user = _gateway.GetUser(id.ToString());
+                login = user.Login;
+                domain = user.Domain;
+                login = user.Domain + "\\" + user.Login;
+            }
+            else
+            {
+                //user = _gateway.GetNonUser(login);
+                //login = user.Login;
+                //login = user.Domain + "\\" + user.Login;
+            }
+
             ViewBag.SortColumn = sortOrder;
             ViewBag.SortDirection = sortOrder.EndsWith("_desc") ? "" : "_desc";
             ViewBag.Controller = "User";
 
             var items = _dataService.GetRecentUserRequests(login, DateTime.Today.AddDays(-7));
 
+            if (id > 0)
+                foreach (var item in items)
+                {
+                    item.Id = id;
+                }
+
             if (login.Contains("\\"))
+            {
+                domain = login.Substring(0, (login.IndexOf("\\")));
                 login = login.Substring(login.IndexOf("\\") + 1);
-            var model = new HistoryModel(id, login);
+            }
+
+            var model = new HistoryModel(id, login, domain);
             model.Requests.AddRange(items, sortOrder);
             model.Requests.SetRelativePercentages();
             return View("History", model);
