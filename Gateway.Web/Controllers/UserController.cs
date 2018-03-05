@@ -35,6 +35,22 @@ namespace Gateway.Web.Controllers
             return View("Details", model);
         }
 
+        public ActionResult NonUserDetails(string id)
+        {
+            //Call AD and get domain and details
+            UserModel Nonuser = new UserModel();
+            if (!string.IsNullOrEmpty(id))
+            {
+                Nonuser.Domain = "";
+                Nonuser.Login = id;
+                Nonuser.FullName = id;
+            }
+
+            //var Nonuser = _gateway.GetNonUser(id);
+
+            return View("Details", Nonuser);
+        }
+
         [RoleBasedAuthorize(Roles = "Security.Delete")]
         public ActionResult RemoveUser(long id)
         {
@@ -405,11 +421,32 @@ namespace Gateway.Web.Controllers
                 sortOrder = "time_desc";
             }
 
+            UserModel user;
+
+            if (id > 0)
+            {
+                user = _gateway.GetUser(id.ToString());
+                login = user.Login;
+                login = user.Domain + "\\" + user.Login;
+            }
+            else
+            {
+                //user = _gateway.GetNonUser(login);
+                //login = user.Login;
+                //login = user.Domain + "\\" + user.Login;
+            }
+
             ViewBag.SortColumn = sortOrder;
             ViewBag.SortDirection = sortOrder.EndsWith("_desc") ? "" : "_desc";
             ViewBag.Controller = "User";
 
             var items = _dataService.GetRecentUserRequests(login, DateTime.Today.AddDays(-7));
+
+            if (id > 0)
+                foreach (var item in items)
+                {
+                    item.Id = id;
+                }
 
             if (login.Contains("\\"))
                 login = login.Substring(login.IndexOf("\\") + 1);

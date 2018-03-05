@@ -347,6 +347,20 @@ namespace Gateway.Web.Services
             return result;
         }
 
+        public UserModel GetNonUser(string id)
+        {
+            var query = string.Format("Users/{0}", id);
+            var response = _gatewayRestService.Get("Security", "latest", query);
+
+            if (!response.Successfull)
+                return new UserModel();
+
+            var element = response.Content.GetPayloadAsXElement();
+            var result = element.Deserialize<UserModel>();
+
+            return result;
+        }
+
         public UserModel GetUserGroups(long id)
         {
             var query = string.Format("Users/{0}/Groups", id);
