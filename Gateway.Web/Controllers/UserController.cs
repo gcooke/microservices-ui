@@ -35,17 +35,19 @@ namespace Gateway.Web.Controllers
             return View("Details", model);
         }
 
-        public ActionResult NonUserDetails(string id)
+        [HttpGet]
+        [Route("User/NonUserDetails/{domain}/{login}")]
+        public ActionResult NonUserDetails(string domain, string login)
         {
-            //Call AD and get domain and details
             UserModel Nonuser = new UserModel();
-            if (!string.IsNullOrEmpty(id))
+            if (!string.IsNullOrEmpty(login) && !string.IsNullOrEmpty(domain))
             {
-                Nonuser.Domain = "";
-                Nonuser.Login = id;
-                Nonuser.FullName = id;
+                Nonuser.Domain = domain;
+                Nonuser.Login = login;
+                Nonuser.FullName = domain + @"\" + login;
             }
 
+            //Call AD and get domain and details
             //var Nonuser = _gateway.GetNonUser(id);
 
             return View("Details", Nonuser);
@@ -422,11 +424,13 @@ namespace Gateway.Web.Controllers
             }
 
             UserModel user;
+            string domain = "";
 
             if (id > 0)
             {
                 user = _gateway.GetUser(id.ToString());
                 login = user.Login;
+                domain = user.Domain;
                 login = user.Domain + "\\" + user.Login;
             }
             else
@@ -449,8 +453,12 @@ namespace Gateway.Web.Controllers
                 }
 
             if (login.Contains("\\"))
+            {
+                domain = login.Substring(0, (login.IndexOf("\\")));
                 login = login.Substring(login.IndexOf("\\") + 1);
-            var model = new HistoryModel(id, login);
+            }
+
+            var model = new HistoryModel(id, login, domain);
             model.Requests.AddRange(items, sortOrder);
             model.Requests.SetRelativePercentages();
             return View("History", model);

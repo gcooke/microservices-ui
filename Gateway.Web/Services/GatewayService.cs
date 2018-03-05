@@ -347,9 +347,9 @@ namespace Gateway.Web.Services
             return result;
         }
 
-        public UserModel GetNonUser(string id)
+        public UserModel GetNonUser(string domain, string login)
         {
-            var query = string.Format("Users/{0}", id);
+            var query = string.Format("Users/{0}", login);
             var response = _gatewayRestService.Get("Security", "latest", query);
 
             if (!response.Successfull)
