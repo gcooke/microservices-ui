@@ -5,6 +5,8 @@ using System.Text;
 using System.Web.UI;
 using System.Xml.Linq;
 using Bagl.Cib.MSF.Contracts.Compression;
+using Bagl.Cib.MSF.Contracts.Converters;
+using Bagl.Cib.MSF.Contracts.Model;
 using Gateway.Web.Database;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Utils;
@@ -64,35 +66,25 @@ namespace Gateway.Web.Models.Request
                     return;
                 }
 
-                if (Direction == "Request")
+                try
                 {
-                    switch (payloadType)
-                    {
-                        case "Binary":
-                            var bytes = compressionType == "GZIP" ? data.DecompressByGZip() : data;
-                            Data = Convert.ToBase64String(bytes);
-                            break;
-                        default:
-                            var x = Encoding.UTF8.GetString(data);
-                            var str = compressionType == "GZIP" ? x.DecompressByGZip() : x;
-                            Data = str;
-                            break;
-                    }
-                }
-                else
-                {
-                    var bytes = compressionType == "GZIP" ? data.DecompressByGZip() : data;
-                    switch (payloadType)
-                    {
-                        case "Binary":
-                            Data = Convert.ToBase64String(bytes);
-                            break;
-                        default:
-                            Data = Encoding.UTF8.GetString(bytes);
-                            break;
-                    }
-                }
+                    //New format
+                    var payloadTypeValue = (PayloadType)Enum.Parse((typeof(PayloadType)), payloadType);
+                    var converter = DefaultPayloadConverters.GetDefault(payloadTypeValue);
 
+                    Data = converter.ConvertForDisplay(data);
+                }
+                catch
+                {
+                    try
+                    {
+                        //old format
+                        Data = LegacyCompession.DecodeLegacyObject(data);
+                    }
+                    finally
+                    {
+                    }
+                }
             }
             catch (Exception ex)
             {
