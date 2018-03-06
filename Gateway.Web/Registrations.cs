@@ -5,6 +5,7 @@ using Bagl.Cib.MIT.IO.Impl;
 using Bagl.Cib.MIT.Logging;
 using Bagl.Cib.MIT.Logging.Impl;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
+using Bagl.Cib.MSF.ClientAPI.Provider;
 using Gateway.Web.Database;
 using Gateway.Web.Services;
 
@@ -22,6 +23,9 @@ namespace Gateway.Web
             information.RegisterType<IRestService, RestService>(Scope.Singleton);
             information.RegisterType<IGatewayRestService, GatewayRestService>(Scope.Singleton);
             information.RegisterType<IBasicRestService, BasicRestService>(Scope.Singleton);
+            information.RegisterType<IRoleService, RoleService>(Scope.Singleton);
+            information.RegisterType<IAuthenticationProvider, AuthenticationProvider>(Scope.Singleton);
+            information.RegisterType<IDateTimeProvider, DateTimeProvider>(Scope.Singleton);
             information.RegisterType<IRoleService, RoleService>(Scope.Singleton);
             information.RegisterType<IFileService, FileService>(Scope.Singleton);
             information.RegisterType<IDifferentialArchiveService, DifferentialArchiveService>(Scope.Singleton);

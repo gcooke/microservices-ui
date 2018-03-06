@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.CodeDom;
+using System.Linq;
 using System.Web.Security;
 using Bagl.Cib.MIT.Logging;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
@@ -14,7 +16,7 @@ namespace Gateway.Web.Authorization
         public AuthorizedRoleProvider()
         {
             _roleService = ServiceLocator.Current.GetInstance<IRoleService>();
-            var loggingService = ServiceLocator.Current.GetInstance<ILoggingService>();;
+            var loggingService = ServiceLocator.Current.GetInstance<ILoggingService>();
             _logger = loggingService.GetLogger(this);
         }
 
