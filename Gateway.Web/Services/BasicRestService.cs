@@ -19,7 +19,7 @@ namespace Gateway.Web.Services
 
         public BasicRestService(ILoggingService loggingService)
         {
-            _defaultRequestTimeout = TimeSpan.FromSeconds(10);
+            _defaultRequestTimeout = TimeSpan.FromSeconds(120);
             _logger = loggingService.GetLogger(this);
         }
 

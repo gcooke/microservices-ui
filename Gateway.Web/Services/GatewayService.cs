@@ -46,7 +46,7 @@ namespace Gateway.Web.Services
             ILoggingService loggingService
             )
         {
-            _defaultRequestTimeout = TimeSpan.FromSeconds(10);
+            _defaultRequestTimeout = TimeSpan.FromSeconds(300);
             _gatewayRestService = gatewayRestService;
             _logger = loggingService.GetLogger(this);
             var gateways = information.GetSetting("KnownGateways", GetDefaultKnownGateways(information.EnvironmentName));
@@ -336,6 +336,20 @@ namespace Gateway.Web.Services
         public UserModel GetUser(string id)
         {
             var query = string.Format("Users/{0}", id);
+            var response = _gatewayRestService.Get("Security", "latest", query);
+
+            if (!response.Successfull)
+                return new UserModel();
+
+            var element = response.Content.GetPayloadAsXElement();
+            var result = element.Deserialize<UserModel>();
+
+            return result;
+        }
+
+        public UserModel GetNonUser(string domain, string login)
+        {
+            var query = string.Format("Users/{0}", login);
             var response = _gatewayRestService.Get("Security", "latest", query);
 
             if (!response.Successfull)

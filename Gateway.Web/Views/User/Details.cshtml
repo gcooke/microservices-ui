@@ -38,7 +38,9 @@
 
         </div>
         <br />
-        @Html.ActionLink("Delete", "RemoveUser", "User", new { id = Model.Id }, new { @class = "btn btn-default btn-sm" })
-
+        @if (@Model.Id > 0)
+        {
+            @Html.ActionLink("Delete", "RemoveUser", "User", new { id = Model.Id }, new { @class = "btn btn-default btn-sm" })
+        }
     </div>
 </div>
