@@ -24,6 +24,9 @@ namespace Gateway.Web
             information.RegisterType<IGatewayRestService, GatewayRestService>(Scope.Singleton);
             information.RegisterType<IBasicRestService, BasicRestService>(Scope.Singleton);
             information.RegisterType<IRoleService, RoleService>(Scope.Singleton);
+            information.RegisterType<IAuthenticationProvider, AuthenticationProvider>(Scope.Singleton);
+            information.RegisterType<IDateTimeProvider, DateTimeProvider>(Scope.Singleton);
+            information.RegisterType<IRoleService, RoleService>(Scope.Singleton);
             information.RegisterType<IFileService, FileService>(Scope.Singleton);
             information.RegisterType<IDifferentialArchiveService, DifferentialArchiveService>(Scope.Singleton);
             information.RegisterType<IDifferentialDownloadService, DifferentialDownloadService>(Scope.Singleton);
