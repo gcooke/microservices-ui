@@ -46,10 +46,7 @@ namespace Gateway.Web.Controllers
         public ActionResult Children(string correlationId, string sortOrder, string filter = "")
         {
             if (string.IsNullOrEmpty(sortOrder))
-            {
-                Session.RegisterLastHistoryLocation(Request.Url);
                 sortOrder = "time_desc";
-            }
 
             ViewBag.SortColumn = sortOrder;
             ViewBag.SortDirection = sortOrder.EndsWith("_desc") ? "" : "_desc";
