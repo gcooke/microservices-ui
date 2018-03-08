@@ -20,8 +20,15 @@ namespace Gateway.Web.Utils
             if (string.IsNullOrEmpty(compressedText))
                 return "";
 
-            var gzBuffer = Convert.FromBase64String(compressedText);
-            return Encoding.UTF8.GetString(gzBuffer.DecompressByGZip());
+            try
+            {
+                var gzBuffer = Convert.FromBase64String(compressedText);
+                return Encoding.UTF8.GetString(gzBuffer.DecompressByGZip());
+            }
+            catch
+            {
+                return compressedText;
+            }
         }
 
         public static string DecodeLegacyObject(Byte[] encodedBytes)
