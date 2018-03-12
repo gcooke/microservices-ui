@@ -66,25 +66,7 @@ namespace Gateway.Web.Models.Request
                     return;
                 }
 
-                try
-                {
-                    //New format
-                    var payloadTypeValue = (PayloadType)Enum.Parse((typeof(PayloadType)), payloadType);
-                    var converter = DefaultPayloadConverters.GetDefault(payloadTypeValue);
-
-                    Data = converter.ConvertForDisplay(data);
-                }
-                catch
-                {
-                    try
-                    {
-                        //old format
-                        Data = LegacyCompession.DecodeLegacyObject(data);
-                    }
-                    finally
-                    {
-                    }
-                }
+                Data = LegacyCompession.DecodeLegacyObject(data, payloadType);
             }
             catch (Exception ex)
             {
