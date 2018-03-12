@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Text;
 using Bagl.Cib.MSF.Contracts.Compression;
+using Bagl.Cib.MSF.Contracts.Converters;
+using Bagl.Cib.MSF.Contracts.Model;
 
 namespace Gateway.Web.Utils
 {
@@ -31,10 +33,31 @@ namespace Gateway.Web.Utils
             }
         }
 
-        public static string DecodeLegacyObject(Byte[] encodedBytes)
+        public static string DecodeLegacyObject(Byte[] encodedBytes, string type)
         {
-            var x = Encoding.UTF8.GetString(encodedBytes);
-            return DecompressByGZip(x); ;
+            string result;
+            try
+            {
+                //New format
+                var payloadTypeValue = (PayloadType) Enum.Parse((typeof(PayloadType)), type);
+                var converter = DefaultPayloadConverters.GetDefault(payloadTypeValue);
+
+                result = converter.ConvertForDisplay(encodedBytes);
+            }
+            catch
+            {
+                try
+                {
+                    //old format
+                    var x = Encoding.UTF8.GetString(encodedBytes);
+                    result = DecompressByGZip(x);
+                }
+                finally
+                {
+                }
+            }
+
+            return result;
         }
     }
 }
