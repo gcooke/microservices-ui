@@ -347,7 +347,7 @@ namespace Gateway.Web.Database
                     var fulluser = line.User;
                     var user = fulluser;
                     if (fulluser.Contains("\\"))
-                        fulluser = user.Substring(fulluser.IndexOf("\\") + 1);
+                        user = user.Substring(fulluser.IndexOf("\\") + 1);
                     var link = string.Format("<a href='../../User/History?id=0&login={0}'>{1}</a>", fulluser, user);
 
                     reportRow.Values.Add(link);
