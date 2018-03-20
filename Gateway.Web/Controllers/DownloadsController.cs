@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
 using System.Web.UI;
+using Bagl.Cib.MIT.IoC;
 using Bagl.Cib.MIT.Logging;
 using Bagl.Cib.MSF.Contracts.Utils;
 using Gateway.Web.Database;
@@ -17,21 +19,31 @@ namespace Gateway.Web.Controllers
     [RoutePrefix("downloads")]
     public class DownloadsController : BaseController
     {
-        private const string RemoteAppsDirectory = @"\\Intranet.barcapint.com\dfs-emea\Group\Jhb\IT_Pricing_Risk\Builds\Redstone\Apps";
-
-        private readonly IGatewayService _gateway;
+        private string RemoteAppsDirectory { get; }
+        private const string RemoteAppsDirectoryKey = "RemoteAppsDirectory";
         private readonly IGatewayDatabaseService _database;
         private readonly IDifferentialDownloadService _differentialDownloadService;
         private readonly ILogger _logger;
 
-        public DownloadsController(IGatewayService gateway, IDifferentialDownloadService differentialDownloadService, IGatewayDatabaseService database, ILoggingService loggingService)
+        public DownloadsController(
+            IDifferentialDownloadService differentialDownloadService,
+            IGatewayDatabaseService database,
+            ILoggingService loggingService,
+            ISystemInformation information)
             : base(loggingService)
         {
-            _gateway = gateway;
             _differentialDownloadService = differentialDownloadService;
             _database = database;
+            string remoteAppsDirectory;
+            if (!information.TryGetSetting(RemoteAppsDirectoryKey, out remoteAppsDirectory))
+            {
+                throw new ConfigurationErrorsException("Missing configuration key: " + RemoteAppsDirectoryKey);
+            }
+            RemoteAppsDirectory = remoteAppsDirectory;
             _logger = loggingService.GetLogger(this);
         }
+
+
 
         [HttpGet]
         [Route("latest/{app}")]
@@ -181,7 +193,7 @@ namespace Gateway.Web.Controllers
         private bool IsValidAppParameter(string app)
         {
             // Check that app name is only alpha numeric.
-            return app.All(char.IsLetterOrDigit);
+            return app.All(c => char.IsLetterOrDigit(c) || char.IsWhiteSpace(c) || c.Equals('-'));
         }
     }
 }
