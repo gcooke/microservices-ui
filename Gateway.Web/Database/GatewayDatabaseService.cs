@@ -335,6 +335,7 @@ namespace Gateway.Web.Database
                 table.Columns.Add("Last 60 Minutes");
                 table.Columns.Add("Last 24 Hours");
                 table.Columns.Add("Last 7 Days");
+                table.Columns.Add("Groups");
 
                 foreach (var row in rows)
                 {
@@ -355,6 +356,7 @@ namespace Gateway.Web.Database
                     reportRow.Values.Add(line.Total60Minutes.ToString());
                     reportRow.Values.Add(line.Total24Hours.ToString());
                     reportRow.Values.Add(line.Total7Days.ToString());
+                    reportRow.Values.Add(line.Groups);
                     table.Rows.Add(reportRow);
 
                 }

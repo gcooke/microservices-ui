@@ -19,6 +19,7 @@
           <Property Name="Weighting" Type="int" Nullable="false" />
           <Property Name="MaxInstances" Type="int" Nullable="false" />
           <Property Name="TimeoutMilliSec" Type="int" />
+          <Property Name="Description" Type="varchar" MaxLength="500" />
         </EntityType>
         <EntityType Name="Link">
           <Key>
@@ -238,6 +239,7 @@
           <Property Name="MaxInstances" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Versions" Relationship="Self.FK_Version_Controller" FromRole="Controller" ToRole="Version" />
           <Property Name="TimeoutMilliSec" Type="Int32" />
+          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Request">
           <Key>
@@ -357,7 +359,7 @@
             <Parameter Name="User" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="spGetUserReport" ReturnType="Collection(GatewayModel.spGetUserReport_Result)">
-          <Parameter Name="Start" Mode="In" Type="DateTime" />
+            <Parameter Name="Start" Mode="In" Type="DateTime" />
           </FunctionImport>
           <EntitySet Name="StatusChanges" EntityType="GatewayModel.StatusChange" />
           <EntitySet Name="Links" EntityType="GatewayModel.Link" />
@@ -558,13 +560,6 @@
           <Property Type="DateTime" Name="UpdateTimeUtc" Nullable="false" Precision="23" />
           <Property Type="String" Name="Status" Nullable="false" MaxLength="100" />
         </ComplexType>
-        <ComplexType Name="spGetUserReport_Result">
-          <Property Type="DateTime" Name="Date" Nullable="true" />
-          <Property Type="DateTime" Name="Latest" Nullable="true" />
-          <Property Type="String" Name="Hour" Nullable="true" MaxLength="33" />
-          <Property Type="String" Name="User" Nullable="false" MaxLength="100" />
-          <Property Type="Int32" Name="Count" Nullable="true" />
-        </ComplexType>
         <EntityType Name="StatusChange">
           <Key>
             <PropertyRef Name="Id" />
@@ -588,6 +583,14 @@
           <Property Name="AdditionalData" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="Permission" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
+        <ComplexType Name="spGetUserReport_Result">
+          <Property Type="DateTime" Name="Date" Nullable="true" />
+          <Property Type="DateTime" Name="Latest" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Hour" Nullable="true" MaxLength="33" />
+          <Property Type="String" Name="User" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="Count" Nullable="true" />
+          <Property Type="String" Name="Groups" Nullable="true" MaxLength="500" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -597,6 +600,7 @@
           <EntitySetMapping Name="Controllers">
             <EntityTypeMapping TypeName="GatewayModel.Controller">
               <MappingFragment StoreEntitySet="Controller">
+                <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="TimeoutMilliSec" ColumnName="TimeoutMilliSec" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
@@ -892,17 +896,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="spGetUserReport" FunctionName="GatewayModel.Store.spGetUserReport">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="GatewayModel.spGetUserReport_Result">
-                <ScalarProperty Name="Date" ColumnName="Date" />
-                <ScalarProperty Name="Latest" ColumnName="Latest" />
-                <ScalarProperty Name="Hour" ColumnName="Hour" />
-                <ScalarProperty Name="User" ColumnName="User" />
-                <ScalarProperty Name="Count" ColumnName="Count" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <EntitySetMapping Name="StatusChanges">
             <EntityTypeMapping TypeName="GatewayModel.StatusChange">
               <MappingFragment StoreEntitySet="StatusChange">
@@ -928,6 +921,18 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="spGetUserReport" FunctionName="GatewayModel.Store.spGetUserReport">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GatewayModel.spGetUserReport_Result">
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Latest" ColumnName="Latest" />
+                <ScalarProperty Name="Hour" ColumnName="Hour" />
+                <ScalarProperty Name="User" ColumnName="User" />
+                <ScalarProperty Name="Count" ColumnName="Count" />
+                <ScalarProperty Name="Groups" ColumnName="Groups" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

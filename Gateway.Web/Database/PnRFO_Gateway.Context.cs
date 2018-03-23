@@ -229,7 +229,6 @@ public partial class GatewayEntities : DbContext
         return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetRecentUserRequests_Result>("spGetRecentUserRequests", startParameter, userParameter);
     }
 
-
     public virtual ObjectResult<spGetUserReport_Result> spGetUserReport(Nullable<System.DateTime> start)
     {
 
