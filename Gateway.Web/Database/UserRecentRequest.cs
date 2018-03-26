@@ -12,6 +12,7 @@ namespace Gateway.Web.Database
         public int Total60Minutes { get; set; }
         public int Total24Hours { get; set; }
         public int Total7Days { get; set; }
+        public string Groups { get; set; }
     }
 
     public class UserRecentRequests
@@ -56,6 +57,8 @@ namespace Gateway.Web.Database
                 if (latest > target.Latest)
                     target.Latest = latest;
             }
+
+            target.Groups = row.Groups;
         }
 
         public IEnumerable<UserRecentRequest> GetAll()
