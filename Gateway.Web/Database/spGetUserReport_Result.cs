@@ -27,6 +27,8 @@ public partial class spGetUserReport_Result
 
     public Nullable<int> Count { get; set; }
 
+    public string Groups { get; set; }
+
 }
 
 }
