@@ -1,0 +1,47 @@
+﻿@using Gateway.Web.Models.Controller
+@model DocumentationModel
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "Controller";
+    ViewBag.Current = "Versions";
+}
+@{ Html.RenderPartial("_ControllerNav", @Model); }
+
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+
+        <h3 class="text-lowercase">Documentation</h3>
+        <br/>
+        <div id="list-meta">
+            <table style="width: 100%; white-space: nowrap" class="datatable">
+                <thead>
+                <tr>
+                    <td>Version</td>
+                </tr>
+                </thead>
+
+                @foreach (var item in Model.VersionDocumentationModels)
+                {
+                    if (item.Status == "Active")
+                    {
+                        <tr style="background: white">
+                            <td>
+                                @HttpUtility.UrlEncode(@item.VersionName)
+                                @if (item.HasDocumentation)
+                                {
+                                    <a class="btn btn-default btn-xs pull-right" href="~/Controller/Download/@Model.Name?version=@item.VersionName">Download</a>
+                                }
+                                else
+                                {
+                                    <a class="btn btn-default btn-xs pull-right" href="~/Controller/Generate/@Model.Name?version=@item.VersionName">Generate</a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+            </table>
+        </div>
+        <br/>
+    </div>
+</div>

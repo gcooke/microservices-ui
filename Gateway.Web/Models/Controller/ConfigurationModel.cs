@@ -67,5 +67,10 @@ namespace Gateway.Web.Models.Controller
         [XmlArray(ElementName="Versions")]
         [XmlArrayItem(ElementName = "Version", Namespace= "Gateway.Web.Models.Controller")]
         public List<Version> Versions { get; set; }
+
+
+        [XmlElement]
+        [Display(Name = "Description")]
+        public string Description { get; set; }
     }
 }

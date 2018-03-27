@@ -180,6 +180,19 @@
 
         </div>
 
+        <div class="row">
+            <div class="col-md-3">
+                @Html.LabelFor(m => m.Description, new {@class = "control-label"})
+            </div>
+
+            <div class="col-md-3">
+                <div class="input-group">
+                    @Html.TextAreaFor(m => m.Description, new {@name = "Description"})
+                </div>
+            </div>
+
+        </div>
+
         <div class="col-md-offset-3 col-md-4">
             <img src="../../Content/img/ajax-loader.gif" id="loading"/>
             <button class="btn btn-default btn-sm" type="submit" i="submit">
