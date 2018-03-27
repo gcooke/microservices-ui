@@ -7,7 +7,10 @@ using Gateway.Web.Services;
 using Gateway.Web.Utils;
 using Controller = System.Web.Mvc.Controller;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using Bagl.Cib.MIT.IoC;
 using Bagl.Cib.MIT.Logging;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
 using Gateway.Web.Authorization;
@@ -20,16 +23,20 @@ namespace Gateway.Web.Controllers
         private readonly IGatewayDatabaseService _dataService;
         private readonly IGatewayService _gateway;
         private readonly IGatewayRestService _gatewayRestService;
+        private readonly ISystemInformation _information;
 
         public ControllerController(
             IGatewayDatabaseService dataService,
             IGatewayService gateway,
-            IGatewayRestService gatewayRestService, ILoggingService loggingService)
+            IGatewayRestService gatewayRestService, 
+            ILoggingService loggingService,
+            ISystemInformation information)
             : base(loggingService)
         {
             _dataService = dataService;
             _gateway = gateway;
             _gatewayRestService = gatewayRestService;
+            _information = information;
         }
 
         public ActionResult Dashboard(string id)
@@ -70,6 +77,56 @@ namespace Gateway.Web.Controllers
                     }));
             }
             return View("Versions", model);
+        }
+
+        public ActionResult Documentation(string id)
+        {
+            var controllersBasePath = _information.GetSetting("SharedControllersPath");
+            var versions = _gateway.GetControllerVersions(id);
+            var model = new DocumentationModel(id);
+
+
+            foreach (var modelVersion in versions.Versions)
+            {
+                var documentationPath = Path.Combine(controllersBasePath, id, modelVersion.Name, "Documentation", "documentation.json");
+                var documentationExists = System.IO.File.Exists(documentationPath);
+                model.VersionDocumentationModels.Add(new VersionDocumentationModel
+                {
+                    VersionName = modelVersion.Name,
+                    HasDocumentation = documentationExists,
+                    Status = modelVersion.Status
+                });
+            }
+
+            return View("Documentation", model);
+        }
+
+        public ActionResult Generate(string id, string version)
+        {
+            var result = _gateway.GenerateDocumentation(id, version);
+            return Redirect("~/Controller/Documentation/"+id);
+        }
+
+
+        public FileResult Download(string id, string version)
+        {
+            var controllersBasePath = _information.GetSetting("SharedControllersPath");
+            var documentationBasepath = Path.Combine(controllersBasePath, id, version, "Documentation");
+            var documentationDir = new DirectoryInfo(documentationBasepath);
+            var files = documentationDir.GetFiles();
+
+            using (var memoryStream = new MemoryStream())
+            {
+                using (var ziparchive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+                {
+                    foreach (var fileInfo in files)
+                    {
+                        var path = Path.Combine(documentationBasepath, fileInfo.Name);
+                        ziparchive.CreateEntryFromFile(path, fileInfo.Name);
+                    }
+                }
+                return File(memoryStream.ToArray(), "application/zip", string.Format("{0} - {1} - Documentation.zip", id, version));
+            }
         }
 
         [HttpPost]

@@ -1249,6 +1249,13 @@ namespace Gateway.Web.Services
             return new[] { response.Message };
         }
 
+        public bool GenerateDocumentation(string id, string version)
+        {
+            var query = string.Format("controllers/{0}/versions/{1}/documentation", id, version);
+            var response = _gatewayRestService.Put("Catalogue", "latest", query, string.Empty);
+            return response.Successfull;
+        }
+
         public string[] UpdateGroupBusinessFunction(string groupId, string businessFunctionId)
         {
             var query = string.Format("groups/{0}/businessfunction/{1}", groupId, businessFunctionId);
