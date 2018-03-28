@@ -130,6 +130,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Reactive.Core, Version=3.0.1000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Reactive.Core.3.1.1\lib\net45\System.Reactive.Core.dll</HintPath>
       <Private>True</Private>
@@ -331,6 +332,7 @@
     <Compile Include="Models\Controllers\VersionsModel.cs" />
     <Compile Include="Models\Controllers\Catalogue.cs" />
     <Compile Include="Models\Controller\ControllerQueueChartModel.cs" />
+    <Compile Include="Models\Controller\DocumentationModel.cs" />
     <Compile Include="Models\Controller\HistoryItem.cs" />
     <Compile Include="Models\Controller\HistoryModel.cs" />
     <Compile Include="Models\Controller\QueueModel.cs" />
@@ -581,6 +583,7 @@
     <Content Include="Views\Security\Links.cshtml" />
     <Content Include="Views\Security\BusinessFunctions.cshtml" />
     <Content Include="Views\Security\GroupTypes.cshtml" />
+    <Content Include="Views\Controller\Documentation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />

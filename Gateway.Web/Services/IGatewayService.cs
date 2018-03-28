@@ -177,5 +177,6 @@ namespace Gateway.Web.Services
         string[] DeleteGroupType(int id);
         #endregion
 
+        bool GenerateDocumentation(string id, string version);
     }
 }
