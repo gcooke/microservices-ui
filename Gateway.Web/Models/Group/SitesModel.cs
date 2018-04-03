@@ -14,6 +14,7 @@ namespace Gateway.Web.Models.Group
         }
 
         public long Id { get; private set; }
+        public string Domain { get; set; }
         public List<SiteModel> Items { get; private set; }
         public List<SelectListItem> AvailableSites { get; private set; }
         public string Name { get; set; }
