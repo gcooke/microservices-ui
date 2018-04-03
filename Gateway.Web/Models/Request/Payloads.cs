@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Web.UI;
 using System.Xml.Linq;
+using Bagl.Cib.MIT.Cube;
 using Bagl.Cib.MSF.Contracts.Compression;
 using Bagl.Cib.MSF.Contracts.Converters;
 using Bagl.Cib.MSF.Contracts.Model;
@@ -81,7 +83,24 @@ namespace Gateway.Web.Models.Request
             try
             {
                 if (Data.StartsWith("<"))
-                    Data = XElement.Parse(Data).ToString(SaveOptions.None);
+                {
+                    var element = XElement.Parse(Data);
+                    Data = element.ToString(SaveOptions.None);
+
+                    // Try parse QA cube result (decode the cube)
+                    var cubeResult = element.Descendants("CubeResult").FirstOrDefault();
+                    if (cubeResult != null)
+                    {
+                        var data = cubeResult.Attributes("data").First();
+                        var encoded = Convert.FromBase64String(data.Value);
+                        var cube = CubeBuilder.FromBytes(encoded);
+                        data.Value = string.Empty;
+
+                        // Move result to element
+                        cubeResult.Value = cube.ToCsv();
+                        Data = element.ToString(SaveOptions.None);
+                    }
+                }
 
                 if (Data.StartsWith("{"))
                     Data = JObject.Parse(Data).ToString(Formatting.Indented);
