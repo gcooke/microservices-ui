@@ -24,5 +24,6 @@ namespace Gateway.Web.Models.User
         public List<SelectListItem> AvailablePortfolios { get; set; }
 
         public string Login { get; set; }
+        public string Domain { get; set; }
     }
 }

@@ -23,5 +23,6 @@ namespace Gateway.Web.Models.Group
         public List<SelectListItem> AvailableApplicationVersions { get; private set; }
 
         public string Name { get; set; }
+        public string Domain { get; set; }
     }
 }

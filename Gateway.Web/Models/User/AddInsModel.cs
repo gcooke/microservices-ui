@@ -33,5 +33,6 @@ namespace Gateway.Web.Models.User
         public List<GroupApplicationVersionModel> GroupApplicationVersions { get; private set; }
 
         public string Login { get; set; }
+        public string Domain { get; set; }
     }
 }
