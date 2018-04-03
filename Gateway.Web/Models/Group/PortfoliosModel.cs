@@ -14,5 +14,6 @@ namespace Gateway.Web.Models.Group
         public long Id { get; set; }
         public List<PortfolioModel> Items { get; private set; }
         public string Name { get; set; }
+        public string Domain { get; set; }
     }
 }
