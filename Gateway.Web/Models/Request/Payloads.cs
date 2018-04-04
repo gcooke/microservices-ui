@@ -51,6 +51,8 @@ namespace Gateway.Web.Models.Request
 
         public long Id { get; set; }
 
+        public bool IsCube { get; set; }
+
         public string Data { get; set; }
 
         public string Direction { get; set; }
@@ -61,6 +63,9 @@ namespace Gateway.Web.Models.Request
         {
             try
             {
+                if (payloadType == "Cube")
+                    IsCube = true;
+
                 if (lengthInBytes >= 50000)
                 {
                     Data = string.Format("Payload size {0:N2} kilobytes. Download below.", lengthInBytes / 10000m);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mime;
 using System.Web.Mvc;
 using Bagl.Cib.MIT.Logging;
 using Gateway.Web.Authorization;
@@ -87,6 +88,12 @@ namespace Gateway.Web.Controllers
         {
             var data = _dataService.GetPayload(payloadId);
             return File(data.GetBytes(), "text/xml", string.Format("Payload_{0}.txt", payloadId));
+        }
+
+        public ActionResult DownloadCube(string correlationId, long payloadId)
+        {
+            var data = _dataService.GetPayload(payloadId);
+            return File(data.GetCubeBytes(), "application/octet-stream", string.Format("Cube_{0}.dat", payloadId));
         }
 
         public ActionResult Timings(string id)
