@@ -9,11 +9,14 @@ namespace Gateway.Web.Models.Controller
     {
         public string Controller { get; set; }
 
-        public IList<VersionDocumentationModel> VersionDocumentationModels { get; set; }
+        public IList<VersionDocumentationModel> ApiDocumentationModels { get; set; }
+
+        public IList<VersionDocumentationModel> ExcelDocumentationModels { get; set; }
 
         public DocumentationModel(string name) : base(name)
         {
-            VersionDocumentationModels = new List<VersionDocumentationModel>();
+            ApiDocumentationModels = new List<VersionDocumentationModel>();
+            ExcelDocumentationModels = new List<VersionDocumentationModel>();
         }
     }
 
