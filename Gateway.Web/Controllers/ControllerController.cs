@@ -81,24 +81,37 @@ namespace Gateway.Web.Controllers
 
         public ActionResult Documentation(string id)
         {
-            var controllersBasePath = _information.GetSetting("SharedControllersPath");
             var versions = _gateway.GetControllerVersions(id);
             var model = new DocumentationModel(id);
 
+            var apiModels = GetDocumentationModels(versions, id, _information.GetSetting("ApiDocumentationPath"));
+            model.ApiDocumentationModels = apiModels;
 
-            foreach (var modelVersion in versions.Versions)
+            if (id.ToLower() == "pricing")
             {
-                var documentationPath = Path.Combine(controllersBasePath, id, modelVersion.Name, "Documentation", "documentation.json");
-                var documentationExists = System.IO.File.Exists(documentationPath);
-                model.VersionDocumentationModels.Add(new VersionDocumentationModel
-                {
-                    VersionName = modelVersion.Name,
-                    HasDocumentation = documentationExists,
-                    Status = modelVersion.Status
-                });
+                var excelModels = GetDocumentationModels(versions, id, _information.GetSetting("ExcelDocumentationPath"));
+                model.ExcelDocumentationModels = excelModels;
             }
 
             return View("Documentation", model);
+        }
+
+        private IList<VersionDocumentationModel> GetDocumentationModels(VersionsModel versions, string controller, string path)
+        {
+            var models = new List<VersionDocumentationModel>();
+            foreach (var modelVersion in versions.Versions)
+            {
+                var apiDocumentationPath = string.Format(path, controller, modelVersion.Name);
+                var apiDocumentationDirectory = new DirectoryInfo(apiDocumentationPath);
+                var apiDocumentationExists = apiDocumentationDirectory.Exists;
+                models.Add(new VersionDocumentationModel
+                {
+                    VersionName = modelVersion.Name,
+                    HasDocumentation = apiDocumentationExists,
+                    Status = modelVersion.Status
+                });
+            }
+            return models;
         }
 
         public ActionResult Generate(string id, string version)
@@ -108,11 +121,16 @@ namespace Gateway.Web.Controllers
         }
 
 
-        public FileResult Download(string id, string version)
+        public FileResult Download(string id, string version, string type = "api")
         {
-            var controllersBasePath = _information.GetSetting("SharedControllersPath");
-            var documentationBasepath = Path.Combine(controllersBasePath, id, version, "Documentation");
-            var documentationDir = new DirectoryInfo(documentationBasepath);
+            if (type.ToLower() != "api" && type.ToLower() != "excel")
+                type = "api";
+
+            var documentationPath = string.Format(type.ToLower() == "excel" ? 
+                _information.GetSetting("ExcelDocumentationPath") : 
+                _information.GetSetting("ApiDocumentationPath"), id, version);
+
+            var documentationDir = new DirectoryInfo(documentationPath);
             var files = documentationDir.GetFiles();
 
             using (var memoryStream = new MemoryStream())
@@ -121,11 +139,11 @@ namespace Gateway.Web.Controllers
                 {
                     foreach (var fileInfo in files)
                     {
-                        var path = Path.Combine(documentationBasepath, fileInfo.Name);
+                        var path = Path.Combine(documentationPath, fileInfo.Name);
                         ziparchive.CreateEntryFromFile(path, fileInfo.Name);
                     }
                 }
-                return File(memoryStream.ToArray(), "application/zip", string.Format("{0} - {1} - Documentation.zip", id, version));
+                return File(memoryStream.ToArray(), "application/zip", string.Format("{0} - {1} - {2} Documentation.zip", id, version, type.ToUpper()));
             }
         }
 
