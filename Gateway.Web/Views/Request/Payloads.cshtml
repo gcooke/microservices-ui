@@ -23,7 +23,11 @@
                 @payload.Direction
                 @if (payload.Id != 0)
                 {
-                    @Html.ActionLink(" ", "Download", "Request", new {correlationId = Model.CorrelationId, payloadId = payload.Id}, new {@class = "glyphicon glyphicon-download hoverlink"})
+                    @Html.ActionLink(" ", "Download", "Request", new { correlationId = Model.CorrelationId, payloadId = payload.Id }, new { @class = "glyphicon glyphicon-download hoverlink", title = "Download converted payload" })
+                }
+                @if (payload.IsCube)
+                {
+                    @Html.ActionLink(" ", "DownloadCube", "Request", new { correlationId = Model.CorrelationId, payloadId = payload.Id }, new { @class = "glyphicon glyphicon-save hoverlink", title = "Download cube" })
                 }
             </h4>
             <pre style="height:280px">@payload.Data</pre>
