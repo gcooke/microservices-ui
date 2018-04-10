@@ -101,13 +101,13 @@ namespace Gateway.Web.Controllers
             var models = new List<VersionDocumentationModel>();
             foreach (var modelVersion in versions.Versions)
             {
-                var apiDocumentationPath = string.Format(path, controller, modelVersion.Name);
-                var apiDocumentationDirectory = new DirectoryInfo(apiDocumentationPath);
-                var apiDocumentationExists = apiDocumentationDirectory.Exists;
+                var documentationPath = string.Format(path, controller, modelVersion.Name);
+                var documentationDirectory = new DirectoryInfo(documentationPath);
+                var documentationExists = documentationDirectory.Exists;
                 models.Add(new VersionDocumentationModel
                 {
                     VersionName = modelVersion.Name,
-                    HasDocumentation = apiDocumentationExists,
+                    HasDocumentation = documentationExists,
                     Status = modelVersion.Status
                 });
             }
