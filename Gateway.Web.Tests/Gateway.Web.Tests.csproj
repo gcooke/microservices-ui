@@ -30,9 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Bagl.Cib.MIT.Cube, Version=1.0.17.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Bagl.Cib.MIT.Cube.1.0.17\lib\net452\Bagl.Cib.MIT.Cube.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Bagl.Cib.MIT.Cube, Version=1.0.27.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bagl.Cib.MIT.Cube.1.0.27\lib\net452\Bagl.Cib.MIT.Cube.dll</HintPath>
     </Reference>
     <Reference Include="Bagl.Cib.MIT.IO, Version=1.0.7.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Bagl.Cib.MIT.IO.1.0.7\lib\net452\Bagl.Cib.MIT.IO.dll</HintPath>

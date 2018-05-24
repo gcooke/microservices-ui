@@ -8,6 +8,7 @@ using System.Linq.Expressions;
 using System.Web.Mvc;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Controllers;
+using Gateway.Web.Models.Home;
 using Gateway.Web.Models.Request;
 using Gateway.Web.Models.Security;
 using RestSharp.Extensions;
@@ -393,6 +394,20 @@ namespace Gateway.Web.Database
             result.Client = string.IsNullOrEmpty(request.ClientID) ? "Unknown" : request.ClientID;
         }
 
+        public IEnumerable<ControllerState> GetControllerStates()
+        {
+            var result = new List<ControllerState>();
+            using (var database = new GatewayEntities())
+            {
+                var items = database.spGetControllerStates();
+                foreach (var item in items.GroupBy(i => i.Controller))
+                {
+                    result.Add(item.ToArray().ToModel());
+                }
+            }
+            return result;
+        }
+
         public IEnumerable<string> GetVersions(string controllerName)
         {
             using (var database = new GatewayEntities())
@@ -725,6 +740,78 @@ namespace Gateway.Web.Database
             }
         }
 
+        public List<ExtendedBatchSummary> GetBatchSummaryStats(DateTime @from, DateTime to)
+        {
+            var results = new List<ExtendedBatchSummary>();
+
+            using (var database = new GatewayEntities())
+            {
+                var batchStats = database.BatchStats;
+                var requests = database.Requests;
+                var responses = database.Responses;
+                var dbSummary = batchStats
+                    .Where(x => DbFunctions.TruncateTime(x.ValuationDate) >= from &&
+                                DbFunctions.TruncateTime(x.ValuationDate) < to)
+                    .Join(requests, b => b.CorrelationId, r => r.CorrelationId, (b, r) => new { b, r })
+                    .Join(responses, b => b.b.CorrelationId, r => r.CorrelationId,
+                        (b, r) => new { batch = b.b, request = b.r, response = r })
+                    .ToArray();
+
+                foreach (var item in dbSummary)
+                {
+                    var pricingRequests = database.Requests
+                        .Join(responses, r => r.CorrelationId, rs => rs.CorrelationId,
+                            (rq, rs) => new { request = rq, response = rs })
+                        .Where(x => x.request.ParentCorrelationId == item.request.CorrelationId)
+                        .Where(x => x.request.Controller.ToLower() == "pricing")
+                        .Select(x => new { x.request.CorrelationId, x.request.Resource, x.response.ResultCode });
+
+                    var pricingResults = new Dictionary<string, Tuple<int, int>>();
+                    foreach (var pricingRequest in pricingRequests)
+                    {
+
+                        var calculationNameUnmapped = GetCalculationName(pricingRequest.Resource);
+                        var calculationName = TransformCalculationName(calculationNameUnmapped);
+
+                        if (pricingResults.ContainsKey(calculationName))
+                            continue;
+
+                        var totalRequests = pricingRequests.Count(x => x.Resource.EndsWith(calculationNameUnmapped));
+                        var successfulRequests = pricingRequests.Count(x => x.ResultCode == 1 && x.Resource.EndsWith(calculationNameUnmapped));
+
+                        pricingResults.Add(calculationName, new Tuple<int, int>(successfulRequests, totalRequests));
+                    }
+
+                    var summary = item.batch.ToModel(item.request, item.response);
+                    summary.CalculationPricingRequestResults = pricingResults;
+                    results.Add(summary);
+                }
+                return results;
+            }
+        }
+
+        private string TransformCalculationName(string name)
+        {
+            if (name.ToLower() == "pv")
+                return "PV";
+
+            if (name.ToLower().StartsWith("xvacalculationwith"))
+                return "XVA";
+
+            if (name.ToLower() == "generalriskreport")
+                return "Risk";
+
+            return name;
+        }
+
+        private string GetCalculationName(string resource)
+        {
+            if (resource == null)
+                return null;
+
+            var lastIndex = resource.LastIndexOf('-');
+            return resource.Substring(lastIndex + 1).Trim();
+        }
     }
 
     internal class ControllerVersionSummaryQueueSize

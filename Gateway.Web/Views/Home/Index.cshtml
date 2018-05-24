@@ -2,26 +2,31 @@
 @{
     ViewBag.Title = "Dashboard";
 }
+@model Gateway.Web.Models.Home.IndexModel
 
 <div class="row">
 
-    <h3 class="text-lowercase">Redstone Dashboard</h3>
-    <p>Welcome to the Redstone API Gateway Dashboard.</p>
-
-    <ul>
-        <li>@Html.ActionLink("Controllers", "Dashboard", "Controllers")</li>
-        <li>@Html.ActionLink("Current Running Hosts", "Workers", "Controllers")</li>
-        <li>@Html.ActionLink("Recent History", "History", "Controllers")</li>
-    </ul>
-    <br/>
-
-    <br/>
-    <h3 class="text-lowercase">Last @Model.Requests.Count requests</h3>
-    <br />
-
-    <div class="containerx bulk">
-        @{ Html.RenderPartial("_HistoryItems", (List<HistoryItem>)@Model.Requests); }
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-4">
+                <h3 class="text-lowercase">Services</h3>
+                @{ Html.RenderPartial("_StateItems", @Model.Services); }
+                <br />
+                <h3 class="text-lowercase">Databases</h3>
+                @{ Html.RenderPartial("_StateItems", @Model.Databases); }
+            </div>
+            <div class="col-sm-4">
+                <a href="@Url.Action("History", "Controllers")" class="hoverlink">
+                    <h3 class="text-lowercase">
+                        Controllers
+                    </h3>
+                </a>
+                @{ Html.RenderPartial("_StateItems", @Model.Controllers); }
+            </div>
+            <div class="col-sm-4">
+                <h3 class="text-lowercase">Batches</h3>
+                @{ Html.RenderPartial("_BatchStates", @Model.Batches); }
+            </div>
+        </div>
     </div>
-
-    <br />
 </div>

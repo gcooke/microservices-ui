@@ -25,6 +25,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -44,9 +45,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Bagl.Cib.MIT.Cube, Version=1.0.17.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Bagl.Cib.MIT.Cube.1.0.17\lib\net452\Bagl.Cib.MIT.Cube.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Bagl.Cib.MIT.Cube, Version=1.0.27.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bagl.Cib.MIT.Cube.1.0.27\lib\net452\Bagl.Cib.MIT.Cube.dll</HintPath>
     </Reference>
     <Reference Include="Bagl.Cib.MIT.IO, Version=1.0.7.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Bagl.Cib.MIT.IO.1.0.7\lib\net452\Bagl.Cib.MIT.IO.dll</HintPath>
@@ -241,6 +241,11 @@
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\UtilsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Database\BatchHelper.cs" />
+    <Compile Include="Database\BatchStat.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\ExtendedBatchSummary.cs" />
     <Compile Include="Database\GatewayDatabaseService.cs" />
     <Compile Include="Database\IGatewayDatabaseService.cs" />
     <Compile Include="Database\Link.cs">
@@ -258,6 +263,9 @@
     </Compile>
     <Compile Include="Database\ResponseStats.cs" />
     <Compile Include="Database\spGetChildRequests_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\spGetControllerStates_Result.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\spGetPayloads_Result.cs">
@@ -346,6 +354,10 @@
     <Compile Include="Models\Group\IGroupModel.cs" />
     <Compile Include="Models\Group\PermissionsModel.cs" />
     <Compile Include="Models\Group\UsersModel.cs" />
+    <Compile Include="Models\Home\DatabaseState.cs" />
+    <Compile Include="Models\Home\ServiceState.cs" />
+    <Compile Include="Models\Home\ControllerState.cs" />
+    <Compile Include="Models\Home\StateItem.cs" />
     <Compile Include="Models\Security\BusinessFunction.cs" />
     <Compile Include="Models\Security\BusinessFunctionsModel.cs" />
     <Compile Include="Models\Security\GroupType.cs" />
@@ -432,6 +444,7 @@
     <Compile Include="Utils\SelectItemListEx.cs" />
     <Compile Include="Utils\SerializationEx.cs" />
     <Compile Include="Utils\SessionEx.cs" />
+    <Compile Include="Utils\SiteConstants.cs" />
     <Compile Include="Utils\StringEx.cs" />
     <Compile Include="Utils\TimeSpanExtensions.cs" />
     <Compile Include="Utils\VersionUtils.cs" />
@@ -584,6 +597,8 @@
     <Content Include="Views\Security\BusinessFunctions.cshtml" />
     <Content Include="Views\Security\GroupTypes.cshtml" />
     <Content Include="Views\Controller\Documentation.cshtml" />
+    <Content Include="Views\Shared\_BatchStates.cshtml" />
+    <Content Include="Views\Shared\_StateItems.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />
