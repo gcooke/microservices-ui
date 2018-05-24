@@ -5,6 +5,22 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="GatewayModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="BatchStats">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CorrelationId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="MessageVersion" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="CompressionType" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Data" Type="varbinary(max)" Nullable="false" />
+          <Property Name="StartTime" Type="datetime" Nullable="false" />
+          <Property Name="EndTime" Type="datetime" Nullable="false" />
+          <Property Name="Site" Type="nvarchar" MaxLength="100" />
+          <Property Name="ValuationDate" Type="datetime" />
+          <Property Name="Controller" Type="varchar" MaxLength="50" />
+          <Property Name="ControllerVersion" Type="varchar" MaxLength="50" />
+        </EntityType>
         <EntityType Name="Controller">
           <Key>
             <PropertyRef Name="Id" />
@@ -158,6 +174,7 @@
         <Function Name="spGetChildRequests" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="correlationId" Type="uniqueidentifier" Mode="In" />
         </Function>
+        <Function Name="spGetControllerStates" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="spGetPayloads" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CorrelationId" Type="uniqueidentifier" Mode="In" />
         </Function>
@@ -201,6 +218,7 @@
           <Parameter Name="Start" Type="datetime" Mode="In" />
         </Function>
         <EntityContainer Name="GatewayModelStoreContainer">
+          <EntitySet Name="BatchStats" EntityType="Self.BatchStats" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Controller" EntityType="Self.Controller" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Link" EntityType="Self.Link" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Payload" EntityType="Self.Payload" Schema="dbo" store:Type="Tables" />
@@ -359,10 +377,12 @@
             <Parameter Name="User" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="spGetUserReport" ReturnType="Collection(GatewayModel.spGetUserReport_Result)">
-            <Parameter Name="Start" Mode="In" Type="DateTime" />
+          <Parameter Name="Start" Mode="In" Type="DateTime" />
           </FunctionImport>
           <EntitySet Name="StatusChanges" EntityType="GatewayModel.StatusChange" />
           <EntitySet Name="Links" EntityType="GatewayModel.Link" />
+          <FunctionImport Name="spGetControllerStates" ReturnType="Collection(GatewayModel.spGetControllerStates_Result)" />
+          <EntitySet Name="BatchStats" EntityType="GatewayModel.BatchStat" />
         </EntityContainer>
         <ComplexType Name="spGetRequestStats_Result">
           <Property Type="DateTime" Name="Date" Nullable="true" />
@@ -591,6 +611,28 @@
           <Property Type="Int32" Name="Count" Nullable="true" />
           <Property Type="String" Name="Groups" Nullable="true" MaxLength="500" />
         </ComplexType>
+        <ComplexType Name="spGetControllerStates_Result">
+          <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
+          <Property Type="DateTime" Name="MaxStart" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="MaxEnd" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="Complete" Nullable="false" />
+        </ComplexType>
+        <EntityType Name="BatchStat">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CorrelationId" Type="Guid" Nullable="false" />
+          <Property Name="MessageVersion" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CompressionType" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Data" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
+          <Property Name="StartTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EndTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Site" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ValuationDate" Type="DateTime" Precision="3" />
+          <Property Name="Controller" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ControllerVersion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -933,6 +975,33 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetControllerStates" FunctionName="GatewayModel.Store.spGetControllerStates">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GatewayModel.spGetControllerStates_Result">
+                <ScalarProperty Name="Controller" ColumnName="Controller" />
+                <ScalarProperty Name="MaxStart" ColumnName="MaxStart" />
+                <ScalarProperty Name="MaxEnd" ColumnName="MaxEnd" />
+                <ScalarProperty Name="Complete" ColumnName="Complete" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="BatchStats">
+            <EntityTypeMapping TypeName="GatewayModel.BatchStat">
+              <MappingFragment StoreEntitySet="BatchStats">
+                <ScalarProperty Name="ControllerVersion" ColumnName="ControllerVersion" />
+                <ScalarProperty Name="Controller" ColumnName="Controller" />
+                <ScalarProperty Name="ValuationDate" ColumnName="ValuationDate" />
+                <ScalarProperty Name="Site" ColumnName="Site" />
+                <ScalarProperty Name="EndTime" ColumnName="EndTime" />
+                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
+                <ScalarProperty Name="Data" ColumnName="Data" />
+                <ScalarProperty Name="CompressionType" ColumnName="CompressionType" />
+                <ScalarProperty Name="MessageVersion" ColumnName="MessageVersion" />
+                <ScalarProperty Name="CorrelationId" ColumnName="CorrelationId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

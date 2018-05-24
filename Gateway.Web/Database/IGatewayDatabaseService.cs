@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Controllers;
+using Gateway.Web.Models.Home;
 using Gateway.Web.Models.Request;
 using Gateway.Web.Models.Security;
 using QueueChartModel = Gateway.Web.Models.Controller.QueueChartModel;
@@ -64,6 +65,8 @@ namespace Gateway.Web.Database
 
         IEnumerable<Status> GetVersionStatuses();
 
+        IEnumerable<ControllerState> GetControllerStates();
+
         IEnumerable<string> GetVersions(string controllerName);
 
         IEnumerable<string> GetActiveVersions(string controllerName);
@@ -72,5 +75,6 @@ namespace Gateway.Web.Database
 
         bool HasStatusChanged(string controller, string version, string status, string alias);
 
+        List<ExtendedBatchSummary> GetBatchSummaryStats(DateTime @from, DateTime to);
     }
 }

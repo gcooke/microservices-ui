@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.IO.Compression;
 using System.Text;
 using Bagl.Cib.MSF.Contracts.Compression;
 using Bagl.Cib.MSF.Contracts.Converters;
@@ -30,6 +32,25 @@ namespace Gateway.Web.Utils
             catch
             {
                 return compressedText;
+            }
+        }
+
+        public static string GetUncompressedString(this byte[] compressed)
+        {
+            var gzBuffer = compressed;
+            using (var ms = new MemoryStream())
+            {
+                var msgLength = BitConverter.ToInt32(gzBuffer, 0);
+                ms.Write(gzBuffer, 4, gzBuffer.Length - 4);
+
+                var buffer = new byte[msgLength];
+                ms.Position = 0;
+                using (var zip = new GZipStream(ms, CompressionMode.Decompress))
+                {
+                    zip.Read(buffer, 0, buffer.Length);
+                }
+
+                return Encoding.UTF8.GetString(buffer);
             }
         }
 

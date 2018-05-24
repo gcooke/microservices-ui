@@ -32,6 +32,29 @@ i, cite, em, var, address, dfn {
     font-size: 13px;
 }
 
+.state_unknown {
+    padding: 0 5px;
+    color: #C0C0C0;
+}
+
+.state_okay {
+    padding: 0 5px;
+    color: #05B505;
+}
+
+.state_warn {
+    margin: 0 2px;
+    padding: 0 5px;
+    color: #FFFFFF;
+    background-color: #FF8E08
+}
+
+.state_fail {
+    margin: 0 2px;
+    padding: 0 5px;
+    color: #FFFFFF;
+    background-color: #EF1C21
+}
 
 .avatar {
     margin-top: 2px;

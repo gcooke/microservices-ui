@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Bagl.Cib.MIT.Logging;
 using Gateway.Web.Authorization;
 using Gateway.Web.Database;
 using Gateway.Web.Models.Home;
-using Gateway.Web.Services;
 using Gateway.Web.Utils;
-using Controller = System.Web.Mvc.Controller;
 
 namespace Gateway.Web.Controllers
 {
@@ -23,7 +22,7 @@ namespace Gateway.Web.Controllers
             _dataService = dataService;
         }
 
-        public ActionResult Index(string sortOrder)
+        public async Task<ActionResult> Index(string sortOrder)
         {
             if (string.IsNullOrEmpty(sortOrder))
             {
@@ -36,12 +35,30 @@ namespace Gateway.Web.Controllers
             ViewBag.Controller = "Home";
             ViewBag.Action = "Index";
 
-            var items = _dataService.GetRecentRequests(DateTime.Today.AddDays(-1));
+            var helper = new BatchHelper(_dataService);
+            var reportDate = helper.GetPreviousWorkday();
+            var batches = await helper.GetRiskBatchReportModel(reportDate);
 
-            var model = new IndexModel();
-            model.Requests.AddRange(items.Take(10), sortOrder);
-            model.Requests.SetRelativePercentages();
-            return View(model);
+            var model = new IndexModel();            
+            model.Controllers.AddRange(_dataService.GetControllerStates());
+            model.Services.AddRange(GetServiceState());
+            model.Databases.AddRange(GetDatabaseState());
+            model.Batches.AddRange(batches.Items);            
+            return View("Index", model);
+        }
+        
+        public IEnumerable<ServiceState> GetServiceState()
+        {
+            yield return new ServiceState("Gateway (003)", DateTime.Now, StateItemState.Unknown, "Unknown");
+            yield return new ServiceState("Gateway (144)", DateTime.Now, StateItemState.Unknown, "Unknown");
+            yield return new ServiceState("ScalingService (144)", DateTime.Now, StateItemState.Unknown, "Unknown");
+            yield return new ServiceState("Redis (144)", DateTime.Now, StateItemState.Unknown, "Unknown");
+        }
+
+        public IEnumerable<DatabaseState> GetDatabaseState()
+        {
+            yield return new DatabaseState("Gateway", DateTime.Now, StateItemState.Unknown, "Unknown");
+            yield return new DatabaseState("PnRFO", DateTime.Now, StateItemState.Unknown, "Unknown");
         }
 
         public ActionResult About()

@@ -1,0 +1,13 @@
+﻿@using Gateway.Web.Database
+@using Gateway.Web.Models.Controller
+@using Gateway.Web.Models.Home
+@model List<Gateway.Web.Database.RiskBatchGroup>
+
+@foreach (var site in Model)
+{
+    <b>@site.Name</b>
+
+    <div style="padding-left: 10px">
+        @{ Html.RenderPartial("_StateItems", site.Items); }
+    </div>
+}
