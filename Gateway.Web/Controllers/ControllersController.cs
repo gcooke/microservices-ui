@@ -259,19 +259,21 @@ namespace Gateway.Web.Controllers
         [HttpGet]
         public JsonResult CurrentQueueData(string[] controllers)
         {
+            var start = DateTime.Now.AddMinutes(-1);
             var data = controllers != null && controllers.Any()
-                ? _dataService.GetCurrentControllerQueueSize(DateTime.Now, controllers.ToList())
-                : _dataService.GetCurrentControllerQueueSize(DateTime.Now);
-
-            return Json(data.All(x => x.Value == 0) ? new Dictionary<string, int>() : data, JsonRequestBehavior.AllowGet);
+                ? _dataService.GetQueueChartModel(start, controllers.ToList())
+                : _dataService.GetQueueChartModel(start);
+            
+            return Json(data.Data, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]
         public JsonResult HistoricalQueueData(string[] controllers)
         {
+            var start = DateTime.Now.AddDays(-1);
             var data = controllers != null && controllers.Any()
-                ? _dataService.GetHistoricalControllerQueueSizes(DateTime.Now, controllers.ToList())
-                : _dataService.GetHistoricalControllerQueueSizes(DateTime.Now);
+                ? _dataService.GetQueueChartModel(start, controllers.ToList())
+                : _dataService.GetQueueChartModel(start);
 
             return Json(data, JsonRequestBehavior.AllowGet);
         }

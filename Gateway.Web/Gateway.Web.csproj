@@ -247,6 +247,7 @@
     </Compile>
     <Compile Include="Database\ExtendedBatchSummary.cs" />
     <Compile Include="Database\GatewayDatabaseService.cs" />
+    <Compile Include="Database\HistoricalSummary.cs" />
     <Compile Include="Database\IGatewayDatabaseService.cs" />
     <Compile Include="Database\Link.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
@@ -255,9 +256,6 @@
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\PayloadData.cs" />
-    <Compile Include="Database\QueueSize.cs">
-      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
-    </Compile>
     <Compile Include="Database\RequestChange.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
@@ -287,6 +285,9 @@
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\spGetRequestChildSummary_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\spGetRequestCounts_Result.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\spGetRequestStatsAll_Result.cs">
@@ -358,6 +359,7 @@
     <Compile Include="Models\Home\ServiceState.cs" />
     <Compile Include="Models\Home\ControllerState.cs" />
     <Compile Include="Models\Home\StateItem.cs" />
+    <Compile Include="Models\Request\RequestCount.cs" />
     <Compile Include="Models\Security\BusinessFunction.cs" />
     <Compile Include="Models\Security\BusinessFunctionsModel.cs" />
     <Compile Include="Models\Security\GroupType.cs" />
@@ -500,7 +502,9 @@
     <Content Include="Content\js\bootstrap.js" />
     <Content Include="Content\js\bootstrap.min.js" />
     <Content Include="appsettings.config" />
-    <Content Include="connectionstrings.config" />
+    <Content Include="connectionstrings.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />

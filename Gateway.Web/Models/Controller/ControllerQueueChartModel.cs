@@ -42,7 +42,7 @@ namespace Gateway.Web.Models.Controller
     {
         public IDictionary<string, int[]> Data { get; set; }
 
-        public QueueChartModel(IList<QueueSizeModel> data)
+        public QueueChartModel(IEnumerable<QueueSizeModel> data)
         {
             Data = new Dictionary<string, int[]>();
 

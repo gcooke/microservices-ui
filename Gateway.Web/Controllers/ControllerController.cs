@@ -28,7 +28,7 @@ namespace Gateway.Web.Controllers
         public ControllerController(
             IGatewayDatabaseService dataService,
             IGatewayService gateway,
-            IGatewayRestService gatewayRestService, 
+            IGatewayRestService gatewayRestService,
             ILoggingService loggingService,
             ISystemInformation information)
             : base(loggingService)
@@ -117,7 +117,7 @@ namespace Gateway.Web.Controllers
         public ActionResult Generate(string id, string version)
         {
             var result = _gateway.GenerateDocumentation(id, version);
-            return Redirect("~/Controller/Documentation/"+id);
+            return Redirect("~/Controller/Documentation/" + id);
         }
 
 
@@ -126,8 +126,8 @@ namespace Gateway.Web.Controllers
             if (type.ToLower() != "api" && type.ToLower() != "excel")
                 type = "api";
 
-            var documentationPath = string.Format(type.ToLower() == "excel" ? 
-                _information.GetSetting("ExcelDocumentationPath") : 
+            var documentationPath = string.Format(type.ToLower() == "excel" ?
+                _information.GetSetting("ExcelDocumentationPath") :
                 _information.GetSetting("ApiDocumentationPath"), id, version);
 
             var documentationDir = new DirectoryInfo(documentationPath);
@@ -277,9 +277,8 @@ namespace Gateway.Web.Controllers
         [HttpGet]
         public JsonResult GetHistoricalQueueData(string controllerName, string[] versions)
         {
-            var data = versions != null && versions.Any()
-                ? _dataService.GetHistoricalControllerVersionQueueSizes(DateTime.Now, controllerName.ToLower(), versions)
-                : _dataService.GetHistoricalControllerVersionQueueSizes(DateTime.Now, controllerName.ToLower());
+            var start = DateTime.Now.AddDays(-1);
+            var data = _dataService.GetQueueChartModel(start, new List<string>(new[] { controllerName }));
 
             return Json(data, JsonRequestBehavior.AllowGet);
         }
@@ -287,13 +286,10 @@ namespace Gateway.Web.Controllers
         [HttpGet]
         public JsonResult GetLiveQueueData(DateTime startDateTime, DateTime? endDateTime, string controllerName, string[] versions)
         {
-            var data = versions != null && versions.Any()
-                ? _dataService.GetLiveControllerVersionQueueSizes(startDateTime, endDateTime, controllerName.ToLower(), versions)
-                : _dataService.GetLiveControllerVersionQueueSizes(startDateTime, endDateTime, controllerName.ToLower());
+            var start = DateTime.Now.AddMinutes(-1);
+            var data = _dataService.GetQueueChartModel(start, new List<string>(new[] { controllerName }));
 
-            return Json(data, JsonRequestBehavior.AllowGet);
+            return Json(data.Data, JsonRequestBehavior.AllowGet);
         }
-
-
     }
 }

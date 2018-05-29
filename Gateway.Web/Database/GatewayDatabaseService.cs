@@ -487,259 +487,18 @@ namespace Gateway.Web.Database
             }
         }
 
-        public IDictionary<string, int> GetCurrentControllerQueueSize(DateTime endDateTime, IList<string> controllers)
+        public QueueChartModel GetQueueChartModel(DateTime startDate)
         {
-            using (var database = new GatewayEntities())
-            {
-                var data = GetCurrentControllerQueueSize(database, endDateTime);
-
-                var selectedControllersSizes = from d in data
-                                               where controllers.Contains(d.Controller)
-                                               group d by d.Controller into g
-                                               select new
-                                               {
-                                                   Controller = g.Key,
-                                                   CurrentQueueCount = g.Sum(x => x.Count)
-                                               };
-
-                var otherControllersSizes = from d in data
-                                            where !controllers.Contains(d.Controller)
-                                            group d by 1 into g
-                                            select new
-                                            {
-                                                Controller = "other",
-                                                CurrentQueueCount = g.Sum(x => x.Count)
-                                            };
-
-                return selectedControllersSizes.Union(otherControllersSizes)
-                    .ToDictionary(p => p.Controller, p => p.CurrentQueueCount);
-            }
+            var model = GetHistoricalCounts(startDate);
+            return model.GetSummaryForAllControllers();
         }
 
-        public IDictionary<string, int> GetCurrentControllerQueueSize(DateTime endDateTime)
+        public QueueChartModel GetQueueChartModel(DateTime startDate, IList<string> controllers)
         {
-            using (var database = new GatewayEntities())
-            {
-                var data = GetCurrentControllerQueueSize(database, endDateTime).OrderByDescending(x => x.Count);
-
-                var selectedControllersSizes = from d in data.Take(5)
-                                               group d by d.Controller into g
-                                               select new
-                                               {
-                                                   Controller = g.Key,
-                                                   CurrentQueueCount = g.Sum(x => x.Count)
-                                               };
-
-                var otherControllersSizes = from d in data.Skip(5)
-                                            group d by 1 into g
-                                            select new
-                                            {
-                                                Controller = "other",
-                                                CurrentQueueCount = g.Sum(x => x.Count)
-                                            };
-
-                return selectedControllersSizes.Union(otherControllersSizes)
-                    .ToDictionary(p => p.Controller, p => p.CurrentQueueCount);
-            }
+            var model = GetHistoricalCounts(startDate);
+            return model.GetSummaryForSelectedControllers(controllers);
         }
-
-        private static IQueryable<ControllerVersionSummaryQueueSize> GetCurrentControllerQueueSize(GatewayEntities database, DateTime endDateTime)
-        {
-            var startTime = endDateTime.AddMinutes(-1);
-            return from qs in database.QueueSizes
-                   where qs.UpdateTime >= startTime && qs.UpdateTime < endDateTime
-                   group qs by new { qs.Controller, qs.Version } into g
-                   select new ControllerVersionSummaryQueueSize
-                   {
-                       Controller = g.Key.Controller,
-                       Version = g.Key.Version,
-                       Count = g.Max(x => x.ItemCount)
-                   };
-        }
-
-        public QueueChartModel GetHistoricalControllerQueueSizes(DateTime endDateTime)
-        {
-            using (var database = new GatewayEntities())
-            {
-                var startTime = endDateTime.AddHours(-24);
-                startTime = new DateTime(startTime.Year, startTime.Month, startTime.Day, startTime.Hour, 0, 0);
-
-                var query = from qs in database.QueueSizes
-                            where qs.UpdateTime >= startTime
-                            group qs by qs.Controller into g
-                            select new
-                            {
-                                Controller = g.Key,
-                                MaxItemCount = g.Max(x => x.ItemCount)
-                            };
-                var controllers = query.OrderByDescending(x => x.MaxItemCount).Take(5).Select(x => x.Controller).ToArray();
-                return GetHistoricalControllerQueueSizes(endDateTime, controllers);
-            }
-        }
-
-        public QueueChartModel GetHistoricalControllerQueueSizes(DateTime endDateTime, IList<string> controllers)
-        {
-            using (var database = new GatewayEntities())
-            {
-                var selectedControllers = GetHistoricalControllerQueueSizes(database, endDateTime, controllers.ToArray());
-                var otherControllers = GetHistoricalControllerQueueSizes(database, endDateTime, controllers.ToArray(), "other");
-
-                return new QueueChartModel(selectedControllers.Union(otherControllers).OrderBy(x => x.Time).ToList());
-            }
-        }
-
-        private static IQueryable<QueueSizeModel> GetHistoricalControllerQueueSizes(GatewayEntities database, DateTime endDateTime, string[] controllers, string versionLabel)
-        {
-            var startDateTime = endDateTime.AddHours(-24);
-            startDateTime = new DateTime(startDateTime.Year, startDateTime.Month, startDateTime.Day, startDateTime.Hour, 0, 0);
-            endDateTime = new DateTime(endDateTime.Year, endDateTime.Month, endDateTime.Day, endDateTime.Hour, 0, 0);
-
-            return from qs in database.QueueSizes
-                   where qs.UpdateTime >= startDateTime && qs.UpdateTime < endDateTime && controllers.Contains(qs.Controller)
-                   group qs by new
-                   {
-                       Time = DbFunctions.CreateDateTime(qs.UpdateTime.Year, qs.UpdateTime.Month, qs.UpdateTime.Day, qs.UpdateTime.Hour, 0, 0).Value
-                   } into g
-                   select new QueueSizeModel
-                   {
-                       Label = versionLabel,
-                       Time = g.Key.Time,
-                       Count = g.Max(x => x.ItemCount)
-                   };
-        }
-
-        private static IQueryable<QueueSizeModel> GetHistoricalControllerQueueSizes(GatewayEntities database, DateTime endDateTime, string[] controllers)
-        {
-            var startDateTime = endDateTime.AddHours(-24);
-            startDateTime = new DateTime(startDateTime.Year, startDateTime.Month, startDateTime.Day, startDateTime.Hour, 0, 0);
-            endDateTime = new DateTime(endDateTime.Year, endDateTime.Month, endDateTime.Day, endDateTime.Hour, 0, 0);
-
-            return from qs in database.QueueSizes
-                   where qs.UpdateTime >= startDateTime && qs.UpdateTime < endDateTime && controllers.Contains(qs.Controller)
-                   group qs by new
-                   {
-                       qs.Controller,
-                       Time = DbFunctions.CreateDateTime(qs.UpdateTime.Year, qs.UpdateTime.Month, qs.UpdateTime.Day, qs.UpdateTime.Hour, 0, 0).Value
-                   } into g
-                   select new QueueSizeModel
-                   {
-                       Label = g.Key.Controller,
-                       Time = g.Key.Time,
-                       Count = g.Max(x => x.ItemCount)
-                   };
-        }
-
-        public QueueChartModel GetHistoricalControllerVersionQueueSizes(DateTime endDateTime, string controller)
-        {
-            using (var database = new GatewayEntities())
-            {
-                var startTime = endDateTime.AddHours(-24);
-                startTime = new DateTime(startTime.Year, startTime.Month, startTime.Day, startTime.Hour, 0, 0);
-                var activeVersions = GetActiveVersions(controller);
-
-                var query = from qs in database.QueueSizes.Where(x => activeVersions.Contains(x.Version))
-                            where qs.Controller.ToLower() == controller.ToLower() && qs.UpdateTime >= startTime
-                            group qs by qs.Version into g
-                            select new
-                            {
-                                Version = g.Key,
-                                MaxItemCount = g.Max(x => x.ItemCount)
-                            };
-                var versions = query.OrderByDescending(x => x.MaxItemCount).Take(5).Select(x => x.Version).ToArray();
-                return GetHistoricalControllerVersionQueueSizes(endDateTime, controller, versions);
-            }
-        }
-
-        public QueueChartModel GetHistoricalControllerVersionQueueSizes(DateTime endDateTime, string controller, string[] versions)
-        {
-            using (var database = new GatewayEntities())
-            {
-                var startTime = endDateTime.AddHours(-24);
-                startTime = new DateTime(startTime.Year, startTime.Month, startTime.Day, startTime.Hour, 0, 0);
-
-                var selectedVersions = GetHistoricalControllerVersionQueueSizes(database, startTime, controller, versions);
-                var otherVersions = GetHistoricalControllerVersionQueueSizes(database, startTime, controller, versions, "other");
-
-                return new QueueChartModel(selectedVersions.Union(otherVersions).OrderBy(x => x.Time).ToList());
-            }
-        }
-
-        private static IQueryable<QueueSizeModel> GetHistoricalControllerVersionQueueSizes(GatewayEntities database, DateTime startTime, string controller, string[] versions)
-        {
-            return database.QueueSizes
-                .Where(qs => qs.Controller.ToLower() == controller.ToLower() && versions.Contains(qs.Version))
-                .GroupBy(qs => new
-                {
-                    qs.Version,
-                    Time = DbFunctions.CreateDateTime(qs.UpdateTime.Year, qs.UpdateTime.Month, qs.UpdateTime.Day, qs.UpdateTime.Hour, 0, 0).Value
-                })
-                .Where(qs => qs.Key.Time >= startTime)
-                .OrderByDescending(qs => qs.Key.Time)
-                .Select(qs => new QueueSizeModel
-                {
-                    Label = qs.Key.Version,
-                    Time = qs.Key.Time,
-                    Count = qs.Max(x => x.ItemCount)
-                });
-        }
-
-        private static IQueryable<QueueSizeModel> GetHistoricalControllerVersionQueueSizes(GatewayEntities database, DateTime startTime, string controller, string[] versions, string versionLabel)
-        {
-            return database.QueueSizes
-                .Where(qs => qs.Controller.ToLower() == controller.ToLower() && !versions.Contains(qs.Version))
-                .GroupBy(qs => new
-                {
-                    Time = DbFunctions.CreateDateTime(qs.UpdateTime.Year, qs.UpdateTime.Month, qs.UpdateTime.Day, qs.UpdateTime.Hour, 0, 0).Value
-                })
-                .Where(qs => qs.Key.Time >= startTime)
-                .OrderByDescending(qs => qs.Key.Time)
-                .Select(qs => new QueueSizeModel
-                {
-                    Label = versionLabel,
-                    Time = qs.Key.Time,
-                    Count = qs.Max(x => x.ItemCount)
-                });
-        }
-
-        public LiveQueueChartModel GetLiveControllerVersionQueueSizes(DateTime startDateTime, DateTime? endDateTime, string controllerName)
-        {
-            var activeVersions = GetActiveVersions(controllerName);
-            return GetLiveControllerVersionQueueSizes(startDateTime, endDateTime, controllerName, activeVersions.ToArray());
-        }
-
-        public LiveQueueChartModel GetLiveControllerVersionQueueSizes(DateTime startDateTime, DateTime? endDateTime, string controller, string[] versions)
-        {
-            using (var database = new GatewayEntities())
-            {
-                var selectedVersionsQuery = database.QueueSizes.Where(qs => qs.Controller.ToLower() == controller.ToLower() &&
-                                                            versions.Contains(qs.Version) &&
-                                                            qs.UpdateTime >= startDateTime &&
-                                                            qs.UpdateTime < endDateTime);
-
-                var otherVersionsQuery = database.QueueSizes.Where(qs => qs.Controller.ToLower() == controller.ToLower() &&
-                                                 !versions.Contains(qs.Version) &&
-                                                 qs.UpdateTime >= startDateTime &&
-                                                 qs.UpdateTime < endDateTime)
-                                             .GroupBy(x => x.UpdateTime);
-
-                var data = selectedVersionsQuery.Select(qs => new QueueSizeModel
-                {
-                    Time = qs.UpdateTime,
-                    Count = qs.ItemCount,
-                    Label = qs.Version
-                });
-
-                data = data.Union(otherVersionsQuery.Select(qs => new QueueSizeModel
-                {
-                    Time = qs.Key,
-                    Count = qs.Sum(x => x.ItemCount),
-                    Label = "other"
-                }));
-
-                return new LiveQueueChartModel(data.ToList());
-            }
-        }
-
+        
         public List<ExtendedBatchSummary> GetBatchSummaryStats(DateTime @from, DateTime to)
         {
             var results = new List<ExtendedBatchSummary>();
@@ -790,6 +549,17 @@ namespace Gateway.Web.Database
             }
         }
 
+        private HistoricalSummary GetHistoricalCounts(DateTime start)
+        {
+            using (var database = new GatewayEntities())
+            {
+                var results = database.spGetRequestCounts(start)
+                                      .Select(r => r.ToModel())
+                                      .ToArray();
+                return new HistoricalSummary(results);
+            }
+        }
+
         private string TransformCalculationName(string name)
         {
             if (name.ToLower() == "pv")
@@ -817,7 +587,7 @@ namespace Gateway.Web.Database
     internal class ControllerVersionSummaryQueueSize
     {
         public string Controller { get; set; }
-        public string Version { get; set; }
+        //public string Version { get; set; }
         public int Count { get; set; }
     }
 
