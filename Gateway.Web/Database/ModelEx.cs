@@ -40,13 +40,13 @@ namespace Gateway.Web.Database
             foreach (var item in items.Where(i => i.Complete == 0))
             {
                 name = item.Controller;
-                if (item.MaxStart.HasValue && firstFailure > item.MaxStart)
-                    firstFailure = item.MaxStart.Value;
+                if (item.MaxStart.HasValue && firstFailure > item.MaxStart.Value.ToLocalTime())
+                    firstFailure = item.MaxStart.Value.ToLocalTime();
             }
 
             var result = new Models.Home.ControllerState();
             result.Name = name;
-            result.Link = "Controller/History/" + name;
+            result.Link = "~/Controller/History/" + name;
             result.Time = firstFailure.ToString("dd MMM HH:mm");
             var diff = now - firstFailure;
             if (diff <= TimeSpan.Zero)
@@ -71,8 +71,8 @@ namespace Gateway.Web.Database
         {
             var result = new Models.Home.ControllerState();
             result.Name = item.Controller;
-            result.Link = "Controller/History/" + result.Name;
-            result.Time = item.MaxEnd?.ToString("dd MMM HH:mm");
+            result.Link = "~/Controller/History/" + result.Name;
+            result.Time = item.MaxEnd?.ToLocalTime().ToString("dd MMM HH:mm");
             TimeSpan diff = TimeSpan.Zero;
             if (item.MaxStart.HasValue && item.MaxEnd.HasValue)
             {
@@ -229,6 +229,15 @@ namespace Gateway.Web.Database
             result.Id = item.Id;
             result.Time = item.UpdateTimeUtc.ToLocalTime();
             result.Message = item.Status;
+            return result;
+        }
+
+        public static Models.Request.RequestCount ToModel(this spGetRequestCounts_Result item)
+        {
+            var result = new Models.Request.RequestCount();
+            result.Controller = item.Controller;
+            result.Count = item.Count.Value;
+            result.Hour = item.Hour.Value.ToLocalTime();
             return result;
         }
 

@@ -31,7 +31,6 @@ namespace Gateway.Web.Database
         public virtual DbSet<Request> Requests { get; set; }
         public virtual DbSet<Response> Responses { get; set; }
         public virtual DbSet<Version> Versions { get; set; }
-        public virtual DbSet<QueueSize> QueueSizes { get; set; }
         public virtual DbSet<Payload> Payloads { get; set; }
         public virtual DbSet<Status> Status { get; set; }
         public virtual DbSet<RequestChange> RequestChanges { get; set; }
@@ -183,6 +182,15 @@ namespace Gateway.Web.Database
         public virtual ObjectResult<spGetControllerStates_Result> spGetControllerStates()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetControllerStates_Result>("spGetControllerStates");
+        }
+    
+        public virtual ObjectResult<spGetRequestCounts_Result> spGetRequestCounts(Nullable<System.DateTime> start)
+        {
+            var startParameter = start.HasValue ?
+                new ObjectParameter("Start", start) :
+                new ObjectParameter("Start", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetRequestCounts_Result>("spGetRequestCounts", startParameter);
         }
     }
 }

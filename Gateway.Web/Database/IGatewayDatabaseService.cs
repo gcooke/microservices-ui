@@ -47,21 +47,17 @@ namespace Gateway.Web.Database
 
         ReportsModel GetUsage();
 
-        IDictionary<string, int> GetCurrentControllerQueueSize(DateTime endDateTime, IList<string> controllers);
+        QueueChartModel GetQueueChartModel(DateTime startDate);
 
-        IDictionary<string, int> GetCurrentControllerQueueSize(DateTime endDateTime);
+        QueueChartModel GetQueueChartModel(DateTime startDate, IList<string> controllers);
 
-        QueueChartModel GetHistoricalControllerQueueSizes(DateTime endDateTime);
+        //QueueChartModel GetQueueChartModel(DateTime endDateTime, string controller);
 
-        QueueChartModel GetHistoricalControllerQueueSizes(DateTime endDateTime, IList<string> controllers);
+        //QueueChartModel GetQueueChartModel(DateTime endDateTime, string controller, string[] versions);
 
-        QueueChartModel GetHistoricalControllerVersionQueueSizes(DateTime endDateTime, string controller);
+        //LiveQueueChartModel GetLiveControllerVersionQueueSizes(DateTime startDateTime, DateTime? endDateTime, string controllerName);
 
-        QueueChartModel GetHistoricalControllerVersionQueueSizes(DateTime endDateTime, string controller, string[] versions);
-
-        LiveQueueChartModel GetLiveControllerVersionQueueSizes(DateTime startDateTime, DateTime? endDateTime, string controllerName);
-
-        LiveQueueChartModel GetLiveControllerVersionQueueSizes(DateTime startDateTime, DateTime? endDateTime, string controller, string[] versions);
+        //LiveQueueChartModel GetLiveControllerVersionQueueSizes(DateTime startDateTime, DateTime? endDateTime, string controller, string[] versions);
 
         IEnumerable<Status> GetVersionStatuses();
 
