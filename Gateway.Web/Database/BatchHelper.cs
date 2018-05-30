@@ -223,6 +223,7 @@ namespace Gateway.Web.Database
             if (Resource != site) // i.e. sub-calc
             {
                 var siteBoundedByHyphens = Resource.IndexOf("-" + site + "-", StringComparison.CurrentCultureIgnoreCase);
+                var isNewFormatBatch = Resource.IndexOf("runriskbatch/", StringComparison.CurrentCultureIgnoreCase) >= 0;
                 if (siteBoundedByHyphens >= 0)
                 {
                     // [Type]-[Site]-[Date:yyyy-MM-dd]
@@ -231,6 +232,12 @@ namespace Gateway.Web.Database
                         Name = defaultQuotesName;
                     else
                         Name = displayName.ToPascalCase(true, CultureInfo.CurrentUICulture);
+                }
+                else if (isNewFormatBatch)
+                {
+                    var startIndex = Resource.IndexOf("/batch/", StringComparison.CurrentCultureIgnoreCase);
+                    var endIndex = Resource.IndexOf("/date", StringComparison.CurrentCultureIgnoreCase);
+                    Name = Resource.Substring(startIndex + 7, endIndex - startIndex - 7).Replace("_", " ");
                 }
                 else
                 {
@@ -241,7 +248,7 @@ namespace Gateway.Web.Database
             {
                 Name = Resource;
             }
-            
+
             Time = string.Format("{0:ddd HH:mm}-{1:ddd HH:mm}", Started, Completed);
         }
 
