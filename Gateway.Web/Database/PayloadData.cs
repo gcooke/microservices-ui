@@ -19,7 +19,7 @@ namespace Gateway.Web.Database
 
         public byte[] GetBytes()
         {
-            return Encoding.UTF8.GetBytes(LegacyCompession.DecodeLegacyObject(_model.Data, _model.PayloadType));
+            return Encoding.UTF8.GetBytes(LegacyCompession.DecodeObject(_model.Data, _model.PayloadType));
         }
 
         public byte[] GetCubeBytes()
