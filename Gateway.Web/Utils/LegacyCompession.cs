@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Text;
 using Bagl.Cib.MSF.Contracts.Compression;
 using Bagl.Cib.MSF.Contracts.Converters;
@@ -19,20 +20,13 @@ namespace Gateway.Web.Utils
             return Convert.ToBase64String(buffer.CompressByGZip());
         }
 
-        public static string DecompressByGZip(string compressedText)
+        public static string GzipUncompressFromBase64(string compressedText)
         {
             if (string.IsNullOrEmpty(compressedText))
                 return "";
 
-            try
-            {
-                var gzBuffer = Convert.FromBase64String(compressedText);
-                return Encoding.UTF8.GetString(gzBuffer.DecompressByGZip());
-            }
-            catch
-            {
-                return compressedText;
-            }
+            var gzBuffer = Convert.FromBase64String(compressedText);
+            return Encoding.UTF8.GetString(gzBuffer.DecompressByGZip());
         }
 
         public static string GetUncompressedString(this byte[] compressed)
@@ -54,31 +48,26 @@ namespace Gateway.Web.Utils
             }
         }
 
-        public static string DecodeLegacyObject(Byte[] encodedBytes, string type)
+        public static string DecodeObject(Byte[] encodedBytes, string type)
         {
-            string result;
-            try
+            if (IsGzipCompressed(encodedBytes))
             {
-                //New format
-                var payloadTypeValue = (PayloadType) Enum.Parse((typeof(PayloadType)), type);
+                var payloadTypeValue = (PayloadType)Enum.Parse((typeof(PayloadType)), type);
                 var converter = DefaultPayloadConverters.GetDefault(payloadTypeValue);
-
-                result = converter.ConvertForDisplay(encodedBytes);
-            }
-            catch
-            {
-                try
-                {
-                    //old format
-                    var x = Encoding.UTF8.GetString(encodedBytes);
-                    result = DecompressByGZip(x);
-                }
-                finally
-                {
-                }
+                return converter.ConvertForDisplay(encodedBytes);
             }
 
-            return result;
+            var text = Encoding.UTF8.GetString(encodedBytes);
+
+            return IsGzipCompressed(Encoding.UTF8.GetBytes(text)) ? GzipUncompressFromBase64(text) : text;
+        }
+
+        private static bool IsGzipCompressed(byte[] data)
+        {
+            var magicNumberBytes = data.Skip(4).Take(4).ToArray();
+            var magicNumber = BitConverter.ToInt32(magicNumberBytes, 0);
+            magicNumber &= 0x00FFFFFF;
+            return magicNumber == 0x00088B1F;
         }
     }
 }

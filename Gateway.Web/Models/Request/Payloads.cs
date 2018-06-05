@@ -73,7 +73,7 @@ namespace Gateway.Web.Models.Request
                     return;
                 }
 
-                Data = LegacyCompession.DecodeLegacyObject(data, payloadType);
+                Data = LegacyCompession.DecodeObject(data, payloadType);
             }
             catch (Exception ex)
             {
