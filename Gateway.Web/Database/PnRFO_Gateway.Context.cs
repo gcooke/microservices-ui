@@ -192,5 +192,14 @@ namespace Gateway.Web.Database
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetRequestCounts_Result>("spGetRequestCounts", startParameter);
         }
+    
+        public virtual ObjectResult<spGetIncompleteRequestCount_Result> spGetIncompleteRequestCount(Nullable<System.DateTime> time)
+        {
+            var timeParameter = time.HasValue ?
+                new ObjectParameter("time", time) :
+                new ObjectParameter("time", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetIncompleteRequestCount_Result>("spGetIncompleteRequestCount", timeParameter);
+        }
     }
 }

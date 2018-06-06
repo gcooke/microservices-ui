@@ -1,0 +1,51 @@
+﻿@using Gateway.Web.Models.Controller
+@using Gateway.Web.Models.Home
+@model List<Gateway.Web.Models.Home.ControllerState>
+
+<table style="width: 100%; white-space: nowrap">
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @if (!string.IsNullOrEmpty(item.Link))
+                {                    
+                    <a class="hoverlink" href="@Url.Content((string)item.Link)">@item.Name 
+                        @if (item.IncompleteRequestCount > 0)
+                        {
+                            <span class="badge badge-danger">@item.IncompleteRequestCount</span>
+                        }
+                    </a>
+                }
+                else
+                {
+                    <div>
+                        @item.Name
+                        @if (item.IncompleteRequestCount > 0)
+                        {
+                            <span class="badge badge-danger">@item.IncompleteRequestCount</span>
+                        }
+                    </div>
+                }
+            </td>
+            <td style="text-align: right; color: #C0C0C0">@item.Time</td>
+            <td style="text-align: center; width: 30%">
+                @switch ((StateItemState)item.State)
+                {
+                    case StateItemState.Unknown:
+                        <div class="state_unknown">@item.Text</div>
+                        break;
+                    case StateItemState.Okay:
+                        <div class="state_okay">@item.Text</div>
+                        break;
+                    case StateItemState.Warn:
+                        <div class="state_warn">@item.Text</div>
+                        break;
+                    case StateItemState.Error:
+                        <div class="state_fail">@item.Text</div>
+                        break;
+                }
+            </td>
+        </tr>
+    }
+
+</table>
