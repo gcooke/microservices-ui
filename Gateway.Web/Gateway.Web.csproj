@@ -266,6 +266,9 @@
     <Compile Include="Database\spGetControllerStates_Result.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
+    <Compile Include="Database\spGetIncompleteRequestCount_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
     <Compile Include="Database\spGetPayloads_Result.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
@@ -603,6 +606,7 @@
     <Content Include="Views\Controller\Documentation.cshtml" />
     <Content Include="Views\Shared\_BatchStates.cshtml" />
     <Content Include="Views\Shared\_StateItems.cshtml" />
+    <Content Include="Views\Shared\_ControllerStateItems.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />

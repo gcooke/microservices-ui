@@ -400,9 +400,13 @@ namespace Gateway.Web.Database
             using (var database = new GatewayEntities())
             {
                 var items = database.spGetControllerStates();
+                var incompleteRequestCount = database.spGetIncompleteRequestCount(DateTime.UtcNow.AddHours(-1)).ToList();
                 foreach (var item in items.GroupBy(i => i.Controller))
                 {
-                    result.Add(item.ToArray().ToModel());
+                    var controllerState = item.ToArray().ToModel();
+                    var count = incompleteRequestCount.SingleOrDefault(x => x.Controller == controllerState.Name);
+                    controllerState.IncompleteRequestCount = count?.InCompleteRequests ?? 0;
+                    result.Add(controllerState);
                 }
             }
             return result;
