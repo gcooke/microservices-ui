@@ -25,8 +25,15 @@ namespace Gateway.Web.Utils
             if (string.IsNullOrEmpty(compressedText))
                 return "";
 
-            var gzBuffer = Convert.FromBase64String(compressedText);
-            return Encoding.UTF8.GetString(gzBuffer.DecompressByGZip());
+            try
+            {
+                var gzBuffer = Convert.FromBase64String(compressedText);
+                return Encoding.UTF8.GetString(gzBuffer.DecompressByGZip());
+            }
+            catch(Exception ex)
+            {
+                return compressedText;
+            }
         }
 
         public static string GetUncompressedString(this byte[] compressed)
@@ -58,8 +65,7 @@ namespace Gateway.Web.Utils
             }
 
             var text = Encoding.UTF8.GetString(encodedBytes);
-
-            return IsGzipCompressed(Encoding.UTF8.GetBytes(text)) ? GzipUncompressFromBase64(text) : text;
+            return GzipUncompressFromBase64(text);
         }
 
         private static bool IsGzipCompressed(byte[] data)
