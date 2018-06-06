@@ -162,6 +162,9 @@
           <Parameter Name="correlationId" Type="uniqueidentifier" Mode="In" />
         </Function>
         <Function Name="spGetControllerStates" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="spGetIncompleteRequestCount" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="time" Type="datetime" Mode="In" />
+        </Function>
         <Function Name="spGetPayloads" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CorrelationId" Type="uniqueidentifier" Mode="In" />
         </Function>
@@ -372,7 +375,10 @@
           <FunctionImport Name="spGetControllerStates" ReturnType="Collection(GatewayModel.spGetControllerStates_Result)" />
           <EntitySet Name="BatchStats" EntityType="GatewayModel.BatchStat" />
           <FunctionImport Name="spGetRequestCounts" ReturnType="Collection(GatewayModel.spGetRequestCounts_Result)">
-            <Parameter Name="Start" Mode="In" Type="DateTime" />
+          <Parameter Name="Start" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="spGetIncompleteRequestCount" ReturnType="Collection(GatewayModel.spGetIncompleteRequestCount_Result)">
+            <Parameter Name="time" Mode="In" Type="DateTime" />
           </FunctionImport>
         </EntityContainer>
         <ComplexType Name="spGetRequestStats_Result">
@@ -615,6 +621,10 @@
           <Property Type="DateTime" Name="Hour" Nullable="true" Precision="23" />
           <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
           <Property Type="Int32" Name="Count" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="spGetIncompleteRequestCount_Result">
+          <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="InCompleteRequests" Nullable="true" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -977,6 +987,14 @@
                 <ScalarProperty Name="Hour" ColumnName="Hour" />
                 <ScalarProperty Name="Controller" ColumnName="Controller" />
                 <ScalarProperty Name="Count" ColumnName="Count" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetIncompleteRequestCount" FunctionName="GatewayModel.Store.spGetIncompleteRequestCount">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GatewayModel.spGetIncompleteRequestCount_Result">
+                <ScalarProperty Name="Controller" ColumnName="Controller" />
+                <ScalarProperty Name="InCompleteRequests" ColumnName="InCompleteRequests" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
