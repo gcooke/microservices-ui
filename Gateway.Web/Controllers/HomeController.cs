@@ -43,7 +43,9 @@ namespace Gateway.Web.Controllers
             model.Controllers.AddRange(_dataService.GetControllerStates());
             model.Services.AddRange(GetServiceState());
             model.Databases.AddRange(GetDatabaseState());
-            model.Batches.AddRange(batches.Items);            
+            model.Batches.AddRange(batches.Items); 
+            
+            Response.AddHeader("Refresh", "60");
             return View("Index", model);
         }
         
