@@ -77,8 +77,7 @@ namespace Gateway.Web.Controllers
         [RoleBasedAuthorize(Roles = "Security.Modify")]
         public async Task<ActionResult> Cancel(string correlationId)
         {
-            await _gateway.CancelWorkItemAsync(correlationId);//.Wait();
-            // This is a crude approach to waiting for the audit to be written prior to refreshing the page.
+            await _gateway.CancelWorkItemAsync(correlationId);
             return Redirect("~/Request/Summary?correlationId=" + correlationId);
         }
 
@@ -86,7 +85,6 @@ namespace Gateway.Web.Controllers
         public async Task<ActionResult> Retry(string correlationId)
         {
             await _gateway.RetryWorkItemAsync(correlationId);
-            // This is a crude approach to waiting for the audit to be written prior to refreshing the page.
             return Redirect("~/Request/Summary?correlationId=" + correlationId);
         }
 
