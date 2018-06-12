@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -10,6 +11,7 @@ using System.Xml.Linq;
 using Bagl.Cib.MIT.IoC;
 using Bagl.Cib.MIT.Logging;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
+using Bagl.Cib.MSF.ClientAPI.Model;
 using Gateway.Web.Models.AddIn;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Controllers;
@@ -113,7 +115,7 @@ namespace Gateway.Web.Services
 
         public void ExpireWorkItem(string id)
         {
-            var result = Delete("health/queueitem/{0}", id);
+            var result = Delete($"health/queueitem/{id}");
             result.Wait(2000);
         }
 
@@ -1371,25 +1373,23 @@ namespace Gateway.Web.Services
             }
         }
 
-        private async Task Delete(string query, params string[] args)
+        private async Task Delete(string query)
         {
-            query = args != null && args.Length > 0 ? string.Format(query, args) : query;
+            var gateway = _gateways.FirstOrDefault();
 
-            foreach (var gateway in _gateways)
+            var url = string.Format("https://{0}:{1}/{2}", gateway, _port, query);
+
+            using (var client = new HttpClient(new HttpClientHandler
             {
-                var url = string.Format("http://{0}:{1}/{2}", gateway, _port, query);
-
-                using (var client = new HttpClient(new HttpClientHandler
-                {
-                    UseDefaultCredentials = true,
-                    AllowAutoRedirect = true
-                }))
-                {
-                    client.Timeout = _defaultRequestTimeout;
-                    var response = await client.DeleteAsync(url);
-                    response.EnsureSuccessStatusCode();
-                }
+                UseDefaultCredentials = true,
+                AllowAutoRedirect = true
+            }))
+            {
+                client.Timeout = _defaultRequestTimeout;
+                var response = await client.DeleteAsync(url);
+                response.EnsureSuccessStatusCode();
             }
+
         }
 
         private void PopulateAvailableSystems(PermissionsModel target)
@@ -1556,6 +1556,17 @@ namespace Gateway.Web.Services
 
             var xmlElement = serverResponse.Document.Descendants().First();
             return xmlElement.Deserialize<GatewayInfo>();
+        }
+
+        //Needs to be reworked. 
+        public async Task CancelWorkItemAsync(string correlationId)
+        {
+            await Delete($"worker/cancel/{correlationId}");
+        }
+
+        public async Task RetryWorkItemAsync(string correlationId)
+        {
+            await Delete($"worker/retry/{correlationId}");            
         }
 
         private class ServerResponse

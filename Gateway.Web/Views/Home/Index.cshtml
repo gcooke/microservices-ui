@@ -3,7 +3,32 @@
     ViewBag.Title = "Dashboard";
 }
 @model Gateway.Web.Models.Home.IndexModel
+@section scripts
+{
+    <script>
+        //define your time in second
+        var c = 600;
+        var t;
+        timedCount();
 
+        function timedCount() {
+
+            var value = c % 600;
+            
+            $('.progressBar').val(value);
+            
+            if (c <= 0) {
+                // stop
+            } else {
+                c = c - 1;
+                t = setTimeout(function () {
+                    timedCount();
+                },
+                    100);
+            }
+        }
+    </script>
+}
 <div class="row">
 
     <div class="container">
@@ -28,5 +53,8 @@
                 @{ Html.RenderPartial("_BatchStates", @Model.Batches); }
             </div>
         </div>
+                
+        <progress class="progressBar" max="600" value="600"></progress>
+
     </div>
 </div>
