@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Bagl.Cib.MIT.Logging;
 using Gateway.Web.Authorization;
@@ -74,13 +75,18 @@ namespace Gateway.Web.Controllers
         }
 
         [RoleBasedAuthorize(Roles = "Security.Modify")]
-        public ActionResult Cancel(string correlationId)
+        public async Task<ActionResult> Cancel(string correlationId)
         {
-            _gateway.ExpireWorkItem(correlationId);
-
+            await _gateway.CancelWorkItemAsync(correlationId);//.Wait();
             // This is a crude approach to waiting for the audit to be written prior to refreshing the page.
-            System.Threading.Thread.Sleep(2000);
+            return Redirect("~/Request/Summary?correlationId=" + correlationId);
+        }
 
+        [RoleBasedAuthorize(Roles = "Security.Modify")]
+        public async Task<ActionResult> Retry(string correlationId)
+        {
+            await _gateway.RetryWorkItemAsync(correlationId);
+            // This is a crude approach to waiting for the audit to be written prior to refreshing the page.
             return Redirect("~/Request/Summary?correlationId=" + correlationId);
         }
 
