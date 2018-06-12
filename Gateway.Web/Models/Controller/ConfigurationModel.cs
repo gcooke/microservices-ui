@@ -72,5 +72,10 @@ namespace Gateway.Web.Models.Controller
         [XmlElement]
         [Display(Name = "Description")]
         public string Description { get; set; }
+
+        [XmlElement]
+        [Display(Name = "Excluded Servers")]
+        [StringLength(1000, ErrorMessage = "List cannot be longer than 1000 characters.")]
+        public string ExcludedServers { get; set; }
     }
 }

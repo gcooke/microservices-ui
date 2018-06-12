@@ -179,6 +179,19 @@
             </div>
 
         </div>
+        
+        <div class="row">
+            <div class="col-md-3">
+                @Html.LabelFor(m => m.ExcludedServers, new {@class = "control-label"})
+            </div>
+
+            <div class="col-md-3">
+                <div class="input-group">
+                    @Html.TextAreaFor(m => m.ExcludedServers, new {@name = "Excluded Servers" })
+                </div>
+            </div>
+
+        </div>
 
         <div class="row">
             <div class="col-md-3">

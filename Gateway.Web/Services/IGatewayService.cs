@@ -105,6 +105,7 @@ namespace Gateway.Web.Services
         string[] DeleteGroupSite(long id, long groupId);
 
         string[] InsertGroupSite(long groupId, long siteId);
+        Task RetryWorkItemAsync(string correlationId);
 
         Models.Group.AddInsModel GetGroupAddIns(long groupId);
 
@@ -178,5 +179,6 @@ namespace Gateway.Web.Services
         #endregion
 
         bool GenerateDocumentation(string id, string version);
+        Task CancelWorkItemAsync(string correlationId);
     }
 }
