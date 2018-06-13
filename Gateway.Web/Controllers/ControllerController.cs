@@ -10,10 +10,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Threading.Tasks;
 using Bagl.Cib.MIT.IoC;
 using Bagl.Cib.MIT.Logging;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
 using Gateway.Web.Authorization;
+using Microsoft.Practices.ObjectBuilder2;
 
 namespace Gateway.Web.Controllers
 {
@@ -198,9 +200,10 @@ namespace Gateway.Web.Controllers
             return Versions(controllerName, results);
         }
 
-        public ActionResult Workers(string id)
+        public async Task<ActionResult> Workers(string id)
         {
-            var model = _gateway.GetWorkers(id);
+            var model = new ServiceModel(id);
+            model.Services = await _gateway.GetWorkersAsync(id);
             return View(model);
         }
 

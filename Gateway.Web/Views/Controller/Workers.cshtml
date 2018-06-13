@@ -4,7 +4,7 @@
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
     ViewBag.Title = "Controller";
-    ViewBag.Current = "Workers";
+    ViewBag.Current = "Workers " + Model.Name;
 }
 @{ Html.RenderPartial("_ControllerNav", (BaseControllerModel)@Model); }
-@{ Html.RenderPartial("_WorkerItems", (WorkersModel)@Model); }
+@{ Html.RenderPartial("_ServiceItems", (ServiceModel)@Model); }

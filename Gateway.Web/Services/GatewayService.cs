@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -11,7 +10,6 @@ using System.Xml.Linq;
 using Bagl.Cib.MIT.IoC;
 using Bagl.Cib.MIT.Logging;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
-using Bagl.Cib.MSF.ClientAPI.Model;
 using Gateway.Web.Models.AddIn;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Controllers;
@@ -22,6 +20,8 @@ using Gateway.Web.Models.Security;
 using Gateway.Web.Models.Shared;
 using Gateway.Web.Models.User;
 using Gateway.Web.Utils;
+using Newtonsoft.Json;
+using StackExchange.Redis;
 using WebGrease.Css.Extensions;
 using ApplicationsModel = Gateway.Web.Models.Security.ApplicationsModel;
 using GroupsModel = Gateway.Web.Models.Security.GroupsModel;
@@ -41,6 +41,8 @@ namespace Gateway.Web.Services
         private readonly string[] _gateways;
         private readonly ILogger _logger;
         private readonly int _port = 7010;
+        private readonly HttpMessageHandler _handler;
+        private readonly Lazy<HttpClient> _defaultClient;
 
         public GatewayService(
             ISystemInformation information,
@@ -53,6 +55,19 @@ namespace Gateway.Web.Services
             _logger = loggingService.GetLogger(this);
             var gateways = information.GetSetting("KnownGateways", GetDefaultKnownGateways(information.EnvironmentName));
             _gateways = gateways.Split(';');
+
+            _defaultClient = new Lazy<HttpClient>(() =>
+            {
+                var handler = new HttpClientHandler
+                {
+                    UseDefaultCredentials = true,
+                    AllowAutoRedirect = true
+                };
+                var client = new HttpClient(handler);
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+                client.Timeout = _defaultRequestTimeout;
+                return client;
+            });
         }
 
         public ServersModel GetServers()
@@ -61,22 +76,18 @@ namespace Gateway.Web.Services
             return new ServersModel(gatewayInfo);
         }
 
-        public WorkersModel GetWorkers()
+        public async Task<List<ServiceInfoModel>> GetWorkersAsync()
         {
-            var gatewayInfo = GetGatewayInfo();
-            return new WorkersModel().BuildModel(gatewayInfo);
+            var gateway = _gateways.FirstOrDefault();
+            var model = await GetAsync(gateway, $"Worker/Controllers");
+            return JsonConvert.DeserializeObject<List<ServiceInfoModel>>(model);
         }
 
-        public WorkersModel GetWorkers(string controller)
+        public async Task<List<ServiceInfoModel>> GetWorkersAsync(string controller)
         {
-            var response = Fetch("health/info");
-
-            if (response == null || !response.Document.Descendants().Any())
-                return new WorkersModel(controller);
-
-            var xmlElement = response.Document.Descendants().First();
-            var gatewayInfo = xmlElement.Deserialize<GatewayInfo>();
-            return new WorkersModel(controller).BuildModel(gatewayInfo);
+            var gateway = _gateways.FirstOrDefault();
+            var model = await GetAsync(gateway, $"Worker/Controller/{controller}");
+            return JsonConvert.DeserializeObject<List<ServiceInfoModel>>(model);
         }
 
         public IEnumerable<QueueModel> GetCurrentQueues(string controller)
@@ -1373,6 +1384,21 @@ namespace Gateway.Web.Services
             }
         }
 
+        public async Task<string> GetAsync(string gateway, string query)
+        {
+            var uri = $"https://{gateway}:{_port}/{query}";
+            var client = _defaultClient.Value;
+            using (var response = await client.GetAsync(uri))
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    return null;
+                }
+
+                return await response.Content.ReadAsStringAsync();
+            }
+        }
+
         private async Task Delete(string query)
         {
             var gateway = _gateways.FirstOrDefault();
@@ -1567,6 +1593,21 @@ namespace Gateway.Web.Services
         public async Task RetryWorkItemAsync(string correlationId)
         {
             await Delete($"worker/retry/{correlationId}");            
+        }
+
+        public async Task DeleteWorkersAsync()
+        {
+            await Delete($"worker/kill/all");
+        }
+
+        public async Task DeleteWorkersAsync(string controller)
+        {
+            await Delete($"worker/kill/{controller}");
+        }
+
+        public async Task DeleteWorkerAsync(string controller, string version, string pid)
+        {
+            await Delete($"worker/kill/{controller}/{version}/{pid}");
         }
 
         private class ServerResponse

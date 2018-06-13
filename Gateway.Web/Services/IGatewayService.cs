@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 using System.Xml.Linq;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
 using Gateway.Web.Models.AddIn;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Controllers;
 using Gateway.Web.Models.Group;
-using Gateway.Web.Models.Permission;
 using Gateway.Web.Models.Request;
 using Gateway.Web.Models.Security;
 using Gateway.Web.Models.Shared;
@@ -21,9 +19,9 @@ namespace Gateway.Web.Services
     {
         ServersModel GetServers();
 
-        WorkersModel GetWorkers();
+        Task<List<ServiceInfoModel>> GetWorkersAsync();
 
-        WorkersModel GetWorkers(string controller);
+        Task<List<ServiceInfoModel>> GetWorkersAsync(string controller);
 
         IEnumerable<QueueModel> GetCurrentQueues(string controller);
 
@@ -180,5 +178,10 @@ namespace Gateway.Web.Services
 
         bool GenerateDocumentation(string id, string version);
         Task CancelWorkItemAsync(string correlationId);
+
+        Task<string> GetAsync(string gateway, string query);
+        Task DeleteWorkersAsync();
+        Task DeleteWorkersAsync(string controller);
+        Task DeleteWorkerAsync(string controller, string version, string pid);
     }
 }
