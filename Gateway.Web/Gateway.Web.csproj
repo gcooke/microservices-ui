@@ -349,6 +349,8 @@
     <Compile Include="Models\Controller\HistoryModel.cs" />
     <Compile Include="Models\Controller\QueueModel.cs" />
     <Compile Include="Models\Controller\QueuesModel.cs" />
+    <Compile Include="Models\Controller\ServiceModel.cs" />
+    <Compile Include="Models\Controller\ServiceInfoModel.cs" />
     <Compile Include="Models\Group\AddInsModel.cs" />
     <Compile Include="Models\Group\ADGroupsModel.cs" />
     <Compile Include="Models\Group\GroupActiveDirectory.cs" />
@@ -607,6 +609,8 @@
     <Content Include="Views\Shared\_BatchStates.cshtml" />
     <Content Include="Views\Shared\_StateItems.cshtml" />
     <Content Include="Views\Shared\_ControllerStateItems.cshtml" />
+    <Content Include="Views\Shared\_ServiceItems.cshtml" />
+    <Content Include="Views\Shared\_AllServiceItems.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />

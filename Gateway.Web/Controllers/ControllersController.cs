@@ -105,11 +105,10 @@ namespace Gateway.Web.Controllers
             return View(model);
         }
 
-        public ActionResult Workers()
+        public async Task<ActionResult> Workers()
         {
-            Response.AddHeader("Refresh", _refreshPeriodInSeconds.ToString());
-            var model = _gateway.GetWorkers();
-            TempData["Workers"] = model;
+            var model = new ServiceModel("");
+            model.Services = await _gateway.GetWorkersAsync();
             return View(model);
         }
 
@@ -168,8 +167,7 @@ namespace Gateway.Web.Controllers
         [RoleBasedAuthorize(Roles = "Security.Modify")]
         public ActionResult Versions(VersionsModel model)
         {
-            var response = _gatewayRestService.Delete("Catalogue", "versions/cleanup", string.Empty,
-                CancellationToken.None);
+            var response = _gatewayRestService.Delete("Catalogue", "versions/cleanup", string.Empty,CancellationToken.None);
 
             model.Success = response.Successfull;
             model.Log = response.Content.Message.Split('\n').ToList();
@@ -214,45 +212,23 @@ namespace Gateway.Web.Controllers
         }
 
         [RoleBasedAuthorize(Roles = "Security.Delete")]
-        public ActionResult KillAll()
+        public async Task<ActionResult> KillAll()
         {
-            var model = (WorkersModel)TempData["Workers"];
-            if (model == null) return RedirectToAction("Workers");
-
-            var workerProxies = model.Workers.SelectMany(item => item.WorkerInfos);
-            foreach (var item in workerProxies)
-            {
-                var query = string.Format("worker/{0}/{1}/{2}", item.Controller, item.Version, item.Pid);
-                _basicRestService.Delete(item.Node, query, new CancellationToken());
-            }
-
+            await _gateway.DeleteWorkersAsync();
             return RedirectToAction("Workers");
         }
 
         [RoleBasedAuthorize(Roles = "Security.Delete")]
-        public ActionResult KillWorkers(string name)
+        public async Task<ActionResult> KillWorkers(string controllername)
         {
-            var model = (WorkersModel)TempData["Workers"];
-            if (model == null) return RedirectToAction("Workers");
-
-            var controllerInfo = model.Workers.FirstOrDefault(i => i.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
-            if (controllerInfo == null) return RedirectToAction("Workers");
-
-            var workerProxies = controllerInfo.WorkerInfos;
-            foreach (var item in workerProxies)
-            {
-                var query = string.Format("worker/{0}/{1}/{2}", name, item.Version, item.Pid);
-                _basicRestService.Delete(item.Node, query, new CancellationToken());
-            }
-
+            await _gateway.DeleteWorkersAsync(controllername);
             return RedirectToAction("Workers");
         }
 
         [RoleBasedAuthorize(Roles = "Security.Delete")]
-        public ActionResult KillWorker(string name, string version, string node, string pid)
+        public async Task<ActionResult> KillWorker(string controllername, string version, string pid)
         {
-            var query = string.Format("worker/{0}/{1}/{2}", name, version, pid);
-            _basicRestService.Delete(node, query, new CancellationToken());
+            await _gateway.DeleteWorkerAsync(controllername, version,pid);
             return RedirectToAction("Workers");
         }
 
