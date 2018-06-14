@@ -1,0 +1,44 @@
+﻿@model Gateway.Web.Models.Controller.ServiceModel
+
+<div id="page-content-wrapper">
+    <h3 class="text-lowercase">
+        All Workers
+    </h3>
+    <br />
+    <div>
+        <div class="container-fluid alert alert-redstone">
+            <div class="col-sm-2 ">Controller</div>
+            <div class="col-sm-1 text-center">Version</div>
+            <div class="col-sm-2 text-center">Server</div>
+            <div class="col-sm-1 text-center">PID</div>
+            <div class="col-sm-1 text-center">Status</div>
+            <div class="col-sm-2 text-center">Last Updated</div>
+            <div class="col-sm-2 text-center">In Progress</div>
+            <div class="col-sm-offset-1">
+                <a href="~/Controllers/KillAll" title="Kill all workers" class="@(Model.Services != null ? "block" : "hidden")">
+                    <span class="btn btn-danger btn-xs glyphicon glyphicon-remove pull-right"></span>
+                </a>
+            </div>
+        </div>
+
+        @foreach (var item in @Model.Services)
+        {
+            <div class="container-fluid alert alert-success"
+                 style="padding: 5px; margin-top: 0.1em; margin-bottom: 0.1em;"
+                 role="alert">
+                <div class="col-sm-2 text-center">@item.Controller</div>
+                <div class="col-sm-1 text-center">@item.Version</div>
+                <div class="col-sm-2 text-center">@item.Server</div>
+                <div class="col-sm-1 text-center">@item.PID</div>
+                <div class="col-sm-1 text-center">@item.Status</div>
+                <div class="col-sm-2 text-center">@item.LastUpdate.AddHours(2)</div>
+                <div class="col-sm-2 text-center">@item.InProgressId</div>
+                <div class="col-sm-offset-1">
+                    <a href="~/Controllers/KillWorker/?controllername=@item.Controller&version=@item.Version&pid=@item.PID">
+                        <small class="btn btn-danger btn-xs glyphicon glyphicon-remove pull-right"></small>
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
