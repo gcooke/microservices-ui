@@ -100,6 +100,13 @@ namespace Gateway.Web.Controllers
             return File(data.GetCubeBytes(), "application/octet-stream", string.Format("Cube_{0}.dat", payloadId));
         }
 
+        public ActionResult ViewCube(string correlationId, long payloadId)
+        {
+            var data = _dataService.GetPayload(payloadId);
+            var model = new CubeModel(data);
+            return View("Cube", model);
+        }
+
         public ActionResult Timings(string id)
         {
             Guid correlationId;
