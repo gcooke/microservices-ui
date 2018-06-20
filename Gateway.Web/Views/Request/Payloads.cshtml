@@ -23,14 +23,18 @@
                 @payload.Direction
                 @if (payload.Id != 0)
                 {
-                    @Html.ActionLink(" ", "Download", "Request", new { correlationId = Model.CorrelationId, payloadId = payload.Id }, new { @class = "glyphicon glyphicon-download hoverlink", title = "Download converted payload" })
-                }
-                @if (payload.IsCube)
-                {
-                    @Html.ActionLink(" ", "DownloadCube", "Request", new { correlationId = Model.CorrelationId, payloadId = payload.Id }, new { @class = "glyphicon glyphicon-save hoverlink", title = "Download cube" })
+                    if (payload.IsCube)
+                    {
+                        @Html.ActionLink(" ", "DownloadCube", "Request", new { correlationId = Model.CorrelationId, payloadId = payload.Id }, new { @class = "glyphicon glyphicon-download hoverlink", title = "Download cube" })
+                        @Html.ActionLink(" ", "ViewCube", "Request", new { correlationId = Model.CorrelationId, payloadId = payload.Id }, new { @class = "glyphicon glyphicon-fullscreen hoverlink", title = "View cube", target="_blank" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink(" ", "Download", "Request", new { correlationId = Model.CorrelationId, payloadId = payload.Id }, new { @class = "glyphicon glyphicon-download hoverlink", title = "Download converted payload" })
+                    }
                 }
             </h4>
-            <pre style="height:280px">@payload.Data</pre>
+            <pre style="height: 280px; width:100%">@Html.Raw(@payload.Data)</pre>
             <br />
         }
     </div>

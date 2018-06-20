@@ -206,6 +206,7 @@ namespace Gateway.Web.Database
             Version = row.ControllerVersion;
             Site = site;
             State = StateItemState.Okay;
+            Link = "~/Request/Summary?correlationId=" + CorrelationId;
 
             if (row.Successfull)
             {

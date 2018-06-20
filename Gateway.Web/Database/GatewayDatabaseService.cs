@@ -502,7 +502,7 @@ namespace Gateway.Web.Database
             var model = GetHistoricalCounts(startDate);
             return model.GetSummaryForSelectedControllers(controllers);
         }
-        
+
         public List<ExtendedBatchSummary> GetBatchSummaryStats(DateTime @from, DateTime to)
         {
             var results = new List<ExtendedBatchSummary>();

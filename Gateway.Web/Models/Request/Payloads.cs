@@ -73,7 +73,14 @@ namespace Gateway.Web.Models.Request
                     return;
                 }
 
-                Data = LegacyCompession.DecodeObject(data, payloadType);
+                if (IsCube)
+                {
+                    Data = CubeBuilder.FromBytes(data).ToCsv().Replace(Environment.NewLine, "<br/>");
+                }
+                else
+                {
+                    Data = LegacyCompession.DecodeObject(data, payloadType);
+                }
             }
             catch (Exception ex)
             {

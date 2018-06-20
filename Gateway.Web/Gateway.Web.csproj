@@ -364,6 +364,7 @@
     <Compile Include="Models\Home\ServiceState.cs" />
     <Compile Include="Models\Home\ControllerState.cs" />
     <Compile Include="Models\Home\StateItem.cs" />
+    <Compile Include="Models\Request\CubeModel.cs" />
     <Compile Include="Models\Request\RequestCount.cs" />
     <Compile Include="Models\Security\BusinessFunction.cs" />
     <Compile Include="Models\Security\BusinessFunctionsModel.cs" />
@@ -611,6 +612,8 @@
     <Content Include="Views\Shared\_ControllerStateItems.cshtml" />
     <Content Include="Views\Shared\_ServiceItems.cshtml" />
     <Content Include="Views\Shared\_AllServiceItems.cshtml" />
+    <Content Include="Views\Request\Cube.cshtml" />
+    <Content Include="Views\Shared\_Layout.Empty.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />
