@@ -160,6 +160,11 @@ pre {
     /*word-wrap: break-word; /* Internet Explorer 5.5+ */
 }
 
+.logs {
+    font-family: "Courier New", monospace;
+    white-space: nowrap;        
+}
+
 .navbar-env {
     background-color: #343434;
     border: 0;

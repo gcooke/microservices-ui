@@ -365,6 +365,7 @@
     <Compile Include="Models\Home\ControllerState.cs" />
     <Compile Include="Models\Home\StateItem.cs" />
     <Compile Include="Models\Request\CubeModel.cs" />
+    <Compile Include="Models\Request\Logs.cs" />
     <Compile Include="Models\Request\RequestCount.cs" />
     <Compile Include="Models\Security\BusinessFunction.cs" />
     <Compile Include="Models\Security\BusinessFunctionsModel.cs" />
@@ -433,6 +434,8 @@
     <Compile Include="Services\GatewayService.cs" />
     <Compile Include="Services\IDifferentialDownloadService.cs" />
     <Compile Include="Services\IGatewayService.cs" />
+    <Compile Include="Services\ILogsService.cs" />
+    <Compile Include="Services\LogsService.cs" />
     <Compile Include="Services\ProcessInformation.cs" />
     <Compile Include="Services\QueueInformation.cs" />
     <Compile Include="Services\VersionUpdate.cs" />
@@ -614,6 +617,7 @@
     <Content Include="Views\Shared\_AllServiceItems.cshtml" />
     <Content Include="Views\Request\Cube.cshtml" />
     <Content Include="Views\Shared\_Layout.Empty.cshtml" />
+    <Content Include="Views\Request\Logs.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />

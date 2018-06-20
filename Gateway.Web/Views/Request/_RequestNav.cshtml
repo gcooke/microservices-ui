@@ -35,6 +35,12 @@
             </a>
         </li>
         <li>
+            <a href="~/Request/Logs?correlationId=@Model.CorrelationId"
+               class="@(ViewBag.Current == "Logs" ? "active" : "")">
+                <span class="glyphicon glyphicon-transfer"></span>&nbsp;&nbsp;Logs
+            </a>
+        </li>
+        <li>
             <a href="~/Request/Children?correlationId=@Model.CorrelationId"
                class="@(ViewBag.Current == "Children" ? "active" : "")">
                 <span class="glyphicon glyphicon-transfer"></span>&nbsp;&nbsp;Children

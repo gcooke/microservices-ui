@@ -32,6 +32,7 @@ namespace Gateway.Web
             information.RegisterType<IDifferentialDownloadService, DifferentialDownloadService>(Scope.Singleton);
             information.RegisterType<IAuthenticationProvider, AuthenticationProvider>(Scope.Singleton);
             information.RegisterType<IDateTimeProvider, DateTimeProvider>(Scope.Singleton);
+            information.RegisterType<ILogsService, LogsService>(Scope.Singleton);
         }
 
         private static void SetupLogging(ISystemInformation information)
