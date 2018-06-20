@@ -160,13 +160,6 @@ pre {
     /*word-wrap: break-word; /* Internet Explorer 5.5+ */
 }
 
-.foo {
-    display: block;
-    unicode-bidi: embed;
-    font-family: monospace;
-    white-space: pre;
-}
-
 .navbar-env {
     background-color: #343434;
     border: 0;
