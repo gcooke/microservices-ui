@@ -19,12 +19,14 @@ namespace Gateway.Web.Controllers
     {
         private readonly IGatewayDatabaseService _dataService;
         private readonly IGatewayService _gateway;
+        private readonly ILogsService _logsService;
 
-        public RequestController(IGatewayDatabaseService dataService, IGatewayService gateway, ILoggingService loggingService)
+        public RequestController(IGatewayDatabaseService dataService, IGatewayService gateway, ILogsService logsService, ILoggingService loggingService)
             : base(loggingService)
         {
             _dataService = dataService;
             _gateway = gateway;
+            _logsService = logsService;
         }
 
         public ActionResult Summary(string correlationId)
@@ -42,6 +44,12 @@ namespace Gateway.Web.Controllers
         public ActionResult Transitions(string correlationId)
         {
             var model = _dataService.GetRequestTransitions(correlationId);
+            return View(model);
+        }
+
+        public ActionResult Logs(string correlationId)
+        {
+            var model = _logsService.GetLogs(correlationId);
             return View(model);
         }
 

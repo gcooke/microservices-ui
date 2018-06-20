@@ -71,6 +71,7 @@ namespace Gateway.Web.Utils
         private static bool IsGzipCompressed(byte[] data)
         {
             var magicNumberBytes = data.Skip(4).Take(4).ToArray();
+            if (magicNumberBytes.Length <= 0) return false;
             var magicNumber = BitConverter.ToInt32(magicNumberBytes, 0);
             magicNumber &= 0x00FFFFFF;
             return magicNumber == 0x00088B1F;

@@ -1,0 +1,25 @@
+﻿@using Gateway.Web.Models.Request
+@model Logs
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "Request";
+    ViewBag.Current = "Logs";
+}
+@{ Html.RenderPartial("_RequestNav", (Logs)@Model); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+
+        <h3 class="text-lowercase">Logs</h3>
+        @foreach (var logItem in Model.Items)
+        {
+            <br />
+            <h4>@logItem.Title</h4>
+            <small>@logItem.Location</small>
+            <p>                
+                <div class="logs">@Html.Raw(@logItem.Content)</div>
+            </p>
+            <br />
+        }
+    </div>
+</div>
