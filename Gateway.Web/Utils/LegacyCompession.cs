@@ -20,19 +20,23 @@ namespace Gateway.Web.Utils
             return Convert.ToBase64String(buffer.CompressByGZip());
         }
 
-        public static string GzipUncompressFromBase64(string compressedText)
+        private static bool TryGzipUncompressFromBase64(string compressedText, Encoding finalEncoding, out string result)
         {
+            result = string.Empty;
             if (string.IsNullOrEmpty(compressedText))
-                return "";
+                return true;
 
             try
             {
                 var gzBuffer = Convert.FromBase64String(compressedText);
-                return Encoding.UTF8.GetString(gzBuffer.DecompressByGZip());
+                var bytes = gzBuffer.DecompressByGZip();
+                result = finalEncoding.GetString(bytes);
+                return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                return compressedText;
+                result = compressedText;
+                return false;
             }
         }
 
@@ -65,7 +69,13 @@ namespace Gateway.Web.Utils
             }
 
             var text = Encoding.UTF8.GetString(encodedBytes);
-            return GzipUncompressFromBase64(text);
+            string result;
+            if (TryGzipUncompressFromBase64(text, Encoding.Unicode, out result))
+                return result;
+            if (TryGzipUncompressFromBase64(text, Encoding.UTF8, out result))
+                return result;
+
+            return text;
         }
 
         private static bool IsGzipCompressed(byte[] data)

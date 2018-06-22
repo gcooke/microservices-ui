@@ -26,7 +26,12 @@
                     if (payload.IsCube)
                     {
                         @Html.ActionLink(" ", "DownloadCube", "Request", new { correlationId = Model.CorrelationId, payloadId = payload.Id }, new { @class = "glyphicon glyphicon-download hoverlink", title = "Download cube" })
-                        @Html.ActionLink(" ", "ViewCube", "Request", new { correlationId = Model.CorrelationId, payloadId = payload.Id }, new { @class = "glyphicon glyphicon-fullscreen hoverlink", title = "View cube", target="_blank" })
+                        @Html.ActionLink(" ", "ViewCube", "Request", new { correlationId = Model.CorrelationId, payloadId = payload.Id }, new { @class = "glyphicon glyphicon-fullscreen hoverlink", title = "View cube", target = "_blank" })
+                    }
+                    else if (payload.ContainsCubeResult)
+                    {
+                        @Html.ActionLink(" ", "Download", "Request", new { correlationId = Model.CorrelationId, payloadId = payload.Id }, new { @class = "glyphicon glyphicon-download hoverlink", title = "Download converted payload" })
+                        @Html.ActionLink(" ", "ExtractCube", "Request", new { correlationId = Model.CorrelationId, payloadId = payload.Id }, new { @class = "glyphicon glyphicon-fullscreen hoverlink", title = "View cube", target = "_blank" })
                     }
                     else
                     {
@@ -34,7 +39,14 @@
                     }
                 }
             </h4>
-            <pre style="height: 280px; width:100%">@Html.Raw(@payload.Data)</pre>
+            if (payload.IsCube)
+            {
+                <pre style="height: 280px; width: 100%">@Html.Raw(@payload.Data)</pre>
+            }
+            else
+            {
+                <pre style="height: 280px; width: 100%" class="prewrap">@payload.Data</pre>
+            }
             <br />
         }
     </div>

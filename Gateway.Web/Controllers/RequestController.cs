@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Xml.Linq;
+using Bagl.Cib.MIT.Cube;
 using Bagl.Cib.MIT.Logging;
 using Gateway.Web.Authorization;
 using Gateway.Web.Database;
@@ -112,6 +114,21 @@ namespace Gateway.Web.Controllers
         {
             var data = _dataService.GetPayload(payloadId);
             var model = new CubeModel(data);
+            return View("Cube", model);
+        }
+
+        public ActionResult ExtractCube(string correlationId, long payloadId)
+        {
+            var data = _dataService.GetPayload(payloadId);
+            var interim = new PayloadModel("na");
+            interim.SetData(data.Data, data.DataLengthBytes, data.CompressionType, data.PayloadType);
+
+            var element = XElement.Parse(interim.Data);
+            var result = element.Descendants().FirstOrDefault(d => d.Attribute("Property")?.Value == "cube");
+            var cubeData = result.Attribute("data").Value;
+            var cube = CubeBuilder.FromBytes(Convert.FromBase64String(cubeData));
+
+            var model = new CubeModel(cube);
             return View("Cube", model);
         }
 

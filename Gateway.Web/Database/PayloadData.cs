@@ -17,6 +17,12 @@ namespace Gateway.Web.Database
             _model = payload;
         }
 
+        public string Direction { get { return _model.Direction; } }
+        public string CompressionType { get { return _model.CompressionType; } }
+        public string PayloadType { get { return _model.PayloadType; } }
+        public byte[] Data { get { return _model.Data; } }
+        public long? DataLengthBytes { get { return _model.DataLengthBytes; }}
+
         public byte[] GetBytes()
         {
             return Encoding.UTF8.GetBytes(LegacyCompession.DecodeObject(_model.Data, _model.PayloadType));

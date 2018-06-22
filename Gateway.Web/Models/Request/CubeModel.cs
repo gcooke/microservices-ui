@@ -20,6 +20,13 @@ namespace Gateway.Web.Models.Request
             RenderRows();
         }
 
+        public CubeModel(ICube cube)
+        {
+            _cube = cube;
+            RenderAttributes();
+            RenderRows();
+        }
+
         public bool HasAttributes
         {
             get { return !string.IsNullOrEmpty(Attributes); }

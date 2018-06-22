@@ -53,13 +53,15 @@ namespace Gateway.Web.Models.Request
 
         public bool IsCube { get; set; }
 
+        public bool ContainsCubeResult { get; set; }
+
         public string Data { get; set; }
 
         public string Direction { get; set; }
 
         public bool IsLarge { get; set; }
 
-        private void SetData(byte[] data, long? lengthInBytes, string compressionType, string payloadType)
+        public void SetData(byte[] data, long? lengthInBytes, string compressionType, string payloadType)
         {
             try
             {
@@ -81,6 +83,9 @@ namespace Gateway.Web.Models.Request
                 {
                     Data = LegacyCompession.DecodeObject(data, payloadType);
                 }
+
+                if (Data?.Contains("<CubeResult") == true)
+                    ContainsCubeResult = true;
             }
             catch (Exception ex)
             {
