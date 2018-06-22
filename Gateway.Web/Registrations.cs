@@ -4,10 +4,12 @@ using Bagl.Cib.MIT.IO;
 using Bagl.Cib.MIT.IO.Impl;
 using Bagl.Cib.MIT.Logging;
 using Bagl.Cib.MIT.Logging.Impl;
+using Bagl.Cib.MIT.Redis;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
 using Bagl.Cib.MSF.ClientAPI.Provider;
 using Gateway.Web.Database;
 using Gateway.Web.Services;
+using StackExchange.Redis;
 
 namespace Gateway.Web
 {
@@ -33,6 +35,29 @@ namespace Gateway.Web
             information.RegisterType<IAuthenticationProvider, AuthenticationProvider>(Scope.Singleton);
             information.RegisterType<IDateTimeProvider, DateTimeProvider>(Scope.Singleton);
             information.RegisterType<ILogsService, LogsService>(Scope.Singleton);
+            information.RegisterType<IRedisConnectionProvider, RedisConnectionProvider>(Scope.Singleton);
+            RegisterRedisOptions(information);
+        }
+
+        private static void RegisterRedisOptions(ISystemInformation information)
+        {
+            var redisOptions = new ConfigurationOptions()
+            {
+                ClientName = AppDomain.CurrentDomain.FriendlyName,
+                EndPoints = { information.GetSetting("Redis.ConnectionStr", "localhost") },
+                ConnectTimeout = 20000,
+                SyncTimeout = 10000,
+                AllowAdmin = false,
+                DefaultDatabase = 0
+            };
+
+            var options = new RedisConfiguration()
+            {
+                RedisOptions = redisOptions,
+                DefaultExpiration = TimeSpan.FromMinutes(10)
+            };
+
+            information.RegisterInstance(options, Scope.Singleton);
         }
 
         private static void SetupLogging(ISystemInformation information)

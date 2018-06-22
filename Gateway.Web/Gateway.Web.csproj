@@ -60,6 +60,10 @@
       <HintPath>..\packages\Bagl.Cib.MIT.Logging.1.0.25\lib\net452\Bagl.Cib.MIT.Logging.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Bagl.Cib.MIT.RedisCore, Version=1.0.10.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bagl.Cib.MIT.Redis.1.0.10\lib\net452\Bagl.Cib.MIT.RedisCore.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Bagl.Cib.MIT.Scheduling, Version=1.0.8.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Bagl.Cib.MIT.Scheduling.1.0.8\lib\net452\Bagl.Cib.MIT.Scheduling.dll</HintPath>
       <Private>True</Private>
