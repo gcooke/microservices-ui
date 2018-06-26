@@ -132,6 +132,8 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.DirectoryServices.AccountManagement" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
@@ -436,6 +438,7 @@
     <Compile Include="Services\BasicRestService.cs" />
     <Compile Include="Services\DifferentialDownloadService.cs" />
     <Compile Include="Services\GatewayService.cs" />
+    <Compile Include="Services\IActiveDirectoryService.cs" />
     <Compile Include="Services\IDifferentialDownloadService.cs" />
     <Compile Include="Services\IGatewayService.cs" />
     <Compile Include="Services\ILogsService.cs" />
@@ -622,6 +625,7 @@
     <Content Include="Views\Request\Cube.cshtml" />
     <Content Include="Views\Shared\_Layout.Empty.cshtml" />
     <Content Include="Views\Request\Logs.cshtml" />
+    <Content Include="Views\Group\Cube.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />

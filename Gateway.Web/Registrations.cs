@@ -36,6 +36,7 @@ namespace Gateway.Web
             information.RegisterType<IDateTimeProvider, DateTimeProvider>(Scope.Singleton);
             information.RegisterType<ILogsService, LogsService>(Scope.Singleton);
             information.RegisterType<IRedisConnectionProvider, RedisConnectionProvider>(Scope.Singleton);
+            information.RegisterType<IActiveDirectoryService, ActiveDirectoryService>(Scope.Singleton);
             RegisterRedisOptions(information);
         }
 

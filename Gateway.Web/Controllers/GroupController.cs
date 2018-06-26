@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using Bagl.Cib.MIT.Cube;
 using Bagl.Cib.MIT.Logging;
 using Gateway.Web.Authorization;
 using Gateway.Web.Models.AddIn;
 using Gateway.Web.Models.Group;
+using Gateway.Web.Models.Request;
 using Gateway.Web.Models.Security;
 using Gateway.Web.Services;
 using Gateway.Web.Utils;
@@ -16,11 +18,13 @@ namespace Gateway.Web.Controllers
     public class GroupController : BaseController
     {
         private readonly IGatewayService _gateway;
+        private readonly IActiveDirectoryService _adService;
 
-        public GroupController(IGatewayService gateway, ILoggingService loggingService)
+        public GroupController(IGatewayService gateway, IActiveDirectoryService adService, ILoggingService loggingService)
             : base(loggingService)
         {
             _gateway = gateway;
+            _adService = adService;
         }
 
         public ActionResult Index()
@@ -172,7 +176,7 @@ namespace Gateway.Web.Controllers
                         ModelState.AddModelError("Remote", item);
                     }
             }
-            
+
             return Redirect(string.Format("~/Group/Details/{0}", groupId));
         }
 
@@ -480,6 +484,31 @@ namespace Gateway.Web.Controllers
 
 
         #endregion
+
+        public ActionResult ViewUsers(long groupId)
+        {
+            var group = _gateway.GetGroup(groupId);
+            var users = _gateway.GetGroupUsers(groupId);
+            var adgroups = _gateway.GetGroupADGroups(groupId);
+            var adUsers = _adService.GetUsers(adgroups);
+
+            var items = users.Items.Concat(adUsers.Items).OrderByDescending(u => u.FullName).Distinct();
+            var builder = new CubeBuilder();
+            builder.AddColumn("Name");
+            builder.AddColumn("Domain");
+            builder.AddColumn("Username");
+            var data = builder.Build();
+            foreach (var item in items.OrderBy(u => u.FullName))
+            {
+                data.AddRow(new[]
+                {
+                    item.FullName, item.Domain, item.Login
+                });
+            }
+
+            var model = new CubeModel(data, group.Name);
+            return View("Cube", model);
+        }
 
         [RoleBasedAuthorize(Roles = "Security.Delete")]
         public ActionResult RemovePermission(string id, string groupId)
