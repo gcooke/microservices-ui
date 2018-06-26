@@ -11,6 +11,7 @@ namespace Gateway.Web.Models.Request
 {
     public class CubeModel
     {
+        public string Header { get; }
         private readonly ICube _cube;
 
         public CubeModel(PayloadData data)
@@ -20,8 +21,9 @@ namespace Gateway.Web.Models.Request
             RenderRows();
         }
 
-        public CubeModel(ICube cube)
+        public CubeModel(ICube cube, string header = "Data")
         {
+            Header = header;
             _cube = cube;
             RenderAttributes();
             RenderRows();

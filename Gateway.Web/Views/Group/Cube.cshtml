@@ -1,0 +1,20 @@
+﻿@using Gateway.Web.Models.Request
+@model CubeModel
+@{
+    Layout = "~/Views/Shared/_Layout.Empty.cshtml";
+    ViewBag.Title = "Cube";
+}
+
+<div>
+
+    @if (Model.HasAttributes)
+    {
+        <h3>Attributes</h3>
+        @Html.Raw(@Model.Attributes)
+        <br />
+    }
+
+    <h3>@Model.Header</h3>
+    @Html.Raw(@Model.Rows)
+
+</div>

@@ -13,6 +13,14 @@
     <div class="hero-unit">
         <br />
         @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+        
+        <p>
+            <strong>Please Note:</strong>
+            users can have access without appearing in this list through Active Directory membership to groups. Click the link below to view all users (both manually configured and active directory users) that are a member of this group.
+        </p>
+        <p>@Html.ActionLink("All users report", "ViewUsers", "Group", new { groupId = Model.Id }, new { @class = "glyphicon glyphicon-fullscreen hoverlink", title = "View all users", target = "_blank" })</p>
+        
+        <br/>
 
         <div id="containerx bulk">
             <table style="white-space: nowrap" class="datatable table" id="searchable-table">
