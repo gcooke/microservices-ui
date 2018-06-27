@@ -39,13 +39,16 @@
                 <br />
                 <h3 class="text-lowercase">Databases</h3>
                 @{ Html.RenderPartial("_StateItems", @Model.Databases); }
+                <br/>
+                <h3 class="text-lowercase">Refresh</h3>
+                <progress class="progressBar" max="600" value="600"></progress>
             </div>
             <div class="col-sm-4">
-                <a href="@Url.Action("History", "Controllers")" class="hoverlink">
-                    <h3 class="text-lowercase">
+                <h3 class="text-lowercase">
+                    <a href="@Url.Action("History", "Controllers")" class="hoverlink" style="color: #990505">
                         Controllers
-                    </h3>
-                </a>
+                    </a>
+                </h3>
                 @{ Html.RenderPartial("_ControllerStateItems", @Model.Controllers); }
             </div>
             <div class="col-sm-4">
@@ -53,8 +56,7 @@
                 @{ Html.RenderPartial("_BatchStates", @Model.Batches); }
             </div>
         </div>
-                
-        <progress class="progressBar" max="600" value="600"></progress>
+       
 
     </div>
 </div>

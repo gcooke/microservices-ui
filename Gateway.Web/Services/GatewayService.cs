@@ -241,6 +241,7 @@ namespace Gateway.Web.Services
                     var element = response.Content.GetPayloadAsXElement();
                     var model = element.Deserialize<ReportsModel>();
                     model.Name = name;
+                    model.Tables.RemoveAll(t => t == null);
                     return model;
                 }
                 catch (Exception ex)
@@ -270,6 +271,7 @@ namespace Gateway.Web.Services
                         model.Name = name;
                         model.SupportsParameter = true;
                         model.Parameter = parameter;
+                        model.Tables.RemoveAll(t => t == null);
                         return model;
                     }
                     catch (Exception ex)

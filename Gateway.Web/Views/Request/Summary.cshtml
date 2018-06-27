@@ -5,6 +5,7 @@
 @using Gateway.Web.Utils
 @using Newtonsoft.Json
 @using Version = Gateway.Web.Models.Controller.Version
+@model Summary
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
     ViewBag.Title = "Request";
@@ -37,10 +38,10 @@
                 </td>
             </tr>
             <tr>
-                <td class="columnheader">Queue Time ms</td>
-                <td>@Model.QueueTimeMs</td>
-                <td class="columnheader">Time Taken ms</td>
-                <td>@Model.TimeTakenMs</td>
+                <td class="columnheader">Queue Time</td>
+                <td>@Model.QueueTimeFormatted</td>
+                <td class="columnheader">Time Taken</td>
+                <td>@Model.TimeTakenFormatted</td>
             </tr>
             <tr>
                 <td class="columnheader">User</td>

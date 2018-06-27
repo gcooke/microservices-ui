@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Gateway.Web.Utils;
 
 namespace Gateway.Web.Models.Request
 {
@@ -32,6 +33,14 @@ namespace Gateway.Web.Models.Request
         public DateTime UpdateTime { get; set; }
         public string Client { get; set; }
 
+        public string QueueTimeFormatted
+        {
+            get { return QueueTimeMs.FormatTimeTaken(true); }
+        }
+        public string TimeTakenFormatted
+        {
+            get { return TimeTakenMs.FormatTimeTaken(true); }
+        }
         public bool IsBusy
         {
             get { return EndUtc == DateTime.MinValue; }

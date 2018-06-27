@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Gateway.Web.Models.Home;
+using Gateway.Web.Utils;
 using RestSharp.Extensions;
 
 namespace Gateway.Web.Database
@@ -11,6 +12,7 @@ namespace Gateway.Web.Database
     public class BatchHelper
     {
         private const string AllCountries = "Botswana,Ghana,Kenya,Mauritius_IBD,Mauritius_Onshore,Mozambique,South_Africa,Seychelles,Tanzania,Tanzania_NBC,Uganda,Zambia";
+
         private readonly IGatewayDatabaseService _database;
 
         public BatchHelper(IGatewayDatabaseService database)
@@ -249,8 +251,9 @@ namespace Gateway.Web.Database
             {
                 Name = Resource;
             }
-
-            Time = string.Format("{0:ddd HH:mm}-{1:ddd HH:mm}", Started, Completed);
+            
+            //Time = string.Format("{0:ddd HH:mm}-{1:ddd HH:mm}", Started, Completed);
+            Time = string.Format("{0:ddd HH:mm} ({1})", Completed, FormatTimeTaken());
         }
 
         public Guid CorrelationId { get; private set; }
@@ -278,6 +281,11 @@ namespace Gateway.Web.Database
         }
         public long TimeTakenMs { get; private set; }
         public bool IsRerun { get; set; }
+
+        private string FormatTimeTaken()
+        {
+            return TimeTakenMs.FormatTimeTaken();
+        }
     }
 
 }
