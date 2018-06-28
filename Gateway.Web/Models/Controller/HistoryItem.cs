@@ -1,13 +1,10 @@
 ﻿using System;
+using Gateway.Web.Utils;
 
 namespace Gateway.Web.Models.Controller
 {
     public class HistoryItem
     {
-        private static TimeSpan Hour = TimeSpan.FromHours(1);
-        private static TimeSpan Minute = TimeSpan.FromMinutes(1);
-        private static TimeSpan Second = TimeSpan.FromSeconds(1);
-
         public Guid CorrelationId { get; set; }
         public long Id { get; set; }
         public string User { get; set; }
@@ -40,17 +37,7 @@ namespace Gateway.Web.Models.Controller
             {
                 if (TimeTakeMs.HasValue)
                 {
-                    var time = TimeSpan.FromMilliseconds(TimeTakeMs.Value);
-                    if (time > Hour)
-                        return string.Format("{0:N2} hours", time.TotalHours);
-
-                    if (time > Minute)
-                        return string.Format("{0:N2} mins", time.TotalMinutes);
-
-                    if (time > Second)
-                        return string.Format("{0:N2} secs", time.TotalSeconds);
-
-                    return string.Format("{0} ms", TimeTakeMs);
+                    return TimeTakeMs.Value.FormatTimeTaken();
                 }
                 return string.Empty;
             }

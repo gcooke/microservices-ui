@@ -3,11 +3,51 @@
 @using Gateway.Web.Models.Home
 @model List<Gateway.Web.Database.RiskBatchGroup>
 
-@foreach (var site in Model)
-{
-    <b>@site.Name</b>
 
-    <div style="padding-left: 10px">
-        @{ Html.RenderPartial("_StateItems", site.Items); }
-    </div>
-}
+<div style="padding-left: 10px">
+    <table style="width: 100%; white-space: nowrap">
+        @foreach (var site in Model)
+        {
+
+            <thead>
+                <tr>
+                    <td colspan="3"><b>@site.Name</b></td>
+                </tr>
+            </thead>
+
+            foreach (var item in site.Items)
+            {
+                <tr>
+                    <td>
+                        @if (!string.IsNullOrEmpty(item.Link))
+                        {
+                            <a class="hoverlink" href="@Url.Content((string) item.Link)">@item.Name</a>
+                        }
+                        else
+                        {
+                            <div>@item.Name</div>
+                        }
+                    </td>
+                    <td style="text-align: left; color: #C0C0C0; padding-left: 5px">@item.Time</td>
+                    <td style="text-align: center; width: 30%">
+                        @switch ((StateItemState)item.State)
+                        {
+                            case StateItemState.Unknown:
+                                <div class="state_unknown">@item.Text</div>
+                                break;
+                            case StateItemState.Okay:
+                                <div class="state_okay">@item.Text</div>
+                                break;
+                            case StateItemState.Warn:
+                                <div class="state_warn">@item.Text</div>
+                                break;
+                            case StateItemState.Error:
+                                <div class="state_fail">@item.Text</div>
+                                break;
+                        }
+                    </td>
+                </tr>
+            }
+        }
+    </table>
+</div>
