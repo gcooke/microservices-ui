@@ -23,6 +23,14 @@ namespace Gateway.Web.Utils
             return defaultValue;
         }
 
+        public static string MaxLength(this string input, int length)
+        {
+            var modifiedLength = length - 3;
+            if (string.IsNullOrEmpty(input)) return input;
+            if (input.Length <= modifiedLength) return input;
+            return input.Substring(0, modifiedLength) + "...";
+        }
+
         public static string AddWordspaces(this string input)
         {
             return new string(InsertSpacesBeforeCaps(input).ToArray()).Trim();
