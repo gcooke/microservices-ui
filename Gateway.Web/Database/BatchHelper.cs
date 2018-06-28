@@ -251,7 +251,15 @@ namespace Gateway.Web.Database
             {
                 Name = Resource;
             }
-            
+
+            if (Name.StartsWith(site, StringComparison.CurrentCultureIgnoreCase))
+                Name = Name.Substring(site.Length);
+            site = site.Replace("_", " ");
+            if (Name.StartsWith(site, StringComparison.CurrentCultureIgnoreCase))
+                Name = Name.Substring(site.Length);
+
+            Name = Name.MaxLength(30);
+
             //Time = string.Format("{0:ddd HH:mm}-{1:ddd HH:mm}", Started, Completed);
             Time = string.Format("{0:ddd HH:mm} ({1})", Completed, FormatTimeTaken());
         }
