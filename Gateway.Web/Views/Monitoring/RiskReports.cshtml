@@ -112,13 +112,13 @@
                                             }
                                             else if (report.TMinus2 != null && report.TMinus2.RowCount.HasValue)
                                             {
-                                                <a href="https://abcap-foutils-uat.intra.absa.co.za/Support/Request/Summary?correlationId=@report.TMinus2.CorrelationId">@report.TMinus2.RowCount</a>
+                                                <a href="/Request/Summary?correlationId=@report.TMinus2.CorrelationId">@report.TMinus2.RowCount</a>
                                                 <br/>
                                                 @report.TMinus2.Timing
                                             }
                                             else if (!string.IsNullOrWhiteSpace(report.TMinus2.CorrelationId))
                                             {
-                                                <a href="https://abcap-foutils-uat.intra.absa.co.za/Support/Request/Summary?correlationId=@report.TMinus2.CorrelationId">
+                                                <a href="/Request/Summary?correlationId=@report.TMinus2.CorrelationId">
                                                     ERROR
                                                 </a>
                                             }
@@ -134,13 +134,13 @@
                                             }
                                             else if (report.TMinus1 != null && report.TMinus1.RowCount.HasValue)
                                             {
-                                                <a href="https://abcap-foutils-uat.intra.absa.co.za/Support/Request/Summary?correlationId=@report.TMinus1.CorrelationId">@report.TMinus1.RowCount</a>
+                                                <a href="/Request/Summary?correlationId=@report.TMinus1.CorrelationId">@report.TMinus1.RowCount</a>
                                                 <br/>
                                                 @report.TMinus1.Timing
                                             }
                                             else if (!string.IsNullOrWhiteSpace(report.TMinus1.CorrelationId))
                                             {
-                                                <a href="https://abcap-foutils-uat.intra.absa.co.za/Support/Request/Summary?correlationId=@report.TMinus1.CorrelationId">
+                                                <a href="/Request/Summary?correlationId=@report.TMinus1.CorrelationId">
                                                     ERROR
                                                 </a>
                                             }
