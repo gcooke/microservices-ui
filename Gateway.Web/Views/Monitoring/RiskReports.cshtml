@@ -1,0 +1,177 @@
+﻿@using Gateway.Web.Enums
+@using Gateway.Web.Models.Monitoring
+@model RiskReportMetricsViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "Monitoring";
+    ViewBag.Current = "Risk Reports";
+}
+@{ Html.RenderPartial("_MonitoringNav"); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+
+        <div class="row">
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <h3 class="text-lowercase">Risk Reports</h3>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <a href="/Monitoring/RiskReports?refresh=true&date=@Model.BusinessDate.ToString("yyyy-MM-dd")" class="btn btn-default pull-right" style="margin-top: 15px">Refresh</a>
+            </div>
+        </div>
+        
+        <div style="margin-top: 15px;">
+            @foreach (var application in Model.Metrics.GroupBy(x => x.System))
+            {
+                var reports = application.ToList().OrderBy(x => x.ReportCategory).ThenBy(x => x.ReportSubCategory).ToList();
+
+                <div class="row">
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <h4 class="text-lowercase">@application.Key</h4>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <h4 class="text-lowercase pull-right">
+                            @Model.BusinessDate.ToString("yyyy-MM-dd")
+                        </h4>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <table style="width: 100%; white-space: nowrap" class="datatable table" id="searchable-table">
+                            <thead>
+                            <tr>
+                                <td colspan="3">Report Details</td>
+                                <td colspan="3" style="text-align: center">Data Counts</td>
+                            </tr>
+                            <tr>
+                                <td style="background: #990505">Category</td>
+                                <td style="background: #990505">Sub-Category</td>
+                                <td style="background: #990505">Name</td>
+                                <td style="background: #990505; text-align: center">T-2</td>
+                                <td style="background: #990505; text-align: center">T-1</td>
+                                <td style="background: #990505; text-align: center">Status</td>
+                            </tr>                      
+                            </thead>
+                            <tbody>
+                            @for (var index = 0; index < reports.Count; index++)
+                            {
+                                var report = reports.ElementAt(index);
+                                var previousReport = (index-1) < 0 ? null : reports.ElementAt(index - 1);
+                                var color = string.Empty;
+                                var icon = string.Empty;
+                                if (@report.Status == MonitoringStatus.Ok)
+                                {
+                                    color = "darkgreen";
+                                    icon = "glyphicon-ok-sign";
+                                }
+                                else if (@report.Status == MonitoringStatus.Issue)
+                                {
+                                    color = "red";
+                                    icon = "glyphicon-remove-sign";
+                                }
+                                else if (@report.Status == MonitoringStatus.Warning)
+                                {
+                                    color = "orange";
+                                    icon = "glyphicon-question-sign";
+                                }
+
+                                <tr>
+                                    <td>
+                                        @if (previousReport == null)
+                                        {
+                                            @report.ReportCategory
+                                        }
+                                        else if (previousReport.ReportCategory != report.ReportCategory)
+                                        {
+                                            @report.ReportCategory
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (previousReport == null)
+                                        {
+                                            @report.ReportSubCategory
+                                        }
+                                        else if (report.ReportSubCategory != previousReport.ReportSubCategory)
+                                        {
+                                            @report.ReportSubCategory
+                                        }
+                                        else if (report.ReportSubCategory == previousReport.ReportSubCategory && report.ReportCategory != previousReport.ReportCategory)
+                                        {
+                                            @report.ReportSubCategory
+                                        }
+                                    </td>
+                                    <td>
+                                        <span style="color: @color"><b>@report.ReportName</b></span>
+                                        <br/>
+                                        @foreach (var parameter in @report.Parameters)
+                                        {
+                                            <b>@parameter.Key</b><span>:</span> @parameter.Value
+                                            <br/>
+                                        }
+                                    </td>
+                                    <td style="text-align: center">
+                                        @if (report.TMinus2 == null)
+                                        {
+                                            <span></span>
+                                        }
+                                        else if (report.TMinus2 != null && report.TMinus2.RowCount.HasValue)
+                                        {
+                                            <a href="https://abcap-foutils-uat.intra.absa.co.za/Support/Request/Summary?correlationId=@report.TMinus2.CorrelationId">@report.TMinus2.RowCount</a>
+                                            <br/>
+                                            @report.TMinus2.Timing
+                                        }
+                                        else if (!string.IsNullOrWhiteSpace(report.TMinus2.CorrelationId))
+                                        {
+                                            <a href="https://abcap-foutils-uat.intra.absa.co.za/Support/Request/Summary?correlationId=@report.TMinus2.CorrelationId">
+                                                ERROR
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <span>TIMEOUT</span>
+                                        }
+                                    </td>
+                                    <td style="text-align: center">
+                                        @if (report.TMinus1 == null)
+                                        {
+                                            <span></span>
+                                        }
+                                        else if (report.TMinus1 != null && report.TMinus1.RowCount.HasValue)
+                                        {
+                                            <a href="https://abcap-foutils-uat.intra.absa.co.za/Support/Request/Summary?correlationId=@report.TMinus1.CorrelationId">@report.TMinus1.RowCount</a>
+                                            <br/>
+                                            @report.TMinus1.Timing
+                                        }
+                                        else if (!string.IsNullOrWhiteSpace(report.TMinus1.CorrelationId))
+                                        {
+                                            <a href="https://abcap-foutils-uat.intra.absa.co.za/Support/Request/Summary?correlationId=@report.TMinus1.CorrelationId">
+                                                ERROR
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <span>TIMEOUT</span>
+                                        }
+                                    </td>
+                                    <td style="text-align: center">
+                                        @if (string.IsNullOrWhiteSpace(icon))
+                                        {
+                                            @report.Status
+                                        }
+                                        else
+                                        {
+                                            <span class="glyphicon @icon" aria-hidden="true" style="color: @color"></span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+        </div>
+
+    </div>
+</div>
