@@ -52,8 +52,8 @@
                 @{ Html.RenderPartial("_ControllerStateItems", @Model.Controllers); }
             </div>
             <div class="col-sm-4">
-                <h3 class="text-lowercase">Batches</h3>
-                @{ Html.RenderPartial("_BatchStates", @Model.Batches); }
+                <h3 class="text-lowercase"><a href="/Monitoring/RiskBatches">Batches</a></h3>
+                @{ Html.RenderPartial("_BatchStatesSummary", @Model.Batches); }
             </div>
         </div>
        

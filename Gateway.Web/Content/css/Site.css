@@ -389,3 +389,33 @@ progress::-webkit-progress-value {
     border-radius: 8px;
     box-shadow:0px 0px 6px #777 inset;
 }
+
+.table-header {
+    background: #990505
+}
+
+.center-text {
+    text-align: center;
+}
+
+.report-table {
+    width: 100%;
+    white-space: nowrap
+}
+
+.m-t-15 {
+    margin-top: 15px;
+}
+
+.report-table-summary-row {
+    background: white;
+}
+
+.report-table-detail-row {
+    background: #E9E9E9;
+    visibility: collapse
+}
+
+.monitoring-report-trigger {
+    cursor: pointer;
+}
