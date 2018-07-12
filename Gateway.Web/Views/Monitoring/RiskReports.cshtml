@@ -1,5 +1,6 @@
 ﻿@using Gateway.Web.Enums
 @using Gateway.Web.Models.Monitoring
+@using Gateway.Web.Utils
 @model RiskReportMetricsViewModel
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
@@ -7,21 +8,17 @@
     ViewBag.Current = "Risk Reports";
 }
 @{ Html.RenderPartial("_MonitoringNav"); }
-
 <div id="page-content-wrapper">
     <div class="hero-unit">
 
         <div class="row">
-            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <h3 class="text-lowercase">Risk Reports</h3>
-            </div>
-            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                <a href="/Monitoring/RiskReports?refresh=true&date=@Model.BusinessDate.ToString("yyyy-MM-dd")" class="btn btn-default pull-right" style="margin-top: 15px">Refresh</a>
             </div>
         </div>
         
         <div id="report-content">
-            <div style="margin-top: 15px;">
+            <div class="m-t-15">
                 @foreach (var application in Model.Metrics.GroupBy(x => x.System))
                 {
                     var reports = application.ToList().OrderBy(x => x.ReportCategory).ThenBy(x => x.ReportSubCategory).ToList();
@@ -36,123 +33,132 @@
 
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            <table style="width: 100%; white-space: nowrap" class="datatable table" id="searchable-table">
+                            <table class="datatable table report-table" id="searchable-table">
                                 <thead>
                                 <tr>
-                                    <td colspan="3">Report Details</td>
-                                    <td colspan="3" style="text-align: center">Data Counts</td>
+                                    <td colspan="4">Report Details</td>
+                                    <td colspan="3" class="center-text">Data Counts</td>
                                 </tr>
                                 <tr>
-                                    <td style="background: #990505">Category</td>
-                                    <td style="background: #990505">Sub-Category</td>
-                                    <td style="background: #990505">Name</td>
-                                    <td style="background: #990505; text-align: center">T-2</td>
-                                    <td style="background: #990505; text-align: center">T-1</td>
-                                    <td style="background: #990505; text-align: center">Status</td>
+                                    <td class="table-header"></td>
+                                    <td class="table-header">Category</td>
+                                    <td class="table-header">Sub-Category</td>
+                                    <td class="table-header">Name</td>
+                                    <td class="table-header center-text">T-2</td>
+                                    <td class="table-header center-text">T-1</td>
+                                    <td class="table-header center-text">Status</td>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 @for (var index = 0; index < reports.Count; index++)
                                 {
                                     var report = reports.ElementAt(index);
-                                    var previousReport = (index - 1) < 0 ? null : reports.ElementAt(index - 1);
-                                    var color = string.Empty;
-                                    if (@report.Status == MonitoringStatus.Ok)
-                                    {
-                                        color = "darkgreen";
-                                    }
-                                    else if (@report.Status == MonitoringStatus.Issue)
-                                    {
-                                        color = "red";
-                                    }
-                                    else if (@report.Status == MonitoringStatus.Warning)
-                                    {
-                                        color = "orange";
-                                    }
+                                    var color = @report.Status.GetStatusColor();
 
-                                    <tr>
+                                    <tr class="report-table-summary-row">
+                                        <td><a class="monitoring-report-trigger" data-group-trigger="@report.Identifier.Replace(" ","-")">[+]</a></td>
                                         <td>
-                                            @if (previousReport == null)
-                                            {
-                                                @report.ReportCategory
-                                            }
-                                            else if (previousReport.ReportCategory != report.ReportCategory)
-                                            {
-                                                @report.ReportCategory
-                                            }
+                                            @report.ReportCategory
                                         </td>
                                         <td>
-                                            @if (previousReport == null)
-                                            {
-                                                @report.ReportSubCategory
-                                            }
-                                            else if (report.ReportSubCategory != previousReport.ReportSubCategory)
-                                            {
-                                                @report.ReportSubCategory
-                                            }
-                                            else if (report.ReportSubCategory == previousReport.ReportSubCategory && report.ReportCategory != previousReport.ReportCategory)
-                                            {
-                                                @report.ReportSubCategory
-                                            }
+                                            @report.ReportSubCategory
                                         </td>
                                         <td>
-                                            <span style="color: @color"><b>@report.ReportName</b></span>
-                                            <br/>
-                                            @foreach (var parameter in @report.Parameters)
-                                            {
-                                                <b>@parameter.Key</b><span>:</span>
-                                                @parameter.Value
-                                                <br/>
-                                            }
+                                            <span style="color: @color">
+                                                <b>
+                                                    @report.ReportName
+                                                    @if (@report.Metrics.Count > 1)
+                                                    {
+                                                        <span>(</span>@report.Metrics.Count<span>)</span>
+                                                    }
+                                                </b>
+                                            </span>
                                         </td>
-                                        <td style="text-align: center">
-                                            @if (report.TMinus2 == null)
-                                            {
-                                                <span></span>
-                                            }
-                                            else if (report.TMinus2 != null && report.TMinus2.RowCount.HasValue)
-                                            {
-                                                <a href="/Request/Summary?correlationId=@report.TMinus2.CorrelationId">@report.TMinus2.RowCount</a>
-                                                <br/>
-                                                @report.TMinus2.Timing
-                                            }
-                                            else if (!string.IsNullOrWhiteSpace(report.TMinus2.CorrelationId))
-                                            {
-                                                <a href="/Request/Summary?correlationId=@report.TMinus2.CorrelationId">
-                                                    ERROR
-                                                </a>
-                                            }
-                                            else
-                                            {
-                                                <span>TIMEOUT</span>
-                                            }
+                                        <td class="center-text">
+                                            <span style="color: @color"><b>@report.PreviousResultsCount</b></span>
                                         </td>
-                                        <td style="text-align: center">
-                                            @if (report.TMinus1 == null)
-                                            {
-                                                <span></span>
-                                            }
-                                            else if (report.TMinus1 != null && report.TMinus1.RowCount.HasValue)
-                                            {
-                                                <a href="/Request/Summary?correlationId=@report.TMinus1.CorrelationId">@report.TMinus1.RowCount</a>
-                                                <br/>
-                                                @report.TMinus1.Timing
-                                            }
-                                            else if (!string.IsNullOrWhiteSpace(report.TMinus1.CorrelationId))
-                                            {
-                                                <a href="/Request/Summary?correlationId=@report.TMinus1.CorrelationId">
-                                                    ERROR
-                                                </a>
-                                            }
-                                            else
-                                            {
-                                                <span>TIMEOUT</span>
-                                            }
+                                        <td class="center-text">
+                                            <span style="color: @color"><b>@report.ResultCount</b></span>
                                         </td>
-                                        <td style="text-align: center">
+                                        <td class="center-text">
                                             <span style="color: @color"><b>@report.Status</b></span>
                                         </td>
                                     </tr>
+
+                                    foreach (var metric in report.Metrics)
+                                    {
+                                        var subReportColor = metric.Status.GetStatusColor();
+                                        <tr class="report-table-detail-row @report.Identifier.Replace(" ","-")">
+                                            <td>
+                                                &nbsp;
+                                            </td>
+                                            <td>
+                                                &nbsp;
+                                            </td>
+                                            <td>
+                                                &nbsp;
+                                            </td>
+                                            <td>
+                                                @foreach (var parameter in @metric.Parameters) 
+                                                { 
+                                                    <span>
+                                                        <b>@parameter.Key</b>
+                                                        <span>:</span> 
+                                                        @parameter.Value 
+                                                    </span>
+                                                    <br/> 
+                                                } 
+                                            </td>
+                                            <td class="center-text">
+                                                @if (metric.PreviousResults == null) 
+                                                { 
+                                                    <span></span> 
+                                                } 
+                                                else if (metric.PreviousResults != null && metric.PreviousResults.RowCount.HasValue) 
+                                                { 
+                                                    <a href="/Request/Summary?correlationId=@metric.PreviousResults.CorrelationId">@metric.PreviousResults.RowCount</a> 
+                                                    <br/> 
+                                                    @metric.PreviousResults.Timing 
+                                                } 
+                                                else if (!string.IsNullOrWhiteSpace(metric.PreviousResults.CorrelationId)) 
+                                                { 
+                                                    <a href="/Request/Summary?correlationId=@metric.PreviousResults.CorrelationId"> 
+                                                        ERROR 
+                                                    </a> 
+                                                } 
+                                                else 
+                                                { 
+                                                    <span>ERROR</span> 
+                                                } 
+                                            </td>
+                                            <td class="center-text">
+                                                @if (metric.Results == null) 
+                                                { 
+                                                    <span></span> 
+                                                } 
+                                                else if (metric.Results != null && metric.Results.RowCount.HasValue) 
+                                                { 
+                                                    <a href="/Request/Summary?correlationId=@metric.Results.CorrelationId">@metric.Results.RowCount</a> 
+                                                    <br/> 
+                                                    @metric.Results.Timing 
+                                                } 
+                                                else if (!string.IsNullOrWhiteSpace(metric.Results.CorrelationId)) 
+                                                { 
+                                                    <a href="/Request/Summary?correlationId=@metric.Results.CorrelationId"> 
+                                                        ERROR 
+                                                    </a> 
+                                                } 
+                                                else 
+                                                { 
+                                                    <span>ERROR</span> 
+                                                }                                             
+                                            </td>
+                                            <td class="center-text">
+                                                <span style="color: @subReportColor"><b>@metric.Status</b></span>
+                                            </td>
+                                        </tr>
+
+                                    }
                                 }
                                 </tbody>
                             </table>

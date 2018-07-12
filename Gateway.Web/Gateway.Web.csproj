@@ -371,10 +371,11 @@
     <Compile Include="Models\Home\ServiceState.cs" />
     <Compile Include="Models\Home\ControllerState.cs" />
     <Compile Include="Models\Home\StateItem.cs" />
+    <Compile Include="Models\Monitoring\RiskReportMetricsViewModel.cs" />
+    <Compile Include="Models\Monitoring\RiskReportResponse.cs" />
     <Compile Include="Models\Request\CubeModel.cs" />
     <Compile Include="Models\Request\Logs.cs" />
     <Compile Include="Models\Monitoring\RiskReportMetrics.cs" />
-    <Compile Include="Models\Monitoring\RiskReportMetricsViewModel.cs" />
     <Compile Include="Models\Request\RequestCount.cs" />
     <Compile Include="Models\Security\BusinessFunction.cs" />
     <Compile Include="Models\Security\BusinessFunctionsModel.cs" />
@@ -446,21 +447,8 @@
     <Compile Include="Services\IGatewayService.cs" />
     <Compile Include="Services\ILogsService.cs" />
     <Compile Include="Services\LogsService.cs" />
-    <Compile Include="Services\Monitoring\RiskReports\RequestClients\BaseRequestClient.cs" />
-    <Compile Include="Services\Monitoring\RiskReports\RequestClients\CubeRequestClient.cs" />
-    <Compile Include="Services\Monitoring\RiskReports\RequestClients\EagleResultRequestClient.cs" />
-    <Compile Include="Services\Monitoring\RiskReports\RequestClients\IRequestClient.cs" />
-    <Compile Include="Services\Monitoring\RiskReports\IRiskReportMonitoringCache.cs" />
-    <Compile Include="Models\Monitoring\RiskReportResponse.cs" />
-    <Compile Include="Services\Monitoring\RiskReports\RiskReportMonitoringCache.cs" />
-    <Compile Include="Services\Monitoring\RiskReports\Config\ConfigMap.cs" />
-    <Compile Include="Services\Monitoring\RiskReports\IRiskReportMonitoringFileService.cs" />
     <Compile Include="Services\Monitoring\RiskReports\IRiskReportMonitoringService.cs" />
-    <Compile Include="Models\Monitoring\RiskReportMonitoringConfigItem.cs" />
-    <Compile Include="Services\Monitoring\RiskReports\RiskReportMonitoringFileService.cs" />
     <Compile Include="Services\Monitoring\RiskReports\RiskReportMonitoringService.cs" />
-    <Compile Include="Services\Monitoring\RiskReports\RequestClients\RiskReturnResultRequestClient.cs" />
-    <Compile Include="Services\Monitoring\RiskReports\RequestClients\XvaReturnResultRequestClient.cs" />
     <Compile Include="Services\ProcessInformation.cs" />
     <Compile Include="Services\QueueInformation.cs" />
     <Compile Include="Services\VersionUpdate.cs" />
@@ -475,6 +463,7 @@
     <Compile Include="Utils\Constants.cs" />
     <Compile Include="Utils\DataContractSerializationEx.cs" />
     <Compile Include="Utils\LegacyCompession.cs" />
+    <Compile Include="Utils\MonitoringHtmlEx.cs" />
     <Compile Include="Utils\ReportsModelEx.cs" />
     <Compile Include="Utils\RestResponseEx.cs" />
     <Compile Include="Utils\SelectItemListEx.cs" />
@@ -561,6 +550,7 @@
     <Content Include="Content\js\respond.js" />
     <Content Include="Content\js\respond.min.js" />
     <Content Include="Content\js\_references.js" />
+    <Content Include="Scripts\Monitoring\Monitoring.js" />
     <Content Include="Scripts\Queues\ControllerQueueCharts.js" />
     <Content Include="Scripts\Queues\Shared\ChartRenderer.js" />
     <Content Include="Scripts\Queues\ControllersQueueCharts.js" />
@@ -647,6 +637,8 @@
     <Content Include="Views\Monitoring\Index.cshtml" />
     <Content Include="Views\Monitoring\_MonitoringNav.cshtml" />
     <Content Include="Views\Monitoring\RiskReports.cshtml" />
+    <Content Include="Views\Monitoring\RiskBatches.cshtml" />
+    <Content Include="Views\Shared\_BatchStatesSummary.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />

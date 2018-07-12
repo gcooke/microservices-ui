@@ -176,7 +176,20 @@ namespace Gateway.Web.Database
         }
 
         public string Name { get; private set; }
+
+        public int TotalRuns => Items.Count;
+
+        public int CompleteRuns
+        {
+            get { return Items.Count(x => x.State == StateItemState.Okay); }
+        }
+
         public List<RiskBatchResult> Items { get; private set; }
+
+        public List<RiskBatchResult> IncompleteItems
+        {
+            get { return Items.Where(x => x.State != StateItemState.Okay).ToList(); }
+        }
     }
 
     public class RiskBatchResult : StateItem
@@ -261,7 +274,8 @@ namespace Gateway.Web.Database
             Name = Name.MaxLength(30);
 
             //Time = string.Format("{0:ddd HH:mm}-{1:ddd HH:mm}", Started, Completed);
-            Time = string.Format("{0:ddd HH:mm} ({1})", Completed, FormatTimeTaken());
+            Time = string.Format("{0:ddd HH:mm}", Completed);
+            Duration = string.Format("{0}", FormatTimeTaken());
         }
 
         public Guid CorrelationId { get; private set; }
@@ -277,18 +291,23 @@ namespace Gateway.Web.Database
         public DateTime TargetCompletion { get; private set; }
 
         public DateTime Started { get; private set; }
+
         public string StartedFormatted
         {
             get { return Started == DateTime.MinValue ? string.Empty : Started.ToString("ddd HH:mm"); }
         }
 
         public DateTime Completed { get; private set; }
+
         public string CompletedFormatted
         {
             get { return Completed == DateTime.MinValue ? string.Empty : Completed.ToString("ddd HH:mm"); }
         }
         public long TimeTakenMs { get; private set; }
+
         public bool IsRerun { get; set; }
+
+        public string Duration { get; set; }
 
         private string FormatTimeTaken()
         {
