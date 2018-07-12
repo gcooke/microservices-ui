@@ -45,6 +45,10 @@ namespace Gateway.Web
                 "~/Scripts/Queues/ControllersQueueCharts.js"
                 ));
 
+            bundles.Add(new ScriptBundle("~/bundles/monitoring").Include(
+                "~/Scripts/Monitoring/Monitoring.js"
+            ));
+
             bundles.Add(new StyleBundle("~/styles/css").Include(
                 "~/Content/css/bootstrap.css",
                 "~/Content/css/font-awesome.css",

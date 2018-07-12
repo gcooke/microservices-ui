@@ -9,7 +9,6 @@ namespace Gateway.Web.Enums
     {
         Ok = 1,
         Warning = 2,
-        Issue = 3,
-        Error = 4
+        Issue = 3
     }
 }

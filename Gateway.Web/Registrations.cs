@@ -10,9 +10,7 @@ using Bagl.Cib.MSF.ClientAPI.Provider;
 using Gateway.Web.Database;
 using Gateway.Web.Services;
 using StackExchange.Redis;
-using Gateway.Web.Services.Monitoring;
 using Gateway.Web.Services.Monitoring.RiskReports;
-using Gateway.Web.Services.Monitoring.RiskReports.RequestClients;
 
 namespace Gateway.Web
 {
@@ -38,19 +36,8 @@ namespace Gateway.Web
             information.RegisterType<IAuthenticationProvider, AuthenticationProvider>(Scope.Singleton);
             information.RegisterType<IDateTimeProvider, DateTimeProvider>(Scope.Singleton);
             information.RegisterType<IRiskReportMonitoringService, RiskReportMonitoringService>(Scope.Singleton);
-            information.RegisterType<IRiskReportMonitoringFileService, RiskReportMonitoringFileService>(Scope.Singleton);
             information.RegisterType<IGateway, Bagl.Cib.MSF.ClientAPI.Gateway.Gateway>(Scope.Singleton);
             information.RegisterType<ISimpleRestService, SimpleRestService>(Scope.Singleton);
-            information.RegisterType<IRiskReportMonitoringCache, RiskReportMonitoringCache>(Scope.Singleton);
-            
-
-            //Monitoring Response Evaluators
-            information.RegisterType<IRequestClient, CubeRequestClient>("CUBE", Scope.Singleton);
-            information.RegisterType<IRequestClient, RiskReturnResultRequestClient>("RISK_RETURN_RESULT", Scope.Singleton);
-            information.RegisterType<IRequestClient, XvaReturnResultRequestClient>("XVA_RETURN_RESULT", Scope.Singleton);
-            information.RegisterType<IRequestClient, EagleResultRequestClient>("EAGLE", Scope.Singleton);
-
-
             information.RegisterType<ILogsService, LogsService>(Scope.Singleton);
             information.RegisterType<IRedisConnectionProvider, RedisConnectionProvider>(Scope.Singleton);
             information.RegisterType<IActiveDirectoryService, ActiveDirectoryService>(Scope.Singleton);

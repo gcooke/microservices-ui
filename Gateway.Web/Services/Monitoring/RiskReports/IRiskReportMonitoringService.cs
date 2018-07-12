@@ -6,6 +6,6 @@ namespace Gateway.Web.Services.Monitoring.RiskReports
 {
     public interface IRiskReportMonitoringService
     {
-        IEnumerable<RiskReportMetrics> GetMetricsForRiskReports(DateTime businessDate, bool clearCache = false);
+        IEnumerable<RiskReportMetrics> GetMetricsForRiskReports(DateTime businessDate);
     }
 }
