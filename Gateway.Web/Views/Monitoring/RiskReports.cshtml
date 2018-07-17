@@ -116,13 +116,13 @@
                                                 } 
                                                 else if (metric.PreviousResults != null && metric.PreviousResults.RowCount.HasValue) 
                                                 { 
-                                                    <a href="/Request/Summary?correlationId=@metric.PreviousResults.CorrelationId">@metric.PreviousResults.RowCount</a> 
+                                                    <a href="~/Request/Summary?correlationId=@metric.PreviousResults.CorrelationId">@metric.PreviousResults.RowCount</a> 
                                                     <br/> 
                                                     @metric.PreviousResults.Timing 
                                                 } 
                                                 else if (!string.IsNullOrWhiteSpace(metric.PreviousResults.CorrelationId)) 
                                                 { 
-                                                    <a href="/Request/Summary?correlationId=@metric.PreviousResults.CorrelationId"> 
+                                                    <a href="~/Request/Summary?correlationId=@metric.PreviousResults.CorrelationId"> 
                                                         ERROR 
                                                     </a> 
                                                 } 
@@ -138,13 +138,13 @@
                                                 } 
                                                 else if (metric.Results != null && metric.Results.RowCount.HasValue) 
                                                 { 
-                                                    <a href="/Request/Summary?correlationId=@metric.Results.CorrelationId">@metric.Results.RowCount</a> 
+                                                    <a href="~/Request/Summary?correlationId=@metric.Results.CorrelationId">@metric.Results.RowCount</a> 
                                                     <br/> 
                                                     @metric.Results.Timing 
                                                 } 
                                                 else if (!string.IsNullOrWhiteSpace(metric.Results.CorrelationId)) 
                                                 { 
-                                                    <a href="/Request/Summary?correlationId=@metric.Results.CorrelationId"> 
+                                                    <a href="~/Request/Summary?correlationId=@metric.Results.CorrelationId"> 
                                                         ERROR 
                                                     </a> 
                                                 } 

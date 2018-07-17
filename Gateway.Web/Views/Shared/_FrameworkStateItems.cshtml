@@ -1,0 +1,88 @@
+﻿@using Gateway.Web.Models.Controller
+@using Gateway.Web.Models.Home
+@using Gateway.Web.Utils
+@model List<Gateway.Web.Models.Monitoring.ServerDiagnostics> 
+
+<table style="width: 100%; white-space: nowrap">
+    <tr>
+        <th>
+            Server
+        </th>
+        <th>
+            CPU
+        </th>
+        <th>
+            RAM
+        </th>
+        <th>
+            Workers
+        </th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @if (!item.Available)
+                {
+                    <div style="background-color: red; display: inline-block; border-radius: 50%; width: 10px; height: 10px; text-align: center;"></div>
+                }
+                else
+                {
+                    <div style="background-color: green; display: inline-block; border-radius: 50%; width: 10px; height: 10px; text-align: center;"></div>
+                }
+                @item.ServerName
+            </td>
+            <td>
+                @switch (item.GetCpuState())
+                {
+                    case StateItemState.Unknown:
+                        <div class="state_unknown">@item.CpuUsage<span>%</span></div>
+                        break;
+                    case StateItemState.Okay:
+                        <div class="state_okay">@item.CpuUsage<span>%</span></div>
+                        break;
+                    case StateItemState.Warn:
+                        <div class="state_warn">@item.CpuUsage<span>%</span></div>
+                        break;
+                    case StateItemState.Error:
+                        <div class="state_fail">@item.CpuUsage<span>%</span></div>
+                        break;
+                }
+            </td>
+            <td>
+                @switch (item.GetMemoryState())
+                {
+                    case StateItemState.Unknown:
+                        <div class="state_unknown">@item.MemoryUtilization<span>GB</span></div>
+                        break;
+                    case StateItemState.Okay:
+                        <div class="state_okay">@item.MemoryAvailableGigabytes<span>GB</span></div>
+                        break;
+                    case StateItemState.Warn:
+                        <div class="state_warn">@item.MemoryAvailableGigabytes<span>GB</span></div>
+                        break;
+                    case StateItemState.Error:
+                        <div class="state_fail">@item.MemoryAvailableGigabytes<span>GB</span></div>
+                        break;
+                }
+            </td>
+            <td>
+                @switch (item.GetWorkerState())
+                {
+                    case StateItemState.Unknown:
+                        <div class="state_unknown">@item.BusyWorkerCount / @item.TotalWorkerCount</div>
+                        break;
+                    case StateItemState.Okay:
+                        <div class="state_okay">@item.BusyWorkerCount / @item.TotalWorkerCount</div>
+                        break;
+                    case StateItemState.Warn:
+                        <div class="state_warn">@item.BusyWorkerCount / @item.TotalWorkerCount</div>
+                        break;
+                    case StateItemState.Error:
+                        <div class="state_fail">@item.BusyWorkerCount / @item.TotalWorkerCount</div>
+                        break;
+                }
+            </td>
+        </tr>
+    }
+</table>

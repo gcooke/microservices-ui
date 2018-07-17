@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Controllers;
 using Gateway.Web.Models.Home;
+using Gateway.Web.Models.Monitoring;
 using Gateway.Web.Models.Request;
 using Gateway.Web.Models.Security;
 using QueueChartModel = Gateway.Web.Models.Controller.QueueChartModel;
@@ -61,7 +62,7 @@ namespace Gateway.Web.Database
 
         IEnumerable<Status> GetVersionStatuses();
 
-        IEnumerable<ControllerState> GetControllerStates();
+        IEnumerable<ControllerState> GetControllerStates(IDictionary<string, ServerDiagnostics> serverDiagnostics);
 
         IEnumerable<string> GetVersions(string controllerName);
 

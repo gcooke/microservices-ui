@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Controllers;
 using Gateway.Web.Models.Home;
+using Gateway.Web.Models.Monitoring;
 using Gateway.Web.Models.Request;
 using Gateway.Web.Models.Security;
 using RestSharp.Extensions;
@@ -394,22 +395,39 @@ namespace Gateway.Web.Database
             result.Client = string.IsNullOrEmpty(request.ClientID) ? "Unknown" : request.ClientID;
         }
 
-        public IEnumerable<ControllerState> GetControllerStates()
+        public IEnumerable<ControllerState> GetControllerStates(IDictionary<string, ServerDiagnostics> serverDiagnostics)
         {
             var result = new List<ControllerState>();
             using (var database = new GatewayEntities())
             {
                 var items = database.spGetControllerStates();
-                var incompleteRequestCount = database.spGetIncompleteRequestCount(DateTime.UtcNow.AddHours(-1)).ToList();
                 foreach (var item in items.GroupBy(i => i.Controller))
                 {
                     var controllerState = item.ToArray().ToModel();
-                    var count = incompleteRequestCount.SingleOrDefault(x => x.Controller == controllerState.Name);
-                    controllerState.IncompleteRequestCount = count?.InCompleteRequests ?? 0;
+                    SetControllerStatistics(controllerState, serverDiagnostics);
                     result.Add(controllerState);
                 }
             }
             return result;
+        }
+
+        private void SetControllerStatistics(ControllerState controllerState, IDictionary<string, ServerDiagnostics> serverDiagnostics)
+        {
+            foreach (var serverDiagnostic in serverDiagnostics.Values)
+            {
+                var controllerRequestsDiagnostic = serverDiagnostic.Requests.Where(x => x.Name.ToLower() == controllerState.Name.ToLower()).ToList();
+                var controllerWorkerDiagnostic = serverDiagnostic.Workers.Where(x => x.Name.ToLower() == controllerState.Name.ToLower()).ToList();
+
+                var requestCount = controllerRequestsDiagnostic.Sum(x => x.RequestCount);
+                var inProgressRequestCount = controllerRequestsDiagnostic.Sum(x => x.RequestInProgressCount);
+                var workerCount = controllerWorkerDiagnostic.Sum(x => x.WorkerCount);
+                var workerInProgressCount = controllerWorkerDiagnostic.Sum(x => x.WorkerInProgressCount);
+
+                controllerState.TotalRequestCount = requestCount;
+                controllerState.ProcessingRequestCount = inProgressRequestCount;
+                controllerState.BusyWorkerCount = workerInProgressCount;
+                controllerState.TotalWorkerCount = workerCount;
+            }
         }
 
         public IEnumerable<string> GetVersions(string controllerName)

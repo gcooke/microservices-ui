@@ -11,6 +11,7 @@ using Gateway.Web.Database;
 using Gateway.Web.Services;
 using StackExchange.Redis;
 using Gateway.Web.Services.Monitoring.RiskReports;
+using Gateway.Web.Services.Monitoring.ServerDiagnostics;
 
 namespace Gateway.Web
 {
@@ -41,6 +42,7 @@ namespace Gateway.Web
             information.RegisterType<ILogsService, LogsService>(Scope.Singleton);
             information.RegisterType<IRedisConnectionProvider, RedisConnectionProvider>(Scope.Singleton);
             information.RegisterType<IActiveDirectoryService, ActiveDirectoryService>(Scope.Singleton);
+            information.RegisterType<IServerDiagnosticsService, ServerDiagnosticsService>(Scope.Singleton);
             RegisterRedisOptions(information);
         }
 
