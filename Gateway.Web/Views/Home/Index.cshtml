@@ -34,12 +34,15 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-4">
+                <h3 class="text-lowercase">Servers</h3>
+                @{ Html.RenderPartial("_FrameworkStateItems", @Model.Servers); }
+                <br />
                 <h3 class="text-lowercase">Services</h3>
                 @{ Html.RenderPartial("_StateItems", @Model.Services); }
                 <br />
                 <h3 class="text-lowercase">Databases</h3>
                 @{ Html.RenderPartial("_StateItems", @Model.Databases); }
-                <br/>
+                <br />
                 <h3 class="text-lowercase">Refresh</h3>
                 <progress class="progressBar" max="600" value="600"></progress>
             </div>

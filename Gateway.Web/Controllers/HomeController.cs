@@ -5,7 +5,10 @@ using System.Web.Mvc;
 using Bagl.Cib.MIT.Logging;
 using Gateway.Web.Authorization;
 using Gateway.Web.Database;
+using Gateway.Web.Models.Controllers;
 using Gateway.Web.Models.Home;
+using Gateway.Web.Models.Monitoring;
+using Gateway.Web.Services.Monitoring.ServerDiagnostics;
 using Gateway.Web.Utils;
 
 namespace Gateway.Web.Controllers
@@ -14,12 +17,15 @@ namespace Gateway.Web.Controllers
     public class HomeController : BaseController
     {
         private readonly IGatewayDatabaseService _dataService;
+        private readonly IServerDiagnosticsService _serverDiagnosticsService;
 
         public HomeController(IGatewayDatabaseService dataService,
+            IServerDiagnosticsService serverDiagnosticsService,
             ILoggingService loggingService)
             : base(loggingService)
         {
             _dataService = dataService;
+            _serverDiagnosticsService = serverDiagnosticsService;
         }
 
         public async Task<ActionResult> Index(string sortOrder)
@@ -35,15 +41,20 @@ namespace Gateway.Web.Controllers
             ViewBag.Controller = "Home";
             ViewBag.Action = "Index";
 
+
+            var serverDiagnostics = _serverDiagnosticsService.Get();
+            serverDiagnostics = FormatServerDiagnostics(serverDiagnostics);
+
             var helper = new BatchHelper(_dataService);
             var reportDate = helper.GetPreviousWorkday();
             var batches = await helper.GetRiskBatchReportModel(reportDate);
 
             var model = new IndexModel();            
-            model.Controllers.AddRange(_dataService.GetControllerStates());
+            model.Controllers.AddRange(_dataService.GetControllerStates(serverDiagnostics));
             model.Services.AddRange(GetServiceState());
             model.Databases.AddRange(GetDatabaseState());
             model.Batches.AddRange(batches.Items); 
+            model.Servers.AddRange(serverDiagnostics.Values);
             
             Response.AddHeader("Refresh", "60");
             return View("Index", model);
@@ -61,6 +72,33 @@ namespace Gateway.Web.Controllers
         {
             yield return new DatabaseState("Gateway", DateTime.Now, StateItemState.Unknown, "Unknown");
             yield return new DatabaseState("PnRFO", DateTime.Now, StateItemState.Unknown, "Unknown");
+        }
+
+        public IDictionary<string, ServerDiagnostics> FormatServerDiagnostics(IDictionary<string, ServerDiagnostics> serverDiagnostics)
+        {
+            var result = new Dictionary<string, ServerDiagnostics>();
+            foreach (var serverDiagnostic in serverDiagnostics)
+            {
+                if (serverDiagnostic.Value == null)
+                {
+                    var diagnostics = new ServerDiagnostics()
+                    {
+                        ServerName = serverDiagnostic.Key,
+                        Workers = new List<WorkerStats>(),
+                        Requests = new List<RequestStats>(),
+                        CpuUtilization = 0,
+                        Available = false,
+                        MemoryUtilization = 0,
+                        Timestamp = DateTime.Now
+                    };
+                    result.Add(serverDiagnostic.Key, diagnostics);
+                    continue;
+                }
+
+                result.Add(serverDiagnostic.Key, serverDiagnostic.Value);
+            }
+
+            return result;
         }
 
         public ActionResult About()

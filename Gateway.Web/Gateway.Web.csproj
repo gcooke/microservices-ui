@@ -371,8 +371,11 @@
     <Compile Include="Models\Home\ServiceState.cs" />
     <Compile Include="Models\Home\ControllerState.cs" />
     <Compile Include="Models\Home\StateItem.cs" />
+    <Compile Include="Models\Monitoring\RequestStats.cs" />
     <Compile Include="Models\Monitoring\RiskReportMetricsViewModel.cs" />
     <Compile Include="Models\Monitoring\RiskReportResponse.cs" />
+    <Compile Include="Models\Monitoring\ServerDiagnostics.cs" />
+    <Compile Include="Models\Monitoring\WorkerStats.cs" />
     <Compile Include="Models\Request\CubeModel.cs" />
     <Compile Include="Models\Request\Logs.cs" />
     <Compile Include="Models\Monitoring\RiskReportMetrics.cs" />
@@ -449,6 +452,8 @@
     <Compile Include="Services\LogsService.cs" />
     <Compile Include="Services\Monitoring\RiskReports\IRiskReportMonitoringService.cs" />
     <Compile Include="Services\Monitoring\RiskReports\RiskReportMonitoringService.cs" />
+    <Compile Include="Services\Monitoring\ServerDiagnostics\IServerDiagnosticsService.cs" />
+    <Compile Include="Services\Monitoring\ServerDiagnostics\ServerDiagnosticsService.cs" />
     <Compile Include="Services\ProcessInformation.cs" />
     <Compile Include="Services\QueueInformation.cs" />
     <Compile Include="Services\VersionUpdate.cs" />
@@ -461,6 +466,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\Calculations.cs" />
     <Compile Include="Utils\Constants.cs" />
+    <Compile Include="Utils\DashboardEx.cs" />
     <Compile Include="Utils\DataContractSerializationEx.cs" />
     <Compile Include="Utils\LegacyCompession.cs" />
     <Compile Include="Utils\MonitoringHtmlEx.cs" />
@@ -639,6 +645,7 @@
     <Content Include="Views\Monitoring\RiskReports.cshtml" />
     <Content Include="Views\Monitoring\RiskBatches.cshtml" />
     <Content Include="Views\Shared\_BatchStatesSummary.cshtml" />
+    <Content Include="Views\Shared\_FrameworkStateItems.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />
