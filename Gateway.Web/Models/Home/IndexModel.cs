@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Gateway.Web.Database;
-using Gateway.Web.Models.Controller;
+using Gateway.Web.Models.Monitoring;
 
 namespace Gateway.Web.Models.Home
 {
@@ -13,6 +12,7 @@ namespace Gateway.Web.Models.Home
             Services = new List<ServiceState>();
             Databases = new List<DatabaseState>();
             Controllers = new List<ControllerState>();
+            Servers = new List<ServerDiagnostics>();
         }
 
         public List<RiskBatchGroup> Batches { get; private set; }
@@ -22,5 +22,7 @@ namespace Gateway.Web.Models.Home
         public List<DatabaseState> Databases { get; private set; }
 
         public List<ControllerState> Controllers { get; private set; }
+
+        public List<ServerDiagnostics> Servers { get; private set; }
     }
 }
