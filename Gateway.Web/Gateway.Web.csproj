@@ -239,6 +239,7 @@
     <Compile Include="Controllers\MonitoringController.cs" />
     <Compile Include="Controllers\PermissionController.cs" />
     <Compile Include="Controllers\GroupController.cs" />
+    <Compile Include="Controllers\ReleasesController.cs" />
     <Compile Include="Controllers\SecurityController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\RequestController.cs" />
@@ -646,6 +647,13 @@
     <Content Include="Views\Monitoring\RiskBatches.cshtml" />
     <Content Include="Views\Shared\_BatchStatesSummary.cshtml" />
     <Content Include="Views\Shared\_FrameworkStateItems.cshtml" />
+    <Content Include="Views\Controllers\_ControllersInfrastructureNav.cshtml" />
+    <Content Include="Views\Controllers\_ControllersConfigNav.cshtml" />
+    <Content Include="Views\Controllers\_ControllersUsageNav.cshtml" />
+    <Content Include="Views\Security\_SecurityReportsNav.cshtml" />
+    <Content Include="Views\Releases\Current.cshtml" />
+    <Content Include="Views\Releases\Historical.cshtml" />
+    <Content Include="Views\Releases\_ReleasesNav.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />
@@ -667,9 +675,7 @@
     <Content Include="Views\User\Portfolios.cshtml" />
     <Content Include="Views\User\Groups.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\Reports\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
