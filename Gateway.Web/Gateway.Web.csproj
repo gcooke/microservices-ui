@@ -239,7 +239,7 @@
     <Compile Include="Controllers\MonitoringController.cs" />
     <Compile Include="Controllers\PermissionController.cs" />
     <Compile Include="Controllers\GroupController.cs" />
-    <Compile Include="Controllers\ReleasesController.cs" />
+    <Compile Include="Controllers\ReleaseProcessController.cs" />
     <Compile Include="Controllers\SecurityController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\RequestController.cs" />
@@ -651,9 +651,9 @@
     <Content Include="Views\Controllers\_ControllersConfigNav.cshtml" />
     <Content Include="Views\Controllers\_ControllersUsageNav.cshtml" />
     <Content Include="Views\Security\_SecurityReportsNav.cshtml" />
-    <Content Include="Views\Releases\Current.cshtml" />
-    <Content Include="Views\Releases\Historical.cshtml" />
-    <Content Include="Views\Releases\_ReleasesNav.cshtml" />
+    <Content Include="Views\ReleaseProcess\CurrentRelease.cshtml" />
+    <Content Include="Views\ReleaseProcess\HistoricalReleases.cshtml" />
+    <Content Include="Views\ReleaseProcess\_ReleasesNav.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />
