@@ -1,0 +1,30 @@
+﻿<!-- Sidebar -->
+<div id="sidebar-wrapper">
+    <br />
+    <div style="margin-left: 10px; height: 50px">
+        <div style="float: left">
+            <img class="sidebar-img" src="@Url.Content(MvcApplication.ControllerIcon)" style="height: 48px">
+        </div>
+        <div style="float: left; margin-top: 5px">
+            <span class="sidebar-title">@ViewBag.Title</span><br />
+            <span class="sidebar-subtitle">@ViewBag.Current</span>
+        </div>
+    </div>
+
+    <div class="sidebar-navheader">
+        <strong>DETAILS</strong>
+    </div>
+
+    <ul class="sidebar-nav">
+        <li>
+            <a href="~/Controllers/Aliases/"
+               class="@(ViewBag.Current == "Aliases" ? "active" : "")">
+                <span class="glyphicon glyphicon-th-list"></span>&nbsp;&nbsp;Aliases
+            </a>
+        </li>
+        <li>
+            &nbsp;
+        </li>
+    </ul>
+</div>
+<!-- /#sidebar-wrapper -->

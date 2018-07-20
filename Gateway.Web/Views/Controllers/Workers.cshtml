@@ -2,9 +2,9 @@
 @using Gateway.Web.Models.Controller
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
-    ViewBag.Title = "All Controllers";
+    ViewBag.Title = "Infrastructure";
     ViewBag.Current = "Workers";
 }
 
-@{ Html.RenderPartial("_ControllersNav"); }
+@{ Html.RenderPartial("_ControllersInfrastructureNav"); }
 @{ Html.RenderPartial("_AllServiceItems", (ServiceModel)@Model); }

@@ -2,10 +2,10 @@
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
     ViewBag.Title = "Security";
-    ViewBag.Current = "Reports";
+    ViewBag.Current = Model.Name;
     ViewBag.Report = Model.Name;
 }
-@{ Html.RenderPartial("_SecurityNav", @Model); }
+@{ Html.RenderPartial("_SecurityReportsNav", @Model); }
 
 <div id="page-content-wrapper">
     <div class="hero-unit">
