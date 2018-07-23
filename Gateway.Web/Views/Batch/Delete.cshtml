@@ -1,0 +1,33 @@
+﻿@using System.Xml.Schema
+@using Gateway.Web.Models
+@using Gateway.Web.Models.Controllers
+@model Gateway.Web.Models.Batches.DeleteBatchConfigModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "Batch";
+    ViewBag.Current = "Configuration";
+}
+@{ Html.RenderPartial("_BatchConfigNav"); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <h3 class="text-lowercase">Delete Batch Configuration</h3>
+            </div>
+        </div>
+        
+        <div class="row m-t-15">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                Are you sure you want to delete the batch configuration, <b>@Model.Type</b>?
+                <br/>
+                <br/>
+                <a href="~/Batch/Delete/@Model.ConfigurationId" class="btn btn-primary">Yes</a>
+                <a href="~/Batch" class="btn btn-default">No</a>
+            </div>
+        </div>
+    </div>
+</div>
+
