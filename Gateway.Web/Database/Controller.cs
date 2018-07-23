@@ -31,6 +31,7 @@ namespace Gateway.Web.Database
         public int MaxInstances { get; set; }
         public Nullable<int> TimeoutMilliSec { get; set; }
         public string Description { get; set; }
+        public string ExcludedServers { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Version> Versions { get; set; }

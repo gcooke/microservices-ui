@@ -234,6 +234,7 @@
     <Compile Include="Authorization\AuthorizedRoleProvider.cs" />
     <Compile Include="Authorization\RoleBasedAuthorizeAttribute.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\BatchController.cs" />
     <Compile Include="Controllers\DownloadsController.cs" />
     <Compile Include="Controllers\AddInController.cs" />
     <Compile Include="Controllers\MonitoringController.cs" />
@@ -267,6 +268,12 @@
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\ResponseStats.cs" />
+    <Compile Include="Database\RiskBatchConfiguration.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\RiskBatchSchedule.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
     <Compile Include="Database\spGetChildRequests_Result.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
@@ -342,6 +349,11 @@
     <Compile Include="Helpers\TreeView.cs" />
     <Compile Include="Models\AddIn\AddInVersionModel.cs" />
     <Compile Include="Models\AddIn\ApplicationVersionModel.cs" />
+    <Compile Include="Models\Batches\BatchConfigList.cs" />
+    <Compile Include="Models\Batches\DeleteBatchConfigModel.cs" />
+    <Compile Include="Enums\MarketDataMap.cs" />
+    <Compile Include="Enums\OutputType.cs" />
+    <Compile Include="Enums\TradeSourceType.cs" />
     <Compile Include="Models\Controllers\AliasesModel.cs" />
     <Compile Include="Models\Controllers\GatewayInfo.cs" />
     <Compile Include="Models\Controllers\HistoryModel.cs" />
@@ -444,6 +456,10 @@
     <Compile Include="Models\User\HistoryModel.cs" />
     <Compile Include="Registrations.cs" />
     <Compile Include="Services\BasicRestService.cs" />
+    <Compile Include="Models\Batches\BatchConfigModel.cs" />
+    <Compile Include="Services\Batches\BatchConfigEx.cs" />
+    <Compile Include="Services\Batches\IRiskBatchConfigService.cs" />
+    <Compile Include="Services\Batches\RiskBatchConfigService.cs" />
     <Compile Include="Services\DifferentialDownloadService.cs" />
     <Compile Include="Services\GatewayService.cs" />
     <Compile Include="Services\IActiveDirectoryService.cs" />
@@ -654,6 +670,10 @@
     <Content Include="Views\ReleaseProcess\CurrentRelease.cshtml" />
     <Content Include="Views\ReleaseProcess\HistoricalReleases.cshtml" />
     <Content Include="Views\ReleaseProcess\_ReleasesNav.cshtml" />
+    <Content Include="Views\Batch\Create.cshtml" />
+    <Content Include="Views\Batch\Index.cshtml" />
+    <Content Include="Views\Batch\_BatchConfigNav.cshtml" />
+    <Content Include="Views\Batch\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />

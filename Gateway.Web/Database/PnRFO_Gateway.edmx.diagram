@@ -17,6 +17,9 @@
         <EntityTypeShape EntityType="GatewayModel.StatusChange" Width="1.5" PointX="3.375" PointY="9.75" />
         <EntityTypeShape EntityType="GatewayModel.Link" Width="1.5" PointX="7.375" PointY="4.75" />
         <EntityTypeShape EntityType="GatewayModel.BatchStat" Width="1.5" PointX="9.375" PointY="4.75" />
+        <EntityTypeShape EntityType="GatewayModel.RiskBatchConfiguration" Width="1.5" PointX="7.375" PointY="9" />
+        <EntityTypeShape EntityType="GatewayModel.RiskBatchSchedule" Width="1.5" PointX="9.625" PointY="9.25" />
+        <AssociationConnector Association="GatewayModel.FK_RiskBatchSchedule_RiskBatchConfiguration" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
