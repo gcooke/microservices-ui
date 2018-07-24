@@ -408,12 +408,15 @@ progress::-webkit-progress-value {
 }
 
 .report-table-summary-row {
-    background: white;
+    background: white !important;
 }
 
 .report-table-detail-row {
-    background: #E9E9E9;
-    visibility: collapse
+    background: #E9E9E9 !important;
+}
+
+.report-table-detail-row-hidden {
+    display: none;
 }
 
 .monitoring-report-trigger {

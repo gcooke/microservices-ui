@@ -3,11 +3,11 @@
         function () {
             var $groupTrigger = $(this);
             $("." + $(this).data("group-trigger")).each(function () {
-                if ($(this).css("visibility") === "collapse") {
-                    $(this).css("visibility", "visible");
+                if ($(this).hasClass("report-table-detail-row-hidden")) {
+                    $(this).removeClass("report-table-detail-row-hidden");
                     $groupTrigger.html("[-]");
                 } else {
-                    $(this).css("visibility", "collapse");
+                    $(this).addClass("report-table-detail-row-hidden");
                     $groupTrigger.html("[+]");
                 }
             });
