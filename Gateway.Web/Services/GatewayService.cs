@@ -591,7 +591,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Content.Message };
+            return new[] { response.Content?.Message ?? response.Message };
         }
 
         public string[] DeleteGroupPortfolio(long id, long groupId)
@@ -604,12 +604,12 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Content.Message };
+            return new[] { response.Content?.Message ?? response.Message };
         }
 
         public string[] DeleteGroupPermission(long id, long groupId)
         {
-            var query = string.Format("groups/{0}/permissions/{1}", groupId, id);
+            var query = $"groups/{groupId}/permissions/{id}";
             var response = _gatewayRestService.Delete("Security", "latest", query, string.Empty);
 
             if (response.Successfull)
@@ -617,7 +617,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Content.Message };
+            return new[] { response.Content?.Message ?? response.Message };
         }
 
         public string[] Create(PermissionModel model)
@@ -630,7 +630,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Content.Message };
+            return new[] { response.Content?.Message ?? response.Message };
         }
 
         public string[] InsertGroupPermission(long groupId, long permissionId)
@@ -881,7 +881,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Content.Message };
+            return new[] { response.Content?.Message ?? response.Message };
         }
 
         public string[] DeleteGroupApplicationVersion(long id, long groupId)
@@ -894,7 +894,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Content.Message };
+            return new[] { response.Content?.Message ?? response.Message };
         }
 
         public string[] UpdateAssignedApplicationVersions(string @from, string to)
@@ -908,7 +908,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Content.Message };
+            return new[] { response.Content?.Message ?? response.Message };
         }
 
         public string[] UpdateAssignedAddInVersions(string @from, string to)
@@ -922,7 +922,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Content.Message };
+            return new[] { response.Content?.Message ?? response.Message };
         }
 
         public string[] RemoveUser(long id)
@@ -935,7 +935,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Content.Message };
+            return new[] { response.Content?.Message ?? response.Message };
         }
 
         public string[] Create(UserModel model)
@@ -947,7 +947,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Content.Message };
+            return new[] { response.Content?.Message ?? response.Message };
         }
 
         public string[] InsertUserPortfolio(long userId, long portfolioId)
@@ -960,7 +960,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Content.Message };
+            return new[] { response.Content?.Message ?? response.Message };
         }
 
         public Models.User.PortfoliosModel GetUserPortfolios(long userId)
@@ -994,7 +994,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Content.Message };
+            return new[] { response.Content?.Message ?? response.Message };
         }
 
         public string[] InsertUserSite(long userId, long siteId)
@@ -1007,7 +1007,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Content.Message };
+            return new[] { response.Content?.Message ?? response.Message };
         }
 
         public Models.User.SitesModel GetUserSites(long userId)
@@ -1038,7 +1038,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Content.Message };
+            return new[] { response.Content?.Message ?? response.Message };
         }
 
         public string[] InsertUserGroup(long userId, long groupId)
@@ -1051,7 +1051,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Content.Message };
+            return new[] { response.Content?.Message ?? response.Message };
         }
 
         public string[] RemoveUserGroup(long userId, long groupId)
@@ -1064,7 +1064,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Content.Message };
+            return new[] { response.Content?.Message ?? response.Message };
         }
 
         public Models.User.AddInsModel GetUserAddInVersions(long userId)
@@ -1140,7 +1140,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Content.Message };
+            return new[] { response.Content?.Message ?? response.Message };
         }
 
         public string[] DeleteUserApplicationVersions(long userId, long applicationVersionId)
@@ -1153,7 +1153,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Content.Message };
+            return new[] { response.Content?.Message ?? response.Message };
         }
 
         public string[] InsertUserAddInVersions(long groupId, AddInVersionModel addInVersion)
@@ -1166,7 +1166,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Content.Message };
+            return new[] { response.Content?.Message ?? response.Message };
         }
 
         public string[] InsertUserApplicationVersions(long groupId, ApplicationVersionModel version)
@@ -1179,7 +1179,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Content.Message };
+            return new[] { response.Content?.Message ?? response.Message };
         }
 
         public IEnumerable<BusinessFunction> GetBusinessFunctions()
@@ -1480,7 +1480,7 @@ namespace Gateway.Web.Services
                 target.AvailableSites.AddRange(interim.OrderBy(v => v.Text));
             }
         }
-        
+
         private IEnumerable<SelectListItem> GetAvailableApplicationVersions()
         {
             var response = _gatewayRestService.Get("Security", "latest", "applications/versions");
@@ -1577,7 +1577,7 @@ namespace Gateway.Web.Services
         {
             var serverResponse = Fetch("health/info");
 
-            if (serverResponse == null || 
+            if (serverResponse == null ||
                 serverResponse.Document == null ||
                 !serverResponse.Document.Descendants().Any())
                 return new GatewayInfo();
@@ -1594,7 +1594,7 @@ namespace Gateway.Web.Services
 
         public async Task RetryWorkItemAsync(string correlationId)
         {
-            await Delete($"worker/retry/{correlationId}");            
+            await Delete($"worker/retry/{correlationId}");
         }
 
         public async Task DeleteWorkersAsync()
