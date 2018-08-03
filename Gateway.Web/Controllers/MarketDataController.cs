@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
 using Bagl.Cib.MIT.Logging;
-using Gateway.Web.Models.Controller;
+using Gateway.Web.Models.MarketData;
 using Gateway.Web.Services;
 
 namespace Gateway.Web.Controllers

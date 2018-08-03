@@ -369,7 +369,8 @@
     <Compile Include="Models\Controller\DocumentationModel.cs" />
     <Compile Include="Models\Controller\HistoryItem.cs" />
     <Compile Include="Models\Controller\HistoryModel.cs" />
-    <Compile Include="Models\Controller\MissingMonikerModel.cs" />
+    <Compile Include="Models\MarketData\MarketDataResponse.cs" />
+    <Compile Include="Models\MarketData\MissingMonikerModel.cs" />
     <Compile Include="Models\Controller\QueueModel.cs" />
     <Compile Include="Models\Controller\QueuesModel.cs" />
     <Compile Include="Models\Controller\ServiceModel.cs" />
@@ -387,6 +388,8 @@
     <Compile Include="Models\Home\ServiceState.cs" />
     <Compile Include="Models\Home\ControllerState.cs" />
     <Compile Include="Models\Home\StateItem.cs" />
+    <Compile Include="Models\MarketData\MonikerResult.cs" />
+    <Compile Include="Models\MarketData\VerifiedMonikerResult.cs" />
     <Compile Include="Models\Monitoring\RequestStats.cs" />
     <Compile Include="Models\Monitoring\RiskReportMetricsViewModel.cs" />
     <Compile Include="Models\Monitoring\RiskReportResponse.cs" />

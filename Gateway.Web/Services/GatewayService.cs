@@ -14,6 +14,7 @@ using Gateway.Web.Models.AddIn;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Controllers;
 using Gateway.Web.Models.Group;
+using Gateway.Web.Models.MarketData;
 using Gateway.Web.Models.Permission;
 using Gateway.Web.Models.Request;
 using Gateway.Web.Models.Security;
