@@ -238,6 +238,7 @@
     <Compile Include="Controllers\BatchController.cs" />
     <Compile Include="Controllers\DownloadsController.cs" />
     <Compile Include="Controllers\AddInController.cs" />
+    <Compile Include="Controllers\MarketDataController.cs" />
     <Compile Include="Controllers\MonitoringController.cs" />
     <Compile Include="Controllers\PermissionController.cs" />
     <Compile Include="Controllers\GroupController.cs" />
@@ -368,6 +369,8 @@
     <Compile Include="Models\Controller\DocumentationModel.cs" />
     <Compile Include="Models\Controller\HistoryItem.cs" />
     <Compile Include="Models\Controller\HistoryModel.cs" />
+    <Compile Include="Models\MarketData\MarketDataResponse.cs" />
+    <Compile Include="Models\MarketData\MissingMonikerModel.cs" />
     <Compile Include="Models\Controller\QueueModel.cs" />
     <Compile Include="Models\Controller\QueuesModel.cs" />
     <Compile Include="Models\Controller\ServiceModel.cs" />
@@ -385,6 +388,8 @@
     <Compile Include="Models\Home\ServiceState.cs" />
     <Compile Include="Models\Home\ControllerState.cs" />
     <Compile Include="Models\Home\StateItem.cs" />
+    <Compile Include="Models\MarketData\MonikerResult.cs" />
+    <Compile Include="Models\MarketData\VerifiedMonikerResult.cs" />
     <Compile Include="Models\Monitoring\RequestStats.cs" />
     <Compile Include="Models\Monitoring\RiskReportMetricsViewModel.cs" />
     <Compile Include="Models\Monitoring\RiskReportResponse.cs" />
@@ -675,6 +680,9 @@
     <Content Include="Views\Batch\Index.cshtml" />
     <Content Include="Views\Batch\_BatchConfigNav.cshtml" />
     <Content Include="Views\Batch\Delete.cshtml" />
+    <Content Include="Views\MarketData\Index.cshtml" />
+    <Content Include="Views\MarketData\MissingMonikers.cshtml" />
+    <Content Include="Views\MarketData\_MarketDataNav.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />
