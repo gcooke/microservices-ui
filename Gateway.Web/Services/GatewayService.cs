@@ -21,6 +21,7 @@ using Gateway.Web.Models.Shared;
 using Gateway.Web.Models.User;
 using Gateway.Web.Utils;
 using Newtonsoft.Json;
+using RestSharp.Deserializers;
 using StackExchange.Redis;
 using WebGrease.Css.Extensions;
 using ApplicationsModel = Gateway.Web.Models.Security.ApplicationsModel;
@@ -1584,6 +1585,23 @@ namespace Gateway.Web.Services
 
             var xmlElement = serverResponse.Document.Descendants().First();
             return xmlElement.Deserialize<GatewayInfo>();
+        }
+
+        public List<MonikerResult> GetMonikers(string server, string query)
+        {
+            var response = _gatewayRestService.Get("marketdata", "Official", query);
+
+            var result = new List<MonikerResult>();
+
+            if (!response.Successfull)
+                return result;
+
+            var element = response.Content.GetPayloadAsXElement().ToString().Deserialize<MarketDataResponse>();
+
+            result.AddRange(element.VerifiedMonikersResult.Failures);
+            result.AddRange(element.VerifiedMonikersResult.Successes);
+
+            return result;
         }
 
         //Needs to be reworked. 
