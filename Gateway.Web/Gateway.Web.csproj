@@ -388,7 +388,7 @@
     <Compile Include="Models\Home\ServiceState.cs" />
     <Compile Include="Models\Home\ControllerState.cs" />
     <Compile Include="Models\Home\StateItem.cs" />
-    <Compile Include="Models\MarketData\MonikerResult.cs" />
+    <Compile Include="Models\MarketData\MonikerCheckResult.cs" />
     <Compile Include="Models\MarketData\VerifiedMonikerResult.cs" />
     <Compile Include="Models\Monitoring\RequestStats.cs" />
     <Compile Include="Models\Monitoring\RiskReportMetricsViewModel.cs" />

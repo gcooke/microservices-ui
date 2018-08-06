@@ -7,7 +7,7 @@ namespace Gateway.Web.Models.MarketData
 {
     public class VerifiedMonikersResult
     {
-        public List<MonikerResult> Failures { get; set; }
-        public List<MonikerResult> Successes { get; set; }
+        public List<MonikerCheckResult> Failures { get; set; }
+        public List<MonikerCheckResult> Successes { get; set; }
     }
 }

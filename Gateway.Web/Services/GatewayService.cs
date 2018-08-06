@@ -1588,11 +1588,11 @@ namespace Gateway.Web.Services
             return xmlElement.Deserialize<GatewayInfo>();
         }
 
-        public List<MonikerResult> GetMonikers(string server, string query)
+        public List<MonikerCheckResult> GetMonikers(string server, string query)
         {
             var response = _gatewayRestService.Get("marketdata", "Official", query);
 
-            var result = new List<MonikerResult>();
+            var result = new List<MonikerCheckResult>();
 
             if (!response.Successfull)
                 return result;
