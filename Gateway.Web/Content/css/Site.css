@@ -403,6 +403,10 @@ progress::-webkit-progress-value {
     white-space: nowrap
 }
 
+.m-t-5 {
+    margin-top: 5px;
+}
+
 .m-t-15 {
     margin-top: 15px;
 }

@@ -675,6 +675,7 @@
     <Content Include="Views\Batch\Index.cshtml" />
     <Content Include="Views\Batch\_BatchConfigNav.cshtml" />
     <Content Include="Views\Batch\Delete.cshtml" />
+    <Content Include="Views\Monitoring\RiskBatchDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />
