@@ -1,4 +1,5 @@
 ﻿@using Gateway.Web.Enums
+@using Gateway.Web.Models.Home
 @using Gateway.Web.Models.Monitoring
 @model Gateway.Web.Database.RiskBatchModel
 @{
@@ -16,10 +17,81 @@
                 <h3 class="text-lowercase">Risk Batches</h3>
             </div>
         </div>
-        
-        <div id="report-content" style="margin-top: 10px;">
-            @{ Html.RenderPartial("_BatchStates", @Model.Items); }
-        </div>
 
+        <div id="report-content" style="margin-top: 10px;">
+            <div>
+                <table class="datatable table report-table" id="searchable-table" style="width: 100%; white-space: nowrap">
+                    <thead>
+                    <tr>
+                        <td class="table-header" style="width: 40px;"></td>
+                        <td class="table-header" style="width: 440px;">Batch</td>
+                        <td class="table-header" style="width: 180px;">Time Taken</td>
+                        <td class="table-header" style="width: 140px;">Errors</td>
+                        <td class="table-header" style="width: 140px;">Status</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var group in Model.Items)
+                    {
+                        <tr class="report-table-summary-row">
+                            <td><a class="monitoring-report-trigger" data-group-trigger="@group.Name.Replace(" ","-")">[+]</a></td>
+                            <td colspan="3">@group.Name</td>
+                            <td><span class="state_okay">@group.CompleteRuns<span>/</span>@group.TotalRuns <span>Complete</span></span></td>
+                        </tr>
+
+                        foreach (var item in group.Items)
+                        {
+                            <tr class="report-table-detail-row report-table-detail-row-hidden @group.Name.Replace(" ","-")">
+                                <td></td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(item.Link))
+                                    {
+                                        <a href="@Url.Content((string) item.Link)">
+                                            @item.Name
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <div>
+                                            @item.Name
+                                        </div>
+                                    }
+                                </td>
+                                <td style="text-align: left; color: #C0C0C0; padding-left: 5px">@item.Time (@item.Duration)</td>
+                                <td>
+                                    @if (item.ErrorCount.HasValue && item.ErrorCount > 0)
+                                    {
+                                        <a href="~/Batch/@group.Name/@item.Name/@item.CorrelationId">@item.ErrorCount.Value Error(s)</a>
+                                    }
+                                    else
+                                    {
+                                        <span>No Errors</span>
+                                    }
+                                </td>
+                                <td>
+                                    @switch ((StateItemState)item.State)
+                                    {
+                                        case StateItemState.Unknown:
+                                            <div class="state_unknown">@item.Text</div>
+                                            break;
+                                        case StateItemState.Okay:
+                                            <div class="state_okay">@item.Text</div>
+                                            break;
+                                        case StateItemState.Warn:
+                                            <div class="state_warn">@item.Text</div>
+                                            break;
+                                        case StateItemState.Error:
+                                            <div class="state_fail">@item.Text</div>
+                                            break;
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
     </div>
 </div>
