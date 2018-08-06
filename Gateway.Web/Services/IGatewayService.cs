@@ -180,7 +180,7 @@ namespace Gateway.Web.Services
 
         bool GenerateDocumentation(string id, string version);
         Task CancelWorkItemAsync(string correlationId);
-        List<MonikerResult> GetMonikers(string server, string query);
+        List<MonikerCheckResult> GetMonikers(string server, string query);
         Task<string> GetAsync(string gateway, string query);
         Task DeleteWorkersAsync();
         Task DeleteWorkersAsync(string controller);

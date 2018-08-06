@@ -11,7 +11,7 @@ namespace Gateway.Web.Models.MarketData
         {
         }
 
-        public List<MonikerResult> MissingMonikers { get; set; }
+        public List<MonikerCheckResult> MissingMonikers { get; set; }
 
         public string RunDate { get; set; }
     }

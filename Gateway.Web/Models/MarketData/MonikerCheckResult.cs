@@ -2,7 +2,7 @@
 
 namespace Gateway.Web.Models.MarketData
 {
-    public class MonikerResult
+    public class MonikerCheckResult
     {
         [XmlAttribute]
         public bool Success { get; set; }

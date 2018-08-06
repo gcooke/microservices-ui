@@ -24,7 +24,7 @@ namespace Gateway.Web.Controllers
             if (rundate == DateTime.MinValue || rundate == null)
                 rundate = DateTime.Now.Date;
 
-            List<MonikerResult> result = _gateway.GetMonikers("marketdata", "verifydefaultlist/" + rundate.Value.ToString("yyyy-MM-dd"));
+            List<MonikerCheckResult> result = _gateway.GetMonikers("marketdata", "verifydefaultlist/" + rundate.Value.ToString("yyyy-MM-dd"));
 
             var model = new MissingMonikerModel("MissingMonikers")
             {
