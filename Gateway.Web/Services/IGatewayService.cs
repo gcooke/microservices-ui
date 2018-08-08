@@ -7,6 +7,8 @@ using Gateway.Web.Models.AddIn;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Controllers;
 using Gateway.Web.Models.Group;
+using Gateway.Web.Models.MarketData;
+using Gateway.Web.Models.Monitoring;
 using Gateway.Web.Models.Request;
 using Gateway.Web.Models.Security;
 using Gateway.Web.Models.Shared;
@@ -178,7 +180,7 @@ namespace Gateway.Web.Services
 
         bool GenerateDocumentation(string id, string version);
         Task CancelWorkItemAsync(string correlationId);
-
+        List<MonikerCheckResult> GetMonikers(string server, string query);
         Task<string> GetAsync(string gateway, string query);
         Task DeleteWorkersAsync();
         Task DeleteWorkersAsync(string controller);

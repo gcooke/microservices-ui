@@ -30,6 +30,7 @@ namespace Gateway.Web
             // Add handle error attribute and authorize attribute to entire site.
             GlobalFilters.Filters.Add(new HandleErrorAttribute());
             GlobalFilters.Filters.Add(new RoleBasedAuthorizeAttribute());
+            GlobalFilters.Filters.Add(new GatewayAuthenticationFilter());
 
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);

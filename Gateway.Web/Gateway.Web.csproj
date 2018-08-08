@@ -232,13 +232,17 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Authorization\AuthorizedRoleProvider.cs" />
+    <Compile Include="Authorization\GatewayAuthenticationFilter.cs" />
     <Compile Include="Authorization\RoleBasedAuthorizeAttribute.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\BatchController.cs" />
     <Compile Include="Controllers\DownloadsController.cs" />
     <Compile Include="Controllers\AddInController.cs" />
+    <Compile Include="Controllers\MarketDataController.cs" />
     <Compile Include="Controllers\MonitoringController.cs" />
     <Compile Include="Controllers\PermissionController.cs" />
     <Compile Include="Controllers\GroupController.cs" />
+    <Compile Include="Controllers\ReleaseProcessController.cs" />
     <Compile Include="Controllers\SecurityController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\RequestController.cs" />
@@ -266,6 +270,12 @@
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\ResponseStats.cs" />
+    <Compile Include="Database\RiskBatchConfiguration.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\RiskBatchSchedule.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
     <Compile Include="Database\spGetChildRequests_Result.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
@@ -341,6 +351,11 @@
     <Compile Include="Helpers\TreeView.cs" />
     <Compile Include="Models\AddIn\AddInVersionModel.cs" />
     <Compile Include="Models\AddIn\ApplicationVersionModel.cs" />
+    <Compile Include="Models\Batches\BatchConfigList.cs" />
+    <Compile Include="Models\Batches\DeleteBatchConfigModel.cs" />
+    <Compile Include="Enums\MarketDataMap.cs" />
+    <Compile Include="Enums\OutputType.cs" />
+    <Compile Include="Enums\TradeSourceType.cs" />
     <Compile Include="Models\Controllers\AliasesModel.cs" />
     <Compile Include="Models\Controllers\GatewayInfo.cs" />
     <Compile Include="Models\Controllers\HistoryModel.cs" />
@@ -354,6 +369,8 @@
     <Compile Include="Models\Controller\DocumentationModel.cs" />
     <Compile Include="Models\Controller\HistoryItem.cs" />
     <Compile Include="Models\Controller\HistoryModel.cs" />
+    <Compile Include="Models\MarketData\MarketDataResponse.cs" />
+    <Compile Include="Models\MarketData\MissingMonikerModel.cs" />
     <Compile Include="Models\Controller\QueueModel.cs" />
     <Compile Include="Models\Controller\QueuesModel.cs" />
     <Compile Include="Models\Controller\ServiceModel.cs" />
@@ -371,6 +388,8 @@
     <Compile Include="Models\Home\ServiceState.cs" />
     <Compile Include="Models\Home\ControllerState.cs" />
     <Compile Include="Models\Home\StateItem.cs" />
+    <Compile Include="Models\MarketData\MonikerCheckResult.cs" />
+    <Compile Include="Models\MarketData\VerifiedMonikerResult.cs" />
     <Compile Include="Models\Monitoring\RequestStats.cs" />
     <Compile Include="Models\Monitoring\RiskReportMetricsViewModel.cs" />
     <Compile Include="Models\Monitoring\RiskReportResponse.cs" />
@@ -443,6 +462,10 @@
     <Compile Include="Models\User\HistoryModel.cs" />
     <Compile Include="Registrations.cs" />
     <Compile Include="Services\BasicRestService.cs" />
+    <Compile Include="Models\Batches\BatchConfigModel.cs" />
+    <Compile Include="Services\Batches\BatchConfigEx.cs" />
+    <Compile Include="Services\Batches\IRiskBatchConfigService.cs" />
+    <Compile Include="Services\Batches\RiskBatchConfigService.cs" />
     <Compile Include="Services\DifferentialDownloadService.cs" />
     <Compile Include="Services\GatewayService.cs" />
     <Compile Include="Services\IActiveDirectoryService.cs" />
@@ -646,6 +669,20 @@
     <Content Include="Views\Monitoring\RiskBatches.cshtml" />
     <Content Include="Views\Shared\_BatchStatesSummary.cshtml" />
     <Content Include="Views\Shared\_FrameworkStateItems.cshtml" />
+    <Content Include="Views\Controllers\_ControllersInfrastructureNav.cshtml" />
+    <Content Include="Views\Controllers\_ControllersConfigNav.cshtml" />
+    <Content Include="Views\Controllers\_ControllersUsageNav.cshtml" />
+    <Content Include="Views\Security\_SecurityReportsNav.cshtml" />
+    <Content Include="Views\ReleaseProcess\CurrentRelease.cshtml" />
+    <Content Include="Views\ReleaseProcess\HistoricalReleases.cshtml" />
+    <Content Include="Views\ReleaseProcess\_ReleasesNav.cshtml" />
+    <Content Include="Views\Batch\Create.cshtml" />
+    <Content Include="Views\Batch\Index.cshtml" />
+    <Content Include="Views\Batch\_BatchConfigNav.cshtml" />
+    <Content Include="Views\Batch\Delete.cshtml" />
+    <Content Include="Views\MarketData\Index.cshtml" />
+    <Content Include="Views\MarketData\MissingMonikers.cshtml" />
+    <Content Include="Views\MarketData\_MarketDataNav.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />
@@ -667,9 +704,7 @@
     <Content Include="Views\User\Portfolios.cshtml" />
     <Content Include="Views\User\Groups.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\Reports\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
@@ -698,7 +733,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>9895</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:9896/</IISUrl>
+          <IISUrl>http://localhost:9896/Support</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

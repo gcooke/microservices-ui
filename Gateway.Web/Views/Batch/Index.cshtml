@@ -1,0 +1,147 @@
+﻿@using System.Xml.Schema
+@using Gateway.Web.Models
+@using Gateway.Web.Models.Controllers
+@model Gateway.Web.Models.Batches.BatchConfigList
+
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "Batch";
+    ViewBag.Current = "Configuration";
+}
+@{ Html.RenderPartial("_BatchConfigNav"); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+
+        <div class="row">
+            <div class="col-sm-6">
+                <h3 class="text-lowercase">Batch Configuration</h3>
+            </div>
+            <div class="col-sm-6">
+                <a href="~/Batch/Create" class="btn btn-default pull-right m-t-15">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    Create
+                </a>
+            </div>
+        </div>
+        
+        <div class="row m-t-15">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <table class="datatable table report-table" id="searchable-table">
+                    <thead>
+                        <tr>
+                            <td></td>
+                            <td>Type</td>
+                            <td>Trade Source Type</td>
+                            <td>Market Data Map</td>
+                            <td>Output Type</td>
+                            <td>Output Tag</td>
+                            <td>State TTL (Minutes)</td>
+                            <td></td>
+                        </tr>
+                    <tr>
+                        <td colspan="8">
+                            @using (@Html.BeginForm("Index", "Batch", FormMethod.Get))
+                            {
+                                @Html.TextBoxFor(m => m.SearchTerm, new { @name="q", @class = "form-control", @placeholder = "Search for batch configuration..."})
+                            }
+                        </td>
+                    </tr>
+
+                    </thead>
+                    <tbody>
+                    
+                    @if (!Model.BatchConfigModels.Any())
+                    {
+                        <tr>
+                            <td colspan="8" class="center-text">
+                                No batch configurations have been created
+                            </td>
+                        </tr>
+                    }
+
+                    @foreach (var item in Model.BatchConfigModels)
+                    {
+                        <tr>
+                            <td>
+                                @Html.CheckBoxFor(m => item.IsSelected)
+                            </td>
+                            <td>@item.Type</td>
+                            <td>@item.TradeSourceType</td>
+                            <td>@item.MarketDataMapName</td>
+                            <td>@item.OutputType</td>
+                            <td>@item.OutputTag</td>
+                            <td>@item.StateTtlMinutes</td>
+                            <td>
+                                <a href="~/Batch/Schedule/@item.ConfigurationId/Create" class="text-center glyphicon glyphicon glyphicon-dashboard"></a>
+                                <a href="~/Batch/Update/@item.ConfigurationId" class="text-center glyphicon glyphicon-pencil"></a>
+                                <a href="~/Batch/Delete/@item.ConfigurationId/@item.Type" class="text-center glyphicon glyphicon-trash"></a>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        @if (Model.PageCount > 0)
+        {
+            <div class="row">
+                <div class="col-sm-12">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination">
+                            @if (Model.CurrentPage == 1)
+                            {
+                                <li class="disabled">
+                                    <a href="#" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li>
+                                    <a href="~/Batch?page=@Model.PreviousPage&searchTerm=@Model.SearchTerm" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                            }
+
+                            @foreach (var page in Enumerable.Range(1, Model.PageCount))
+                            {
+                                if (page == Model.CurrentPage)
+                                {
+                                    <li class="active"><a href="~/Batch?page=@page&searchTerm=@Model.SearchTerm">@page</a></li>
+                                }
+                                else
+                                {
+                                    <li><a href="~/Batch?page=@page&searchTerm=@Model.SearchTerm">@page</a></li>
+                                }
+                            }
+                        
+                        
+                            @if (Model.CurrentPage == Model.PageCount)
+                            {
+                                <li class="disabled">
+                                    <a href="#" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li>
+                                    <a href="~/Batch?page=@Model.NextPage&searchTerm=@Model.SearchTerm" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            }
+
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+

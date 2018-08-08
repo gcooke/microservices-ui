@@ -36,6 +36,7 @@
           <Property Name="MaxInstances" Type="int" Nullable="false" />
           <Property Name="TimeoutMilliSec" Type="int" />
           <Property Name="Description" Type="varchar" MaxLength="500" />
+          <Property Name="ExcludedServers" Type="nvarchar" MaxLength="1000" />
         </EntityType>
         <EntityType Name="Link">
           <Key>
@@ -104,6 +105,27 @@
           <Property Name="Size" Type="int" />
           <Property Name="SizeUnit" Type="varchar" MaxLength="100" />
         </EntityType>
+        <EntityType Name="RiskBatchConfiguration">
+          <Key>
+            <PropertyRef Name="ConfigurationId" />
+          </Key>
+          <Property Name="ConfigurationId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Type" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="TradeSourceType" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="MarketDataMapName" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="OutputType" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="OutputTag" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="StateTtlMinutes" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RiskBatchSchedule">
+          <Key>
+            <PropertyRef Name="ScheduleId" />
+          </Key>
+          <Property Name="ScheduleId" Type="bigint" Nullable="false" />
+          <Property Name="ConfigurationId" Type="bigint" Nullable="false" />
+          <Property Name="TradeSource" Type="varchar(max)" Nullable="false" />
+          <Property Name="Schedule" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
         <EntityType Name="Status">
           <Key>
             <PropertyRef Name="Id" />
@@ -134,6 +156,18 @@
           <Property Name="Alias" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="StatusId" Type="int" Nullable="false" />
         </EntityType>
+        <Association Name="FK_RiskBatchSchedule_RiskBatchConfiguration">
+          <End Role="RiskBatchConfiguration" Type="Self.RiskBatchConfiguration" Multiplicity="1" />
+          <End Role="RiskBatchSchedule" Type="Self.RiskBatchSchedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RiskBatchConfiguration">
+              <PropertyRef Name="ConfigurationId" />
+            </Principal>
+            <Dependent Role="RiskBatchSchedule">
+              <PropertyRef Name="ConfigurationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Version_Controller">
           <End Role="Controller" Type="Self.Controller" Multiplicity="1" />
           <End Role="Version" Type="Self.Version" Multiplicity="*" />
@@ -218,9 +252,15 @@
           <EntitySet Name="Request" EntityType="Self.Request" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RequestChange" EntityType="Self.RequestChange" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Response" EntityType="Self.Response" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RiskBatchConfiguration" EntityType="Self.RiskBatchConfiguration" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RiskBatchSchedule" EntityType="Self.RiskBatchSchedule" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Status" EntityType="Self.Status" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="StatusChange" EntityType="Self.StatusChange" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Version" EntityType="Self.Version" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_RiskBatchSchedule_RiskBatchConfiguration" Association="Self.FK_RiskBatchSchedule_RiskBatchConfiguration">
+            <End Role="RiskBatchConfiguration" EntitySet="RiskBatchConfiguration" />
+            <End Role="RiskBatchSchedule" EntitySet="RiskBatchSchedule" />
+          </AssociationSet>
           <AssociationSet Name="FK_Version_Controller" Association="Self.FK_Version_Controller">
             <End Role="Controller" EntitySet="Controller" />
             <End Role="Version" EntitySet="Version" />
@@ -250,6 +290,7 @@
           <NavigationProperty Name="Versions" Relationship="Self.FK_Version_Controller" FromRole="Controller" ToRole="Version" />
           <Property Name="TimeoutMilliSec" Type="Int32" />
           <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="ExcludedServers" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Request">
           <Key>
@@ -378,8 +419,14 @@
           <Parameter Name="Start" Mode="In" Type="DateTime" />
           </FunctionImport>
           <FunctionImport Name="spGetIncompleteRequestCount" ReturnType="Collection(GatewayModel.spGetIncompleteRequestCount_Result)">
-            <Parameter Name="time" Mode="In" Type="DateTime" />
+          <Parameter Name="time" Mode="In" Type="DateTime" />
           </FunctionImport>
+          <EntitySet Name="RiskBatchConfigurations" EntityType="GatewayModel.RiskBatchConfiguration" />
+          <EntitySet Name="RiskBatchSchedules" EntityType="GatewayModel.RiskBatchSchedule" />
+          <AssociationSet Name="FK_RiskBatchSchedule_RiskBatchConfiguration" Association="GatewayModel.FK_RiskBatchSchedule_RiskBatchConfiguration">
+            <End Role="RiskBatchConfiguration" EntitySet="RiskBatchConfigurations" />
+            <End Role="RiskBatchSchedule" EntitySet="RiskBatchSchedules" />
+          </AssociationSet>
         </EntityContainer>
         <ComplexType Name="spGetRequestStats_Result">
           <Property Type="DateTime" Name="Date" Nullable="true" />
@@ -626,6 +673,41 @@
           <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
           <Property Type="Int32" Name="InCompleteRequests" Nullable="true" />
         </ComplexType>
+        <EntityType Name="RiskBatchConfiguration">
+          <Key>
+            <PropertyRef Name="ConfigurationId" />
+          </Key>
+          <Property Name="ConfigurationId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Type" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="TradeSourceType" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="MarketDataMapName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="OutputType" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="OutputTag" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="StateTtlMinutes" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="RiskBatchSchedules" Relationship="GatewayModel.FK_RiskBatchSchedule_RiskBatchConfiguration" FromRole="RiskBatchConfiguration" ToRole="RiskBatchSchedule" />
+        </EntityType>
+        <EntityType Name="RiskBatchSchedule">
+          <Key>
+            <PropertyRef Name="ScheduleId" />
+          </Key>
+          <Property Name="ScheduleId" Type="Int64" Nullable="false" />
+          <Property Name="ConfigurationId" Type="Int64" Nullable="false" />
+          <Property Name="TradeSource" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Schedule" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="RiskBatchConfiguration" Relationship="GatewayModel.FK_RiskBatchSchedule_RiskBatchConfiguration" FromRole="RiskBatchSchedule" ToRole="RiskBatchConfiguration" />
+        </EntityType>
+        <Association Name="FK_RiskBatchSchedule_RiskBatchConfiguration">
+          <End Type="GatewayModel.RiskBatchConfiguration" Role="RiskBatchConfiguration" Multiplicity="1" />
+          <End Type="GatewayModel.RiskBatchSchedule" Role="RiskBatchSchedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RiskBatchConfiguration">
+              <PropertyRef Name="ConfigurationId" />
+            </Principal>
+            <Dependent Role="RiskBatchSchedule">
+              <PropertyRef Name="ConfigurationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -635,6 +717,7 @@
           <EntitySetMapping Name="Controllers">
             <EntityTypeMapping TypeName="GatewayModel.Controller">
               <MappingFragment StoreEntitySet="Controller">
+                <ScalarProperty Name="ExcludedServers" ColumnName="ExcludedServers" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="TimeoutMilliSec" ColumnName="TimeoutMilliSec" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
@@ -998,6 +1081,29 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="RiskBatchConfigurations">
+            <EntityTypeMapping TypeName="GatewayModel.RiskBatchConfiguration">
+              <MappingFragment StoreEntitySet="RiskBatchConfiguration">
+                <ScalarProperty Name="StateTtlMinutes" ColumnName="StateTtlMinutes" />
+                <ScalarProperty Name="OutputTag" ColumnName="OutputTag" />
+                <ScalarProperty Name="OutputType" ColumnName="OutputType" />
+                <ScalarProperty Name="MarketDataMapName" ColumnName="MarketDataMapName" />
+                <ScalarProperty Name="TradeSourceType" ColumnName="TradeSourceType" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="ConfigurationId" ColumnName="ConfigurationId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RiskBatchSchedules">
+            <EntityTypeMapping TypeName="GatewayModel.RiskBatchSchedule">
+              <MappingFragment StoreEntitySet="RiskBatchSchedule">
+                <ScalarProperty Name="Schedule" ColumnName="Schedule" />
+                <ScalarProperty Name="TradeSource" ColumnName="TradeSource" />
+                <ScalarProperty Name="ConfigurationId" ColumnName="ConfigurationId" />
+                <ScalarProperty Name="ScheduleId" ColumnName="ScheduleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

@@ -9,6 +9,7 @@ using Bagl.Cib.MSF.ClientAPI.Gateway;
 using Bagl.Cib.MSF.ClientAPI.Provider;
 using Gateway.Web.Database;
 using Gateway.Web.Services;
+using Gateway.Web.Services.Batches;
 using StackExchange.Redis;
 using Gateway.Web.Services.Monitoring.RiskReports;
 using Gateway.Web.Services.Monitoring.ServerDiagnostics;
@@ -28,7 +29,7 @@ namespace Gateway.Web
             information.RegisterType<IGatewayRestService, GatewayRestService>(Scope.Singleton);
             information.RegisterType<IBasicRestService, BasicRestService>(Scope.Singleton);
             information.RegisterType<IRoleService, RoleService>(Scope.Singleton);
-            information.RegisterType<IAuthenticationProvider, AuthenticationProvider>(Scope.Singleton);
+            information.RegisterType<IAuthenticationProvider, AuthenticationProvider>(Scope.ContainerSingleton);
             information.RegisterType<IDateTimeProvider, DateTimeProvider>(Scope.Singleton);
             information.RegisterType<IRoleService, RoleService>(Scope.Singleton);
             information.RegisterType<IFileService, FileService>(Scope.Singleton);
@@ -43,6 +44,7 @@ namespace Gateway.Web
             information.RegisterType<IRedisConnectionProvider, RedisConnectionProvider>(Scope.Singleton);
             information.RegisterType<IActiveDirectoryService, ActiveDirectoryService>(Scope.Singleton);
             information.RegisterType<IServerDiagnosticsService, ServerDiagnosticsService>(Scope.Singleton);
+            information.RegisterType<IRiskBatchConfigService, RiskBatchConfigService>(Scope.Singleton);
             RegisterRedisOptions(information);
         }
 

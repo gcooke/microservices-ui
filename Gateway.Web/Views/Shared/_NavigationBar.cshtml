@@ -14,10 +14,62 @@
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                <li>@Html.ActionLink("Controllers", "Dashboard", "Controllers")</li>
-                <li>@Html.ActionLink("Security", "Index", "Security")</li>
-                <li>@Html.ActionLink("Monitoring", "RiskReports", "Monitoring")</li>
-                <li>@Html.ActionLink("How To", "HowTo", "Home")</li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        Controllers <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>@Html.ActionLink("Controllers", "Dashboard", "Controllers")</li>
+                        <li>@Html.ActionLink("Queues", "Queues", "Controllers")</li>
+                        <li>@Html.ActionLink("History", "History", "Controllers")</li>
+                        <li>@Html.ActionLink("Actions", "Actions", "Controllers")</li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        Reports <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>@Html.ActionLink("Risk Data", "RiskReports", "Monitoring")</li>
+                        <li>@Html.ActionLink("Market Data", "MissingMonikersAction", "MarketData")</li>
+                        <li>@Html.ActionLink("Infrastructure", "Workers", "Controllers")</li>
+                        <li>@Html.ActionLink("Configuration", "Aliases", "Controllers")</li>
+                        <li>@Html.ActionLink("Usage", "UsageReport", "Controllers")</li>
+                        <li>@Html.ActionLink("Security", "Reports/Audit", "Security")</li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        Security <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>@Html.ActionLink("Groups", "Groups", "Security")</li>
+                        <li>@Html.ActionLink("Users", "Users", "Security")</li>
+                        <li>@Html.ActionLink("Applications", "AddIns", "Security")</li>
+                        <li>@Html.ActionLink("Permissions", "Permissions", "Security")</li>
+                        <li>@Html.ActionLink("Links", "Links", "Security")</li>
+                        <li>@Html.ActionLink("BusinessFunctions", "BusinessFunctions", "Security")</li>
+                        <li>@Html.ActionLink("Group Types", "GroupTypes", "Security")</li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        Configuration <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>@Html.ActionLink("Batch", "Index", "Batch")</li>
+                        <li>@Html.ActionLink("Schedule", "Index", "Batch")</li>
+                    </ul>
+                </li>
+                @*<li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        Releases <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>@Html.ActionLink("Current Release", "Current", "ReleaseProcess")</li>
+                        <li>@Html.ActionLink("Historical Releases", "Historical", "ReleaseProcess")</li>
+                    </ul>
+                </li>*@
             </ul>
 
             <div class="pull-right">

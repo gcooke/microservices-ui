@@ -1,0 +1,21 @@
+﻿@using Gateway.Web.Enums
+@using Gateway.Web.Models.Monitoring
+@model Gateway.Web.Database.RiskBatchModel
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "Releases";
+    ViewBag.Current = "Historical Releases";
+}
+@{ Html.RenderPartial("_ReleasesNav"); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <h3 class="text-lowercase">Historical Releases</h3>
+            </div>
+        </div>
+
+    </div>
+</div>
