@@ -12,6 +12,7 @@ using Gateway.Web.Models.Home;
 using Gateway.Web.Models.Monitoring;
 using Gateway.Web.Models.Request;
 using Gateway.Web.Models.Security;
+using Gateway.Web.Models.ServerResource;
 using RestSharp.Extensions;
 using WebGrease.Css.Ast.Selectors;
 using QueueChartModel = Gateway.Web.Models.Controller.QueueChartModel;
@@ -568,6 +569,147 @@ namespace Gateway.Web.Database
                     results.Add(summary);
                 }
                 return results;
+            }
+        }
+
+        public ResourceConfigModel GetConfiguredServers()
+        {
+            using (var database = new GatewayEntities())
+            {
+                ResourceConfigModel model = new ResourceConfigModel();
+
+
+                model.Configs =  database.Servers.Select(s => new ItemResourceConfig
+                {
+                    Name = s.Name ,
+                    DisplayName = s.Name + "/" +  s.Domain,
+                    AllowableResources = s.ServerExternalResources.Select(ser=>new ExternalResourceConfig
+                    {
+                        Name = ser.ExternalResource.Name,
+                        Type = ser.ExternalResource.Type
+                    }).ToList()
+                }).ToList();
+
+
+                model.AllResources = database.ExternalResources.Select(er => new ExternalResourceConfig
+                {
+                    Name = er.Name,
+                    Type = er.Type
+                }).ToList();
+
+                model.ConfigType = ResourceConfigType.Server;
+
+                return model;
+            }
+        }
+
+        public ResourceConfigModel GetControllerResources()
+        {
+            using (var database = new GatewayEntities())
+            {
+                ResourceConfigModel model = new ResourceConfigModel();
+
+                model.Configs = database.Controllers.Select(s => new ItemResourceConfig
+                {
+                    Name = s.Name,
+                    DisplayName = s.Name,
+                    AllowableResources = s.ControllerExternalResources.Select(ser => new ExternalResourceConfig
+                    {
+                        Name = ser.ExternalResource.Name,
+                        Type = ser.ExternalResource.Type
+                    }).ToList()
+                }).ToList();
+
+
+                model.AllResources = database.ExternalResources.Select(er => new ExternalResourceConfig
+                {
+                    Name = er.Name,
+                    Type = er.Type
+                }).ToList();
+
+                model.ConfigType = ResourceConfigType.Controller;
+
+                return model;
+            }
+        }
+
+
+        public void DeleteServerResourceLink(string serverName, string resourceName)
+        {
+            using (var database = new GatewayEntities())
+            {
+                var toDelete = database.ServerExternalResources.Where(sr =>
+                    sr.ExternalResource.Name == resourceName && sr.Server.Name == serverName);
+
+                database.ServerExternalResources.RemoveRange(toDelete);
+
+                database.SaveChanges();
+            }
+        }
+
+        public void AddServerResourceLink(string serverName, string resourceName)
+        {
+            using (var database = new GatewayEntities())
+            {
+                var existing = database.ServerExternalResources.Where(sr =>
+                    sr.ExternalResource.Name == resourceName && sr.Server.Name == serverName);
+
+                if (!existing.Any())
+                {
+                    var server = database.Servers.SingleOrDefault(s => s.Name == serverName);
+                    var resource = database.ExternalResources.SingleOrDefault(r => r.Name == resourceName);
+
+                    if (server != null && resource != null)
+                    {
+                        database.ServerExternalResources.Add(new ServerExternalResource
+                        {
+                            ExternalResource = resource,
+                            Server = server
+                        });
+                        database.SaveChanges();
+                    }
+                }
+
+            }
+
+        }
+
+        public void DeleteControllerResourceLink(string controllerName, string resourceName)
+        {
+            using (var database = new GatewayEntities())
+            {
+                var toDelete = database.ControllerExternalResources.Where(sr =>
+                    sr.ExternalResource.Name == resourceName && sr.Controller.Name == controllerName);
+
+                database.ControllerExternalResources.RemoveRange(toDelete);
+
+                database.SaveChanges();
+            }
+        }
+
+        public void AddControllerResourceLink(string controllerName, string resourceName)
+        {
+            using (var database = new GatewayEntities())
+            {
+                var existing = database.ControllerExternalResources.Where(sr =>
+                    sr.ExternalResource.Name == resourceName && sr.Controller.Name == controllerName);
+
+                if (!existing.Any())
+                {
+                    var controller = database.Controllers.SingleOrDefault(s => s.Name == controllerName);
+                    var resource = database.ExternalResources.SingleOrDefault(r => r.Name == resourceName);
+
+                    if (controller != null && resource != null)
+                    {
+                        database.ControllerExternalResources.Add(new ControllerExternalResource
+                        {
+                            ExternalResource = resource,
+                            Controller = controller
+                        });
+                        database.SaveChanges();
+                    }
+                }
+
             }
         }
 

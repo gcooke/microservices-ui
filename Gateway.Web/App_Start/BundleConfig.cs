@@ -49,6 +49,10 @@ namespace Gateway.Web
                 "~/Scripts/Monitoring/Monitoring.js"
             ));
 
+            bundles.Add(new ScriptBundle("~/bundles/server-resources").Include(
+                "~/Scripts/ServerResources/ServerResources.js"
+            ));
+
             bundles.Add(new StyleBundle("~/styles/css").Include(
                 "~/Content/css/bootstrap.css",
                 "~/Content/css/font-awesome.css",

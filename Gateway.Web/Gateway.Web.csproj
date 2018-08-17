@@ -244,6 +244,7 @@
     <Compile Include="Controllers\GroupController.cs" />
     <Compile Include="Controllers\ReleaseProcessController.cs" />
     <Compile Include="Controllers\SecurityController.cs" />
+    <Compile Include="Controllers\ServerResourceController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\RequestController.cs" />
     <Compile Include="Controllers\ControllersController.cs" />
@@ -255,7 +256,13 @@
     <Compile Include="Database\BatchStat.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
+    <Compile Include="Database\ControllerExternalResource.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
     <Compile Include="Database\ExtendedBatchSummary.cs" />
+    <Compile Include="Database\ExternalResource.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
     <Compile Include="Database\GatewayDatabaseService.cs" />
     <Compile Include="Database\HistoricalSummary.cs" />
     <Compile Include="Database\IGatewayDatabaseService.cs" />
@@ -274,6 +281,12 @@
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\RiskBatchSchedule.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\Server.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\ServerExternalResource.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\spGetChildRequests_Result.cs">
@@ -357,10 +370,12 @@
     <Compile Include="Enums\OutputType.cs" />
     <Compile Include="Enums\TradeSourceType.cs" />
     <Compile Include="Models\Controllers\AliasesModel.cs" />
+    <Compile Include="Models\Controllers\ExternalResourceConfig.cs" />
     <Compile Include="Models\Controllers\GatewayInfo.cs" />
     <Compile Include="Models\Controllers\HistoryModel.cs" />
     <Compile Include="Models\Controllers\QueueChartModel.cs" />
     <Compile Include="Models\Controllers\QueuesModel.cs" />
+    <Compile Include="Models\Controllers\ItemResourceConfig.cs" />
     <Compile Include="Models\Controllers\ServersModel.cs" />
     <Compile Include="Models\Controllers\UsageModel.cs" />
     <Compile Include="Models\Controllers\VersionsModel.cs" />
@@ -405,6 +420,8 @@
     <Compile Include="Models\Security\GroupTypesModel.cs" />
     <Compile Include="Models\Security\LinkModel.cs" />
     <Compile Include="Models\Security\LinksModel.cs" />
+    <Compile Include="Models\ServerResource\ResourceConfigModel.cs" />
+    <Compile Include="Models\ServerResource\ResourceConfigType.cs" />
     <Compile Include="Models\Shared\AddInModel.cs" />
     <Compile Include="Models\Shared\ApplicationModel.cs" />
     <Compile Include="Models\Shared\EntityAddInVersionModel.cs" />
@@ -579,6 +596,7 @@
     <Content Include="Content\js\respond.js" />
     <Content Include="Content\js\respond.min.js" />
     <Content Include="Content\js\_references.js" />
+    <Content Include="Scripts\ServerResources\ServerResources.js" />
     <Content Include="Scripts\Monitoring\Monitoring.js" />
     <Content Include="Scripts\Queues\ControllerQueueCharts.js" />
     <Content Include="Scripts\Queues\Shared\ChartRenderer.js" />
@@ -683,6 +701,8 @@
     <Content Include="Views\MarketData\Index.cshtml" />
     <Content Include="Views\MarketData\MissingMonikers.cshtml" />
     <Content Include="Views\MarketData\_MarketDataNav.cshtml" />
+    <Content Include="Views\ServerResource\Index.cshtml" />
+    <Content Include="Views\ServerResource\_ServerResourcesNav.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />

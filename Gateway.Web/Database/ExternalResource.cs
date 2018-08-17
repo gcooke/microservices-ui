@@ -12,24 +12,22 @@ namespace Gateway.Web.Database
     using System;
     using System.Collections.Generic;
     
-    public partial class RiskBatchSchedule
+    public partial class ExternalResource
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public RiskBatchSchedule()
+        public ExternalResource()
         {
-            this.RiskBatchSchedule1 = new HashSet<RiskBatchSchedule>();
+            this.ControllerExternalResources = new HashSet<ControllerExternalResource>();
+            this.ServerExternalResources = new HashSet<ServerExternalResource>();
         }
     
-        public long ScheduleId { get; set; }
-        public long ConfigurationId { get; set; }
-        public string TradeSource { get; set; }
-        public string ScheduleKey { get; set; }
-        public Nullable<long> GroupId { get; set; }
-        public Nullable<long> Parent { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Type { get; set; }
     
-        public virtual RiskBatchConfiguration RiskBatchConfiguration { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<RiskBatchSchedule> RiskBatchSchedule1 { get; set; }
-        public virtual RiskBatchSchedule RiskBatchSchedule2 { get; set; }
+        public virtual ICollection<ControllerExternalResource> ControllerExternalResources { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ServerExternalResource> ServerExternalResources { get; set; }
     }
 }

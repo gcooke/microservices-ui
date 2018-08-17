@@ -12,24 +12,21 @@ namespace Gateway.Web.Database
     using System;
     using System.Collections.Generic;
     
-    public partial class RiskBatchSchedule
+    public partial class Server
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public RiskBatchSchedule()
+        public Server()
         {
-            this.RiskBatchSchedule1 = new HashSet<RiskBatchSchedule>();
+            this.ServerExternalResources = new HashSet<ServerExternalResource>();
         }
     
-        public long ScheduleId { get; set; }
-        public long ConfigurationId { get; set; }
-        public string TradeSource { get; set; }
-        public string ScheduleKey { get; set; }
-        public Nullable<long> GroupId { get; set; }
-        public Nullable<long> Parent { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Domain { get; set; }
+        public int RAM { get; set; }
+        public int CpuCores { get; set; }
     
-        public virtual RiskBatchConfiguration RiskBatchConfiguration { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<RiskBatchSchedule> RiskBatchSchedule1 { get; set; }
-        public virtual RiskBatchSchedule RiskBatchSchedule2 { get; set; }
+        public virtual ICollection<ServerExternalResource> ServerExternalResources { get; set; }
     }
 }

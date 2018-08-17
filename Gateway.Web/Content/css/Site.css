@@ -426,3 +426,7 @@ progress::-webkit-progress-value {
 .monitoring-report-trigger {
     cursor: pointer;
 }
+
+.server-resource-button {
+    margin-top: 5px;
+}
