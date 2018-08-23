@@ -1,4 +1,5 @@
 ﻿using System;
+using Absa.Cib.MIT.TaskScheduling.Client.Scheduler;
 using Bagl.Cib.MIT.IoC;
 using Bagl.Cib.MIT.IO;
 using Bagl.Cib.MIT.IO.Impl;
@@ -8,11 +9,16 @@ using Bagl.Cib.MIT.Redis;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
 using Bagl.Cib.MSF.ClientAPI.Provider;
 using Gateway.Web.Database;
+using Gateway.Web.Models.Schedule;
+using Gateway.Web.Models.Schedule.Input;
 using Gateway.Web.Services;
 using Gateway.Web.Services.Batches;
+using Gateway.Web.Services.Batches.Interfaces;
 using StackExchange.Redis;
 using Gateway.Web.Services.Monitoring.RiskReports;
 using Gateway.Web.Services.Monitoring.ServerDiagnostics;
+using Gateway.Web.Services.Schedule;
+using Gateway.Web.Services.Schedule.Interfaces;
 
 namespace Gateway.Web
 {
@@ -44,7 +50,13 @@ namespace Gateway.Web
             information.RegisterType<IRedisConnectionProvider, RedisConnectionProvider>(Scope.Singleton);
             information.RegisterType<IActiveDirectoryService, ActiveDirectoryService>(Scope.Singleton);
             information.RegisterType<IServerDiagnosticsService, ServerDiagnosticsService>(Scope.Singleton);
-            information.RegisterType<IRiskBatchConfigService, RiskBatchConfigService>(Scope.Singleton);
+            information.RegisterType<IBatchConfigService, BatchConfigService>(Scope.Singleton);
+            information.RegisterType<IScheduleDataService, ScheduleDataService>(Scope.Singleton);
+            information.RegisterType<IRedstoneWebRequestScheduler, RedstoneWebRequestScheduler>(Scope.Singleton);
+            information.RegisterType<IBatchConfigDataService, BatchConfigDataService>(Scope.Singleton);
+            information.RegisterType<IScheduleService<ScheduleBatchModel>, RedstoneBatchScheduleService>(Scope.Singleton);
+            information.RegisterType<IScheduleService<ScheduleWebRequestModel>, RedstoneRequestScheduleService>(Scope.Singleton);
+            information.RegisterType<IScheduleGroupService, ScheduleGroupService>(Scope.Singleton);
             RegisterRedisOptions(information);
         }
 

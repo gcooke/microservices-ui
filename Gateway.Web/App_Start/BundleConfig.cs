@@ -49,6 +49,11 @@ namespace Gateway.Web
                 "~/Scripts/Monitoring/Monitoring.js"
             ));
 
+
+            bundles.Add(new ScriptBundle("~/bundles/schedule").Include(
+                "~/Scripts/Schedule/Schedule.js"
+            ));
+
             bundles.Add(new ScriptBundle("~/bundles/server-resources").Include(
                 "~/Scripts/ServerResources/ServerResources.js"
             ));
@@ -67,6 +72,24 @@ namespace Gateway.Web
                 "~/Content/css/c3.css"
                 ));
 
+            bundles.Add(new StyleBundle("~/styles/treetable").Include(
+                "~/Content/js/treetable/css/jquery.treetable.css",
+                "~/Content/js/treetable/css/jquery.treetable.theme.default.css"
+            ));
+
+            bundles.Add(new ScriptBundle("~/bundles/treetable").Include(
+                "~/Content/js/treetable/jquery.treetable.js"
+            ));
+
+            bundles.Add(new ScriptBundle("~/bundles/calendar").Include(
+                "~/Content/js/bootstrap-datepicker.js",
+                "~/Content/js/bootstrap-datepaginator.min.js"
+            ));
+
+            bundles.Add(new StyleBundle("~/styles/calendar").Include(
+                "~/Content/css/bootstrap-datepicker.css",
+                "~/Content/css/bootstrap-datepaginator.min.css"
+            ));
         }
     }
 }

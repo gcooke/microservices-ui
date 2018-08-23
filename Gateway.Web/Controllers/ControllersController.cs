@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 using Bagl.Cib.MIT.IoC;
 using Bagl.Cib.MIT.Logging;
@@ -15,7 +13,6 @@ using Gateway.Web.Models.AddIn;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Services;
 using Gateway.Web.Utils;
-using Controller = System.Web.Mvc.Controller;
 using DashboardModel = Gateway.Web.Models.Controllers.DashboardModel;
 using HistoryModel = Gateway.Web.Models.Controllers.HistoryModel;
 using QueuesModel = Gateway.Web.Models.Controllers.QueuesModel;

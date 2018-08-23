@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using Gateway.Web.Controllers;
 using Gateway.Web.Database;
+using Gateway.Web.Models.Batches;
 using Gateway.Web.Models.Monitoring;
 
 namespace Gateway.Web.Models.Home
