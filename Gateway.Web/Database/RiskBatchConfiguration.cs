@@ -17,7 +17,7 @@ namespace Gateway.Web.Database
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public RiskBatchConfiguration()
         {
-            this.RiskBatchSchedules = new HashSet<RiskBatchSchedule>();
+            this.Schedules = new HashSet<Schedule>();
         }
     
         public long ConfigurationId { get; set; }
@@ -30,6 +30,6 @@ namespace Gateway.Web.Database
         public int JobProcessorCount { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<RiskBatchSchedule> RiskBatchSchedules { get; set; }
+        public virtual ICollection<Schedule> Schedules { get; set; }
     }
 }

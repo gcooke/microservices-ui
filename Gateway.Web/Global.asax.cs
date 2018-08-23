@@ -1,11 +1,15 @@
-﻿
-using System.Configuration;
+﻿using System.Configuration;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using Absa.Cib.MIT.TaskScheduling.Client;
+using Absa.Cib.MIT.TaskScheduling.Models;
+using Bagl.Cib.MIT.IoC;
 using Bagl.Cib.MIT.IoC.Models;
 using Bagl.Cib.MIT.Logging;
 using Gateway.Web.Authorization;
+using Gateway.Web.ModelBindersConverters;
+using Gateway.Web.Models.Schedule.Input;
 using Microsoft.Practices.ServiceLocation;
 using Microsoft.Practices.Unity;
 
@@ -32,6 +36,8 @@ namespace Gateway.Web
             GlobalFilters.Filters.Add(new RoleBasedAuthorizeAttribute());
             GlobalFilters.Filters.Add(new GatewayAuthenticationFilter());
 
+            ModelBinders.Binders[typeof(ScheduleWebRequestModel)] = new ScheduleWebRequestModelBinder();
+
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles, Environment);
@@ -45,6 +51,15 @@ namespace Gateway.Web
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
             var locator = new UnityServiceLocator(container);
             ServiceLocator.SetLocatorProvider(() => locator);
+
+            var systemInformation = container.Resolve<ISystemInformation>();
+            var schedulingConnectionString = systemInformation.GetSetting("SchedulingConnectionString");
+
+            var schedulingClientProvider = new SchedulingClientProvider();
+            schedulingClientProvider.Setup(new SchedulingClientOptions
+            {
+                SqlServerConnectionString = schedulingConnectionString
+            });
         }
     }
 }

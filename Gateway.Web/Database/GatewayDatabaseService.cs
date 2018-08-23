@@ -414,6 +414,9 @@ namespace Gateway.Web.Database
 
         private void SetControllerStatistics(ControllerState controllerState, IDictionary<string, ServerDiagnostics> serverDiagnostics)
         {
+            if (serverDiagnostics == null)
+                return;
+
             foreach (var serverDiagnostic in serverDiagnostics.Values)
             {
                 var controllerRequestsDiagnostic = serverDiagnostic.Requests.Where(x => x.Name.ToLower() == controllerState.Name.ToLower()).ToList();

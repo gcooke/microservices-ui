@@ -1,0 +1,136 @@
+﻿@model Gateway.Web.Models.Schedule.Output.ScheduleGroupModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "Configuration";
+    ViewBag.Current = "Schedule";
+}
+@{ Html.RenderPartial("_BatchConfigNav"); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+
+        <div class="row">
+            <div class="col-sm-6">
+                <h3 class="text-lowercase">
+                    Schedule
+                </h3>
+            </div>
+            <div class="col-sm-6 m-t-15">
+                <a href="~/Schedule" class="btn btn-default pull-right m-l-5" style="margin-right: 0 !important">Done</a>
+                <div class="btn-group pull-right">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="margin-right: 0 !important">
+                        Bulk Actions <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a onclick="bulkFunction('select-schedule', '/Schedule/Batch/Update/Bulk')">Edit Batches</a>
+                        </li>
+                        <li>
+                            <a onclick="bulkFunction('select-schedule', 'Delete/Bulk/Confirmation', true)">Delete</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="row m-t-15">
+            <div class="col-sm-12">
+                @using (@Html.BeginForm("CreateGroup", "Schedule", FormMethod.Get))
+                {
+                    <div class="form-group">
+                        @Html.Label("Add Group")
+                        <small>A group is a collection of tasks that will run at the same time of the day.</small>
+                        <div class="input-group">
+                            @Html.TextBox("cron", "", new {@name = "cron", placeholder = "Input a cron expression for the task(s) OR use the 'Generate Cron' button to generate one.", @class = "form-control", @style = "margin-top: 0 !important"})
+                            <span class="input-group-btn">
+                                <a href="https://crontab.guru/" target="_blank" class="btn btn-default" type="button">Generate Cron</a>
+                                <button class="btn btn-default" type="submit" style="margin: 0 !important">
+                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        @if (Model.Groups.Any())
+        {
+            <div class="row m-t-15">
+                <div class="col-sm-12">
+                    @using (@Html.BeginForm("Update", "Schedule", FormMethod.Get))
+                    {
+                        <div class="form-group">
+                            @Html.Label("Search")
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.SearchTerm, new {@name = "searchTerm", @class = "form-control", @placeholder = "Search for task...", @style = "margin-top: 0 !important"})
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="submit" style="margin: 0 !important">
+                                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        <div class="row m-t-20">
+            <div class="col-sm-12">
+                @if (!Model.Groups.Any())
+                {
+                    <div style="text-align: center">
+                        <h4>
+                            No groups have been created.<br/>
+                            <small>Create a group above.</small>
+                        </h4>
+                    </div>
+                }
+
+                @foreach (var group in Model.Groups)
+                {
+                    <div class="panel panel-primary" style="border-color: #990505">
+                        <div class="panel-heading" style="background: #990505; border-color: #990505">
+                            @Html.CheckBox("select-all", new {@class = "select-all-trigger", @data_children = "select-schedule-" + group.GroupId})
+                            @group.FriendlyScheduleDescription
+
+                            <div class="btn-group btn-group-xs pull-right">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Add <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="tab-link" href="#batch-tab-@group.GroupId" data-toggle="tab">Redstone Batch</a></li>
+                                    <li><a class="tab-link" href="#web-tab-@group.GroupId" data-toggle="tab">Redstone Web Request</a></li>
+                                </ul>
+                            </div>
+
+                            <a class="btn btn-default btn-xs pull-right batch-group-trigger m-r-5" href="~/Schedule/Group/@group.GroupId/Delete/Confirm">
+                                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                            </a>
+                        </div>
+                        <div class="panel-body">
+                            <div class="tab-content">
+                                <div class="tab-pane fade active in" id="view-tab-@group.GroupId">
+                                    @*Panel Body For Viewing Tasks in Group*@
+                                    @Html.Partial("Partials/_Schedule", group)
+                                </div>
+
+                                <div class="tab-pane fade" id="batch-tab-@group.GroupId">
+                                    @*Panel Body For Adding Batch to a Group*@
+                                    @Html.Partial("Partials/_ScheduleBatch", group.ScheduleBatchModel)
+                                </div>
+
+                                <div class="tab-pane fade" id="web-tab-@group.GroupId">
+                                    @*Panel Body For Adding Web Request to a Group*@
+                                    @Html.Partial("Partials/_ScheduleWebRequest", group.ScheduleWebRequestModel)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
