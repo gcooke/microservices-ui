@@ -43,7 +43,7 @@ namespace Gateway.Web.Controllers
 
             var date = businessDate.Value.Date;
 
-            var scheduleGroups = _scheduleDataService.GetScheduleGroups(businessDate.Value, searchTerm);
+            var scheduleGroups = _scheduleGroupService.GetScheduleGroups(businessDate.Value, searchTerm);
 
             var model = new ScheduleViewModel
             {
@@ -157,7 +157,7 @@ namespace Gateway.Web.Controllers
             if (businessDate == null)
                 businessDate = DateTime.Now;
 
-            var tasks = _scheduleDataService.GetScheduleGroups(businessDate.Value);
+            var tasks = _scheduleGroupService.GetScheduleGroups(businessDate.Value, null);
             var statuses = tasks
                 .SelectMany(x => x.Tasks)
                 .Select(x => new
