@@ -90,6 +90,11 @@ function setupCalendar() {
 }
 
 function pollResults() {
+    var shouldPollResults = $("#pollResults").val();
+    console.log(shouldPollResults);
+    if (shouldPollResults !== "true")
+        return;
+
     var businessDate = $("#businessDate").data("date");
     $.get("Schedule/Status?includeDailySummaries=true&businessDate=" + businessDate, function (data) {
         updateView(data);
