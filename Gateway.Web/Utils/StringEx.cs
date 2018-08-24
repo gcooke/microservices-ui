@@ -48,5 +48,18 @@ namespace Gateway.Web.Utils
                 yield return c;
             }
         }
+
+        public static string Truncate(this string value, int length, bool appendElipsis = true)
+        {
+            if (value.Length <= length)
+                return value;
+
+            value = value.Substring(0, length);
+
+            if (appendElipsis)
+                value += "...";
+
+            return value;
+        }
     }
 }

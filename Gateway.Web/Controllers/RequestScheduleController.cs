@@ -27,6 +27,16 @@ namespace Gateway.Web.Controllers
             _scheduleGroupService = scheduleGroupService;
         }
 
+
+        [HttpGet]
+        [Route("Create/Group/{id}")]
+        public ActionResult CreateForGroup(long id)
+        {
+            var model = new ScheduleWebRequestModel {Group = id.ToString()};
+            model.SetData(_batchConfigDataService);
+            return View("Create", model);
+        }
+
         [HttpGet]
         [Route("Update/{id}")]
         public ActionResult UpdateRequest(long id)
@@ -38,7 +48,6 @@ namespace Gateway.Web.Controllers
         }
 
         [HttpPost]
-        [ValidateInput(false)]
         public ActionResult CreateOrUpdateRequest(ScheduleWebRequestModel model)
         {
             try
@@ -54,7 +63,14 @@ namespace Gateway.Web.Controllers
                         model.Group = id.ToString();
                     }
 
-                    _scheduleWebRequestService.ScheduleBatches(model);
+                   var errorCollection = _scheduleWebRequestService.ScheduleBatches(model);
+                    foreach (var errorList in errorCollection)
+                    {
+                        foreach (var error in errorList)
+                        {
+                            ModelState.AddModelError(Guid.NewGuid().ToString(), error.ErrorMessage);
+                        }
+                    }
                 }
             }
             catch (Exception ex)

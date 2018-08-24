@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Web.Mvc;
 using Absa.Cib.MIT.TaskScheduling.Client.Scheduler;
@@ -37,14 +38,29 @@ namespace Gateway.Web.Services.Schedule
                 var jobKeys = new List<string>();
                 var errorCollection = new List<ModelErrorCollection>();
                 var parameters = GetParameters(db, model);
+                var errors = new ModelErrorCollection();
                 try
                 {
                     Schedule(parameters, db, errorCollection, jobKeys);
                     db.SaveChanges();
                 }
+                catch (DbEntityValidationException ex)
+                {
+                    Logger.Error(ex, "Unable to save item due to DbEntityValidationException.");
+                    foreach (var error in ex.EntityValidationErrors.SelectMany(x => x.ValidationErrors))
+                    {
+                        errors.Add(error.ErrorMessage);
+                    }
+                }
                 catch (Exception ex)
                 {
+                    Logger.Error(ex, "Unable to save item.");
+                    errors.Add("An unknown error has occurred - unable to save item: " + ex.Message);
                     HandleException(ex, jobKeys);
+                }
+                finally
+                {
+                    errorCollection.Add(errors);
                 }
 
                 return errorCollection;

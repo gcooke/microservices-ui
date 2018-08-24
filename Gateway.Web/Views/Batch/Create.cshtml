@@ -35,6 +35,14 @@
                         <button type="submit" class="btn btn-default">Reload</button>
                     }
                     </div>
+                    
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            <b>The following errors have occurred:</b>
+                            @Html.ValidationSummary(false, "", new {@class = "text-danger"})
+                        </div>
+                    }
 
                     <div class="m-t-20">
                         @using (Html.BeginForm("CreateOrUpdate", "Batch", FormMethod.Post))

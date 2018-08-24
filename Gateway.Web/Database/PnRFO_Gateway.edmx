@@ -1050,7 +1050,7 @@
             <PropertyRef Name="RequestConfigurationId" />
           </Key>
           <Property Name="RequestConfigurationId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="80" FixedLength="false" Unicode="false" />
           <Property Name="Payload" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="Verb" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="Url" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />

@@ -48,6 +48,15 @@ namespace Gateway.Web.Controllers
         }
 
         [HttpGet]
+        [Route("Create/Group/{id}")]
+        public ActionResult CreateForGroup(long id)
+        {
+            var model = new ScheduleBatchModel {Group = id.ToString()};
+            model.SetData(_batchConfigDataService);
+            return View("Create", model);
+        }
+
+        [HttpGet]
         [Route("Create/Bulk")]
         public ActionResult CreateForManyConfiguration(string items)
         {
