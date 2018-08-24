@@ -8,9 +8,7 @@ namespace Gateway.Web.ModelBindersConverters
     {
         public object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
         {
-            var performValidation = controllerContext.Controller.ValidateRequest &&
-                                    bindingContext.ModelMetadata.RequestValidationEnabled;
-            var payloadValue = GetValueFromValueProvider(bindingContext, "Payload", performValidation);
+            var payloadValue = GetValueFromValueProvider(bindingContext, "Payload", false);
             var request = controllerContext.HttpContext.Request;
             var requestConfigurationId = request.Form["RequestConfigurationId"];
 

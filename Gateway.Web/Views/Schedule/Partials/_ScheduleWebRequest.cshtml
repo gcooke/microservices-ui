@@ -1,9 +1,10 @@
 ﻿@model Gateway.Web.Models.Schedule.Input.ScheduleWebRequestModel
 
-@using (@Html.BeginForm("AssignWebRequestToGroup", "RequestSchedule", FormMethod.Post, new {id = "Form-" + @Model.Group}))
+@using (@Html.BeginForm("AssignWebRequestToGroup", "RequestSchedule", FormMethod.Post, new { id = "Form-" + @Model.Group }))
 {
     @Html.HiddenFor(m => @Model.Group)
     @Html.HiddenFor(m => @Model.RequestConfigurationId)
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
     <div class="row">
         <div class="col-sm-2">
             <ul class="nav nav-pills nav-stacked">
@@ -25,41 +26,41 @@
             <div class="tab-content">
                 <div class="tab-pane fade active in" id="general-@Model.Group">
                     <div class="form-group">
-                        @Html.LabelFor(m => m.Name, new {@class = "control-label"})
-                        @Html.TextBoxFor(m => m.Name, new {@class = "form-control input-sm"})
+                        @Html.LabelFor(m => m.Name, new { @class = "control-label", maxlength = 80 })
+                        @Html.TextBoxFor(m => m.Name, new { @class = "form-control input-sm" })
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(m => m.Url, new {@class = "control-label"})
-                        @Html.TextBoxFor(m => m.Url, new {@class = "form-control input-sm"})
+                        @Html.LabelFor(m => m.Url, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.Url, new { @class = "form-control input-sm" })
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(m => m.Verb, new {@class = "control-label"})
-                        @Html.DropDownListFor(m => m.Verb, Model.Verbs, new {@class = "form-control input-sm"})
+                        @Html.LabelFor(m => m.Verb, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.Verb, Model.Verbs, new { @class = "form-control input-sm" })
                     </div>
                 </div>
                 <div class="tab-pane fade" id="payload-@Model.Group">
                     <div class="form-group">
-                        @Html.LabelFor(m => m.Payload, new {@class = "control-label"})
-                        @Html.TextAreaFor(m => m.Payload, new {@rows = "10", @class = "form-control input-sm"})
+                        @Html.LabelFor(m => m.Payload, new { @class = "control-label" })
+                        @Html.TextAreaFor(m => m.Payload, new { @rows = "10", @class = "form-control input-sm" })
                     </div>
                 </div>
                 <div class="tab-pane fade" id="arguments-@Model.Group">
                     <table style="width: 100%;" class="table table-bordered">
                         <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Type</th>
-                            <th>Format/Value</th>
-                            <th></th>
-                        </tr>
+                            <tr>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Format/Value</th>
+                                <th></th>
+                            </tr>
                         </thead>
                         <tbody id="argument-table-body" class="editable-table">
-                        <tr>
-                            <td style="padding: 0 !important">@Html.TextBoxFor(m => m.Arguments[0].Key, new {@class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;"})</td>
-                            <td style="padding: 0 !important">@Html.DropDownListFor(m => m.Arguments[0].Type, Model.ArgumentDataTypes, new {@class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;"})</td>
-                            <td style="padding: 0 !important">@Html.TextBoxFor(m => m.Arguments[0].FormatValue, new {@class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;"})</td>
-                            <td><a>[X]</a></td>
-                        </tr>
+                            <tr>
+                                <td style="padding: 0 !important">@Html.TextBoxFor(m => m.Arguments[0].Key, new { @class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;" })</td>
+                                <td style="padding: 0 !important">@Html.DropDownListFor(m => m.Arguments[0].Type, Model.ArgumentDataTypes, new { @class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;" })</td>
+                                <td style="padding: 0 !important">@Html.TextBoxFor(m => m.Arguments[0].FormatValue, new { @class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;" })</td>
+                                <td><a>[X]</a></td>
+                            </tr>
                         </tbody>
                     </table>
                     <a class="add-row-button" style="cursor: pointer" data-table-body="#argument-table-body">Insert Row</a>
@@ -67,11 +68,11 @@
                 <div class="tab-pane fade" id="headers-@Model.Group">
                     <table style="width: 100%;" class="table table-bordered">
                         <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Value</th>
-                            <th></th>
-                        </tr>
+                            <tr>
+                                <th>Name</th>
+                                <th>Value</th>
+                                <th></th>
+                            </tr>
                         </thead>
                         <tbody id="header-table-body" class="editable-table">
                             <tr>

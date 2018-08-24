@@ -1,4 +1,5 @@
-﻿@model Gateway.Web.Models.Schedule.Output.ScheduleGroup
+﻿@using Gateway.Web.Utils
+@model Gateway.Web.Models.Schedule.Output.ScheduleGroup
 
 <div class="row" style="padding-left: 15px; padding-right: 15px;">
     @if (Model.Tasks.Any())
@@ -7,8 +8,10 @@
             @foreach (var item in Model.Tasks)
             {
                 <tr class="batch-schedule-container" style="padding: 20px !important;" data-tt-branch="@item.HasChildren" data-tt-id="@item.ScheduleId" data-tt-parent-id="@item.ParentId">
-                    <td style="width: 50%">
-                        @Html.CheckBox("select-" + item.ScheduleKey, new {@class = "select-schedule select-schedule-" + @Model.GroupId, @data_id = item.ScheduleId})
+                    <td style="width: 7%;">
+                        @Html.CheckBox("select-" + item.ScheduleKey, new { @class = "select-schedule select-schedule-" + @Model.GroupId, @data_id = item.ScheduleId })
+                    </td>
+                    <td style="width: 73%;">
                         @if (item.Type.ToLower() == "request")
                         {
                             <span class="label label-danger" style="padding: 2px !important;">@item.Type</span>
@@ -17,22 +20,17 @@
                         {
                             <span class="label label-info" style="padding: 2px !important;">@item.Type</span>
                         }
-                        <a href="~/Schedule/@item.Type/Update/@item.ScheduleId" class="m-l-5"id="@item.Key">
-                            @item.Name
-                        </a>
-                    </td>
-                    <td style="width: 25%">
-                        <span style="font-size: 85%; color: black;">
-                            @item.ChildrenCount dependant batch(es)
+                        <span class="m-l-5" style="margin-top: 2px" id="@item.Key">
+                            @item.Name.Truncate(75)
+                            @if (item.ChildrenCount > 0)
+                            {
+                                <span>(@item.ChildrenCount)</span>
+                            }
                         </span>
                     </td>
-                    <td style="width: 25%">
-                        <a href="~/Schedule/Delete/Bulk/Confirmation?items=@item.ScheduleId">
-                            <span class="glyphicon glyphicon-trash pull-right" aria-hidden="true"></span>
-                        </a>
-                        <a href="~/Schedule/@item.Type/Update/@item.ScheduleId" class="m-l-5">
-                            <span class="glyphicon glyphicon-pencil pull-right" aria-hidden="true"></span>
-                        </a>
+                    <td style="width: 20%;">
+                        <a type="button" href="~/Schedule/@item.Type/Update/@item.ScheduleId" class="btn btn-default btn-xs pull-right" style="margin-right: 0 !important">Edit</a>
+                        <a type="button" href="~/Schedule/Delete/Bulk/Confirmation?items=@item.ScheduleId" class="btn btn-default btn-xs pull-right" style="margin-right: 5px !important">Delete</a>
                     </td>
                 </tr>
             }

@@ -15,11 +15,19 @@
 
                     @if (Model.IsUpdating)
                     {
-                        <h3 class="text-lowercase">Update Schedule</h3>
+                        <h3 class="text-lowercase">Update Redstone Batch</h3>
                     }
                     else
                     {
-                        <h3 class="text-lowercase">Create Schedule</h3>
+                        <h3 class="text-lowercase">Create Redstone Batch</h3>
+                    }
+                    
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            <b>The following errors have occurred:</b>
+                            @Html.ValidationSummary(false, "", new {@class = "text-danger"})
+                        </div>
                     }
 
                     <div class="m-t-20">

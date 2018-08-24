@@ -12,18 +12,20 @@ namespace Gateway.Web.Models.Schedule.Input
     {
         [Required]
         [Display(Name = "Name")]
+        [StringLength(80, ErrorMessage = "Name cannot be longer than 80 characters")]
         public string Name { get; set; }
 
         [Required]
         [Display(Name = "Url")]
+        [StringLength(500, ErrorMessage = "Url cannot be longer than 500 characters")]
         public string Url { get; set; }
 
         [Required]
         [Display(Name = "Verb")]
+        [StringLength(0, ErrorMessage = "Verb cannot be longer than 10 characters")]
         public string Verb { get; set; }
 
         [Display(Name = "Payload")]
-        [AllowHtml]
         public string Payload { get; set; }
 
         public IList<Argument> Arguments { get; set; }
