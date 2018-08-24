@@ -14,13 +14,11 @@ namespace Gateway.Web.Services.Schedule
 {
     public class ScheduleDataService : IScheduleDataService
     {
-        private readonly IScheduleGroupService _scheduleGroupService;
         private readonly IRedstoneWebRequestScheduler _scheduler;
 
-        public ScheduleDataService(IScheduleGroupService scheduleGroupService,
+        public ScheduleDataService(
             IRedstoneWebRequestScheduler scheduler)
         {
-            _scheduleGroupService = scheduleGroupService;
             _scheduler = scheduler;
         }
 
@@ -90,68 +88,6 @@ namespace Gateway.Web.Services.Schedule
             }
         }
 
-        public IList<ScheduleGroup> GetScheduleGroups(DateTime date, string searchTerm = null)
-        {
-            using (var db = new GatewayEntities())
-            {
-                var startDate = date.Date;
-                var endDate = startDate.AddHours(24).AddMinutes(-1);
-                var groups = _scheduleGroupService.GetGroups(searchTerm);
-                var runGroups = new List<ScheduleGroup>();
-
-                string status = null;
-                if (!string.IsNullOrWhiteSpace(searchTerm) && searchTerm.Contains("status:"))
-                {
-                    var statusIndex = searchTerm.IndexOf("status:", StringComparison.Ordinal);
-                    if (statusIndex > 0)
-                    {
-                        searchTerm = searchTerm.Substring(0, statusIndex - 1).Trim();
-                    }
-                    status = searchTerm.Substring(statusIndex + "status:".Length);
-                }
-
-                foreach (var group in groups)
-                {
-                    var crontabSchedule = CrontabSchedule.Parse(group.Schedule);
-                    var occurrences = crontabSchedule
-                        .GetNextOccurrences(startDate, endDate)
-                        .Select(x => x.ToLocalTime())
-                        .ToList();
-
-                    if(!occurrences.Any())
-                        continue;
-
-                    group.FriendScheduledTime = occurrences.First().ToString("hh:mm tt");
-
-                    foreach (var batch in group.Tasks)
-                    {
-                        var jobList = db.ScheduledJobs
-                            .Where(x => x.ScheduleId == batch.ScheduleId)
-                            .Where(x => x.BusinessDate >= startDate && x.BusinessDate <= endDate)
-                            .Where(x => status == null || x.Status.ToLower() == status.ToLower())
-                            .ToList();
-
-                        var lastJob = jobList.LastOrDefault();
-
-                        if (lastJob == null)
-                        {
-                            batch.Status = "Not Started";
-                            continue;
-                        }
-
-                        batch.Status = lastJob.Status;
-                        batch.Retries = jobList.Count - 1;
-                        batch.RequestId = lastJob.RequestId;
-                        batch.StartedAt = lastJob.StartedAt;
-                        batch.FinishedAt = lastJob.FinishedAt;
-                    }
-
-                    runGroups.Add(group);
-                }
-
-                return runGroups;
-            }
-        }
 
         public IDictionary<string, string> GetDailyStatuses(DateTime now)
         {

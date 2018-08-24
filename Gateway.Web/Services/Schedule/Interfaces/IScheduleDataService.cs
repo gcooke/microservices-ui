@@ -9,7 +9,6 @@ namespace Gateway.Web.Services.Schedule.Interfaces
 {
     public interface IScheduleDataService
     {
-        IList<ScheduleGroup> GetScheduleGroups(DateTime date, string searchTerm = null);
         IList<ScheduleTask> GetScheduleTasks(IEnumerable<long> scheduleIdList);
         ScheduleTask GetScheduleTask(long id);
         Database.Schedule GetSchedule(long id);
