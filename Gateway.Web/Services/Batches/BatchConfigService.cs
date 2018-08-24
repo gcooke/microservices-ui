@@ -203,6 +203,20 @@ namespace Gateway.Web.Services.Batches
 
         private bool IsUniqueConfiguration(GatewayEntities db, BatchConfigModel batchConfigModel)
         {
+            if (batchConfigModel.IsUpdating)
+            {
+                var existingItem = db.RiskBatchConfigurations.SingleOrDefault(x => x.ConfigurationId == batchConfigModel.ConfigurationId);
+                if (existingItem != null && existingItem.Type == batchConfigModel.Type)
+                {
+                    return true;
+                }
+
+                if (existingItem != null && existingItem.Type != batchConfigModel.Type)
+                {
+                    return db.RiskBatchConfigurations.Count(x => x.Type == batchConfigModel.Type) == 0;
+                }
+            }
+
             return db.RiskBatchConfigurations.Count(x => x.Type == batchConfigModel.Type) == 0;
         }
     }

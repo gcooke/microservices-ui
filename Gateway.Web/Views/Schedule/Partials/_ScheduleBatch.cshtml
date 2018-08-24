@@ -1,6 +1,6 @@
 ﻿@model Gateway.Web.Models.Schedule.Input.ScheduleBatchModel
 
-@using (@Html.BeginForm("AssignBatchToGroup", "Schedule", FormMethod.Post, new {id = "Form-" + @Model.Group}))
+@using (@Html.BeginForm("AssignToGroup", "BatchSchedule", FormMethod.Post, new {id = "Form-" + @Model.Group}))
 {
     @Html.HiddenFor(m => @Model.Group)
     <div class="row">

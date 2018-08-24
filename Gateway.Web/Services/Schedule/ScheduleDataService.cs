@@ -167,7 +167,8 @@ namespace Gateway.Web.Services.Schedule
             _scheduler.RemoveScheduledWebRequest(entity.ScheduleKey);
 
             db.ScheduledJobs.RemoveRange(entity.ScheduledJobs);
-            db.RequestConfigurations = null;
+            if(entity.RequestConfigurationId != null)
+                db.RequestConfigurations.Remove(entity.RequestConfiguration);
 
             db.Schedules.Remove(entity);
 

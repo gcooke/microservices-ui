@@ -241,7 +241,8 @@ namespace Gateway.Web.Services.Schedule
                     throw new Exception($"Unable to find group with ID {groupId}");
                 }
 
-                foreach (var schedule in entity.Schedules)
+                var schedules = entity.Schedules.ToList();
+                foreach (var schedule in schedules)
                 {
                     _scheduleDataService.DeleteSchedule(schedule.ScheduleId, db, false);
                 }
@@ -257,8 +258,8 @@ namespace Gateway.Web.Services.Schedule
                 return x => true;
 
             var terms = s.ToLower().Split(' ');
-            return x => terms.Any(y => x.TradeSource.ToLower().Contains(y) ||
-                                       x.RiskBatchConfiguration.Type.ToLower().Contains(y));
+            return x => terms.Any(y => (x.TradeSource != null && x.TradeSource.ToLower().Contains(y)) ||
+                                       (x.RiskBatchConfiguration != null && x.RiskBatchConfiguration.Type.ToLower().Contains(y)));
         }
     }
 }
