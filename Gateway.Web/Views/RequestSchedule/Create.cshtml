@@ -15,11 +15,11 @@
 
                     @if (Model.IsUpdating)
                     {
-                        <h3 class="text-lowercase">Update Redstone Reqeust</h3>
+                        <h3 class="text-lowercase">Update Redstone Request</h3>
                     }
                     else
                     {
-                        <h3 class="text-lowercase">Create Redstone Reqeust</h3>
+                        <h3 class="text-lowercase">Create Redstone Request</h3>
                     }
 
                     <div class="m-t-20">
@@ -105,7 +105,7 @@
                                              {
                                                  <tr>
                                                      <td style="padding: 0 !important">@Html.TextBoxFor(m => m.Arguments[index].Key, new {@class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;"})</td>
-                                                     <td style="padding: 0 !important">@Html.DropDownListFor(m => m.Arguments[index].Type, Model.ArgumentDataTypes, new {@class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;"})</td>
+                                                     <td style="padding: 0 !important">@Html.DropDownListFor(m => m.Arguments[index].Type, Model.ArgumentDataTypes, Model.Arguments[index].Type, new {@class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;"})</td>
                                                      <td style="padding: 0 !important">@Html.TextBoxFor(m => m.Arguments[index].FormatValue, new {@class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;"})</td>
                                                      <td>
                                                          <a>[X]</a>

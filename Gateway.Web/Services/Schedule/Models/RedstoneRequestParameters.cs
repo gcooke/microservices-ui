@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Absa.Cib.MIT.TaskScheduling.Models;
 using Gateway.Web.Database;
 using Gateway.Web.Models.Schedule.Input;
@@ -38,8 +39,9 @@ namespace Gateway.Web.Services.Schedule.Models
             Verb = m.Verb;
             Payload = m.Payload;
             Arguments = m.Arguments;
-            Headers = m.Headers;
             RequestConfigurationId = m.RequestConfigurationId;
+            IsAsync = m.Headers.Any(x => x.Key.ToLower() == "isasync");
+            Headers = Headers.Where(x => x.Key.ToLower() != "isasync").ToList();
         }
     }
 }

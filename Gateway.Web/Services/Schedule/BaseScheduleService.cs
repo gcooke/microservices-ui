@@ -124,7 +124,7 @@ namespace Gateway.Web.Services.Schedule
         {
             try
             {
-                ScheduleBatch(entity, entity.ScheduleGroup);
+                ScheduleBatch(entity, entity.ScheduleGroup, parameters.IsAsync);
 
                 if (!entity.IsUpdating)
                 {
@@ -140,7 +140,7 @@ namespace Gateway.Web.Services.Schedule
             }
         }
 
-        protected virtual void ScheduleBatch(Database.Schedule entity, ScheduleGroup group)
+        protected virtual void ScheduleBatch(Database.Schedule entity, ScheduleGroup group, bool isAsync)
         {
             Scheduler.RemoveScheduledWebRequest(entity.ScheduleKey);
 
@@ -149,13 +149,19 @@ namespace Gateway.Web.Services.Schedule
                 Scheduler.RemoveScheduledWebRequest(entity.ParentSchedule.ScheduleKey);
                 var parent = GetRequest(entity.ParentSchedule);
                 var cron = entity.ParentSchedule.ScheduleGroup.Schedule;
-                Scheduler.ScheduleAsyncWebRequest(parent, entity.ParentSchedule.ScheduleKey, cron);
+                if(isAsync)
+                    Scheduler.ScheduleAsyncWebRequest(parent, entity.ParentSchedule.ScheduleKey, cron);
+                else
+                    Scheduler.ScheduleWebRequest(parent, entity.ParentSchedule.ScheduleKey, cron);
             }
             else
             {
                 var request = GetRequest(entity);
                 var cron = group.Schedule;
-                Scheduler.ScheduleAsyncWebRequest(request, entity.ScheduleKey, cron);
+                if (isAsync)
+                    Scheduler.ScheduleAsyncWebRequest(request, entity.ScheduleKey, cron);
+                else
+                    Scheduler.ScheduleWebRequest(request, entity.ScheduleKey, cron);
             }
         }
 

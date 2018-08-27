@@ -12,6 +12,6 @@ namespace Gateway.Web.Services.Schedule.Interfaces
         IList<ScheduleGroup> GetGroups(IList<long> idList);
         long CreateOrUpdate(string cron, string name = null);
         void Delete(long groupId);
-        IList<ScheduleGroup> GetScheduleGroups(DateTime businessDateValue, string searchTerm);
+        IList<ScheduleGroup> GetScheduleGroups(DateTime businessDateValue, string searchTerm, bool includeAllGroups = false);
     }
 }
