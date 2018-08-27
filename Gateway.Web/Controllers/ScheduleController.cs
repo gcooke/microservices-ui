@@ -157,7 +157,7 @@ namespace Gateway.Web.Controllers
             if (businessDate == null)
                 businessDate = DateTime.Now;
 
-            var tasks = _scheduleGroupService.GetScheduleGroups(businessDate.Value, null);
+            var tasks = _scheduleGroupService.GetScheduleGroups(businessDate.Value, null, true);
             var statuses = tasks
                 .SelectMany(x => x.Tasks)
                 .Select(x => new
