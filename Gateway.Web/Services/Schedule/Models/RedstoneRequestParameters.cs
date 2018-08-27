@@ -40,8 +40,8 @@ namespace Gateway.Web.Services.Schedule.Models
             Payload = m.Payload;
             Arguments = m.Arguments;
             RequestConfigurationId = m.RequestConfigurationId;
-            IsAsync = m.Headers.Any(x => x.Key.ToLower() == "isasync");
-            Headers = Headers.Where(x => x.Key.ToLower() != "isasync").ToList();
+            IsAsync = m.Headers.Any(x => x.Key != null && x.Value != null && x.Key.ToLower() == "isasync" && x.Value.ToLower() == "true");
+            Headers = m.Headers;
         }
     }
 }

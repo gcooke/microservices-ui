@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Web.Mvc;
+using Absa.Cib.MIT.TaskScheduling.Models;
 using Gateway.Web.Models.Schedule.Input;
 using Gateway.Web.Services.Batches.Interfaces;
 using Gateway.Web.Services.Schedule.Interfaces;
 using Gateway.Web.Services.Schedule.Utils;
+using Newtonsoft.Json;
 
 namespace Gateway.Web.Controllers
 {
@@ -13,17 +16,20 @@ namespace Gateway.Web.Controllers
         private readonly IBatchConfigDataService _batchConfigDataService;
         private readonly IScheduleDataService _scheduleDataService;
         private readonly IScheduleService<ScheduleWebRequestModel> _scheduleWebRequestService;
+        private readonly IRequestConfigurationService _requestConfigurationService;
         private readonly IScheduleGroupService _scheduleGroupService;
 
         public RequestScheduleController(IScheduleDataService scheduleDataService,
             IBatchConfigDataService batchConfigDataService,
             IScheduleService<ScheduleBatchModel> scheduleBatchService,
             IScheduleService<ScheduleWebRequestModel> scheduleWebRequestService,
+            IRequestConfigurationService requestConfigurationService,
             IScheduleGroupService scheduleGroupService)
         {
             _scheduleDataService = scheduleDataService;
             _batchConfigDataService = batchConfigDataService;
             _scheduleWebRequestService = scheduleWebRequestService;
+            _requestConfigurationService = requestConfigurationService;
             _scheduleGroupService = scheduleGroupService;
         }
 
@@ -33,8 +39,26 @@ namespace Gateway.Web.Controllers
         public ActionResult CreateForGroup(long id)
         {
             var model = new ScheduleWebRequestModel {Group = id.ToString()};
-            model.SetData(_batchConfigDataService);
+            model.SetData(_batchConfigDataService, _requestConfigurationService);
             return View("Create", model);
+        }
+
+        [HttpGet]
+        [Route("Create/Group/Template")]
+        public ActionResult CreateUsingTemplate(long group, long requestTemplate)
+        {
+            var model = new ScheduleWebRequestModel { Group = group.ToString() };
+            var request = _requestConfigurationService.GetRequestConfiguration(requestTemplate);
+            model.SetData(_batchConfigDataService, _requestConfigurationService);
+            model.ScheduleId = 0;
+            model.Group = group.ToString();
+            model.Name = null;
+            model.Url = request.Url;
+            model.Payload = request.Payload;
+            model.Verb = request.Verb;
+            model.Arguments = JsonConvert.DeserializeObject<List<Argument>>(request.Arguments);
+            model.Headers = JsonConvert.DeserializeObject<List<Header>>(request.Headers);
+            return View("Create",model);
         }
 
         [HttpGet]
@@ -43,7 +67,7 @@ namespace Gateway.Web.Controllers
         {
             var schedule = _scheduleDataService.GetSchedule(id);
             var model = schedule.ToReqeustInputModel();
-            model.SetData(_batchConfigDataService);
+            model.SetData(_batchConfigDataService, _requestConfigurationService);
             return View("Create", model);
         }
 
@@ -80,7 +104,7 @@ namespace Gateway.Web.Controllers
 
             if (!ModelState.IsValid)
             {
-                model.SetData(_batchConfigDataService);
+                model.SetData(_batchConfigDataService, _requestConfigurationService);
                 return View("Create", model);
             }
 
