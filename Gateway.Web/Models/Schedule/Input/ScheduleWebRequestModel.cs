@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Absa.Cib.MIT.TaskScheduling.Models;
 using Absa.Cib.MIT.TaskScheduling.Models.Enum;
+using WebGrease.Css.Extensions;
 
 namespace Gateway.Web.Models.Schedule.Input
 {
@@ -28,6 +29,9 @@ namespace Gateway.Web.Models.Schedule.Input
         [Display(Name = "Payload")]
         public string Payload { get; set; }
 
+        [Display(Name = "Request Template")]
+        public string RequestTemplate { get; set; }
+
         public IList<Argument> Arguments { get; set; }
 
         public IList<Header> Headers { get; set; }
@@ -40,11 +44,13 @@ namespace Gateway.Web.Models.Schedule.Input
 
         public long? RequestConfigurationId { get; set; }
 
-
+        public IList<SelectListItem> RequestTemplates { get; set; }
+        
         public ScheduleWebRequestModel()
         {
             Arguments = new List<Argument>();
             Headers = new List<Header>();
+            RequestTemplates = new List<SelectListItem>();
 
             foreach (var i in Enumerable.Range(0, 100))
             {
@@ -55,7 +61,31 @@ namespace Gateway.Web.Models.Schedule.Input
             {
                 Headers.Add(new Header(null, null));
             }
+        }
 
+        public IList<SelectListItem> GetArgumentTypes(string selectedArgumentType = null)
+        {
+            var items = new List<SelectListItem>();
+
+            if (!string.IsNullOrWhiteSpace(selectedArgumentType))
+            {
+                foreach (var argumentDataType in ArgumentDataTypes)
+                {
+                    var isSelected = argumentDataType.Value == selectedArgumentType;
+                    items.Add(new SelectListItem
+                    {
+                        Value = argumentDataType.Value,
+                        Text = argumentDataType.Text,
+                        Selected = isSelected
+                    });
+                }
+            }
+            else
+            {
+                items.AddRange(ArgumentDataTypes);
+            }
+
+            return items;
         }
     }
 }

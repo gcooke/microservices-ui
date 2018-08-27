@@ -16,6 +16,8 @@ namespace Gateway.Web.Services.Batches.Utils
                 StateTtlMinutes = config.StateTtlMinutes,
                 TradeSourceType = config.TradeSourceType,
                 Type = config.Type,
+                ReportingCurrency = config.ReportingCurrency,
+                FundingCurrency = config.FundingCurrency,
                 ScheduleCount = config.Schedules.Count
             };
         }
@@ -31,7 +33,9 @@ namespace Gateway.Web.Services.Batches.Utils
                 OutputType = config.OutputType,
                 StateTtlMinutes = config.StateTtlMinutes ?? 0,
                 TradeSourceType = config.TradeSourceType,
-                Type = config.Type
+                Type = config.Type,
+                ReportingCurrency = config.ReportingCurrency,
+                FundingCurrency = config.FundingCurrency,
             };
         }
 
@@ -44,6 +48,8 @@ namespace Gateway.Web.Services.Batches.Utils
             configuration.StateTtlMinutes = model.StateTtlMinutes ?? 0;
             configuration.TradeSourceType = model.TradeSourceType;
             configuration.Type = model.Type;
+            configuration.ReportingCurrency = model.ReportingCurrency;
+            configuration.FundingCurrency = model.FundingCurrency;
         }
     }
 }

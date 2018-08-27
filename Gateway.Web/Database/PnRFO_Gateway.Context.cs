@@ -41,11 +41,11 @@ namespace Gateway.Web.Database
         public virtual DbSet<ExternalResource> ExternalResources { get; set; }
         public virtual DbSet<Server> Servers { get; set; }
         public virtual DbSet<ServerExternalResource> ServerExternalResources { get; set; }
-        public virtual DbSet<RiskBatchConfiguration> RiskBatchConfigurations { get; set; }
         public virtual DbSet<ScheduleGroup> ScheduleGroups { get; set; }
         public virtual DbSet<ScheduledJob> ScheduledJobs { get; set; }
         public virtual DbSet<RequestConfiguration> RequestConfigurations { get; set; }
         public virtual DbSet<Schedule> Schedules { get; set; }
+        public virtual DbSet<RiskBatchConfiguration> RiskBatchConfigurations { get; set; }
     
         public virtual ObjectResult<spGetRequestStats_Result> spGetRequestStats(Nullable<System.DateTime> start, string controller)
         {

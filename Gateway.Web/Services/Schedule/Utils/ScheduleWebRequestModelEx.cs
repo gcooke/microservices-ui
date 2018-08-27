@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Web.Mvc;
 using Absa.Cib.MIT.TaskScheduling.Models;
 using Gateway.Web.Models.Schedule.Input;
 using Gateway.Web.Services.Batches.Interfaces;
+using Gateway.Web.Services.Schedule.Interfaces;
 using Newtonsoft.Json;
 
 namespace Gateway.Web.Services.Schedule.Utils
@@ -42,11 +44,14 @@ namespace Gateway.Web.Services.Schedule.Utils
             return model;
         }
 
-        public static void SetData(this ScheduleWebRequestModel model, IBatchConfigDataService service)
+        public static void SetData(this ScheduleWebRequestModel model, IBatchConfigDataService service, IRequestConfigurationService requestConfigurationService)
         {
             model.SetGroups(service, new[] { model.Group });
             model.SetParents(service, new[] { model.Parent });
             model.SetChildren(service, model.Children.ToArray());
+
+            var requestConfigurations = requestConfigurationService.GetRequestConfigurations();
+            model.RequestTemplates = requestConfigurations.Select(x => new SelectListItem {Value = x.RequestConfigurationId.ToString(), Text = x.Name}).ToList();
         }
     }
 }
