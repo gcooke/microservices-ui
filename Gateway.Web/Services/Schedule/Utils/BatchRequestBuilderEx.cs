@@ -11,9 +11,9 @@ namespace Gateway.Web.Services.Schedule.Utils
 {
     public static class BatchRequestBuilderEx
     {
-        private static string _authUrl = "https://abcap-foutils-uat.intra.absa.co.za";
-        private static string _baseUrl = "https://abcap-foutils-uat.intra.absa.co.za:7010/api/";
-        private static string _authQuery = "authorization/oauth/token";
+        private static readonly string AuthUrl = System.Configuration.ConfigurationManager.AppSettings["AuthUrl"];
+        private static readonly string BaseUrl = System.Configuration.ConfigurationManager.AppSettings["BaseUrl"];
+        private static readonly string AuthQuery = System.Configuration.ConfigurationManager.AppSettings["AuthQuery"];
         private static string _query = "riskdata/official/eagle/20180718";
 
         public static RedstoneRequest ToRequest(this Database.Schedule schedule, DateTime? businessDate = null)
@@ -22,10 +22,10 @@ namespace Gateway.Web.Services.Schedule.Utils
             {
                 var batchRequest = RedstoneRequestBuilder
                     .Create()
-                    .SetBaseUrl(_baseUrl)
-                    .SetAuthUrl(_authUrl)
+                    .SetBaseUrl(BaseUrl)
+                    .SetAuthUrl(AuthUrl)
                     .SetQuery(_query)
-                    .SetAuthQuery(_authQuery)
+                    .SetAuthQuery(AuthQuery)
                     .SetMethod(Method.GET)
                     .SetId(schedule.ScheduleId)
                     .SetBusinessDate(businessDate)
@@ -38,9 +38,9 @@ namespace Gateway.Web.Services.Schedule.Utils
             var webRequest = RedstoneRequestBuilder
                 .Create()
                 .SetBaseUrl(schedule.RequestConfiguration.Url)
-                .SetAuthUrl(_authUrl)
+                .SetAuthUrl(AuthUrl)
                 .SetQuery("")
-                .SetAuthQuery(_authQuery)
+                .SetAuthQuery(AuthQuery)
                 .SetMethod((Method) Enum.Parse(typeof(Method), schedule.RequestConfiguration.Verb.ToUpper()))
                 .SetId(schedule.ScheduleId)
                 .SetBusinessDate(businessDate)

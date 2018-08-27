@@ -22,7 +22,7 @@ namespace Gateway.Web.Models.Schedule.Input
 
         [Required]
         [Display(Name = "Verb")]
-        [StringLength(0, ErrorMessage = "Verb cannot be longer than 10 characters")]
+        [StringLength(10, ErrorMessage = "Verb cannot be longer than 10 characters")]
         public string Verb { get; set; }
 
         [Display(Name = "Payload")]

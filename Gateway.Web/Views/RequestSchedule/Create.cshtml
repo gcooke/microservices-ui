@@ -99,16 +99,32 @@
                                             </tr>
                                         </thead>
                                         <tbody id="argument-table-body" class="editable-table">
-                                        @foreach (var index in Enumerable.Range(0, Model.Arguments.Count(x => x.Key != null)))
+                                        @if (Model.IsUpdating)
                                         {
-                                            <tr>
-                                                <td style="padding: 0 !important">@Html.TextBoxFor(m => m.Arguments[index].Key, new {@class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;"})</td>
-                                                <td style="padding: 0 !important">@Html.DropDownListFor(m => m.Arguments[index].Type, Model.ArgumentDataTypes, new {@class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;"})</td>
-                                                <td style="padding: 0 !important">@Html.TextBoxFor(m => m.Arguments[index].FormatValue, new {@class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;"})</td>
-                                                <td>
-                                                    <a>[X]</a>
-                                                </td>
-                                            </tr>
+                                             foreach (var index in Enumerable.Range(0, Model.Arguments.Count(x => x.Key != null)))
+                                             {
+                                                 <tr>
+                                                     <td style="padding: 0 !important">@Html.TextBoxFor(m => m.Arguments[index].Key, new {@class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;"})</td>
+                                                     <td style="padding: 0 !important">@Html.DropDownListFor(m => m.Arguments[index].Type, Model.ArgumentDataTypes, new {@class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;"})</td>
+                                                     <td style="padding: 0 !important">@Html.TextBoxFor(m => m.Arguments[index].FormatValue, new {@class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;"})</td>
+                                                     <td>
+                                                         <a>[X]</a>
+                                                     </td>
+                                                 </tr>
+                                            }
+                                        }
+                                        else {
+                                            if (Model.Arguments.Count > 0)
+                                            {
+                                                <tr>
+                                                    <td style="padding: 0 !important">@Html.TextBoxFor(m => m.Arguments[0].Key, new {@class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;"})</td>
+                                                    <td style="padding: 0 !important">@Html.DropDownListFor(m => m.Arguments[0].Type, Model.ArgumentDataTypes, new {@class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;"})</td>
+                                                    <td style="padding: 0 !important">@Html.TextBoxFor(m => m.Arguments[0].FormatValue, new {@class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;"})</td>
+                                                    <td>
+                                                        <a>[X]</a>
+                                                    </td>
+                                                </tr>
+                                            }
                                         }
                                         </tbody>
                                     </table>
@@ -124,15 +140,31 @@
                                         </tr>
                                         </thead>
                                         <tbody id="header-table-body" class="editable-table">
-                                        @foreach (var index in Enumerable.Range(0, Model.Headers.Count(x => x.Key != null)))
+                                        @if (Model.IsUpdating)
                                         {
-                                            <tr>
-                                                <td style="padding: 0 !important">@Html.TextBoxFor(m => m.Headers[index].Key, new {@class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;"})</td>
-                                                <td style="padding: 0 !important">@Html.TextBoxFor(m => m.Headers[index].Value, new {@class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;"})</td>
-                                                <td>
-                                                    <a>[X]</a>
-                                                </td>
-                                            </tr>
+                                            foreach (var index in Enumerable.Range(0, Math.Max(1, Model.Headers.Count(x => x.Key != null))))
+                                            {
+                                                <tr>
+                                                    <td style="padding: 0 !important">@Html.TextBoxFor(m => m.Headers[index].Key, new {@class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;"})</td>
+                                                    <td style="padding: 0 !important">@Html.TextBoxFor(m => m.Headers[index].Value, new {@class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;"})</td>
+                                                    <td>
+                                                        <a>[X]</a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (Model.Headers.Count > 0)
+                                            {
+                                                <tr>
+                                                    <td style="padding: 0 !important">@Html.TextBoxFor(m => m.Headers[0].Key, new {@class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;"})</td>
+                                                    <td style="padding: 0 !important">@Html.TextBoxFor(m => m.Headers[0].Value, new {@class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;"})</td>
+                                                    <td>
+                                                        <a>[X]</a>
+                                                    </td>
+                                                </tr>
+                                            }
                                         }
                                         </tbody>
                                     </table>
