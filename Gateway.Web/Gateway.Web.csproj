@@ -535,6 +535,7 @@
     <Compile Include="Models\Batches\BatchConfigModel.cs" />
     <Compile Include="Services\Batches\BatchConfigDataService.cs" />
     <Compile Include="Services\Schedule\BaseScheduleService.cs" />
+    <Compile Include="Services\Schedule\Interfaces\IRequestConfigurationService.cs" />
     <Compile Include="Services\Schedule\Models\BaseScheduleParameters.cs" />
     <Compile Include="Services\Schedule\Models\RedstoneRequestParameters.cs" />
     <Compile Include="Services\Schedule\RedstoneRequestScheduleService.cs" />

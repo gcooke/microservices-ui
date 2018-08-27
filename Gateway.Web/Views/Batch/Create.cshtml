@@ -84,6 +84,16 @@
                                 @Html.TextBoxFor(m => m.StateTtlMinutes, new { @name = "StateTtlMinutes", Placeholder = "Number of minutes to keep calculation state in Redis (0 - state cleared at end of batch).", @class = "form-control" })
                             </div>
 
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.ReportingCurrency, new { @class = "control-label" })
+                                @Html.TextBoxFor(m => m.ReportingCurrency, new { @name = "ReportingCurrency", Placeholder = "Reporting Currency", @class = "form-control" })
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.FundingCurrency, new { @class = "control-label" })
+                                @Html.TextBoxFor(m => m.FundingCurrency, new { @name = "FundingCurrency", Placeholder = "Funding Currency", @class = "form-control" })
+                            </div>
+
                             <div class="form-group" hidden="@Model.IsUpdating">
                                 @Html.CheckBoxFor(m => m.CreateAnother, new {@name = "CreateAnother" }) <span>Create Another</span><br/>
                                 @Html.CheckBoxFor(m => m.CreateAnotherBasedOnCurrentConfiguration, new {@name = "CreateAnotherBasedOnCurrentConfiguration" }) <span>Base next configuration on this configuration</span>

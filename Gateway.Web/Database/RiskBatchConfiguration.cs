@@ -28,6 +28,8 @@ namespace Gateway.Web.Database
         public string OutputTag { get; set; }
         public int StateTtlMinutes { get; set; }
         public int JobProcessorCount { get; set; }
+        public string ReportingCurrency { get; set; }
+        public string FundingCurrency { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Schedule> Schedules { get; set; }

@@ -57,6 +57,7 @@ namespace Gateway.Web
             information.RegisterType<IScheduleService<ScheduleBatchModel>, RedstoneBatchScheduleService>(Scope.Singleton);
             information.RegisterType<IScheduleService<ScheduleWebRequestModel>, RedstoneRequestScheduleService>(Scope.Singleton);
             information.RegisterType<IScheduleGroupService, ScheduleGroupService>(Scope.Singleton);
+            information.RegisterType<IRequestConfigurationService, RequestConfigurationService>(Scope.Singleton);
             RegisterRedisOptions(information);
         }
 

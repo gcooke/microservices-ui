@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Absa.Cib.MIT.TaskScheduling.Models;
 using Absa.Cib.MIT.TaskScheduling.Models.Builders.RedstoneRequest;
+using Absa.Cib.MIT.TaskScheduling.Models.Enum;
 using Bagl.Cib.MSF.Contracts.Compression;
 using Newtonsoft.Json;
 using RestSharp;
@@ -14,7 +15,7 @@ namespace Gateway.Web.Services.Schedule.Utils
         private static readonly string AuthUrl = System.Configuration.ConfigurationManager.AppSettings["AuthUrl"];
         private static readonly string BaseUrl = System.Configuration.ConfigurationManager.AppSettings["BaseUrl"];
         private static readonly string AuthQuery = System.Configuration.ConfigurationManager.AppSettings["AuthQuery"];
-        private static string _query = "riskdata/official/eagle/20180718";
+        private static string _query = "Batch/Run/%id%/%valuationDate%";
 
         public static RedstoneRequest ToRequest(this Database.Schedule schedule, DateTime? businessDate = null)
         {
@@ -30,6 +31,9 @@ namespace Gateway.Web.Services.Schedule.Utils
                     .SetId(schedule.ScheduleId)
                     .SetBusinessDate(businessDate)
                     .Build();
+
+                batchRequest.Arguments.Add(new Argument("id", ArgumentDataTypes.String.ToString(), schedule.ScheduleId.ToString()));
+                batchRequest.Arguments.Add(new Argument("valuationDate", ArgumentDataTypes.PreviousWeekDay.ToString(), "yyyy-MM-dd"));
 
                 AddChildRequest(batchRequest, schedule.Children.ToList());
                 return batchRequest;

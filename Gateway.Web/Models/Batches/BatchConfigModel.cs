@@ -44,6 +44,16 @@ namespace Gateway.Web.Models.Batches
         [RegularExpression(@"^[0-9]*$", ErrorMessage = "The State Time to Live (Minutes) field name must contain numbers only.")]
         public int? StateTtlMinutes { get; set; }
 
+        [Required]
+        [Display(Name = "Reporting Currency")]
+        [StringLength(3, ErrorMessage = "Reporting Currency cannot be longer than 3 characters.")]
+        public string ReportingCurrency { get; set; }
+
+        [Required]
+        [Display(Name = "Funding Currency")]
+        [StringLength(3, ErrorMessage = "Funding Currency cannot be longer than 3 characters.")]
+        public string FundingCurrency { get; set; }
+
         public bool CreateAnother { get; set; }
 
         public bool IsSelected { get; set; }
