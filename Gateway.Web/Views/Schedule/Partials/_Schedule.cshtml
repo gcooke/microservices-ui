@@ -1,0 +1,45 @@
+﻿@using Gateway.Web.Utils
+@model Gateway.Web.Models.Schedule.Output.ScheduleGroup
+
+<div class="row" style="padding-left: 15px; padding-right: 15px;">
+    @if (Model.Tasks.Any())
+    {
+        <table class="batch-table" style="width: 100%; border: none !important;">
+            @foreach (var item in Model.Tasks)
+            {
+                <tr class="batch-schedule-container" style="padding: 20px !important;" data-tt-branch="@item.HasChildren" data-tt-id="@item.ScheduleId" data-tt-parent-id="@item.ParentId">
+                    <td style="width: 7%;">
+                        @Html.CheckBox("select-" + item.ScheduleKey, new { @class = "select-schedule select-schedule-" + @Model.GroupId, @data_id = item.ScheduleId })
+                    </td>
+                    <td style="width: 73%;">
+                        @if (item.Type.ToLower() == "request")
+                        {
+                            <span class="label label-danger" style="padding: 2px !important;">@item.Type</span>
+                        }
+                        else
+                        {
+                            <span class="label label-info" style="padding: 2px !important;">@item.Type</span>
+                        }
+                        <span class="m-l-5" style="margin-top: 2px" id="@item.Key">
+                            @item.Name.Truncate(75)
+                            @if (item.ChildrenCount > 0)
+                            {
+                                <span>(@item.ChildrenCount)</span>
+                            }
+                        </span>
+                    </td>
+                    <td style="width: 20%;">
+                        <a type="button" href="~/Schedule/@item.Type/Update/@item.ScheduleId" class="btn btn-default btn-xs pull-right" style="margin-right: 0 !important">Edit</a>
+                        <a type="button" href="~/Schedule/Delete/Bulk/Confirmation?items=@item.ScheduleId" class="btn btn-default btn-xs pull-right" style="margin-right: 5px !important">Delete</a>
+                    </td>
+                </tr>
+            }
+        </table>
+    }
+    else
+    {
+        <div class="col-sm-12 text-center">
+            There are no tasks assigned to this group.<br/>
+        </div>
+    }
+</div>

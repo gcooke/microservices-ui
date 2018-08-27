@@ -6,6 +6,7 @@ using Gateway.Web.Models.Home;
 using Gateway.Web.Models.Monitoring;
 using Gateway.Web.Models.Request;
 using Gateway.Web.Models.Security;
+using Gateway.Web.Models.ServerResource;
 using QueueChartModel = Gateway.Web.Models.Controller.QueueChartModel;
 
 namespace Gateway.Web.Database
@@ -73,5 +74,12 @@ namespace Gateway.Web.Database
         bool HasStatusChanged(string controller, string version, string status, string alias);
 
         List<ExtendedBatchSummary> GetBatchSummaryStats(DateTime @from, DateTime to);
+        ResourceConfigModel GetConfiguredServers();
+        ResourceConfigModel GetControllerResources();
+
+        void DeleteServerResourceLink(string serverName, string resourceName);
+        void AddServerResourceLink(string serverName, string resourceName);
+        void DeleteControllerResourceLink(string controllerName, string resourceName);
+        void AddControllerResourceLink(string controllerName, string resourceName);
     }
 }

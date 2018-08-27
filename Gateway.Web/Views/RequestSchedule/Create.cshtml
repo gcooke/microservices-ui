@@ -1,0 +1,217 @@
+﻿@model Gateway.Web.Models.Schedule.Input.ScheduleWebRequestModel
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "Configuration";
+    ViewBag.Current = "Schedule";
+}
+@{ Html.RenderPartial("_BatchConfigNav"); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+
+        <div class="container-fluid m-t-15">
+            <div class="row">
+                <div class="col-sm-12">
+
+                    @if (Model.IsUpdating)
+                    {
+                        <h3 class="text-lowercase">Update Redstone Reqeust</h3>
+                    }
+                    else
+                    {
+                        <h3 class="text-lowercase">Create Redstone Reqeust</h3>
+                    }
+
+                    <div class="m-t-20">
+                    </div>
+                </div>
+            </div>
+
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger" role="alert">
+                    <b>The following errors have occurred:</b>
+                    @Html.ValidationSummary(false, "", new {@class = "text-danger"})
+                </div>
+            }
+            
+            <div class="m-t-20">
+                @using (@Html.BeginForm("CreateOrUpdateRequest", "RequestSchedule", FormMethod.Post, new {id = "Form-" + @Model.Group}))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.ScheduleId)
+                    @Html.HiddenFor(m => m.RequestConfigurationId)
+                    @Html.HiddenFor(m => m.BulkUpdate)
+
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <ul class="nav nav-pills nav-stacked">
+                                <li class="active">
+                                    <a href="#general" data-toggle="tab">General</a>
+                                </li>
+                                <li>
+                                    <a href="#payload" data-toggle="tab">Payload</a>
+                                </li>
+                                <li>
+                                    <a href="#arguments" data-toggle="tab">Arguments</a>
+                                </li>
+                                <li>
+                                    <a href="#headers" data-toggle="tab">Headers</a>
+                                </li>
+                                <li>
+                                    <a href="#group" data-toggle="tab">Group</a>
+                                </li>
+                                <li>
+                                    <a href="#linked-items" data-toggle="tab">Linked Items</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-sm-10">
+                            <div class="tab-content">
+                                <div class="tab-pane fade active in" id="general">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.Name, new { @class = "control-label", maxlength=80 })
+                                        @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.Url, new { @class = "control-label" })
+                                        @Html.TextBoxFor(m => m.Url, new { @class = "form-control" })
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.Verb, new { @class = "control-label" })
+                                        @Html.DropDownListFor(m => m.Verb, Model.Verbs, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="payload">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.Payload, new { @class = "control-label" })
+                                        @Html.TextAreaFor(m => m.Payload, new { @rows = "35", @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="arguments">
+                                    <table style="width: 100%;" class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Type</th>
+                                                <th>Format/Value</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="argument-table-body" class="editable-table">
+                                        @if (Model.IsUpdating)
+                                        {
+                                             foreach (var index in Enumerable.Range(0, Model.Arguments.Count(x => x.Key != null)))
+                                             {
+                                                 <tr>
+                                                     <td style="padding: 0 !important">@Html.TextBoxFor(m => m.Arguments[index].Key, new {@class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;"})</td>
+                                                     <td style="padding: 0 !important">@Html.DropDownListFor(m => m.Arguments[index].Type, Model.ArgumentDataTypes, new {@class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;"})</td>
+                                                     <td style="padding: 0 !important">@Html.TextBoxFor(m => m.Arguments[index].FormatValue, new {@class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;"})</td>
+                                                     <td>
+                                                         <a>[X]</a>
+                                                     </td>
+                                                 </tr>
+                                            }
+                                        }
+                                        else {
+                                            if (Model.Arguments.Count > 0)
+                                            {
+                                                <tr>
+                                                    <td style="padding: 0 !important">@Html.TextBoxFor(m => m.Arguments[0].Key, new {@class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;"})</td>
+                                                    <td style="padding: 0 !important">@Html.DropDownListFor(m => m.Arguments[0].Type, Model.ArgumentDataTypes, new {@class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;"})</td>
+                                                    <td style="padding: 0 !important">@Html.TextBoxFor(m => m.Arguments[0].FormatValue, new {@class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;"})</td>
+                                                    <td>
+                                                        <a>[X]</a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                        </tbody>
+                                    </table>
+                                    <a class="add-row-button" style="cursor: pointer" data-table-body="#argument-table-body">Insert Row</a>
+                                </div>
+                                <div class="tab-pane fade" id="headers">
+                                    <table style="width: 100%;" class="table table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Value</th>
+                                            <th></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="header-table-body" class="editable-table">
+                                        @if (Model.IsUpdating)
+                                        {
+                                            foreach (var index in Enumerable.Range(0, Math.Max(1, Model.Headers.Count(x => x.Key != null))))
+                                            {
+                                                <tr>
+                                                    <td style="padding: 0 !important">@Html.TextBoxFor(m => m.Headers[index].Key, new {@class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;"})</td>
+                                                    <td style="padding: 0 !important">@Html.TextBoxFor(m => m.Headers[index].Value, new {@class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;"})</td>
+                                                    <td>
+                                                        <a>[X]</a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (Model.Headers.Count > 0)
+                                            {
+                                                <tr>
+                                                    <td style="padding: 0 !important">@Html.TextBoxFor(m => m.Headers[0].Key, new {@class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;"})</td>
+                                                    <td style="padding: 0 !important">@Html.TextBoxFor(m => m.Headers[0].Value, new {@class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;"})</td>
+                                                    <td>
+                                                        <a>[X]</a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                        </tbody>
+                                    </table>
+                                    <a class="add-row-button" data-table-body="#header-table-body">Insert Row</a>
+                                </div>
+                                <div class="tab-pane fade" id="group">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.Group, new {@class = "control-label"})
+                                        <small>A group is a collection of batches that will run at the same time of the day.</small>
+                                        @Html.DropDownListFor(m => m.Group, Model.Groups, new {@name = "Group", @class = "form-control"})
+                                        <div class="input-group m-t-5">
+                                            @Html.TextBoxFor(m => m.GroupName, new {@name = "GroupName", placeholder = "Input a cron expression for the group OR use the 'Generate Cron' button to generate one.", @class = "form-control", @style = "margin-top: 0 !important"})
+                                            <span class="input-group-btn">
+                                                <a href="https://crontab.guru/" target="_blank" class="btn btn-default" type="button">Generate Cron</a>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="linked-items">
+                                    @if (!Model.BulkUpdate)
+                                    {
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.Parent, new {@class = "control-label"})
+                                            @Html.DropDownListFor(m => m.Parent, Model.Parents, new {@name = "ConfigurationId", @class = "form-control"})
+                                        </div>
+
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.Children, new {@class = "control-label"})
+                                            @Html.ListBoxFor(m => m.Children, Model.ChildSchedules, new {@multiple = "true", @name = "ConfigurationId", @class = "form-control", style="height: 500px;"})
+                                        </div>
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row m-t-15">
+                        <div class="col-sm-12">
+                            <button type="submit" class="btn btn-default">Save</button>
+                        </div>
+                    </div>
+                }
+
+            </div>
+
+        </div>
+
+
+    </div>
+</div>

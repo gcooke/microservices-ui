@@ -1,0 +1,96 @@
+﻿@model Gateway.Web.Models.Schedule.Input.ScheduleWebRequestModel
+
+@using (@Html.BeginForm("AssignWebRequestToGroup", "RequestSchedule", FormMethod.Post, new { id = "Form-" + @Model.Group }))
+{
+    @Html.HiddenFor(m => @Model.Group)
+    @Html.HiddenFor(m => @Model.RequestConfigurationId)
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+    <div class="row">
+        <div class="col-sm-2">
+            <ul class="nav nav-pills nav-stacked">
+                <li class="active">
+                    <a href="#general-@Model.Group" data-toggle="tab">General</a>
+                </li>
+                <li>
+                    <a href="#payload-@Model.Group" data-toggle="tab">Payload</a>
+                </li>
+                <li>
+                    <a href="#arguments-@Model.Group" data-toggle="tab">Arguments</a>
+                </li>
+                <li>
+                    <a href="#headers-@Model.Group" data-toggle="tab">Headers</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-sm-10">
+            <div class="tab-content">
+                <div class="tab-pane fade active in" id="general-@Model.Group">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Name, new { @class = "control-label", maxlength = 80 })
+                        @Html.TextBoxFor(m => m.Name, new { @class = "form-control input-sm" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Url, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.Url, new { @class = "form-control input-sm" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Verb, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.Verb, Model.Verbs, new { @class = "form-control input-sm" })
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="payload-@Model.Group">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Payload, new { @class = "control-label" })
+                        @Html.TextAreaFor(m => m.Payload, new { @rows = "10", @class = "form-control input-sm" })
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="arguments-@Model.Group">
+                    <table style="width: 100%;" class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Format/Value</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="argument-table-body" class="editable-table">
+                            <tr>
+                                <td style="padding: 0 !important">@Html.TextBoxFor(m => m.Arguments[0].Key, new { @class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;" })</td>
+                                <td style="padding: 0 !important">@Html.DropDownListFor(m => m.Arguments[0].Type, Model.ArgumentDataTypes, new { @class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;" })</td>
+                                <td style="padding: 0 !important">@Html.TextBoxFor(m => m.Arguments[0].FormatValue, new { @class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;" })</td>
+                                <td><a>[X]</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <a class="add-row-button" style="cursor: pointer" data-table-body="#argument-table-body">Insert Row</a>
+                </div>
+                <div class="tab-pane fade" id="headers-@Model.Group">
+                    <table style="width: 100%;" class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Value</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="header-table-body" class="editable-table">
+                            <tr>
+                                <td style="padding: 0 !important">@Html.TextBoxFor(m => m.Headers[0].Key, new { @class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;" })</td>
+                                <td style="padding: 0 !important">@Html.TextBoxFor(m => m.Headers[0].Value, new { @class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;" })</td>
+                                <td><a>[X]</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <a class="add-row-button" data-table-body="#header-table-body">Insert Row</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row m-t-15">
+        <div class="col-sm-12">
+            <button type="submit" class="btn btn-default pull-right" style="margin: 0 !important" id="assign-button">Assign to Group</button>
+            <a class="btn btn-link pull-right m-r-5" href="#view-tab-@Model.Group" data-toggle="tab">Cancel</a>
+        </div>
+    </div>
+}

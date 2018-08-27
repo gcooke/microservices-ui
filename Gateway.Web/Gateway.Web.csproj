@@ -15,7 +15,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Gateway.Web</RootNamespace>
     <AssemblyName>Gateway.Web</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort>443</IISExpressSSLPort>
@@ -26,6 +26,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <Use64BitIISExpress />
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -45,6 +46,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Absa.Cib.MIT.TaskScheduling, Version=1.1.17.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Absa.Cib.MIT.TaskScheduling.1.1.17\lib\net46\Absa.Cib.MIT.TaskScheduling.dll</HintPath>
+    </Reference>
     <Reference Include="Bagl.Cib.MIT.Cube, Version=1.0.27.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Bagl.Cib.MIT.Cube.1.0.27\lib\net452\Bagl.Cib.MIT.Cube.dll</HintPath>
     </Reference>
@@ -76,6 +80,9 @@
       <HintPath>..\packages\Bagl.Cib.MSF.ClientAPI.1.1.169\lib\net452\Bagl.Cib.MSF.Contracts.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="CronExpressionDescriptor, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CronExpressionDescriptor.2.5.0\lib\netstandard2.0\CronExpressionDescriptor.dll</HintPath>
+    </Reference>
     <Reference Include="CsvHelper, Version=7.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
       <HintPath>..\packages\CsvHelper.7.1.1\lib\net45\CsvHelper.dll</HintPath>
     </Reference>
@@ -86,6 +93,12 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="Hangfire.Core, Version=1.6.19.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hangfire.Core.1.6.19\lib\net45\Hangfire.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Hangfire.SqlServer, Version=1.6.19.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hangfire.SqlServer.1.6.19\lib\net45\Hangfire.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
@@ -100,6 +113,12 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Owin, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.3.0.0\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.3.0.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
       <Private>True</Private>
@@ -116,9 +135,15 @@
       <HintPath>..\packages\Unity.4.0.1\lib\net45\Microsoft.Practices.Unity.RegistrationByConvention.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="NCrontab, Version=3.2.20120.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ncrontab.3.3.0\lib\net35\NCrontab.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
     <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\RestSharp.105.2.3\lib\net452\RestSharp.dll</HintPath>
@@ -131,11 +156,15 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.DirectoryServices.AccountManagement" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Reactive, Version=4.0.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reactive.4.0.0\lib\net46\System.Reactive.dll</HintPath>
+    </Reference>
     <Reference Include="System.Reactive.Core, Version=3.0.1000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Reactive.Core.3.1.1\lib\net45\System.Reactive.Core.dll</HintPath>
       <Private>True</Private>
@@ -162,6 +191,9 @@
       <HintPath>..\packages\System.Threading.Tasks.Extensions.4.3.0\lib\portable-net45+win8+wp8+wpa81\System.Threading.Tasks.Extensions.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Threading.Thread, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Thread.4.3.0\lib\net46\System.Threading.Thread.dll</HintPath>
+    </Reference>
     <Reference Include="System.ValueTuple, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ValueTuple.4.3.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
       <Private>True</Private>
@@ -170,14 +202,12 @@
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Windows" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
@@ -217,6 +247,7 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="WebGrease">
       <Private>True</Private>
       <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
@@ -235,6 +266,28 @@
     <Compile Include="Authorization\GatewayAuthenticationFilter.cs" />
     <Compile Include="Authorization\RoleBasedAuthorizeAttribute.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\BatchScheduleController.cs" />
+    <Compile Include="Controllers\RequestScheduleController.cs" />
+    <Compile Include="Database\RequestConfiguration.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\Schedule.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\ScheduledJob.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\ScheduleGroup.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\SchedulePartial.cs" />
+    <Compile Include="Models\Schedule\Input\BaseScheduleModel.cs" />
+    <Compile Include="Models\Schedule\Output\ScheduleGroup.cs" />
+    <Compile Include="Models\Schedule\Output\ScheduleTask.cs" />
+    <Compile Include="Models\Schedule\Input\ScheduleWebRequestModel.cs" />
+    <Compile Include="Models\Schedule\Output\ScheduleViewModel.cs" />
+    <Compile Include="Models\Schedule\Output\ScheduleGroupModel.cs" />
+    <Compile Include="Controllers\ScheduleController.cs" />
     <Compile Include="Controllers\BatchController.cs" />
     <Compile Include="Controllers\DownloadsController.cs" />
     <Compile Include="Controllers\AddInController.cs" />
@@ -244,6 +297,7 @@
     <Compile Include="Controllers\GroupController.cs" />
     <Compile Include="Controllers\ReleaseProcessController.cs" />
     <Compile Include="Controllers\SecurityController.cs" />
+    <Compile Include="Controllers\ServerResourceController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\RequestController.cs" />
     <Compile Include="Controllers\ControllersController.cs" />
@@ -255,7 +309,13 @@
     <Compile Include="Database\BatchStat.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
+    <Compile Include="Database\ControllerExternalResource.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
     <Compile Include="Database\ExtendedBatchSummary.cs" />
+    <Compile Include="Database\ExternalResource.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
     <Compile Include="Database\GatewayDatabaseService.cs" />
     <Compile Include="Database\HistoricalSummary.cs" />
     <Compile Include="Database\IGatewayDatabaseService.cs" />
@@ -273,7 +333,10 @@
     <Compile Include="Database\RiskBatchConfiguration.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
-    <Compile Include="Database\RiskBatchSchedule.cs">
+    <Compile Include="Database\Server.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\ServerExternalResource.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\spGetChildRequests_Result.cs">
@@ -352,15 +415,19 @@
     <Compile Include="Models\AddIn\AddInVersionModel.cs" />
     <Compile Include="Models\AddIn\ApplicationVersionModel.cs" />
     <Compile Include="Models\Batches\BatchConfigList.cs" />
-    <Compile Include="Models\Batches\DeleteBatchConfigModel.cs" />
+    <Compile Include="Models\Schedule\Input\ScheduleBatchModel.cs" />
+    <Compile Include="Models\Schedule\Output\ScheduleDeleteModel.cs" />
+    <Compile Include="Models\Batches\BatchDeleteConfigModel.cs" />
     <Compile Include="Enums\MarketDataMap.cs" />
     <Compile Include="Enums\OutputType.cs" />
     <Compile Include="Enums\TradeSourceType.cs" />
     <Compile Include="Models\Controllers\AliasesModel.cs" />
+    <Compile Include="Models\Controllers\ExternalResourceConfig.cs" />
     <Compile Include="Models\Controllers\GatewayInfo.cs" />
     <Compile Include="Models\Controllers\HistoryModel.cs" />
     <Compile Include="Models\Controllers\QueueChartModel.cs" />
     <Compile Include="Models\Controllers\QueuesModel.cs" />
+    <Compile Include="Models\Controllers\ItemResourceConfig.cs" />
     <Compile Include="Models\Controllers\ServersModel.cs" />
     <Compile Include="Models\Controllers\UsageModel.cs" />
     <Compile Include="Models\Controllers\VersionsModel.cs" />
@@ -405,6 +472,8 @@
     <Compile Include="Models\Security\GroupTypesModel.cs" />
     <Compile Include="Models\Security\LinkModel.cs" />
     <Compile Include="Models\Security\LinksModel.cs" />
+    <Compile Include="Models\ServerResource\ResourceConfigModel.cs" />
+    <Compile Include="Models\ServerResource\ResourceConfigType.cs" />
     <Compile Include="Models\Shared\AddInModel.cs" />
     <Compile Include="Models\Shared\ApplicationModel.cs" />
     <Compile Include="Models\Shared\EntityAddInVersionModel.cs" />
@@ -461,11 +530,26 @@
     <Compile Include="Models\Security\UsersModel.cs" />
     <Compile Include="Models\User\HistoryModel.cs" />
     <Compile Include="Registrations.cs" />
+    <Compile Include="ModelBindersConverters\ScheduleWebRequestModelBinder.cs" />
     <Compile Include="Services\BasicRestService.cs" />
     <Compile Include="Models\Batches\BatchConfigModel.cs" />
-    <Compile Include="Services\Batches\BatchConfigEx.cs" />
-    <Compile Include="Services\Batches\IRiskBatchConfigService.cs" />
-    <Compile Include="Services\Batches\RiskBatchConfigService.cs" />
+    <Compile Include="Services\Batches\BatchConfigDataService.cs" />
+    <Compile Include="Services\Schedule\BaseScheduleService.cs" />
+    <Compile Include="Services\Schedule\Models\BaseScheduleParameters.cs" />
+    <Compile Include="Services\Schedule\Models\RedstoneRequestParameters.cs" />
+    <Compile Include="Services\Schedule\RedstoneRequestScheduleService.cs" />
+    <Compile Include="Services\Schedule\Utils\BatchRequestBuilderEx.cs" />
+    <Compile Include="Services\Schedule\ScheduleGroupService.cs" />
+    <Compile Include="Services\Batches\Utils\BatchEx.cs" />
+    <Compile Include="Services\Schedule\Models\BatchScheduleParameters.cs" />
+    <Compile Include="Services\Schedule\RedstoneBatchScheduleService.cs" />
+    <Compile Include="Services\Batches\Interfaces\IBatchConfigDataService.cs" />
+    <Compile Include="Services\Schedule\Interfaces\IScheduleService.cs" />
+    <Compile Include="Services\Schedule\Interfaces\IScheduleGroupService.cs" />
+    <Compile Include="Services\Schedule\Interfaces\IScheduleDataService.cs" />
+    <Compile Include="Services\Batches\Interfaces\IBatchConfigService.cs" />
+    <Compile Include="Services\Batches\BatchConfigService.cs" />
+    <Compile Include="Services\Schedule\ScheduleDataService.cs" />
     <Compile Include="Services\DifferentialDownloadService.cs" />
     <Compile Include="Services\GatewayService.cs" />
     <Compile Include="Services\IActiveDirectoryService.cs" />
@@ -479,6 +563,10 @@
     <Compile Include="Services\Monitoring\ServerDiagnostics\ServerDiagnosticsService.cs" />
     <Compile Include="Services\ProcessInformation.cs" />
     <Compile Include="Services\QueueInformation.cs" />
+    <Compile Include="Services\Schedule\Utils\ScheduleBatchModelEx.cs" />
+    <Compile Include="Services\Schedule\Utils\ScheduleGroupEx.cs" />
+    <Compile Include="Services\Schedule\Utils\ScheduleTaskEx.cs" />
+    <Compile Include="Services\Schedule\Utils\ScheduleWebRequestModelEx.cs" />
     <Compile Include="Services\VersionUpdate.cs" />
     <Compile Include="UnityDependencyResolver.cs" />
     <Compile Include="Global.asax.cs">
@@ -487,8 +575,10 @@
     <Compile Include="Models\Controllers\ControllerStats.cs" />
     <Compile Include="Models\Controllers\DashboardModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\Schedule\Utils\BaseScheduleModelEx.cs" />
     <Compile Include="Utils\Calculations.cs" />
     <Compile Include="Utils\Constants.cs" />
+    <Compile Include="Utils\CronTabExpression.cs" />
     <Compile Include="Utils\DashboardEx.cs" />
     <Compile Include="Utils\DataContractSerializationEx.cs" />
     <Compile Include="Utils\LegacyCompession.cs" />
@@ -505,6 +595,8 @@
     <Compile Include="Utils\XmlExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\css\bootstrap-datepaginator.min.css" />
+    <Content Include="Content\css\bootstrap-datepicker.css" />
     <Content Include="Content\css\bootstrap-quick-search.css" />
     <Content Include="Content\css\bootstrap-quick-search.min.css" />
     <Content Include="Content\css\bootstrap.css" />
@@ -530,6 +622,8 @@
     <Content Include="Content\img\Redstone.DEV.png" />
     <Content Include="Content\img\Redstone.PROD.png" />
     <Content Include="Content\img\Redstone.UAT.png" />
+    <Content Include="Content\js\bootstrap-datepaginator.min.js" />
+    <Content Include="Content\js\bootstrap-datepicker.js" />
     <Content Include="Content\js\bootstrap-quick-search.js" />
     <Content Include="Content\js\bootstrap-quick-search.min.js" />
     <Content Include="Content\js\c3.js" />
@@ -539,6 +633,16 @@
     <Content Include="Content\js\moment.js" />
     <Content Include="Content\js\row-click.js" />
     <Content Include="Content\js\spinner.js" />
+    <Content Include="Content\js\treetable\.gitignore" />
+    <Content Include="Content\js\treetable\css\jquery.treetable.css" />
+    <Content Include="Content\js\treetable\css\jquery.treetable.theme.default.css" />
+    <Content Include="Content\js\treetable\css\screen.css" />
+    <Content Include="Content\js\treetable\GPL-LICENSE.txt" />
+    <Content Include="Content\js\treetable\index.html" />
+    <Content Include="Content\js\treetable\jquery.treetable.js" />
+    <Content Include="Content\js\treetable\MIT-LICENSE.txt" />
+    <Content Include="Content\js\treetable\test.html" />
+    <Content Include="Content\js\treetable\test\jquery.treetable.test.js" />
     <Content Include="Database\PnRFO_Gateway.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>PnRFO_Gateway.edmx</DependentUpon>
@@ -553,7 +657,9 @@
     <Content Include="Global.asax" />
     <Content Include="Content\js\bootstrap.js" />
     <Content Include="Content\js\bootstrap.min.js" />
-    <Content Include="appsettings.config" />
+    <Content Include="appsettings.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="connectionstrings.config">
       <SubType>Designer</SubType>
     </Content>
@@ -579,6 +685,8 @@
     <Content Include="Content\js\respond.js" />
     <Content Include="Content\js\respond.min.js" />
     <Content Include="Content\js\_references.js" />
+    <Content Include="Scripts\Schedule\Schedule.js" />
+    <Content Include="Scripts\ServerResources\ServerResources.js" />
     <Content Include="Scripts\Monitoring\Monitoring.js" />
     <Content Include="Scripts\Queues\ControllerQueueCharts.js" />
     <Content Include="Scripts\Queues\Shared\ChartRenderer.js" />
@@ -609,6 +717,10 @@
       <DependentUpon>PnRFO_Gateway.edmx</DependentUpon>
     </Content>
     <Content Include="Views\Controller\Dashboard.cshtml" />
+    <Content Include="Content\js\treetable\bower.json" />
+    <Content Include="Content\js\treetable\CHANGELOG.md" />
+    <Content Include="Content\js\treetable\README.md" />
+    <Content Include="Content\js\treetable\treetable.jquery.json" />
     <None Include="Properties\PublishProfiles\local.pubxml" />
     <None Include="Properties\PublishProfiles\remote.pubxml" />
     <Content Include="Views\Controller\_ControllerNav.cshtml" />
@@ -678,11 +790,21 @@
     <Content Include="Views\ReleaseProcess\_ReleasesNav.cshtml" />
     <Content Include="Views\Batch\Create.cshtml" />
     <Content Include="Views\Batch\Index.cshtml" />
-    <Content Include="Views\Batch\_BatchConfigNav.cshtml" />
+    <Content Include="Views\Shared\_BatchConfigNav.cshtml" />
     <Content Include="Views\Batch\Delete.cshtml" />
     <Content Include="Views\MarketData\Index.cshtml" />
     <Content Include="Views\MarketData\MissingMonikers.cshtml" />
     <Content Include="Views\MarketData\_MarketDataNav.cshtml" />
+    <Content Include="Views\ServerResource\Index.cshtml" />
+    <Content Include="Views\ServerResource\_ServerResourcesNav.cshtml" />
+    <Content Include="Views\BatchSchedule\Create.cshtml" />
+    <Content Include="Views\Schedule\Delete.cshtml" />
+    <Content Include="Views\Schedule\Index.cshtml" />
+    <Content Include="Views\Schedule\Update.cshtml" />
+    <Content Include="Views\Schedule\Partials\_ScheduleBatch.cshtml" />
+    <Content Include="Views\Schedule\Partials\_Schedule.cshtml" />
+    <Content Include="Views\Schedule\Partials\_ScheduleWebRequest.cshtml" />
+    <Content Include="Views\RequestSchedule\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />

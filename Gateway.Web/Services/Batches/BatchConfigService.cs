@@ -4,11 +4,22 @@ using System.Linq;
 using System.Linq.Expressions;
 using Gateway.Web.Database;
 using Gateway.Web.Models.Batches;
+using Gateway.Web.Services.Batches.Interfaces;
+using Gateway.Web.Services.Batches.Utils;
+using Gateway.Web.Services.Schedule.Interfaces;
+using ScheduleGroup = Gateway.Web.Database.ScheduleGroup;
 
 namespace Gateway.Web.Services.Batches
 {
-    public class RiskBatchConfigService : IRiskBatchConfigService
+    public class BatchConfigService : IBatchConfigService
     {
+        private readonly IScheduleDataService _scheduleDataService;
+
+        public BatchConfigService(IScheduleDataService scheduleDataService)
+        {
+            _scheduleDataService = scheduleDataService;
+        }
+
         public BatchConfigModel CreateConfiguration(BatchConfigModel batchConfigModel)
         {
             using (var db = new GatewayEntities())
@@ -58,9 +69,12 @@ namespace Gateway.Web.Services.Batches
                     throw new Exception($"Unable to find configuration with ID {id}");
                 }
 
+                _scheduleDataService.DeleteForConfiguration(id, db, false);
+
+                var model = entity.ToModel();
                 db.RiskBatchConfigurations.Remove(entity);
                 db.SaveChanges();
-                return entity.ToModel();
+                return model;
             }
         }
 
@@ -75,7 +89,6 @@ namespace Gateway.Web.Services.Batches
                     throw new Exception($"Unable to find configuration with ID {id}");
                 }
 
-                db.RiskBatchConfigurations.Remove(entity);
                 return entity.ToModel();
             }
         }
@@ -105,12 +118,57 @@ namespace Gateway.Web.Services.Batches
             }
         }
 
-        public IList<string> GetConfigurationTypes()
+        public IList<BatchConfigModel> GetConfigurationTypes()
         {
             using (var db = new GatewayEntities())
             {
                 return db.RiskBatchConfigurations
-                    .Select(x => x.Type)
+                    .Select(x => new { x.Type, x.ConfigurationId})
+                    .Select(x => new BatchConfigModel
+                    {
+                        ConfigurationId = x.ConfigurationId,
+                        Type = x.Type
+                    })
+                    .ToList();
+            }
+        }
+
+        public IEnumerable<ScheduleGroup> GetScheduleGroups()
+        {
+            using (var db = new GatewayEntities())
+            {
+                var items = db.ScheduleGroups
+                    .ToList();
+                return items;
+            }
+        }
+
+        public IEnumerable<Database.Schedule> GetSchedules()
+        {
+            using (var db = new GatewayEntities())
+            {
+                var items = db.Schedules
+                    .Include("RiskBatchConfiguration")
+                    .Include("RequestConfiguration")
+                    .Include("ParentSchedule")
+                    .Include("Children")
+                    .ToList();
+                return items;
+            }
+        }
+
+        public IList<BatchConfigModel> GetConfigurationTypes(IEnumerable<long> configurationIdList)
+        {
+            using (var db = new GatewayEntities())
+            {
+                return db.RiskBatchConfigurations
+                    .Where(x => configurationIdList.Contains(x.ConfigurationId))
+                    .Select(x => new { x.Type, x.ConfigurationId })
+                    .Select(x => new BatchConfigModel
+                    {
+                        ConfigurationId = x.ConfigurationId,
+                        Type = x.Type
+                    })
                     .ToList();
             }
         }
@@ -145,6 +203,20 @@ namespace Gateway.Web.Services.Batches
 
         private bool IsUniqueConfiguration(GatewayEntities db, BatchConfigModel batchConfigModel)
         {
+            if (batchConfigModel.IsUpdating)
+            {
+                var existingItem = db.RiskBatchConfigurations.SingleOrDefault(x => x.ConfigurationId == batchConfigModel.ConfigurationId);
+                if (existingItem != null && existingItem.Type == batchConfigModel.Type)
+                {
+                    return true;
+                }
+
+                if (existingItem != null && existingItem.Type != batchConfigModel.Type)
+                {
+                    return db.RiskBatchConfigurations.Count(x => x.Type == batchConfigModel.Type) == 0;
+                }
+            }
+
             return db.RiskBatchConfigurations.Count(x => x.Type == batchConfigModel.Type) == 0;
         }
     }

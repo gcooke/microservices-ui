@@ -16,7 +16,7 @@ namespace Gateway.Web.Models.Batches
 
         [Required]
         [Display(Name = "Risk Batch Type")]
-        [StringLength(100, ErrorMessage = "Type cannot be longer than 100 characters.")]
+        [StringLength(50, ErrorMessage = "Type cannot be longer than 50 characters.")]
         public string Type { get; set; }
 
         [Required]
@@ -51,6 +51,8 @@ namespace Gateway.Web.Models.Batches
         public bool CreateAnotherBasedOnCurrentConfiguration { get; set; }
 
         public bool IsUpdating => ConfigurationId != 0;
+
+        public int ScheduleCount { get; set; }
         
         public IList<SelectListItem> TradeSourceTypes
         {

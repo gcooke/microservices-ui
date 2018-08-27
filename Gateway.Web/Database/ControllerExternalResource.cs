@@ -12,13 +12,13 @@ namespace Gateway.Web.Database
     using System;
     using System.Collections.Generic;
     
-    public partial class RiskBatchSchedule
+    public partial class ControllerExternalResource
     {
-        public long ScheduleId { get; set; }
-        public long ConfigurationId { get; set; }
-        public string TradeSource { get; set; }
-        public string Schedule { get; set; }
+        public int Id { get; set; }
+        public long ControllerId { get; set; }
+        public int ExternalResourceId { get; set; }
     
-        public virtual RiskBatchConfiguration RiskBatchConfiguration { get; set; }
+        public virtual Controller Controller { get; set; }
+        public virtual ExternalResource ExternalResource { get; set; }
     }
 }

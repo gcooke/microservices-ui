@@ -231,7 +231,7 @@ fieldset {
         }
 
 label {
-    col-md-2 control-label display: inline;
+    display: inline;
     font-size: 1.2em;
     font-weight: 600;
 }
@@ -403,12 +403,28 @@ progress::-webkit-progress-value {
     white-space: nowrap
 }
 
+.m-t-5 {
+    margin-top: 5px;
+}
+
+.m-t-10 {
+    margin-top: 10px;
+}
+
 .m-t-15 {
     margin-top: 15px;
 }
 
 .m-t-20 {
     margin-top: 20px;
+}
+
+.m-r-5 {
+    margin-right: 5px;
+}
+
+.m-l-5 {
+    margin-left: 5px;
 }
 
 .report-table-summary-row {
@@ -423,6 +439,28 @@ progress::-webkit-progress-value {
     display: none;
 }
 
+.report-panel-detail-row-hidden {
+    display: none;
+}
+
 .monitoring-report-trigger {
     cursor: pointer;
+}
+
+.batch-schedule-container {
+    background: #F5F5F5;
+    padding: 20px;
+    color: black;
+    border-right: 1px solid #FFFFFF;
+    border-bottom: 1px solid #FFFFFF;
+    cursor: pointer;
+}
+
+.batch-schedule-container:hover {
+    background: #E8E8E8;
+    cursor: pointer;
+}
+
+.server-resource-button {
+    margin-top: 5px;
 }

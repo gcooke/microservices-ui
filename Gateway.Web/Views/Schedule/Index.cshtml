@@ -1,0 +1,125 @@
+﻿@using Gateway.Web.Utils
+@model Gateway.Web.Models.Schedule.Output.ScheduleViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "Configuration";
+    ViewBag.Current = "Schedule";
+}
+@{ Html.RenderPartial("_BatchConfigNav"); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+
+        <div class="row">
+            <div class="col-sm-6">
+                <h3 class="text-lowercase">
+                    Schedule <small id="businessDate" data-date="@Model.BusinessDate.ToString("yyyy-MM-dd")">@Model.BusinessDate.ToString("yyyy-MM-dd")</small>
+                </h3>
+            </div>
+            <div class="col-sm-6">
+                <a href="~/Schedule/Update"
+                   class="btn btn-default pull-right m-t-15">
+                    Edit Schedule
+                </a>
+            </div>
+        </div>
+
+        <div class="row m-t-15">
+            <div class="col-sm-12">
+                @using (@Html.BeginForm("Index", "Schedule", FormMethod.Get))
+                {
+                    <div class="form-group">
+                        @Html.Label("Search")
+                        <div class="input-group">
+                            @Html.HiddenFor(x => x.BusinessDate)
+                            @Html.TextBoxFor(m => m.SearchTerm, new {@name = "searchTerm", @class = "form-control", @placeholder = "Search for batch...", @style = "margin-top: 0 !important"})
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="submit" style="margin: 0 !important">
+                                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-sm-12">
+                <div id="paginator" data-current-date="@Model.BusinessDate.ToString("yyyy-MM-dd")"></div>
+            </div>
+        </div>
+
+        <div class="row m-t-15">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <input type="hidden" id="pollResults" value="true"/>
+                @if (!Model.Groups.Groups.Any())
+                {
+                    <div style="text-align: center">
+                        <h4>There are no tasks scheduled for <b>@Model.BusinessDate.ToString("yyyy-MM-dd")</b></h4>
+                    </div>
+                }
+                else
+                {
+                    foreach (var batch in Model.Groups.Groups)
+                    {
+                        <div class="panel panel-primary" style="border-color: #990505">
+                            <div class="panel-heading" style="background: #990505; border-color: #990505">
+                                @batch.FriendScheduledTime
+                                <button class="btn btn-default btn-xs pull-right" onclick="asyncGet('Schedule/Group/Rerun/@batch.GroupId/@Model.BusinessDate.ToString("yyyy-MM-dd")')">Rerun All</button>
+                            </div>
+                            <div class="panel-body" id="batch-group-view-batch.GroupId">
+                                <div class="row" style="padding-left: 15px; padding-right: 15px;">
+                                    @if (batch.Tasks.Any())
+                                    {
+                                        <table class="batch-table" style="width: 100%; border: none !important;">
+                                            @foreach (var item in batch.Tasks)
+                                            {
+                                                <tr class="batch-schedule-container" style="padding: 20px !important;" data-tt-branch="@item.HasChildren" data-tt-id="@item.ScheduleId" data-tt-parent-id="@item.ParentId">
+                                                    <td style="width: 30%;">
+                                                        @if (item.Type.ToLower() == "request")
+                                                        {
+                                                            <span class="label label-danger" style="padding: 2px !important;">@item.Type</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="label label-info" style="padding: 2px !important;">@item.Type</span>
+                                                        }
+                                                        <span class="m-l-5" style="margin-top: 2px" id="@item.Key">
+                                                            @item.Name.Truncate(25)
+                                                            @if (item.ChildrenCount > 0)
+                                                            {
+                                                                <span>(@item.ChildrenCount)</span>
+                                                            }
+                                                        </span>
+                                                    </td>
+                                                    <td style="width: 25%;">
+                                                        <span id="timing-@item.ScheduleId"></span>
+                                                    </td>
+                                                    <td style="width: 25%;">
+                                                        <span id="status-@item.ScheduleId"></span>
+                                                    </td>
+                                                    <td style="width: 20%;">
+                                                        <button type="button" class="btn btn-default btn-xs pull-right" style="margin-right: 0 !important" onclick="asyncGet('Schedule/Rerun/@item.ScheduleId/@Model.BusinessDate.ToString("yyyy-MM-dd")')">Rerun</button>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </table>
+                                    }
+                                    else
+                                    {
+                                        <div class="col-sm-12 text-center">
+                                            There are no batches assigned to this group.<br/>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+
+            </div>
+        </div>
+    </div>
+</div>

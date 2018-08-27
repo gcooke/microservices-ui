@@ -122,12 +122,20 @@ namespace Gateway.Web.Controllers
             var data = _dataService.GetPayload(payloadId);
             var interim = new PayloadModel("na");
             interim.SetData(data.Data, data.DataLengthBytes, data.CompressionType, data.PayloadType);
-
             var element = XElement.Parse(interim.Data);
-            var result = element.Descendants().FirstOrDefault(d => d.Attribute("Property")?.Value == "cube");
-            var cubeData = result.Attribute("data").Value;
-            var cube = CubeBuilder.FromBytes(Convert.FromBase64String(cubeData));
+            string value;
+            if (element.Descendants().Any(e => e.Name.LocalName.Equals("CalcResultCube", StringComparison.InvariantCultureIgnoreCase)))
+            {
+                var result = element.Descendants().First(e => e.Name.LocalName.Equals("CalcResultCube", StringComparison.InvariantCultureIgnoreCase));
+                value = result.Attribute("data")?.Value;
+            }
+            else
+            {
+                var result = element.Descendants().FirstOrDefault(d => d.Attribute("Property")?.Value == "cube");
+                value = result?.Attribute("data")?.Value;
+            }
 
+            var cube = CubeBuilder.FromBytes(Convert.FromBase64String(value ?? string.Empty));
             var model = new CubeModel(cube);
             return View("Cube", model);
         }

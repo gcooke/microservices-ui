@@ -5,8 +5,8 @@
 
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
-    ViewBag.Title = "Batch";
-    ViewBag.Current = "Configuration";
+    ViewBag.Current = "Batch";
+    ViewBag.Title = "Configuration";
 }
 @{ Html.RenderPartial("_BatchConfigNav"); }
 
@@ -17,11 +17,20 @@
             <div class="col-sm-6">
                 <h3 class="text-lowercase">Batch Configuration</h3>
             </div>
-            <div class="col-sm-6">
-                <a href="~/Batch/Create" class="btn btn-default pull-right m-t-15">
+            <div class="col-sm-6 m-t-15">
+                <a href="~/Batch/Create" class="btn btn-default pull-right">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                     Create
                 </a>
+                <div class="btn-group pull-right m-r-5">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Bulk Actions <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a onclick="bulkFunction('select-config','Schedule/Batch/Create/Bulk')">Schedule</a></li>
+                        <li><a onclick="bulkFunction('select-config','Batch/Delete/Bulk')">Delete</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
         
@@ -29,28 +38,28 @@
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <table class="datatable table report-table" id="searchable-table">
                     <thead>
-                        <tr>
-                            <td></td>
-                            <td>Type</td>
-                            <td>Trade Source Type</td>
-                            <td>Market Data Map</td>
-                            <td>Output Type</td>
-                            <td>Output Tag</td>
-                            <td>State TTL (Minutes)</td>
-                            <td></td>
-                        </tr>
+                    <tr>
+                        <td>@Html.CheckBox("select-all", new { @class = "select-all-trigger", @data_children = "select-config" })</td>
+                        <td>Type</td>
+                        <td>Trade Source Type</td>
+                        <td>Market Data Map</td>
+                        <td>Output Type</td>
+                        <td>Output Tag</td>
+                        <td>State TTL (Minutes)</td>
+                        <td></td>
+                    </tr>
                     <tr>
                         <td colspan="8">
                             @using (@Html.BeginForm("Index", "Batch", FormMethod.Get))
                             {
-                                @Html.TextBoxFor(m => m.SearchTerm, new { @name="q", @class = "form-control", @placeholder = "Search for batch configuration..."})
+                                @Html.TextBoxFor(m => m.SearchTerm, new {@name = "q", @class = "form-control", @placeholder = "Search for batch configuration..."})
                             }
                         </td>
                     </tr>
 
                     </thead>
                     <tbody>
-                    
+
                     @if (!Model.BatchConfigModels.Any())
                     {
                         <tr>
@@ -63,17 +72,15 @@
                     @foreach (var item in Model.BatchConfigModels)
                     {
                         <tr>
-                            <td>
-                                @Html.CheckBoxFor(m => item.IsSelected)
-                            </td>
-                            <td>@item.Type</td>
+                            <td>@Html.CheckBox("select-"+@item.Type, new { @class="select-config", @data_id=@item.ConfigurationId })</td>
+                            <td><a href="~/Schedule?SearchTerm=@item.Type">@item.Type</a></td>
                             <td>@item.TradeSourceType</td>
                             <td>@item.MarketDataMapName</td>
                             <td>@item.OutputType</td>
                             <td>@item.OutputTag</td>
                             <td>@item.StateTtlMinutes</td>
                             <td>
-                                <a href="~/Batch/Schedule/@item.ConfigurationId/Create" class="text-center glyphicon glyphicon glyphicon-dashboard"></a>
+                                <a href="~/Schedule/Batch/Create/@item.ConfigurationId" class="text-center glyphicon glyphicon glyphicon-dashboard"></a>
                                 <a href="~/Batch/Update/@item.ConfigurationId" class="text-center glyphicon glyphicon-pencil"></a>
                                 <a href="~/Batch/Delete/@item.ConfigurationId/@item.Type" class="text-center glyphicon glyphicon-trash"></a>
                             </td>
@@ -84,7 +91,8 @@
             </div>
         </div>
         
-        @if (Model.PageCount > 0)
+        
+        @if (Model.PageCount > 1)
         {
             <div class="row">
                 <div class="col-sm-12">
@@ -144,4 +152,3 @@
         }
     </div>
 </div>
-

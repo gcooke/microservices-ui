@@ -1,9 +1,9 @@
 using Gateway.Web.Database;
 using Gateway.Web.Models.Batches;
 
-namespace Gateway.Web.Services.Batches
+namespace Gateway.Web.Services.Batches.Utils
 {
-    public static class BatchConfigEx
+    public static class BatchEx
     {
         public static BatchConfigModel ToModel(this RiskBatchConfiguration config)
         {
@@ -15,9 +15,11 @@ namespace Gateway.Web.Services.Batches
                 OutputType = config.OutputType,
                 StateTtlMinutes = config.StateTtlMinutes,
                 TradeSourceType = config.TradeSourceType,
-                Type = config.Type
+                Type = config.Type,
+                ScheduleCount = config.Schedules.Count
             };
         }
+
 
         public static RiskBatchConfiguration ToEntity(this BatchConfigModel config)
         {
