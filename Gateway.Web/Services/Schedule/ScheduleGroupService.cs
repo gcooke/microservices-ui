@@ -22,7 +22,7 @@ namespace Gateway.Web.Services.Schedule
             _scheduleDataService = scheduleDataService;
         }
 
-        public IList<ScheduleGroup> GetScheduleGroups(DateTime date, string searchTerm = null)
+        public IList<ScheduleGroup> GetScheduleGroups(DateTime date, string searchTerm = null, bool includeAllGroups = false)
         {
             using (var db = new GatewayEntities())
             {
@@ -47,13 +47,15 @@ namespace Gateway.Web.Services.Schedule
                     var crontabSchedule = CrontabSchedule.Parse(group.Schedule);
                     var occurrences = crontabSchedule
                         .GetNextOccurrences(startDate, endDate)
-                        .Select(x => x.ToLocalTime())
                         .ToList();
 
-                    if (!occurrences.Any())
-                        continue;
+                    if (!includeAllGroups)
+                    {
+                        if (!occurrences.Any())
+                            continue;
 
-                    group.FriendScheduledTime = occurrences.First().ToString("hh:mm tt");
+                        group.FriendScheduledTime = occurrences.First().ToString("hh:mm tt");
+                    }
 
                     foreach (var batch in group.Tasks)
                     {

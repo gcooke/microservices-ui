@@ -27,6 +27,7 @@ namespace Gateway.Web.Services.Schedule.Models
                 .ToList();
 
             TradeSources = m.TradeSources.Split(',');
+            IsAsync = true;
         }
     }
 }
