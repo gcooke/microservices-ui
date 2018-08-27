@@ -129,7 +129,7 @@
             <PropertyRef Name="RequestConfigurationId" />
           </Key>
           <Property Name="RequestConfigurationId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="80" Nullable="false" />
           <Property Name="Payload" Type="varchar(max)" Nullable="false" />
           <Property Name="Verb" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="Url" Type="varchar" MaxLength="500" Nullable="false" />
@@ -163,6 +163,8 @@
           <Property Name="OutputTag" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="StateTtlMinutes" Type="int" Nullable="false" />
           <Property Name="JobProcessorCount" Type="int" Nullable="false" />
+          <Property Name="ReportingCurrency" Type="varchar" MaxLength="3" Nullable="false" />
+          <Property Name="FundingCurrency" Type="varchar" MaxLength="3" Nullable="false" />
         </EntityType>
         <EntityType Name="Schedule">
           <Key>
@@ -648,17 +650,12 @@
             <End Role="Server" EntitySet="Servers" />
             <End Role="ServerExternalResource" EntitySet="ServerExternalResources" />
           </AssociationSet>
-          <EntitySet Name="RiskBatchConfigurations" EntityType="GatewayModel.RiskBatchConfiguration" />
           <EntitySet Name="ScheduleGroups" EntityType="GatewayModel.ScheduleGroup" />
           <EntitySet Name="ScheduledJobs" EntityType="GatewayModel.ScheduledJob" />
           <EntitySet Name="RequestConfigurations" EntityType="GatewayModel.RequestConfiguration" />
           <EntitySet Name="Schedules" EntityType="GatewayModel.Schedule" />
           <AssociationSet Name="FK_Schedule_RequestConfiguration" Association="GatewayModel.FK_Schedule_RequestConfiguration">
             <End Role="RequestConfiguration" EntitySet="RequestConfigurations" />
-            <End Role="Schedule" EntitySet="Schedules" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Schedule_RiskBatchConfiguration" Association="GatewayModel.FK_Schedule_RiskBatchConfiguration">
-            <End Role="RiskBatchConfiguration" EntitySet="RiskBatchConfigurations" />
             <End Role="Schedule" EntitySet="Schedules" />
           </AssociationSet>
           <AssociationSet Name="FK_Schedule_Schedule" Association="GatewayModel.FK_Schedule_Schedule">
@@ -672,6 +669,11 @@
           <AssociationSet Name="FK_ScheduledJob_Schedule" Association="GatewayModel.FK_ScheduledJob_Schedule">
             <End Role="Schedule" EntitySet="Schedules" />
             <End Role="ScheduledJob" EntitySet="ScheduledJobs" />
+          </AssociationSet>
+          <EntitySet Name="RiskBatchConfigurations" EntityType="GatewayModel.RiskBatchConfiguration" />
+          <AssociationSet Name="FK_Schedule_RiskBatchConfiguration" Association="GatewayModel.FK_Schedule_RiskBatchConfiguration">
+            <End Role="RiskBatchConfiguration" EntitySet="RiskBatchConfigurations" />
+            <End Role="Schedule" EntitySet="Schedules" />
           </AssociationSet>
           </EntityContainer>
         <ComplexType Name="spGetRequestStats_Result">
@@ -1008,20 +1010,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="RiskBatchConfiguration">
-          <Key>
-            <PropertyRef Name="ConfigurationId" />
-          </Key>
-          <Property Name="ConfigurationId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Type" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="TradeSourceType" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="MarketDataMapName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="OutputType" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="OutputTag" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="StateTtlMinutes" Type="Int32" Nullable="false" />
-          <Property Name="JobProcessorCount" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Schedules" Relationship="GatewayModel.FK_Schedule_RiskBatchConfiguration" FromRole="RiskBatchConfiguration" ToRole="Schedule" />
-        </EntityType>
         <EntityType Name="ScheduleGroup">
           <Key>
             <PropertyRef Name="GroupId" />
@@ -1070,11 +1058,11 @@
           <Property Name="GroupId" Type="Int64" />
           <Property Name="Parent" Type="Int64" />
           <NavigationProperty Name="RequestConfiguration" Relationship="GatewayModel.FK_Schedule_RequestConfiguration" FromRole="Schedule" ToRole="RequestConfiguration" />
-          <NavigationProperty Name="RiskBatchConfiguration" Relationship="GatewayModel.FK_Schedule_RiskBatchConfiguration" FromRole="Schedule" ToRole="RiskBatchConfiguration" />
           <NavigationProperty Name="Children" Relationship="GatewayModel.FK_Schedule_Schedule" FromRole="Schedule" ToRole="Schedule1" />
           <NavigationProperty Name="ParentSchedule" Relationship="GatewayModel.FK_Schedule_Schedule" FromRole="Schedule1" ToRole="Schedule" />
           <NavigationProperty Name="ScheduleGroup" Relationship="GatewayModel.FK_Schedule_ScheduleGroup" FromRole="Schedule" ToRole="ScheduleGroup" />
           <NavigationProperty Name="ScheduledJobs" Relationship="GatewayModel.FK_ScheduledJob_Schedule" FromRole="Schedule" ToRole="ScheduledJob" />
+          <NavigationProperty Name="RiskBatchConfiguration" Relationship="GatewayModel.FK_Schedule_RiskBatchConfiguration" FromRole="Schedule" ToRole="RiskBatchConfiguration" />
         </EntityType>
         <Association Name="FK_Schedule_RequestConfiguration">
           <End Type="GatewayModel.RequestConfiguration" Role="RequestConfiguration" Multiplicity="0..1" />
@@ -1085,18 +1073,6 @@
             </Principal>
             <Dependent Role="Schedule">
               <PropertyRef Name="RequestConfigurationId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Schedule_RiskBatchConfiguration">
-          <End Type="GatewayModel.RiskBatchConfiguration" Role="RiskBatchConfiguration" Multiplicity="0..1" />
-          <End Type="GatewayModel.Schedule" Role="Schedule" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="RiskBatchConfiguration">
-              <PropertyRef Name="ConfigurationId" />
-            </Principal>
-            <Dependent Role="Schedule">
-              <PropertyRef Name="RiskBatchConfigurationId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1133,6 +1109,34 @@
             </Principal>
             <Dependent Role="ScheduledJob">
               <PropertyRef Name="ScheduleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="RiskBatchConfiguration">
+          <Key>
+            <PropertyRef Name="ConfigurationId" />
+          </Key>
+          <Property Name="ConfigurationId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Type" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="TradeSourceType" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="MarketDataMapName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="OutputType" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="OutputTag" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="StateTtlMinutes" Type="Int32" Nullable="false" />
+          <Property Name="JobProcessorCount" Type="Int32" Nullable="false" />
+          <Property Name="ReportingCurrency" Type="String" Nullable="false" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="FundingCurrency" Type="String" Nullable="false" MaxLength="3" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Schedules" Relationship="GatewayModel.FK_Schedule_RiskBatchConfiguration" FromRole="RiskBatchConfiguration" ToRole="Schedule" />
+        </EntityType>
+        <Association Name="FK_Schedule_RiskBatchConfiguration">
+          <End Type="GatewayModel.RiskBatchConfiguration" Role="RiskBatchConfiguration" Multiplicity="0..1" />
+          <End Type="GatewayModel.Schedule" Role="Schedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RiskBatchConfiguration">
+              <PropertyRef Name="ConfigurationId" />
+            </Principal>
+            <Dependent Role="Schedule">
+              <PropertyRef Name="RiskBatchConfigurationId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1547,20 +1551,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="RiskBatchConfigurations">
-            <EntityTypeMapping TypeName="GatewayModel.RiskBatchConfiguration">
-              <MappingFragment StoreEntitySet="RiskBatchConfiguration">
-                <ScalarProperty Name="JobProcessorCount" ColumnName="JobProcessorCount" />
-                <ScalarProperty Name="StateTtlMinutes" ColumnName="StateTtlMinutes" />
-                <ScalarProperty Name="OutputTag" ColumnName="OutputTag" />
-                <ScalarProperty Name="OutputType" ColumnName="OutputType" />
-                <ScalarProperty Name="MarketDataMapName" ColumnName="MarketDataMapName" />
-                <ScalarProperty Name="TradeSourceType" ColumnName="TradeSourceType" />
-                <ScalarProperty Name="Type" ColumnName="Type" />
-                <ScalarProperty Name="ConfigurationId" ColumnName="ConfigurationId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="ScheduleGroups">
             <EntityTypeMapping TypeName="GatewayModel.ScheduleGroup">
               <MappingFragment StoreEntitySet="ScheduleGroup">
@@ -1607,6 +1597,22 @@
                 <ScalarProperty Name="RequestConfigurationId" ColumnName="RequestConfigurationId" />
                 <ScalarProperty Name="RiskBatchConfigurationId" ColumnName="RiskBatchConfigurationId" />
                 <ScalarProperty Name="ScheduleId" ColumnName="ScheduleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RiskBatchConfigurations">
+            <EntityTypeMapping TypeName="GatewayModel.RiskBatchConfiguration">
+              <MappingFragment StoreEntitySet="RiskBatchConfiguration">
+                <ScalarProperty Name="FundingCurrency" ColumnName="FundingCurrency" />
+                <ScalarProperty Name="ReportingCurrency" ColumnName="ReportingCurrency" />
+                <ScalarProperty Name="JobProcessorCount" ColumnName="JobProcessorCount" />
+                <ScalarProperty Name="StateTtlMinutes" ColumnName="StateTtlMinutes" />
+                <ScalarProperty Name="OutputTag" ColumnName="OutputTag" />
+                <ScalarProperty Name="OutputType" ColumnName="OutputType" />
+                <ScalarProperty Name="MarketDataMapName" ColumnName="MarketDataMapName" />
+                <ScalarProperty Name="TradeSourceType" ColumnName="TradeSourceType" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="ConfigurationId" ColumnName="ConfigurationId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

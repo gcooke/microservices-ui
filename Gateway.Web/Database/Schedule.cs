@@ -30,12 +30,12 @@ namespace Gateway.Web.Database
         public Nullable<long> Parent { get; set; }
     
         public virtual RequestConfiguration RequestConfiguration { get; set; }
-        public virtual RiskBatchConfiguration RiskBatchConfiguration { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Schedule> Children { get; set; }
         public virtual Schedule ParentSchedule { get; set; }
         public virtual ScheduleGroup ScheduleGroup { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ScheduledJob> ScheduledJobs { get; set; }
+        public virtual RiskBatchConfiguration RiskBatchConfiguration { get; set; }
     }
 }
