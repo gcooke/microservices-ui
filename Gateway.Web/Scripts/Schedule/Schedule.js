@@ -139,7 +139,7 @@ function getStatusHtml(value) {
     var icon = getIcon(value);
 
     if (value.RequestId !== null) {
-        html = "<a target='_blank' href='~/Request/Summary?correlationId=" + value.RequestId + "'>" +
+        html = "<a target='_blank' href='/Request/Summary?correlationId=" + value.RequestId + "'>" +
             "<span style='color: " + color + "'>" +
             "<span class='" + icon +"'></span> " +
             value.Status +
