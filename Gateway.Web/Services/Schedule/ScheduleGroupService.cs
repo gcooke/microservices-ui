@@ -54,6 +54,7 @@ namespace Gateway.Web.Services.Schedule
                         if (!occurrences.Any())
                             continue;
 
+                        group.NextOccurrence = occurrences.First();
                         group.FriendScheduledTime = occurrences.First().ToString("hh:mm tt");
                     }
 
@@ -83,7 +84,7 @@ namespace Gateway.Web.Services.Schedule
                     runGroups.Add(group);
                 }
 
-                return runGroups;
+                return runGroups.OrderBy(x => x.NextOccurrence).ToList();
             }
         }
 
@@ -92,6 +93,9 @@ namespace Gateway.Web.Services.Schedule
         {
             using (var db = new GatewayEntities())
             {
+                var startDate = DateTime.Now.Date;
+                var endDate = startDate.AddHours(24).AddMinutes(-1).AddDays(7);
+
                 var groups = db.ScheduleGroups
                     .Include("Schedules")
                     .ToList();
@@ -107,6 +111,16 @@ namespace Gateway.Web.Services.Schedule
                         .Where(GetSearchCriteria(searchTerm))
                         .Where(x => !x.Parent.HasValue);
 
+                    var crontabSchedule = CrontabSchedule.Parse(group.Schedule);
+                    var occurrences = crontabSchedule
+                        .GetNextOccurrences(startDate, endDate)
+                        .ToList();
+
+                    if (occurrences.Any())
+                    {
+                        groupModel.NextOccurrence = occurrences.First();
+                    }
+
                     foreach (var schedule in rootChildren)
                     {
                         groupModel.Tasks.Add(schedule.ToModel());
@@ -118,7 +132,7 @@ namespace Gateway.Web.Services.Schedule
                     }
                 }
 
-                return groupModels;
+                return groupModels.OrderBy(x => x.NextOccurrence).ToList();
             }
         }
 
