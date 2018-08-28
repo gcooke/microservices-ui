@@ -24,10 +24,10 @@
                     </button>
                     <ul class="dropdown-menu">
                         <li>
-                            <a onclick="bulkFunction('select-schedule', 'Schedule/Batch/Update/Bulk')">Edit Batches</a>
+                            <a onclick="bulkFunction('select-schedule', '@Url.Content("~/Schedule/Batch/Update/Bulk")')">Edit Batches</a>
                         </li>
                         <li>
-                            <a onclick="bulkFunction('select-schedule', 'Delete/Bulk/Confirmation', true)">Delete</a>
+                            <a onclick="bulkFunction('select-schedule', '@Url.Content("~/Schedule/Delete/Bulk/Confirmation")', true)">Delete</a>
                         </li>
                     </ul>
                 </div>

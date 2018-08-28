@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using Gateway.Web.Models.Schedule.Input;
 using Gateway.Web.Services.Batches.Interfaces;
+using Gateway.Web.Utils;
 
 namespace Gateway.Web.Services.Schedule.Utils
 {
@@ -11,7 +12,11 @@ namespace Gateway.Web.Services.Schedule.Utils
         {
             model.Groups = service
                 .GetGroups()
-                .Select(x => new SelectListItem { Value = x.GroupId.ToString(), Text = x.Schedule })
+                .Select(x => new SelectListItem
+                {
+                    Value = x.GroupId.ToString(),
+                    Text = CronExpressionDescriptor.ExpressionDescriptor.GetDescription(CronTabExpression.Parse(x.Schedule).FromUtcCronExpression())
+                })
                 .ToList();
 
             model.Groups.Insert(0, new SelectListItem { Text = null, Value = null });
