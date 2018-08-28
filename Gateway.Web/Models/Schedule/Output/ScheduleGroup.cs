@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Gateway.Web.Models.Schedule.Input;
 
@@ -20,6 +21,8 @@ namespace Gateway.Web.Models.Schedule.Output
         public ScheduleBatchModel ScheduleBatchModel { get; set; }
 
         public ScheduleWebRequestModel ScheduleWebRequestModel { get; set; }
+
+        public DateTime NextOccurrence { get; set; }
 
         public ScheduleGroup()
         {
