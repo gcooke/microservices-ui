@@ -1,0 +1,47 @@
+﻿@model Gateway.Web.Models.Schedule.Output.ScheduleGroup
+
+<div class="row" style="padding-left: 15px; padding-right: 15px;">
+    @if (Model.Tasks.Any())
+    {
+        <table class="batch-table" style="width: 100%; border: none !important;">
+            @foreach (var item in Model.Tasks)
+            {
+                <tr class="batch-schedule-container" style="padding: 20px !important;" data-tt-branch="@item.HasChildren" data-tt-id="@item.ScheduleId" data-tt-parent-id="@item.ParentId">
+                    <td style="width: 50%">
+                        @Html.CheckBox("select-" + item.ScheduleKey, new {@class = "select-schedule select-schedule-" + @Model.GroupId, @data_id = item.ScheduleId})
+                        @if (item.Type.ToLower() == "request")
+                        {
+                            <span class="label label-danger" style="padding: 2px !important;">@item.Type</span>
+                        }
+                        else
+                        {
+                            <span class="label label-info" style="padding: 2px !important;">@item.Type</span>
+                        }
+                        <a href="~/Schedule/@item.Type/Update/@item.ScheduleId" class="m-l-5"id="@item.Key">
+                            @item.Name
+                        </a>
+                    </td>
+                    <td style="width: 25%">
+                        <span style="font-size: 85%; color: black;">
+                            @item.ChildrenCount dependant batch(es)
+                        </span>
+                    </td>
+                    <td style="width: 25%">
+                        <a href="~/Schedule/Delete/Bulk/Confirmation?items=@item.ScheduleId">
+                            <span class="glyphicon glyphicon-trash pull-right" aria-hidden="true"></span>
+                        </a>
+                        <a href="~/Schedule/@item.Type/Update/@item.ScheduleId" class="m-l-5">
+                            <span class="glyphicon glyphicon-pencil pull-right" aria-hidden="true"></span>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </table>
+    }
+    else
+    {
+        <div class="col-sm-12 text-center">
+            There are no tasks assigned to this group.<br/>
+        </div>
+    }
+</div>

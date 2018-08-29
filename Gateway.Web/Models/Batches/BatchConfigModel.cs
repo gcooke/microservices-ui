@@ -51,6 +51,8 @@ namespace Gateway.Web.Models.Batches
         public bool CreateAnotherBasedOnCurrentConfiguration { get; set; }
 
         public bool IsUpdating => ConfigurationId != 0;
+
+        public int ScheduleCount { get; set; }
         
         public IList<SelectListItem> TradeSourceTypes
         {

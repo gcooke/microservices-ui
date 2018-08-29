@@ -1,0 +1,67 @@
+﻿@model Gateway.Web.Models.MarketData.MissingMonikerModel
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "Market Data";
+    ViewBag.Current = "Missing Monikers";
+}
+@{ Html.RenderPartial("_MarketDataNav"); }
+
+@using (Html.BeginForm("MissingMonikersAction", "MarketData", FormMethod.Get))
+{
+    <div style="margin-left: 250px; margin-top:15px">
+        <input style="width: 200px;" type="date" name="rundate" value="@Model.RunDate"/>
+        <button class="btn btn-default" style="margin-top:-5px" type="submit" name="Go">Go</button>
+    </div>
+}
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <h3 class="text-lowercase">Missing Monikers</h3>
+            </div>
+        </div>
+        <div id="report-content" style="margin-top: 10px;">
+            <table style="width: 100%; white-space: nowrap" class="datatable table">
+                @if (@Model.MissingMonikers.Where(x => !x.Success).Any())
+                {
+                    foreach (var monikeritem in @Model.MissingMonikers.Where(x => !x.Success))
+                     {
+                         <tr>
+                             <td>@monikeritem.Moniker</td>
+                             <!--<td>@monikeritem.Success</td>-->
+                         </tr>
+                     }
+                }
+                else
+                {
+                    <tr>
+                        <td>None</td>
+                    </tr>
+                }
+            </table>
+        </div>
+        <br />
+        <h3 class="text-lowercase">Available Monikers</h3>
+        <div id="report-content" style="margin-top: 10px;">
+            <table style="width: 100%; white-space: nowrap" class="datatable table">
+                @if (@Model.MissingMonikers.Where(x => x.Success).Any())
+                {
+                    foreach (var monikeritem in @Model.MissingMonikers.Where(x => x.Success))
+                     {
+                         <tr>
+                             <td>@monikeritem.Moniker</td>
+                             <!--<td>@monikeritem.Success</td>-->
+                         </tr>
+                     }
+                }
+                else
+                {
+                    <tr>
+                        <td>None</td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>

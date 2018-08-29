@@ -1,12 +1,12 @@
 ﻿@using System.Xml.Schema
 @using Gateway.Web.Models
 @using Gateway.Web.Models.Controllers
-@model Gateway.Web.Models.Batches.DeleteBatchConfigModel
+@model Gateway.Web.Models.Batches.BatchDeleteConfigModel
 
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
-    ViewBag.Title = "Batch";
-    ViewBag.Current = "Configuration";
+    ViewBag.Current = "Batch";
+    ViewBag.Title = "Configuration";
 }
 @{ Html.RenderPartial("_BatchConfigNav"); }
 
@@ -21,10 +21,10 @@
         
         <div class="row m-t-15">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                Are you sure you want to delete the batch configuration, <b>@Model.Type</b>?
+                Are you sure you want to delete the batch configuration, <b>@Model.Type</b>, and <b>@Model.ScheduleCount linked schedule(s)</b>?
                 <br/>
                 <br/>
-                <a href="~/Batch/Delete/@Model.ConfigurationId" class="btn btn-primary">Yes</a>
+                <a href="~/Batch/Delete/@Model.ConfigurationId" class="btn btn-default">Yes</a>
                 <a href="~/Batch" class="btn btn-default">No</a>
             </div>
         </div>

@@ -5,22 +5,22 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Gateway.Web.Enums;
 using Gateway.Web.Models.Batches;
-using Gateway.Web.Services.Batches;
+using Gateway.Web.Services.Batches.Interfaces;
 
 namespace Gateway.Web.Controllers
 {
     [RoutePrefix("Batch")]
     public class BatchController : Controller
     {
-        private readonly IRiskBatchConfigService _riskBatchConfigService;
+        private readonly IBatchConfigService _riskBatchConfigService;
 
-        public BatchController(IRiskBatchConfigService riskBatchConfigService)
+        public BatchController(IBatchConfigService riskBatchConfigService)
         {
             _riskBatchConfigService = riskBatchConfigService;
         }
         
         [HttpGet]
-        public ActionResult Index(int page = 1, int pageSize = 10, string searchTerm = null)
+        public ActionResult Index(int page = 1, int pageSize = 100, string searchTerm = null)
         {
             var offset = (page - 1) * pageSize;
             var batchConfigList = _riskBatchConfigService.GetConfigurations(offset, pageSize, searchTerm);
@@ -28,7 +28,7 @@ namespace Gateway.Web.Controllers
         }
 
         [HttpGet]
-        public ActionResult Create(string configurationTemplate)
+        public ActionResult Create(string configurationTemplate, bool createAnother = false, bool basedOfCurrentItem = false)
         {
             BatchConfigModel model = null;
 
@@ -38,12 +38,16 @@ namespace Gateway.Web.Controllers
             {
                 model = new BatchConfigModel();
                 model.ConfigurationTemplates = configTypes;
+                model.CreateAnother = createAnother;
+                model.CreateAnotherBasedOnCurrentConfiguration = basedOfCurrentItem;
                 return View(model);
             }
 
             model = _riskBatchConfigService.GetConfiguration(configurationTemplate) ?? new BatchConfigModel();
             model.ConfigurationTemplates = configTypes;
             model.ConfigurationId = 0;
+            model.CreateAnother = createAnother;
+            model.CreateAnotherBasedOnCurrentConfiguration = basedOfCurrentItem;
 
             return View(model);
         }
@@ -61,10 +65,12 @@ namespace Gateway.Web.Controllers
         [Route("Delete/{id}/{type}")]
         public ActionResult Delete(long id, string type)
         {
-            var model = new DeleteBatchConfigModel
+            var config = _riskBatchConfigService.GetConfiguration(id);
+            var model = new BatchDeleteConfigModel
             {
                 ConfigurationId = id,
-                Type = type
+                Type = type,
+                ScheduleCount = config.ScheduleCount
             };
             return View("Delete", model);
         }
@@ -74,6 +80,20 @@ namespace Gateway.Web.Controllers
         public RedirectToRouteResult Delete(long id)
         {
             _riskBatchConfigService.DeleteConfiguration(id);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        [Route("Delete/Bulk")]
+        public RedirectToRouteResult Delete(string items)
+        {
+            var itemList = items.Split(',').Select(long.Parse);
+
+            foreach (var id in itemList)
+            {
+                _riskBatchConfigService.DeleteConfiguration(id);
+            }
+
             return RedirectToAction("Index");
         }
 
@@ -118,13 +138,23 @@ namespace Gateway.Web.Controllers
 
             if (model.CreateAnother && model.CreateAnotherBasedOnCurrentConfiguration)
             {
-                var routeValueDictionary = new RouteValueDictionary { { "configurationTemplate", model.Type } };
+                var routeValueDictionary = new RouteValueDictionary
+                {
+                    { "configurationTemplate", model.Type },
+                    { "createAnother", model.CreateAnother },
+                    { "basedOfCurrentItem", model.CreateAnotherBasedOnCurrentConfiguration }
+                };
                 return RedirectToAction("Create", routeValueDictionary);
             }
 
             if (model.CreateAnother)
             {
-                return RedirectToAction("Create");
+                var routeValueDictionary = new RouteValueDictionary
+                {
+                    { "createAnother", model.CreateAnother },
+                    { "basedOfCurrentItem", model.CreateAnotherBasedOnCurrentConfiguration }
+                };
+                return RedirectToAction("Create", routeValueDictionary);
             }
 
             return RedirectToAction("Index");
@@ -143,7 +173,7 @@ namespace Gateway.Web.Controllers
             types.Insert(0, null);
 
             return types
-                .Select(x => new SelectListItem { Value = x, Text = x })
+                .Select(x => new SelectListItem { Value = x?.Type, Text = x?.Type })
                 .ToList();
         }
     }

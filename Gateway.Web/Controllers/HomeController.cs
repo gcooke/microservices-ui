@@ -47,7 +47,8 @@ namespace Gateway.Web.Controllers
 
 
             var serverDiagnostics = _serverDiagnosticsService.Get();
-            serverDiagnostics = FormatServerDiagnostics(serverDiagnostics);
+            if(serverDiagnostics != null)
+                serverDiagnostics = FormatServerDiagnostics(serverDiagnostics);
 
             var helper = new BatchHelper(_dataService, _gateway);
             var reportDate = helper.GetPreviousWorkday();
@@ -57,8 +58,9 @@ namespace Gateway.Web.Controllers
             model.Controllers.AddRange(_dataService.GetControllerStates(serverDiagnostics));
             model.Services.AddRange(GetServiceState());
             model.Databases.AddRange(GetDatabaseState());
-            model.Batches.AddRange(batches.Items); 
-            model.Servers.AddRange(serverDiagnostics.Values);
+            model.Batches.AddRange(batches.Items);
+            if (serverDiagnostics != null)
+                model.Servers.AddRange(serverDiagnostics.Values);
             
             Response.AddHeader("Refresh", "60");
             return View("Index", model);

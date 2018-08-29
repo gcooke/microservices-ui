@@ -18,6 +18,7 @@ namespace Gateway.Web.Database
         public Controller()
         {
             this.Versions = new HashSet<Version>();
+            this.ControllerExternalResources = new HashSet<ControllerExternalResource>();
         }
     
         public long Id { get; set; }
@@ -35,5 +36,7 @@ namespace Gateway.Web.Database
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Version> Versions { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ControllerExternalResource> ControllerExternalResources { get; set; }
     }
 }
