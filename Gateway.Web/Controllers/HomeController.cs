@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Bagl.Cib.MIT.Logging;
+using Bagl.Cib.MSF.ClientAPI.Gateway;
 using Gateway.Web.Authorization;
 using Gateway.Web.Database;
 using Gateway.Web.Models.Controllers;
@@ -18,14 +19,17 @@ namespace Gateway.Web.Controllers
     {
         private readonly IGatewayDatabaseService _dataService;
         private readonly IServerDiagnosticsService _serverDiagnosticsService;
+        private readonly IGatewayRestService _gateway;
 
         public HomeController(IGatewayDatabaseService dataService,
             IServerDiagnosticsService serverDiagnosticsService,
-            ILoggingService loggingService)
+            ILoggingService loggingService,
+            IGatewayRestService gateway )
             : base(loggingService)
         {
             _dataService = dataService;
             _serverDiagnosticsService = serverDiagnosticsService;
+            _gateway = gateway;
         }
 
         public async Task<ActionResult> Index(string sortOrder)
@@ -46,7 +50,7 @@ namespace Gateway.Web.Controllers
             if(serverDiagnostics != null)
                 serverDiagnostics = FormatServerDiagnostics(serverDiagnostics);
 
-            var helper = new BatchHelper(_dataService);
+            var helper = new BatchHelper(_dataService, _gateway);
             var reportDate = helper.GetPreviousWorkday();
             var batches = await helper.GetRiskBatchReportModel(reportDate);
 
