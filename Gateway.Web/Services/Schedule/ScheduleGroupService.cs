@@ -275,7 +275,8 @@ namespace Gateway.Web.Services.Schedule
 
             var terms = s.ToLower().Split(' ');
             return x => terms.Any(y => (x.TradeSource != null && x.TradeSource.ToLower().Contains(y)) ||
-                                       (x.RiskBatchConfiguration != null && x.RiskBatchConfiguration.Type.ToLower().Contains(y)));
+                                       (x.RiskBatchConfiguration != null && x.RiskBatchConfiguration.Type.ToLower().Contains(y)) ||
+                                       (x.RequestConfiguration != null && x.RequestConfiguration.Name.ToLower().Contains(y)));
         }
     }
 }

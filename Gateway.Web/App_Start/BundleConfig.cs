@@ -90,6 +90,12 @@ namespace Gateway.Web
                 "~/Content/css/bootstrap-datepicker.css",
                 "~/Content/css/bootstrap-datepaginator.min.css"
             ));
+
+            bundles.Add(new StyleBundle("~/styles/toastr").Include(
+                "~/Content/css/toastr.min.css"));
+
+            bundles.Add(new ScriptBundle("~/bundles/toastr").Include(
+                "~/Content/js/toastr.min.js"));
         }
     }
 }
