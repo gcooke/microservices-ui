@@ -77,21 +77,6 @@ namespace Gateway.Web.Controllers
             return View("Create", model);
         }
 
-        [HttpGet]
-        [Route("Update/Bulk")]
-        public ActionResult UpdateBulk(string items)
-        {
-            var idList = items.Split(',').Select(long.Parse).ToList();
-            var schedules = _scheduleDataService.GetSchedules(idList)
-                .Where(x => x.RiskBatchConfigurationId != null)
-                .ToList();
-
-            var model = schedules.ToBatchInputModel();
-            model.SetData(_batchConfigDataService);
-            model.BulkUpdate = true;
-            return View("Create", model);
-        }
-
         [HttpPost]
         public ActionResult CreateOrUpdate(ScheduleBatchModel model)
         {

@@ -212,8 +212,9 @@ function getIcon(value) {
     return icon;
 }
 
-function asyncGet(url) {
+function rerunTask(url) {
     $.get(url);
+    toastr.success('Task(s) has been added to queue and will be rerun shortly.', 'Success');
 }
 
 function bulkFunction(childClass, baseUrl, isAsync) {
