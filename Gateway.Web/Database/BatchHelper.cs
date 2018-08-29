@@ -1,10 +1,14 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using Bagl.Cib.MSF.ClientAPI.Gateway;
+using Bagl.Cib.MSF.ClientAPI.Model;
 using Gateway.Web.Models.Home;
 using Gateway.Web.Utils;
+using Newtonsoft.Json;
 using RestSharp.Extensions;
 
 namespace Gateway.Web.Database
@@ -14,10 +18,25 @@ namespace Gateway.Web.Database
         private const string AllCountries = "Botswana,Ghana,Kenya,Mauritius_IBD,Mauritius_Onshore,Mozambique,South_Africa,Seychelles,Tanzania,Tanzania_NBC,Uganda,Zambia";
 
         private readonly IGatewayDatabaseService _database;
+        private readonly IGatewayRestService _gateway;
 
-        public BatchHelper(IGatewayDatabaseService database)
+        public BatchHelper(IGatewayDatabaseService database, IGatewayRestService gateway)
         {
             _database = database;
+            _gateway = gateway;
+        }
+
+        public BatchDetail GetBatchDetails(string name, DateTime reportDate, Guid correlationId)
+        {
+            var response = _gateway.Get("managementinterface", $"batch/{name}/{correlationId}/detail/{reportDate:yyyy-MM-dd}", CancellationToken.None);
+
+            if (!response.Successfull || response.Content?.Payload == null)
+                throw new Exception("Unable to retrieve batch error details.");
+
+            var payload = response.Content.GetPayloadAsString();
+            var data = JsonConvert.DeserializeObject<BatchDetail>(payload);
+
+            return data;
         }
 
         public Task<RiskBatchModel> GetRiskBatchReportModel(DateTime reportDate)
@@ -27,11 +46,14 @@ namespace Gateway.Web.Database
             // Get data
             var results = _database.GetBatchSummaryStats(reportDate, reportDate.AddDays(1));
 
+            // Get error date
+            var errorData = GetBatchSummaries(reportDate);
+
             // Get list of sites (order descending in length so that matches are done correctly)
             var sites = AllCountries.Split(',').OrderByDescending(s => s.Length).ToArray();
 
             // Convert to Dictionary
-            var runs = GetResults(results, sites, reportDate);
+            var runs = GetResults(results, sites, reportDate, errorData);
 
             // Run through each site
             foreach (var site in sites.OrderBy(s => s))
@@ -80,7 +102,7 @@ namespace Gateway.Web.Database
             return Task.FromResult(model);
         }
 
-        private Dictionary<string, List<RiskBatchResult>> GetResults(List<ExtendedBatchSummary> results, string[] sites, DateTime reportDate)
+        private Dictionary<string, List<RiskBatchResult>> GetResults(List<ExtendedBatchSummary> results, string[] sites, DateTime reportDate, List<BatchSummary> errorData)
         {
             var result = new Dictionary<string, List<RiskBatchResult>>();
             if (results != null)
@@ -97,6 +119,7 @@ namespace Gateway.Web.Database
 
                     var target = GetOrAdd(result, site, reportDate);
                     target.Update(row, site, defaultBatchName, defaultQuotesName);
+                    target.UpdateErrors(row, errorData);
                 }
             }
 
@@ -154,6 +177,20 @@ namespace Gateway.Web.Database
             while (result.DayOfWeek == DayOfWeek.Saturday || result.DayOfWeek == DayOfWeek.Sunday)
                 result = result.AddDays(-1);
             return result;
+        }
+
+        private List<BatchSummary> GetBatchSummaries(DateTime valuationDate)
+        {
+            _gateway.SetGatewayUrlForService("managementinterface", "Official", "http://localhost:7001/");
+            var response = _gateway.Get("managementinterface", $"batch/{valuationDate:yyyy-MM-dd}/summary", CancellationToken.None);
+
+            if (!response.Successfull || response.Content?.Payload == null)
+                return new List<BatchSummary>();
+
+            var payload = response.Content.GetPayloadAsString();
+            var data = JsonConvert.DeserializeObject<List<BatchSummary>>(payload);
+
+            return data;
         }
     }
 
@@ -278,6 +315,13 @@ namespace Gateway.Web.Database
             Duration = string.Format("{0}", FormatTimeTaken());
         }
 
+        public void UpdateErrors(ExtendedBatchSummary row, List<BatchSummary> errorData)
+        {
+            var error = errorData.SingleOrDefault(x => x.LegalEntity.ToUpper().Contains(Site.ToUpper()) &&
+                                           x.LegalEntity.ToUpper().Contains(Name.ToUpper()));
+            ErrorCount = error?.TotalErrorCount;
+        }
+
         public Guid CorrelationId { get; private set; }
 
         public DateTime Date { get; private set; }
@@ -313,6 +357,92 @@ namespace Gateway.Web.Database
         {
             return TimeTakenMs.FormatTimeTaken();
         }
+
+        public int? ErrorCount { get; set; }
     }
 
+    public class BatchSummary
+    {
+        public string LegalEntity { get; set; }
+        public string Controller { get; set; }
+        public string ControllerVersion { get; set; }
+        public DateTime? ValuationDate { get; set; }
+        public int ExecutionCount { get; set; }
+        public DateTime StartTime { get; set; }
+        public long Duration { get; set; }
+        public int TradeCount { get; set; }
+        public int FatalErrorCount { get; set; }
+        public int TotalErrorCount { get; set; }
+        public Guid RequestCorrelationId { get; set; }
+
+        public string TimeTakenMs => TimeSpan.FromMilliseconds(Duration).Humanize();
+
+        public string GetBatchName(string site)
+        {
+            return LegalEntity
+                .Replace(site, "")
+                .Replace(site.ToUpper(), "")
+                .Replace("-", "")
+                .Trim();
+        }
+    }
+
+    public class BatchDetail
+    {
+        public string LegalEntity { get; set; }
+        public DateTime ValuationDate { get; set; }
+        public IList<BatchExecution> BatchExecutions { get; set; }
+
+        public BatchDetail()
+        {
+            BatchExecutions = new List<BatchExecution>();
+        }
+
+        public string BatchName => LegalEntity
+            .Replace("-", " - ")
+            .Replace("_", " ");
+    }
+
+    public class BatchExecution
+    {
+        public BatchSummary Summary { get; set; }
+        public IList<BatchIssues> Issues { get; set; }
+        public long BatchStatId { get; set; }
+
+        public BatchExecution()
+        {
+            Issues = new List<BatchIssues>();
+        }
+    }
+
+    public class BatchIssues
+    {
+        public BatchCommentDto Issue { get; set; }
+        public IList<BatchCommentDto> Comments { get; set; }
+        public Dictionary<Guid, string> Occurences { get; set; }
+        public int OccurenceCount => Occurences.Count;
+
+        public BatchIssues()
+        {
+            Comments = new List<BatchCommentDto>();
+            Occurences = new Dictionary<Guid, string>();
+        }
+    }
+
+    public class BatchCommentDto
+    {
+        public int Id { get; set; }
+        public int BatchStatId { get; set; }
+        public Guid RequestCorrelationId { get; set; }
+        public Guid ParentRequestCorrelationId { get; set; }
+        public int BatchCommentType { get; set; }
+        public string ErrorMessage { get; set; }
+        public string ErrorDescription { get; set; }
+        public string ReportedBy { get; set; }
+        public string Controller { get; set; }
+        public string ControllerVersion { get; set; }
+        public DateTime ReportedAt { get; set; }
+        public string Resource { get; set; }
+        public int? ParentBatchCommentId { get; set; }
+    }
 }

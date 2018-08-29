@@ -808,6 +808,7 @@
     <Content Include="Views\Schedule\Partials\_Schedule.cshtml" />
     <Content Include="Views\Schedule\Partials\_ScheduleWebRequest.cshtml" />
     <Content Include="Views\RequestSchedule\Create.cshtml" />
+    <Content Include="Views\Monitoring\RiskBatchDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />
