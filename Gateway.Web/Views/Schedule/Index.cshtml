@@ -68,7 +68,7 @@
                         <div class="panel panel-primary" style="border-color: #990505">
                             <div class="panel-heading" style="background: #990505; border-color: #990505">
                                 @batch.FriendScheduledTime
-                                <button class="btn btn-default btn-xs pull-right" onclick="asyncGet('@url')">Rerun All</button>
+                                <button class="btn btn-default btn-xs pull-right" onclick="rerunTask('@url')">Rerun All</button>
                             </div>
                             <div class="panel-body" id="batch-group-view-batch.GroupId">
                                 <div class="row" style="padding-left: 15px; padding-right: 15px;">
@@ -103,7 +103,7 @@
                                                         <span id="status-@item.ScheduleId"></span>
                                                     </td>
                                                     <td style="width: 20%;">
-                                                        <button type="button" class="btn btn-default btn-xs pull-right" style="margin-right: 0 !important" onclick="asyncGet('@taskUrl')">Rerun</button>
+                                                        <button type="button" class="btn btn-default btn-xs pull-right" style="margin-right: 0 !important" onclick="rerunTask('@taskUrl')">Rerun</button>
                                                     </td>
                                                 </tr>
                                             }
