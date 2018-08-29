@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -31,7 +31,7 @@ namespace Gateway.Web.Database
             var response = _gateway.Get("managementinterface", $"batch/{name}/{correlationId}/detail/{reportDate:yyyy-MM-dd}", CancellationToken.None);
 
             if (!response.Successfull || response.Content?.Payload == null)
-                return new BatchDetail();
+                throw new Exception("Unable to retrieve batch error details.");
 
             var payload = response.Content.GetPayloadAsString();
             var data = JsonConvert.DeserializeObject<BatchDetail>(payload);
