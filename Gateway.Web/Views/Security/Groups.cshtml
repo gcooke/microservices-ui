@@ -6,27 +6,32 @@
     ViewBag.Title = "Security";
     ViewBag.Current = "Groups";
 }
-@{ Html.RenderPartial("_SecurityNav", (GroupsModel)@Model); }
+@{ Html.RenderPartial("_SecurityNav", (GroupsModel) @Model); }
 
 <div id="page-content-wrapper">
     <div class="hero-unit">
 
-        <br />
+        <br/>
         <div id="containerx bulk">
-            @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+            @Html.ValidationSummary(false, "", new {@class = "text-danger"})
 
-            <table style="width: 100%; white-space: nowrap" class="datatable table" id="searchable-table">
-                <thead>
+            @foreach (var item in @Model.GroupsPerBusinessFunction)
+            {
+                <h3>@item.Key</h3>
+
+                <table style="width: 100%; white-space: nowrap" class="datatable table" id="searchable-table">
+                    <thead>
                     <tr>
                         <td>Group</td>
                         <td>
                             Description
                             <a class="btn btn-default btn-xs glyphicon glyphicon-plus pull-right"
                                data-target=".add-modal"
-                               data-toggle="modal"></a>
+                               data-toggle="modal">
+                            </a>
                         </td>
                     </tr>
-                    <tr>
+                    @*<tr>
                         <td colspan="2">
                             <div class="form-group">
                                 <input class="form-control col-sm-11"
@@ -36,27 +41,30 @@
                                        name="quick-search"
                                        type="text">
                                 <span class="col-sm-1 form-control-feedback form-action-clear glyphicon glyphicon-remove form-control input-group-addon"
-                                      aria-hidden="true"></span>
+                                      aria-hidden="true">
+                                </span>
                             </div>
                         </td>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (GroupModel group in Model.Items)
+                    </tr>*@
+                    </thead>
+                    <tbody>
+
+                    @foreach (var group in item.Value)
                     {
-                        <tr data-href="@(Url.Action("Details", "Group", new { id = group.Id }))">
+                        <tr data-href="@(Url.Action("Details", "Group", new {id = group.Id}))">
                             <td>@group.Name</td>
                             <td colspan="2">@group.Description</td>
                         </tr>
                     }
-                </tbody>
-            </table>
-            <br />
+                    </tbody>
+                </table>
+            }
+            <br/>
         </div>
-        <br />
+        <br/>
 
-        @using (Html.BeginForm("InsertGroup", "Security", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-            {
+        @using (Html.BeginForm("InsertGroup", "Security", FormMethod.Post, new {@class = "form-horizontal", role = "form"}))
+        {
             <div class="modal fade add-modal" tabindex="-1" role="dialog">
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
@@ -77,7 +85,7 @@
                                         <label class="control-label">Name</label>
                                     </div>
                                     <div class="col-md-4">
-                                        @Html.TextBox("_name", "", new { @class = "form-control" })
+                                        @Html.TextBox("_name", "", new {@class = "form-control"})
                                     </div>
                                 </div>
                                 <div class="row">
@@ -85,7 +93,7 @@
                                         <label class="control-label">Description</label>
                                     </div>
                                     <div class="col-md-4">
-                                        @Html.TextBox("_description", "", new { @class = "form-control" })
+                                        @Html.TextBox("_description", "", new {@class = "form-control"})
                                     </div>
                                 </div>
                             </div>
