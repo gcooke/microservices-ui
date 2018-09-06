@@ -15,7 +15,8 @@ namespace Gateway.Web.Database
 {
     public class BatchHelper
     {
-        private const string AllCountries = "Botswana,Ghana,Kenya,Mauritius_IBD,Mauritius_Onshore,Mozambique,South_Africa,Seychelles,Tanzania,Tanzania_NBC,Uganda,Zambia";
+        private const string AllCountries =
+            "Botswana,Ghana,Kenya,Mauritius_IBD,Mauritius_Onshore,Mozambique,South_Africa,Seychelles,Tanzania,Tanzania_NBC,Uganda,Zambia";
 
         private readonly IGatewayDatabaseService _database;
         private readonly IGatewayRestService _gateway;
@@ -28,7 +29,8 @@ namespace Gateway.Web.Database
 
         public BatchDetail GetBatchDetails(string name, DateTime reportDate, Guid correlationId)
         {
-            var response = _gateway.Get("managementinterface", $"batch/{name}/{correlationId}/detail/{reportDate:yyyy-MM-dd}", CancellationToken.None);
+            var response = _gateway.Get("managementinterface",
+                $"batch/{name}/{correlationId}/detail/{reportDate:yyyy-MM-dd}", CancellationToken.None);
 
             if (!response.Successfull || response.Content?.Payload == null)
                 throw new Exception("Unable to retrieve batch error details.");
@@ -68,6 +70,7 @@ namespace Gateway.Web.Database
                     siteRuns = new List<RiskBatchResult>();
                     siteRuns.Add(new RiskBatchResult(site, reportDate));
                 }
+
                 runs.Remove(site);
 
                 // Add site runs to site group
@@ -102,7 +105,8 @@ namespace Gateway.Web.Database
             return Task.FromResult(model);
         }
 
-        private Dictionary<string, List<RiskBatchResult>> GetResults(List<ExtendedBatchSummary> results, string[] sites, DateTime reportDate, List<BatchSummary> errorData)
+        private Dictionary<string, List<RiskBatchResult>> GetResults(List<ExtendedBatchSummary> results, string[] sites,
+            DateTime reportDate, List<BatchSummary> errorData)
         {
             var result = new Dictionary<string, List<RiskBatchResult>>();
             if (results != null)
@@ -114,7 +118,8 @@ namespace Gateway.Web.Database
                 {
                     // Determine site
                     var resource = row.Resource;
-                    var site = sites.FirstOrDefault(s => resource.IndexOf(s, StringComparison.CurrentCultureIgnoreCase) >= 0);
+                    var site = sites.FirstOrDefault(s =>
+                        resource.IndexOf(s, StringComparison.CurrentCultureIgnoreCase) >= 0);
                     if (site == null) site = resource;
 
                     var target = GetOrAdd(result, site, reportDate);
@@ -137,6 +142,7 @@ namespace Gateway.Web.Database
                     list[index + 1].IsRerun = true;
                 }
             }
+
             return result;
         }
 
@@ -148,11 +154,13 @@ namespace Gateway.Web.Database
                 {
                     return x.Resource.CompareTo(y.Resource);
                 }
+
                 return x.Started.CompareTo(y.Started);
             }
         }
 
-        private RiskBatchResult GetOrAdd(Dictionary<string, List<RiskBatchResult>> lookup, string site, DateTime reportDate)
+        private RiskBatchResult GetOrAdd(Dictionary<string, List<RiskBatchResult>> lookup, string site,
+            DateTime reportDate)
         {
             List<RiskBatchResult> list;
             if (!lookup.TryGetValue(site, out list))
@@ -168,6 +176,7 @@ namespace Gateway.Web.Database
                 target = new RiskBatchResult(site, reportDate);
                 list.Add(target);
             }
+
             return target;
         }
 
@@ -182,7 +191,8 @@ namespace Gateway.Web.Database
         private List<BatchSummary> GetBatchSummaries(DateTime valuationDate)
         {
             _gateway.SetGatewayUrlForService("managementinterface", "Official", "http://localhost:7001/");
-            var response = _gateway.Get("managementinterface", $"batch/{valuationDate:yyyy-MM-dd}/summary", CancellationToken.None);
+            var response = _gateway.Get("managementinterface", $"batch/{valuationDate:yyyy-MM-dd}/summary",
+                CancellationToken.None);
 
             if (!response.Successfull || response.Content?.Payload == null)
                 return new List<BatchSummary>();
@@ -252,7 +262,7 @@ namespace Gateway.Web.Database
         {
             CorrelationId = row.CorrelationId;
             Started = row.StartUtc.ToLocalTime();
-            TimeTakenMs = (int)(row.EndUtc - row.StartUtc).TotalMilliseconds;
+            TimeTakenMs = (int) (row.EndUtc - row.StartUtc).TotalMilliseconds;
             Completed = Started.AddMilliseconds(TimeTakenMs);
             Resource = row.Resource;
             Version = row.ControllerVersion;
@@ -275,8 +285,10 @@ namespace Gateway.Web.Database
             // Determine name
             if (Resource != site) // i.e. sub-calc
             {
-                var siteBoundedByHyphens = Resource.IndexOf("-" + site + "-", StringComparison.CurrentCultureIgnoreCase);
-                var isNewFormatBatch = Resource.IndexOf("runriskbatch/", StringComparison.CurrentCultureIgnoreCase) >= 0;
+                var siteBoundedByHyphens =
+                    Resource.IndexOf("-" + site + "-", StringComparison.CurrentCultureIgnoreCase);
+                var isNewFormatBatch =
+                    Resource.IndexOf("runriskbatch/", StringComparison.CurrentCultureIgnoreCase) >= 0;
                 if (siteBoundedByHyphens >= 0)
                 {
                     // [Type]-[Site]-[Date:yyyy-MM-dd]
@@ -317,8 +329,24 @@ namespace Gateway.Web.Database
 
         public void UpdateErrors(ExtendedBatchSummary row, List<BatchSummary> errorData)
         {
-            var error = errorData.SingleOrDefault(x => x.LegalEntity.ToUpper().Contains(Site.ToUpper()) &&
-                                           x.LegalEntity.ToUpper().Contains(Name.ToUpper()));
+            var errors = errorData.Where(x =>
+                    x.LegalEntity.ToUpper().Contains(Site.ToUpper()) &&
+                    x.LegalEntity.ToUpper().Contains(Name.ToUpper()))
+                .ToList();
+
+            if (!errors.Any())
+            {
+                ErrorCount = 0;
+                return;
+            }
+
+            if (errors.Count == 1)
+            {
+                ErrorCount = errors.First()?.TotalErrorCount;
+                return;
+            }
+
+            var error = errors.FirstOrDefault(x => x.LegalEntity.ToUpper() == $"{Site.ToUpper()}-{Name.ToUpper()}");
             ErrorCount = error?.TotalErrorCount;
         }
 
@@ -347,6 +375,7 @@ namespace Gateway.Web.Database
         {
             get { return Completed == DateTime.MinValue ? string.Empty : Completed.ToString("ddd HH:mm"); }
         }
+
         public long TimeTakenMs { get; private set; }
 
         public bool IsRerun { get; set; }

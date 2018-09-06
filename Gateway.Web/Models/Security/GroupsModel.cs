@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Gateway.Web.Models.Group;
 
 namespace Gateway.Web.Models.Security
@@ -11,5 +12,10 @@ namespace Gateway.Web.Models.Security
         }
 
         public List<GroupModel> Items { get; private set; }
+
+        public IDictionary<string, List<GroupModel>> GroupsPerBusinessFunction
+        {
+            get { return Items.GroupBy(x => x.BusinessFunction).ToDictionary(x => x.Key, x => x.ToList()); }
+        }
     }
 }
