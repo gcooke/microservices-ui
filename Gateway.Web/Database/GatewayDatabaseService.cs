@@ -134,7 +134,7 @@ namespace Gateway.Web.Database
                     }
                 }
 
-                var latestGroups = versions.Where(v => v.StatusId == 2).GroupBy(v => v.ControllerId);
+                var latestGroups = versions.Where(v => v.Status.Name.ToLower() == "active").GroupBy(v => v.ControllerId);
                 var latest = result.GetOrAdd(" Latest");
                 foreach (var group in latestGroups)
                 {
