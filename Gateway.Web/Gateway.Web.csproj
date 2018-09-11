@@ -283,6 +283,7 @@
     <Compile Include="Database\SchedulePartial.cs" />
     <Compile Include="Models\Schedule\Input\BaseScheduleModel.cs" />
     <Compile Include="Models\Schedule\Output\ScheduleGroup.cs" />
+    <Compile Include="Models\Schedule\Output\ScheduleStatus.cs" />
     <Compile Include="Models\Schedule\Output\ScheduleTask.cs" />
     <Compile Include="Models\Schedule\Input\ScheduleWebRequestModel.cs" />
     <Compile Include="Models\Schedule\Output\ScheduleViewModel.cs" />
@@ -859,7 +860,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>9895</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:9896/Support</IISUrl>
+          <IISUrl>http://localhost:9896</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
