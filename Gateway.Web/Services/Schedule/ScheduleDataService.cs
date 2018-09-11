@@ -95,7 +95,7 @@ namespace Gateway.Web.Services.Schedule
             {
                 var data = new Dictionary<string, string>();
                 var date = new DateTime(now.Year, now.Month, now.Day).Date;
-                while (now - date <= TimeSpan.FromDays(30))
+                while (now - date <= TimeSpan.FromDays(12))
                 {
                     var businessDate = date;
                     var jobs = db.ScheduledJobs.Where(x => x.BusinessDate == businessDate)
@@ -214,16 +214,17 @@ namespace Gateway.Web.Services.Schedule
             }
         }
 
-        public void RerunTaskGroup(long id, DateTime businessDate)
+        public void RerunTaskGroup(long id, DateTime businessDate, string searchTerm)
         {
             using (var db = new GatewayEntities())
             {
                 var batches = db.Schedules
-                    .Where(x => x.GroupId == id)
                     .Include("RiskBatchConfiguration")
                     .Include("RequestConfiguration")
                     .Include("ParentSchedule")
                     .Include("Children")
+                    .Where(GetSearchCriteria(searchTerm))
+                    .Where(x => x.GroupId == id)
                     .ToList();
 
                 if (!batches.Any())
@@ -253,6 +254,17 @@ namespace Gateway.Web.Services.Schedule
                 var cron = group.Schedule;
                 _scheduler.ScheduleAsyncWebRequest(request, entity.ScheduleKey, cron);
             }
+        }
+
+        private Func<Database.Schedule, bool> GetSearchCriteria(string s)
+        {
+            if (string.IsNullOrWhiteSpace(s))
+                return x => true;
+
+            var terms = s.ToLower().Split(' ');
+            return x => terms.Any(y => (x.TradeSource != null && x.TradeSource.ToLower().Contains(y)) ||
+                                       (x.RiskBatchConfiguration != null && x.RiskBatchConfiguration.Type.ToLower().Contains(y)) ||
+                                       (x.RequestConfiguration != null && x.RequestConfiguration.Name.ToLower().Contains(y)));
         }
     }
 }

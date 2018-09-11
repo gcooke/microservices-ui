@@ -1,4 +1,6 @@
-﻿$(document).ready(function() {
+﻿var requests = [];
+
+$(document).ready(function () {
     setupSelectAllTrigger();
     setupBatchTable();
     setupCalendar();
@@ -91,46 +93,43 @@ function setupCalendar() {
 
 function pollResults() {
     var shouldPollResults = $("#pollResults").val();
-    console.log(shouldPollResults);
+
     if (shouldPollResults !== "true")
         return;
 
     var businessDate = $("#businessDate").data("date");
-    $.get("Schedule/Status?includeDailySummaries=true&businessDate=" + businessDate, function (data) {
+    var request = $.get("Schedule/Status?includeDailySummaries=true&businessDate=" + businessDate, function (data) {
+        requests.pop();
         updateView(data);
+        setTimeout(function() { pollResults() }, 5000);
     });
 
-    setInterval(function () {
-        var businessDate = $("#businessDate").data("date");
-        $.get("Schedule/Status?includeDailySummaries=true&businessDate=" + businessDate, function (data) {
-            updateView(data);
-        });
-    }, 5000);
+    requests.push(request);
 }
 
 function updateView(data) {
     var statusList = JSON.parse(data);
-    $.each(statusList,
+    $.each(statusList.TaskStatus,
         function (index, value) {
             $("#status-" + value.ScheduleId).html(getStatusHtml(value));
             $("#timing-" + value.ScheduleId).html(getTimingsHtml(value));
 
-            $("#paginator li").each(function (index, item) {
-                var date = $(item).find("a").data("moment");
-                var $date = $(item).find("a");
-
-                if (typeof (date) !== "undefined") {
-                    if (typeof (value.DailySummaries[date]) !== "undefined") {
-                        var $icon = $date.find("span");
-                        if (value.DailySummaries[date] !== "") {
-                            var color = getColor(value.DailySummaries[date]);
-                            $icon.css("color", color);
-                            $icon.css("display", "inline");
-                        }
-                    }
-                }
-            });
         });
+
+    $("#paginator li").each(function (index, item) {
+        var date = $(item).find("a").data("moment");
+        var $date = $(item).find("a");
+        if (typeof (date) !== "undefined") {
+            if (typeof (statusList.DailySummaries[date]) !== "undefined") {
+                var $icon = $date.find("span");
+                if (statusList.DailySummaries[date] !== "") {
+                    var color = getColor(statusList.DailySummaries[date]);
+                    $icon.css("color", color);
+                    $icon.css("display", "inline");
+                }
+            }
+        }
+    });
 }
 
 function getStatusHtml(value) {
@@ -213,8 +212,16 @@ function getIcon(value) {
 }
 
 function rerunTask(url) {
-    $.get(url);
-    toastr.success('Task(s) has been added to queue and will be rerun shortly.', 'Success');
+    $.each(requests,
+        function(index, value) {
+            value.abort();
+        });
+
+    $.get(url, function(date) {
+        toastr.success('Task(s) has been added to queue and will be rerun shortly.', 'Success');
+        pollResults();
+    });
+
 }
 
 function bulkFunction(childClass, baseUrl, isAsync) {

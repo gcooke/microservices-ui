@@ -145,9 +145,9 @@ namespace Gateway.Web.Controllers
 
         [HttpGet]
         [Route("Group/Rerun/{id}/{businessDate}")]
-        public void RerunGroup(long id, DateTime businessDate)
+        public void RerunGroup(long id, DateTime businessDate, string searchTerm)
         {
-            _scheduleDataService.RerunTaskGroup(id, businessDate);
+            _scheduleDataService.RerunTaskGroup(id, businessDate, searchTerm);
         }
 
         [HttpGet]
@@ -160,18 +160,25 @@ namespace Gateway.Web.Controllers
             var tasks = _scheduleGroupService.GetScheduleGroups(businessDate.Value, null, true);
             var statuses = tasks
                 .SelectMany(x => x.Tasks)
-                .Select(x => new
+                .Select(x => new ScheduleStatus
                 {
-                    x.ScheduleId,
-                    x.Status,
-                    x.RequestId,
+                    ScheduleId = x.ScheduleId,
+                    Status = x.Status,
+                    RequestId = x.RequestId,
                     StartedAt = x.StartedAt?.ToString("HH:mm"),
                     FinishedAt = x.FinishedAt?.ToString("HH:mm"),
-                    x.Retries,
-                    x.TimeTakenFormatted,
-                    DailySummaries = includeDailySummaries ? _scheduleDataService.GetDailyStatuses(DateTime.Now) : null
-                });
-            return JsonConvert.SerializeObject(statuses);
+                    Retries = x.Retries,
+                    TimeTakenFormatted = x.TimeTakenFormatted
+                })
+                .ToList();
+
+            var model = new ScheduleStatusSummary
+            {
+                TaskStatus = statuses,
+                DailySummaries = includeDailySummaries ? _scheduleDataService.GetDailyStatuses(DateTime.Now) : null
+            };
+
+            return JsonConvert.SerializeObject(model);
         }
 
         [HttpGet]
