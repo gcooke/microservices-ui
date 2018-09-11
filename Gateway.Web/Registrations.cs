@@ -41,7 +41,6 @@ namespace Gateway.Web
             information.RegisterType<IFileService, FileService>(Scope.Singleton);
             information.RegisterType<IDifferentialArchiveService, DifferentialArchiveService>(Scope.Singleton);
             information.RegisterType<IDifferentialDownloadService, DifferentialDownloadService>(Scope.Singleton);
-            information.RegisterType<IAuthenticationProvider, AuthenticationProvider>(Scope.Singleton);
             information.RegisterType<IDateTimeProvider, DateTimeProvider>(Scope.Singleton);
             information.RegisterType<IRiskReportMonitoringService, RiskReportMonitoringService>(Scope.Singleton);
             information.RegisterType<IGateway, Bagl.Cib.MSF.ClientAPI.Gateway.Gateway>(Scope.Singleton);

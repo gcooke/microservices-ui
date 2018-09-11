@@ -10,19 +10,18 @@ namespace Gateway.Web.Authorization
 {
     public class AuthorizedRoleProvider : RoleProvider
     {
-        private readonly IRoleService _roleService;
         private readonly ILogger _logger;
 
         public AuthorizedRoleProvider()
         {
-            _roleService = ServiceLocator.Current.GetInstance<IRoleService>();
             var loggingService = ServiceLocator.Current.GetInstance<ILoggingService>();
             _logger = loggingService.GetLogger(this);
         }
 
         public override bool IsUserInRole(string username, string roleName)
         {
-            var userDetail = _roleService.GetUserDetail(username);
+            var roleService = ServiceLocator.Current.GetInstance<IRoleService>();
+            var userDetail = roleService.GetUserDetail(username);
             if (userDetail != null)
             {
                 return userDetail.HasRole(roleName);
@@ -32,7 +31,8 @@ namespace Gateway.Web.Authorization
 
         public override string[] GetRolesForUser(string username)
         {
-            var userDetail = _roleService.GetUserDetail(username);
+            var roleService = ServiceLocator.Current.GetInstance<IRoleService>();
+            var userDetail = roleService.GetUserDetail(username);
             if (userDetail != null)
             {
                 return userDetail.Roles
