@@ -1,4 +1,6 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
@@ -17,12 +19,14 @@ namespace Gateway.Web
 {
     public class MvcApplication : System.Web.HttpApplication
     {
+        private static UnityContainer _container;
+
         public static string Environment { get; set; }
         public static string FavIcon { get; set; }
         public static string ControllerIcon { get; set; }
         public static string SiteLogo { get; set; }
 
-        protected void Application_Start()
+        protected void Application_Start(object sender, EventArgs e)
         {
             Environment = ConfigurationManager.AppSettings["Environment"];
             FavIcon = "~/content/img/favicon." + Environment + ".png";
@@ -43,16 +47,13 @@ namespace Gateway.Web
             BundleConfig.RegisterBundles(BundleTable.Bundles, Environment);
 
             BundleTable.EnableOptimizations = true;
-            var container = new UnityContainer();
+            _container = new UnityContainer();
             var information = new SystemInformation("Redstone.UI", Environment, SessionKeyType.Application,
-                new string[0], container);
+                new string[0], _container);            
             Registrations.Register(information);
-            container.Resolve<ILoggingService>().Initialize(information.LoggingInformation);
-            DependencyResolver.SetResolver(new UnityDependencyResolver(container));
-            var locator = new UnityServiceLocator(container);
-            ServiceLocator.SetLocatorProvider(() => locator);
-
-            var systemInformation = container.Resolve<ISystemInformation>();
+            _container.Resolve<ILoggingService>().Initialize(information.LoggingInformation);
+            
+            var systemInformation = _container.Resolve<ISystemInformation>();
             var schedulingConnectionString = systemInformation.GetSetting("SchedulingConnectionString");
 
             var schedulingClientProvider = new SchedulingClientProvider();
@@ -60,6 +61,25 @@ namespace Gateway.Web
             {
                 SqlServerConnectionString = schedulingConnectionString
             });
+        }
+
+        protected void Application_BeginRequest(object sender, EventArgs e)
+        {
+            var childContainer = _container.CreateChildContainer();
+            HttpContext.Current.Items["container"] = childContainer;
+            var resolver = new UnityDependencyResolver(childContainer);
+            DependencyResolver.SetResolver(resolver);
+
+            var locator = new UnityServiceLocator(_container);
+            ServiceLocator.SetLocatorProvider(() => locator);
+        }
+
+        protected void Application_EndRequest(object sender, EventArgs e)
+        {
+            var container = HttpContext.Current.Items["container"] as IUnityContainer;
+            if (container == null) return;
+            container.Dispose();
+            HttpContext.Current.Items.Remove("container");
         }
     }
 }
