@@ -36,9 +36,9 @@ namespace Gateway.Web.Models.Schedule.Output
 
         public bool HasChildren => ChildrenCount > 0;
 
-        public int TimeTakenMs => ((FinishedAt ?? DateTime.MinValue) - (StartedAt ?? DateTime.MinValue)).Milliseconds;
+        public int TimeTakenMs => (int) ((FinishedAt ?? DateTime.MinValue) - (StartedAt ?? DateTime.MinValue)).TotalMilliseconds;
 
-        public string TimeTakenFormatted => TimeTakenMs.FormatTimeTaken(true);
+        public string TimeTakenFormatted => TimeTakenMs.FormatTimeTaken();
 
         public string FriendlyScheduleDescription => string.IsNullOrWhiteSpace(Schedule)
             ? string.Empty
