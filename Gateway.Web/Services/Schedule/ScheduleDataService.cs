@@ -146,11 +146,12 @@ namespace Gateway.Web.Services.Schedule
         {
             db = db ?? new GatewayEntities();
             var entity = db.Schedules
+                .Where(x => x.ScheduleId == id)
                 .Include("RiskBatchConfiguration")
                 .Include("RequestConfiguration")
                 .Include("ParentSchedule")
                 .Include("Children")
-                .SingleOrDefault(x => x.ScheduleId == id);
+                .SingleOrDefault();
 
             if (entity == null)
             {
@@ -165,12 +166,11 @@ namespace Gateway.Web.Services.Schedule
             }
 
             _scheduler.RemoveScheduledWebRequest(entity.ScheduleKey);
+            db.Schedules.Remove(entity);
 
             db.ScheduledJobs.RemoveRange(entity.ScheduledJobs);
             if(entity.RequestConfigurationId != null)
                 db.RequestConfigurations.Remove(entity.RequestConfiguration);
-
-            db.Schedules.Remove(entity);
 
             if (!saveChanges)
                 return;
@@ -234,6 +234,28 @@ namespace Gateway.Web.Services.Schedule
                 {
                     _scheduler.EnqueueAsyncWebRequest(schedule.ToRequest(businessDate));
                 }
+            }
+        }
+
+        public void DisableSchedule(long id)
+        {
+            using (var db = new GatewayEntities())
+            {
+                var schedule = db.Schedules
+                    .Where(x => x.ScheduleId == id)
+                    .Include("RiskBatchConfiguration")
+                    .Include("RequestConfiguration")
+                    .Include("ParentSchedule")
+                    .Include("Children")
+                    .SingleOrDefault();
+
+                if (schedule == null)
+                    return;
+
+                _scheduler.RemoveScheduledWebRequest(schedule.ScheduleKey);
+
+                schedule.IsEnabled = false;
+                db.SaveChanges();
             }
         }
 

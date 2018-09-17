@@ -19,13 +19,13 @@
         <EntityTypeShape EntityType="GatewayModel.BatchStat" Width="1.5" PointX="9.375" PointY="4.75" />
         <EntityTypeShape EntityType="GatewayModel.ScheduleGroup" Width="1.5" PointX="7.375" PointY="9.625" />
         <EntityTypeShape EntityType="GatewayModel.ScheduledJob" Width="1.5" PointX="11.875" PointY="9.125" />
-        <EntityTypeShape EntityType="GatewayModel.RequestConfiguration" Width="1.5" PointX="2.1590134977172193" PointY="4.9390416466347133" />
+        <EntityTypeShape EntityType="GatewayModel.RequestConfiguration" Width="1.5" PointX="2.375" PointY="5.375" />
         <AssociationConnector Association="GatewayModel.FK_Schedule_RequestConfiguration" />
         <EntityTypeShape EntityType="GatewayModel.Schedule" Width="1.5" PointX="4.65339078598348" PointY="21.258143807415916" />
         <AssociationConnector Association="GatewayModel.FK_Schedule_Schedule" />
         <AssociationConnector Association="GatewayModel.FK_Schedule_ScheduleGroup" />
         <AssociationConnector Association="GatewayModel.FK_ScheduledJob_Schedule" />
-        <EntityTypeShape EntityType="GatewayModel.RiskBatchConfiguration" Width="1.5" PointX="2.63140415522801" PointY="2.8543520881116167" />
+        <EntityTypeShape EntityType="GatewayModel.RiskBatchConfiguration" Width="1.5" PointX="7" PointY="7.75" />
         <AssociationConnector Association="GatewayModel.FK_Schedule_RiskBatchConfiguration" />
         </Diagram>
         <EntityTypeShape EntityType="GatewayModel.ControllerExternalResource" Width="1.5" PointX="13.625" PointY="3.25" />

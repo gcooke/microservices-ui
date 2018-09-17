@@ -22,13 +22,12 @@ namespace Gateway.Web.Services.Schedule
             _scheduleDataService = scheduleDataService;
         }
 
-        public IList<ScheduleGroup> GetScheduleGroups(DateTime date, string searchTerm = null, bool includeAllGroups = false)
+        public IList<ScheduleGroup> GetScheduleGroups(DateTime startDate, DateTime endDate, string searchTerm = null,
+            bool includeAllGroups = false, bool includeDisabledTasks = true)
         {
             using (var db = new GatewayEntities())
             {
-                var startDate = date.Date;
-                var endDate = startDate.AddHours(24).AddMinutes(-1);
-                var groups = GetGroups(searchTerm);
+                var groups = GetGroups(startDate, endDate, searchTerm);
                 var runGroups = new List<ScheduleGroup>();
 
                 string status = null;
@@ -44,25 +43,18 @@ namespace Gateway.Web.Services.Schedule
 
                 foreach (var group in groups)
                 {
-                    var crontabSchedule = CrontabSchedule.Parse(group.Schedule);
-                    var occurrences = crontabSchedule
-                        .GetNextOccurrences(startDate, endDate)
-                        .ToList();
+                    group.FriendScheduledTime = group.NextOccurrence.ToString("hh:mm tt");
 
-                    if (!includeAllGroups)
+                    if (!includeDisabledTasks)
                     {
-                        if (!occurrences.Any())
-                            continue;
-
-                        group.NextOccurrence = occurrences.First();
-                        group.FriendScheduledTime = occurrences.First().ToString("hh:mm tt");
+                        group.Tasks = group.Tasks.Where(x => x.IsEnabled).ToList();
                     }
 
-                    foreach (var batch in group.Tasks)
+                    foreach (var task in group.Tasks)
                     {
                         var jobList = db.ScheduledJobs
-                            .Where(x => x.ScheduleId == batch.ScheduleId)
-                            .Where(x => x.BusinessDate >= startDate && x.BusinessDate <= endDate)
+                            .Where(x => x.ScheduleId == task.ScheduleId)
+                            .Where(x => x.BusinessDate > startDate && x.BusinessDate < endDate)
                             .Where(x => status == null || x.Status.ToLower() == status.ToLower())
                             .ToList();
 
@@ -70,15 +62,15 @@ namespace Gateway.Web.Services.Schedule
 
                         if (lastJob == null)
                         {
-                            batch.Status = "Not Started";
+                            task.Status = "Not Started";
                             continue;
                         }
 
-                        batch.Status = lastJob.Status;
-                        batch.Retries = jobList.Count - 1;
-                        batch.RequestId = lastJob.RequestId;
-                        batch.StartedAt = lastJob.StartedAt;
-                        batch.FinishedAt = lastJob.FinishedAt;
+                        task.Status = lastJob.Status;
+                        task.Retries = jobList.Count - 1;
+                        task.RequestId = lastJob.RequestId;
+                        task.StartedAt = lastJob.StartedAt;
+                        task.FinishedAt = lastJob.FinishedAt;
                     }
 
                     runGroups.Add(group);
@@ -89,13 +81,10 @@ namespace Gateway.Web.Services.Schedule
         }
 
 
-        public IList<ScheduleGroup> GetGroups(string searchTerm = null)
+        public IList<ScheduleGroup> GetGroups(DateTime startDate, DateTime endDate, string searchTerm = null)
         {
             using (var db = new GatewayEntities())
             {
-                var startDate = DateTime.Now.Date;
-                var endDate = startDate.AddHours(24).AddMinutes(-1).AddDays(7);
-
                 var groups = db.ScheduleGroups
                     .Include("Schedules")
                     .ToList();
@@ -111,7 +100,8 @@ namespace Gateway.Web.Services.Schedule
                         .Where(GetSearchCriteria(searchTerm))
                         .Where(x => !x.Parent.HasValue);
 
-                    var crontabSchedule = CrontabSchedule.Parse(group.Schedule);
+                    var localTimeCron = CronTabExpression.Parse(group.Schedule).FromUtcCronExpression();
+                    var crontabSchedule = CrontabSchedule.Parse(localTimeCron);
                     var occurrences = crontabSchedule
                         .GetNextOccurrences(startDate, endDate)
                         .ToList();
@@ -132,7 +122,7 @@ namespace Gateway.Web.Services.Schedule
                     }
                 }
 
-                return groupModels.OrderBy(x => x.NextOccurrence).ToList();
+                return groupModels.OrderBy(x => x.NextOccurrence.TimeOfDay).ToList();
             }
         }
 

@@ -171,12 +171,16 @@
             <PropertyRef Name="ScheduleId" />
           </Key>
           <Property Name="ScheduleId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="RiskBatchConfigurationId" Type="bigint" />
-          <Property Name="RequestConfigurationId" Type="bigint" />
-          <Property Name="TradeSource" Type="varchar(max)" />
           <Property Name="ScheduleKey" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="GroupId" Type="bigint" />
           <Property Name="Parent" Type="bigint" />
+          <Property Name="RequestConfigurationId" Type="bigint" />
+          <Property Name="RiskBatchConfigurationId" Type="bigint" />
+          <Property Name="TradeSource" Type="varchar(max)" />
+          <Property Name="Site" Type="varchar" MaxLength="500" />
+          <Property Name="FundingCurrency" Type="varchar" MaxLength="3" />
+          <Property Name="ReportingCurrency" Type="varchar" MaxLength="3" />
+          <Property Name="IsEnabled" Type="bit" />
         </EntityType>
         <EntityType Name="ScheduleGroup">
           <Key>
@@ -1063,6 +1067,10 @@
           <NavigationProperty Name="ScheduleGroup" Relationship="GatewayModel.FK_Schedule_ScheduleGroup" FromRole="Schedule" ToRole="ScheduleGroup" />
           <NavigationProperty Name="ScheduledJobs" Relationship="GatewayModel.FK_ScheduledJob_Schedule" FromRole="Schedule" ToRole="ScheduledJob" />
           <NavigationProperty Name="RiskBatchConfiguration" Relationship="GatewayModel.FK_Schedule_RiskBatchConfiguration" FromRole="Schedule" ToRole="RiskBatchConfiguration" />
+          <Property Name="Site" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="FundingCurrency" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="ReportingCurrency" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="IsEnabled" Type="Boolean" />
         </EntityType>
         <Association Name="FK_Schedule_RequestConfiguration">
           <End Type="GatewayModel.RequestConfiguration" Role="RequestConfiguration" Multiplicity="0..1" />
@@ -1590,6 +1598,10 @@
           <EntitySetMapping Name="Schedules">
             <EntityTypeMapping TypeName="GatewayModel.Schedule">
               <MappingFragment StoreEntitySet="Schedule">
+                <ScalarProperty Name="IsEnabled" ColumnName="IsEnabled" />
+                <ScalarProperty Name="ReportingCurrency" ColumnName="ReportingCurrency" />
+                <ScalarProperty Name="FundingCurrency" ColumnName="FundingCurrency" />
+                <ScalarProperty Name="Site" ColumnName="Site" />
                 <ScalarProperty Name="Parent" ColumnName="Parent" />
                 <ScalarProperty Name="GroupId" ColumnName="GroupId" />
                 <ScalarProperty Name="ScheduleKey" ColumnName="ScheduleKey" />

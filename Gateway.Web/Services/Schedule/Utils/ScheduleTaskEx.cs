@@ -17,7 +17,9 @@ namespace Gateway.Web.Services.Schedule.Utils
                 ChildrenCount = schedule.Children.Count,
                 GroupName = schedule.ScheduleGroup?.Schedule,
                 Name = schedule.Name,
-                Key = schedule.Key
+                Key = schedule.Key,
+                IsEnabled = schedule.IsEnabled ?? true,
+                IsBatch = schedule.RiskBatchConfigurationId != null
             };
 
             return task;

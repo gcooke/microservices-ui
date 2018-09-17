@@ -48,6 +48,10 @@ namespace Gateway.Web.Models.Schedule.Output
 
         public string Key { get; set; }
 
+        public bool IsEnabled { get; set; }
+
+        public bool IsBatch { get; set; }
+
         public ScheduleTask(string type)
         {
             Children = new Dictionary<long, string>();

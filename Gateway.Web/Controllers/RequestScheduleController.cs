@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using Absa.Cib.MIT.TaskScheduling.Models;
 using Gateway.Web.Models.Schedule.Input;
@@ -47,7 +48,7 @@ namespace Gateway.Web.Controllers
         [Route("Create/Group/Template")]
         public ActionResult CreateUsingTemplate(long group, long requestTemplate)
         {
-            var model = new ScheduleWebRequestModel { Group = group.ToString() };
+            var model = new ScheduleWebRequestModel {Group = group.ToString()};
             var request = _requestConfigurationService.GetRequestConfiguration(requestTemplate);
             model.SetData(_batchConfigDataService, _requestConfigurationService);
             model.ScheduleId = 0;
@@ -58,7 +59,7 @@ namespace Gateway.Web.Controllers
             model.Verb = request.Verb;
             model.Arguments = JsonConvert.DeserializeObject<List<Argument>>(request.Arguments);
             model.Headers = JsonConvert.DeserializeObject<List<Header>>(request.Headers);
-            return View("Create",model);
+            return View("Create", model);
         }
 
         [HttpGet]
@@ -71,13 +72,44 @@ namespace Gateway.Web.Controllers
             return View("Create", model);
         }
 
+        [HttpGet]
+        [Route("Update/Bulk")]
+        public ActionResult CreateForManyConfiguration(string items)
+        {
+            var scheduleIdList = items.Split(',').Select(long.Parse).ToList();
+            var model = new ScheduleWebRequestModel { ScheduleIdList = new List<long>() };
+
+            foreach (var schedule in _scheduleDataService.GetSchedules(scheduleIdList))
+            {
+                if(schedule.RequestConfiguration != null)
+                    model.ScheduleIdList.Add(schedule.ScheduleId);
+            }
+
+            model.SetData(_batchConfigDataService, _requestConfigurationService);
+            model.BulkUpdate = true;
+
+            return View("Create", model);
+        }
+
         [HttpPost]
         public ActionResult CreateOrUpdateRequest(ScheduleWebRequestModel model)
         {
+            if (model.BulkUpdate)
+            {
+                return CreateOrUpdateMultipleRequests(model);
+            }
+
+            return CreateOrUpdateSingleRequest(model);
+        }
+
+        private ActionResult CreateOrUpdateSingleRequest(ScheduleWebRequestModel model)
+        {
             try
             {
-                if (string.IsNullOrWhiteSpace(model.Group) && string.IsNullOrWhiteSpace(model.GroupName) && string.IsNullOrWhiteSpace(model.Parent))
-                    ModelState.AddModelError("Group", "Please ensure either a Group has been selected or a cron schedule for a new group or a parent has been specified");
+                if (string.IsNullOrWhiteSpace(model.Group) && string.IsNullOrWhiteSpace(model.GroupName) &&
+                    string.IsNullOrWhiteSpace(model.Parent))
+                    ModelState.AddModelError("Group",
+                        "Please ensure either a Group has been selected or a cron schedule for a new group or a parent has been specified");
 
                 if (ModelState.IsValid)
                 {
@@ -87,7 +119,7 @@ namespace Gateway.Web.Controllers
                         model.Group = id.ToString();
                     }
 
-                   var errorCollection = _scheduleWebRequestService.ScheduleBatches(model);
+                    var errorCollection = _scheduleWebRequestService.ScheduleBatches(model);
                     foreach (var errorList in errorCollection)
                     {
                         foreach (var error in errorList)
@@ -108,7 +140,43 @@ namespace Gateway.Web.Controllers
                 return View("Create", model);
             }
 
-            return RedirectToAction("Update","Schedule");
+            return RedirectToAction("Update", "Schedule");
+        }
+
+        public ActionResult CreateOrUpdateMultipleRequests(ScheduleWebRequestModel model)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(model.Group) && string.IsNullOrWhiteSpace(model.GroupName))
+                    ModelState.AddModelError("Group",
+                        "Please ensure either a Group has been selected or a cron schedule for a new group has been specified");
+
+                if (ModelState.IsValid)
+                {
+                    if (string.IsNullOrWhiteSpace(model.Parent) && string.IsNullOrWhiteSpace(model.Group))
+                    {
+                        var id = _scheduleGroupService.CreateOrUpdate(model.GroupName);
+                        model.Group = id.ToString();
+                    }
+
+                    foreach (var schedule in model.ScheduleIdList)
+                    {
+                        _scheduleWebRequestService.RescheduleBatches(schedule, long.Parse(model.Group));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                model.SetData(_batchConfigDataService, _requestConfigurationService);
+                return View("Create", model);
+            }
+
+            return RedirectToAction("Update", "Schedule");
         }
 
         [HttpPost]
@@ -124,7 +192,16 @@ namespace Gateway.Web.Controllers
                 ModelState.AddModelError(string.Empty, ex.Message);
             }
 
-            return RedirectToAction("Update","Schedule");
+            return RedirectToAction("Update", "Schedule");
+        }
+
+        [HttpGet]
+        [Route("{id}/Enable")]
+        public ActionResult EnableSchedule(long id)
+        {
+            var schedule = _scheduleDataService.GetSchedule(id);
+            _scheduleWebRequestService.RescheduleBatches(id, null, schedule.Key);
+            return RedirectToAction("Update", "Schedule");
         }
     }
 }

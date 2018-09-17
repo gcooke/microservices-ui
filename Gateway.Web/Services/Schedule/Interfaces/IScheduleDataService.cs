@@ -18,6 +18,6 @@ namespace Gateway.Web.Services.Schedule.Interfaces
         void DeleteForConfiguration(long id, GatewayEntities db = null, bool saveChanges = true);
         void RerunTask(long id, DateTime businessDate);
         void RerunTaskGroup(long id, DateTime businessDate, string searchTerm);
-
+        void DisableSchedule(long l);
     }
 }

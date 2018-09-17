@@ -28,6 +28,10 @@ namespace Gateway.Web.Database
         public string ScheduleKey { get; set; }
         public Nullable<long> GroupId { get; set; }
         public Nullable<long> Parent { get; set; }
+        public string Site { get; set; }
+        public string FundingCurrency { get; set; }
+        public string ReportingCurrency { get; set; }
+        public Nullable<bool> IsEnabled { get; set; }
     
         public virtual RequestConfiguration RequestConfiguration { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
