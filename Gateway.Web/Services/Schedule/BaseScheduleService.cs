@@ -13,11 +13,12 @@ using Gateway.Web.Models.Schedule.Input;
 using Gateway.Web.Services.Schedule.Interfaces;
 using Gateway.Web.Services.Schedule.Models;
 using Gateway.Web.Services.Schedule.Utils;
+using Newtonsoft.Json;
 using ScheduleGroup = Gateway.Web.Database.ScheduleGroup;
 
 namespace Gateway.Web.Services.Schedule
 {
-    public abstract class BaseScheduleService<T, TK> : IScheduleService<T> 
+    public abstract class BaseScheduleService<T, TK> : IScheduleService<T>
         where T : BaseScheduleModel
         where TK : BaseScheduleParameters
     {
@@ -55,7 +56,7 @@ namespace Gateway.Web.Services.Schedule
                 catch (Exception ex)
                 {
                     Logger.Error(ex, "Unable to save item.");
-                    errors.Add("An unknown error has occurred - unable to save item: " + ex.Message);
+                    errors.Add("Unable to save item: " + ex.Message);
                     HandleException(ex, jobKeys);
                 }
                 finally
@@ -67,19 +68,66 @@ namespace Gateway.Web.Services.Schedule
             }
         }
 
+        public void RescheduleBatches(long id, long? groupId = null, string key = null)
+        {
+            using (var db = new GatewayEntities())
+            {
+                var schedule = GetSchedule(db, id, key);
+
+                if (schedule.GroupId == null)
+                    return;
+
+                if (schedule.Parent != null)
+                    return;
+
+                var group = db.ScheduleGroups.Single(x => x.GroupId == (groupId ?? schedule.GroupId.Value));
+                var isAsync = true;
+
+                if (schedule.RequestConfiguration?.Arguments != null)
+                {
+                    var args = JsonConvert.DeserializeObject<IList<Argument>>(schedule.RequestConfiguration.Arguments);
+                    var isAsyncArg = args.SingleOrDefault(x => x.Key.ToLower() == "isasync");
+                    if (isAsyncArg != null)
+                    {
+                        isAsync = isAsyncArg.FormatValue.ToLower() == "true";
+                    }
+                }
+
+                ScheduleBatch(schedule, group, isAsync);
+                schedule.GroupId = group.GroupId;
+                schedule.IsEnabled = true;
+
+                db.SaveChanges();
+            }
+        }
+
         protected abstract TK GetParameters(GatewayEntities db, T model);
 
-        public abstract void Schedule(TK parameters, GatewayEntities db, IList<ModelErrorCollection> errorCollection, IList<string> jobKeys);
+        public abstract void Schedule(TK parameters, GatewayEntities db, IList<ModelErrorCollection> errorCollection,
+            IList<string> jobKeys);
 
-        protected virtual Database.Schedule GetSchedule(GatewayEntities db, string key)
+        protected virtual Database.Schedule GetSchedule(GatewayEntities db, long id, string key)
         {
+            if (id == 0 && key != null)
+            {
+                return db.Schedules
+                           .Where(x => x.ScheduleKey == key)
+                           .Include("RiskBatchConfiguration")
+                           .Include("RequestConfiguration")
+                           .Include("ParentSchedule")
+                           .Include("Children")
+                           .SingleOrDefault() ??
+                       new Database.Schedule { ScheduleKey = key };
+            }
+
             return db.Schedules
-                .Include("RiskBatchConfiguration")
-                .Include("RequestConfiguration")
-                .Include("ParentSchedule")
-                .Include("Children")
-                .SingleOrDefault(x => x.ScheduleKey == key) ??
-                new Database.Schedule { ScheduleKey = key };
+                       .Where(x => x.ScheduleId == id)
+                       .Include("RiskBatchConfiguration")
+                       .Include("RequestConfiguration")
+                       .Include("ParentSchedule")
+                       .Include("Children")
+                       .SingleOrDefault() ??
+                   new Database.Schedule {ScheduleKey = key};
         }
 
         protected virtual void AssignSchedule(Database.Schedule entity, TK parameters)
@@ -149,7 +197,7 @@ namespace Gateway.Web.Services.Schedule
                 Scheduler.RemoveScheduledWebRequest(entity.ParentSchedule.ScheduleKey);
                 var parent = GetRequest(entity.ParentSchedule);
                 var cron = entity.ParentSchedule.ScheduleGroup.Schedule;
-                if(isAsync)
+                if (isAsync)
                     Scheduler.ScheduleAsyncWebRequest(parent, entity.ParentSchedule.ScheduleKey, cron);
                 else
                     Scheduler.ScheduleWebRequest(parent, entity.ParentSchedule.ScheduleKey, cron);

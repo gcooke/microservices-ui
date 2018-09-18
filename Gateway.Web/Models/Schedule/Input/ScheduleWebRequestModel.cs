@@ -32,6 +32,9 @@ namespace Gateway.Web.Models.Schedule.Input
         [Display(Name = "Request Template")]
         public string RequestTemplate { get; set; }
 
+        [Required]
+        public IList<long> ScheduleIdList { get; set; }
+
         public IList<Argument> Arguments { get; set; }
 
         public IList<Header> Headers { get; set; }
@@ -51,6 +54,7 @@ namespace Gateway.Web.Models.Schedule.Input
             Arguments = new List<Argument>();
             Headers = new List<Header>();
             RequestTemplates = new List<SelectListItem>();
+            ScheduleIdList = new List<long>();
 
             foreach (var i in Enumerable.Range(0, 100))
             {

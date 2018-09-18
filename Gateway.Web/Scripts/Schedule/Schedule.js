@@ -29,8 +29,8 @@ function setupTabs()
 function setupSelectAllTrigger() {
     $(".select-all-trigger").on("click",
         function () {
-            var childClass = $(".select-all-trigger").data("children");
-            if ($(".select-all-trigger").is(":checked")) {
+            var childClass = $(this).data("children");
+            if ($(this).is(":checked")) {
                 $("." + childClass).prop("checked", true);
                 $(".report-table-detail-row-hidden").removeClass("report-table-detail-row-hidden");
                 $(".monitoring-report-trigger").html("[-]");

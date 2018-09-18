@@ -21,6 +21,8 @@ namespace Gateway.Web.Services.Schedule.Models
 
         public bool IsAsync { get; set; }
 
+        public long ScheduleId { get; set; }
+
         public virtual void Populate(GatewayEntities db, BaseScheduleModel model)
         {
             if (!string.IsNullOrWhiteSpace(model.Group))
@@ -60,6 +62,7 @@ namespace Gateway.Web.Services.Schedule.Models
 
             ModifyChildren = !model.BulkUpdate;
             ModifyParent = !model.BulkUpdate;
+            ScheduleId = model.ScheduleId;
             IsAsync = true;
         }
 

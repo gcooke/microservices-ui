@@ -67,7 +67,7 @@ namespace Gateway.Web.Services.Schedule
             }
 
             var key = GenerateKey(config);
-            var entity = GetSchedule(db, key);
+            var entity = GetSchedule(db, parameters.ScheduleId, key);
             var errors = parameters.Validate(entity);
 
             if (errors.Any())
