@@ -11,9 +11,12 @@ namespace Gateway.Web.ModelBindersConverters
             var payloadValue = GetValueFromValueProvider(bindingContext, "Payload", false);
             var request = controllerContext.HttpContext.Request;
             var requestConfigurationId = request.Form["RequestConfigurationId"];
+            var scheduleIdList = request.Form["ScheduleIdListCount"];
+            var scheduleIdListCount = scheduleIdList == null ? 0 : int.Parse(scheduleIdList);
 
             var model = new ScheduleWebRequestModel
             {
+                ScheduleId = long.Parse(request.Form["ScheduleId"]),
                 Name = request.Form["Name"],
                 Url = request.Form["Url"],
                 Verb = request.Form["Verb"],
@@ -24,8 +27,13 @@ namespace Gateway.Web.ModelBindersConverters
                 RequestConfigurationId = string.IsNullOrWhiteSpace(requestConfigurationId)
                     ? (long?)null
                     : long.Parse(request.Form["RequestConfigurationId"]),
+                BulkUpdate = bool.Parse(request.Form["BulkUpdate"])
             };
 
+            foreach (var scheduleIdListIndex in Enumerable.Range(0, scheduleIdListCount))
+            {
+                model.ScheduleIdList.Add(long.Parse(request.Form[$"ScheduleIdList[{scheduleIdListIndex}]"]));
+            }
 
             foreach (var argumentIndex in Enumerable.Range(0, model.Arguments.Count))
             {

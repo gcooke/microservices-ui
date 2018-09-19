@@ -15,7 +15,7 @@ namespace Gateway.Web.Models.Security
 
         public IDictionary<string, List<GroupModel>> GroupsPerBusinessFunction
         {
-            get { return Items.GroupBy(x => x.BusinessFunction).ToDictionary(x => x.Key, x => x.ToList()); }
+            get { return Items.GroupBy(x => x.BusinessFunction ?? "Elevated Privileges").ToDictionary(x => x.Key, x => x.ToList()); }
         }
     }
 }

@@ -67,6 +67,22 @@ namespace Gateway.Web.Controllers
             return View("Create", model);
         }
 
+
+        [HttpGet]
+        [Route("Update/Bulk")]
+        public ActionResult UpdateBulk(string items)
+        {
+            var idList = items.Split(',').Select(long.Parse).ToList();
+            var schedules = _scheduleDataService.GetSchedules(idList)
+                .Where(x => x.RiskBatchConfigurationId != null)
+                .ToList();
+
+            var model = schedules.ToBatchInputModel();
+            model.SetData(_batchConfigDataService);
+            model.BulkUpdate = true;
+            return View("Create", model);
+        }
+
         [HttpGet]
         [Route("Update/{id}")]
         public ActionResult Update(long id)
@@ -134,6 +150,15 @@ namespace Gateway.Web.Controllers
                 ModelState.AddModelError(string.Empty, ex.Message);
             }
 
+            return RedirectToAction("Update", "Schedule");
+        }
+
+        [HttpGet]
+        [Route("{id}/Enable")]
+        public ActionResult EnableSchedule(long id)
+        {
+            var schedule = _scheduleDataService.GetSchedule(id);
+            _scheduleBatchService.RescheduleBatches(id, null, schedule.Key);
             return RedirectToAction("Update", "Schedule");
         }
     }

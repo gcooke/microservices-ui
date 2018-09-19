@@ -43,7 +43,9 @@ namespace Gateway.Web.Controllers
 
             var date = businessDate.Value.Date;
 
-            var scheduleGroups = _scheduleGroupService.GetScheduleGroups(businessDate.Value, searchTerm);
+            var startDate = DateTime.Now.Date.AddMinutes(-1);
+            var endDate = startDate.AddHours(24);
+            var scheduleGroups = _scheduleGroupService.GetScheduleGroups(startDate, endDate, searchTerm, false, false);
 
             var model = new ScheduleViewModel
             {
@@ -63,7 +65,10 @@ namespace Gateway.Web.Controllers
         [Route("Update")]
         public ActionResult Update(string searchTerm = null)
         {
-            var groups = _scheduleGroupService.GetGroups(searchTerm);
+            var startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMinutes(-1);
+            var endDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
+
+            var groups = _scheduleGroupService.GetGroups(startDate, endDate, searchTerm);
             var model = new ScheduleGroupModel {Groups = groups, SearchTerm = searchTerm};
 
             foreach (var group in model.Groups)
@@ -151,13 +156,23 @@ namespace Gateway.Web.Controllers
         }
 
         [HttpGet]
+        [Route("{id}/Disable")]
+        public ActionResult DisableSchedule(long id)
+        {
+            _scheduleDataService.DisableSchedule(id);
+            return RedirectToAction("Update");
+        }
+
+        [HttpGet]
         [Route("Status")]
         public string GetStatus(DateTime? businessDate = null, bool includeDailySummaries = false)
         {
             if (businessDate == null)
                 businessDate = DateTime.Now;
 
-            var tasks = _scheduleGroupService.GetScheduleGroups(businessDate.Value, null, true);
+            var startDate = businessDate?.AddMinutes(-1);
+            var endDate = startDate?.AddHours(24);
+            var tasks = _scheduleGroupService.GetScheduleGroups(startDate.Value, endDate.Value, null, true);
             var statuses = tasks
                 .SelectMany(x => x.Tasks)
                 .Select(x => new ScheduleStatus

@@ -35,7 +35,7 @@ namespace Gateway.Web.Services.Schedule
                 foreach (var tradeSource in parameters.TradeSources)
                 {
                     var key = GenerateKey(config, tradeSource);
-                    var entity = GetSchedule(db, key);
+                    var entity = GetSchedule(db, parameters.ScheduleId, key);
                     var errors = parameters.Validate(entity);
 
                     if (errors.Any())

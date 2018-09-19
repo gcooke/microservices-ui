@@ -1,4 +1,5 @@
 ﻿using System.Web.Mvc;
+using System.Web.Routing;
 using Bagl.Cib.MIT.Logging;
 
 namespace Gateway.Web.Controllers
@@ -24,7 +25,10 @@ namespace Gateway.Web.Controllers
                 filterContext.Exception.StackTrace);
 
             // Redirect on error:
-            filterContext.Result = RedirectToAction("Index", "Error");
+            var result = this.View("~/Views/Error/Error.cshtml", new HandleErrorInfo(filterContext.Exception,
+                filterContext.RouteData.Values["controller"].ToString(),
+                filterContext.RouteData.Values["action"].ToString()));
+            filterContext.Result = result;
         }
     }
 }

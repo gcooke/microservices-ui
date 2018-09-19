@@ -10,5 +10,7 @@ namespace Gateway.Web.Services.Schedule.Interfaces
     public interface IScheduleService<T> where T : BaseScheduleModel
     {
         IList<ModelErrorCollection> ScheduleBatches(T model);
+
+        void RescheduleBatches(long id, long? groupId = null, string key = null);
     }
 }

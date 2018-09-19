@@ -1,4 +1,5 @@
-﻿@model System.Web.Mvc.HandleErrorInfo
+﻿@using Gateway.Web.Utils
+@model System.Web.Mvc.HandleErrorInfo
 @{
     ViewBag.Title = "Error";
 }
@@ -15,8 +16,8 @@
                 <b>Controller:</b> @Model.ControllerName<br />
                 <b>Action:</b> @Model.ActionName
             </p>
-            <div style="overflow:scroll">
-                <pre>
+            <div style="overflow: scroll;">
+                <pre style="white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;">
                     @Model.Exception.StackTrace
                 </pre>
             </div>
