@@ -15,7 +15,7 @@ namespace Gateway.Web.Services.Schedule.Utils
         private static readonly string AuthUrl = System.Configuration.ConfigurationManager.AppSettings["AuthUrl"];
         private static readonly string BaseUrl = System.Configuration.ConfigurationManager.AppSettings["BaseUrl"];
         private static readonly string AuthQuery = System.Configuration.ConfigurationManager.AppSettings["AuthQuery"];
-        private static string _query = "Batch/Run/%id%/%valuationDate%";
+        private static string _query = "RiskBatch/Official/Batch/Run/%id%/%valuationDate%";
 
         public static RedstoneRequest ToRequest(this Database.Schedule schedule, DateTime? businessDate = null)
         {

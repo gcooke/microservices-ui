@@ -3,6 +3,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Filters;
 using Bagl.Cib.MSF.ClientAPI.Provider;
+using Microsoft.Practices.ServiceLocation;
 
 namespace Gateway.Web.Authorization
 {
@@ -16,8 +17,7 @@ namespace Gateway.Web.Authorization
                 return;
             }
 
-            var controller = (Controller)context.Controller;
-            var authenticationProvider = controller.Resolver.GetService(typeof(IAuthenticationProvider)) as IAuthenticationProvider;
+            var authenticationProvider = ServiceLocator.Current.GetInstance<IAuthenticationProvider>();
 
             if (authenticationProvider == null)
             {
