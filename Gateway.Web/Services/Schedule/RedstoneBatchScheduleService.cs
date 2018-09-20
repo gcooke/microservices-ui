@@ -76,7 +76,8 @@ namespace Gateway.Web.Services.Schedule
             entity.RiskBatchConfigurationId = configuration.ConfigurationId;
             entity.TradeSource = tradeSource.Trim();
 
-            if (Enum.TryParse(configuration.TradeSourceType, out TradeSourceType tradeSourceType))
+            TradeSourceType tradeSourceType;
+            if (Enum.TryParse(configuration.TradeSourceType, out tradeSourceType))
                 return;
 
             if (tradeSourceType == TradeSourceType.Site)
