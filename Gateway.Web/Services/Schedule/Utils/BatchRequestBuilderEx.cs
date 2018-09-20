@@ -27,7 +27,7 @@ namespace Gateway.Web.Services.Schedule.Utils
                     .SetAuthUrl(AuthUrl)
                     .SetQuery(_query)
                     .SetAuthQuery(AuthQuery)
-                    .SetMethod(Method.GET)
+                    .SetMethod(Method.PUT)
                     .SetId(schedule.ScheduleId)
                     .SetBusinessDate(businessDate)
                     .Build();
