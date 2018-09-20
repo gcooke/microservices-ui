@@ -6,6 +6,7 @@ using Absa.Cib.MIT.TaskScheduling.Client.Scheduler;
 using Absa.Cib.MIT.TaskScheduling.Models;
 using Bagl.Cib.MIT.Logging;
 using Gateway.Web.Database;
+using Gateway.Web.Enums;
 using Gateway.Web.Models.Schedule;
 using Gateway.Web.Models.Schedule.Input;
 using Gateway.Web.Services.Schedule.Models;
@@ -74,6 +75,14 @@ namespace Gateway.Web.Services.Schedule
             base.AssignSchedule(entity, parameters);
             entity.RiskBatchConfigurationId = configuration.ConfigurationId;
             entity.TradeSource = tradeSource.Trim();
+
+            if (Enum.TryParse(configuration.TradeSourceType, out TradeSourceType tradeSourceType))
+                return;
+
+            if (tradeSourceType == TradeSourceType.Site)
+            {
+                entity.Site = tradeSource;
+            }
         }
     }
 }
