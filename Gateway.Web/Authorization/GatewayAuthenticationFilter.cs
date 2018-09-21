@@ -3,6 +3,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Filters;
 using Bagl.Cib.MSF.ClientAPI.Provider;
+using Microsoft.Practices.ServiceLocation;
 
 namespace Gateway.Web.Authorization
 {
@@ -16,8 +17,7 @@ namespace Gateway.Web.Authorization
                 return;
             }
 
-            var controller = (Controller)context.Controller;
-            var authenticationProvider = controller.Resolver.GetService(typeof(IAuthenticationProvider)) as IAuthenticationProvider;
+            var authenticationProvider = ServiceLocator.Current.GetInstance<IAuthenticationProvider>();
 
             if (authenticationProvider == null)
             {
@@ -26,7 +26,7 @@ namespace Gateway.Web.Authorization
                 throw new Exception(message);
             }
 
-            var requestCookie = context.HttpContext.Request.Cookies["X-Token"];
+            var requestCookie = context.HttpContext.Request.Cookies["SIGMA_AUTH"];
             if (string.IsNullOrWhiteSpace(requestCookie?.Value))
             {
                 var message = "Trying to get token for user " + context.HttpContext.User.Identity.Name;
@@ -49,7 +49,7 @@ namespace Gateway.Web.Authorization
                     Log(context, message);
                 }
 
-                var httpCookie = new HttpCookie("X-Token", token) { Expires = expiry };
+                var httpCookie = new HttpCookie("SIGMA_AUTH", token) { Expires = expiry };
                 context.HttpContext.Response.Cookies.Add(httpCookie);
             }
 

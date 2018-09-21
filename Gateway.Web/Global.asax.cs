@@ -26,6 +26,8 @@ namespace Gateway.Web
         public static string ControllerIcon { get; set; }
         public static string SiteLogo { get; set; }
 
+        public static string SigmaHomePage { get; set; }
+
         protected void Application_Start(object sender, EventArgs e)
         {
             Environment = ConfigurationManager.AppSettings["Environment"];
@@ -55,6 +57,8 @@ namespace Gateway.Web
             
             var systemInformation = _container.Resolve<ISystemInformation>();
             var schedulingConnectionString = systemInformation.GetSetting("SchedulingConnectionString");
+
+            SigmaHomePage = systemInformation.GetSetting("AuthUrl", "https://abcap-foutils.intra.absa.co.za");
 
             var schedulingClientProvider = new SchedulingClientProvider();
             schedulingClientProvider.Setup(new SchedulingClientOptions
