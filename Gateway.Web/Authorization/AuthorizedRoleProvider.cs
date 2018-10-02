@@ -1,10 +1,8 @@
-﻿using System;
-using System.CodeDom;
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Security;
 using Bagl.Cib.MIT.Logging;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
-using Microsoft.Practices.ServiceLocation;
+using CommonServiceLocator;
 
 namespace Gateway.Web.Authorization
 {

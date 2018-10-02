@@ -5,7 +5,6 @@ using Gateway.Web.Database;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Services;
 using Gateway.Web.Utils;
-using Controller = System.Web.Mvc.Controller;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -15,7 +14,6 @@ using Bagl.Cib.MIT.IoC;
 using Bagl.Cib.MIT.Logging;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
 using Gateway.Web.Authorization;
-using Microsoft.Practices.ObjectBuilder2;
 
 namespace Gateway.Web.Controllers
 {
