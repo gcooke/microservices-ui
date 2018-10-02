@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
-using Microsoft.Practices.Unity;
+using Unity;
 
 namespace Gateway.Web
 {

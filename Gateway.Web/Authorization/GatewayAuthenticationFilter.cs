@@ -3,7 +3,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Filters;
 using Bagl.Cib.MSF.ClientAPI.Provider;
-using Microsoft.Practices.ServiceLocation;
+using CommonServiceLocator;
 
 namespace Gateway.Web.Authorization
 {
