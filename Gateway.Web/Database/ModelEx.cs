@@ -262,7 +262,10 @@ namespace Gateway.Web.Database
                 response = new Response { ResultMessage = "In progress" };
 
             var str = summary.Data.GetUncompressedString();
-            var data = XElement.Parse(str);
+            XElement data = new XElement("Data", "No results");
+
+            if (!string.IsNullOrEmpty(str))
+                data = XElement.Parse(str);
 
             return new ExtendedBatchSummary
             {
@@ -271,7 +274,7 @@ namespace Gateway.Web.Database
                 EndUtc = summary.EndTime,
                 Data = data,
                 ControllerVersion = request.Version,
-                Resource = request.Resource,
+                Resource = summary.Site?? request.Resource,
                 Successfull = response.ResultCode == 1,
                 Message = response.ResultMessage
             };
