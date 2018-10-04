@@ -42,7 +42,20 @@ namespace Gateway.Web.Services.Schedule
                 var errors = new ModelErrorCollection();
                 try
                 {
-                    Schedule(parameters, db, errorCollection, jobKeys);
+                    var schedules = Schedule(parameters, db, errorCollection, jobKeys);
+                    db.SaveChanges();
+
+                    foreach (var schedule in schedules)
+                    {
+                        if (!TryScheduleBatch(schedule, parameters, db))
+                        {
+                            Scheduler.RemoveScheduledWebRequest(schedule.ScheduleKey);
+                            if(schedule.RequestConfiguration != null)
+                                db.RequestConfigurations.Remove(schedule.RequestConfiguration);
+                            db.Schedules.Remove(schedule);
+                        }
+                    }
+
                     db.SaveChanges();
                 }
                 catch (DbEntityValidationException ex)
@@ -103,31 +116,26 @@ namespace Gateway.Web.Services.Schedule
 
         protected abstract TK GetParameters(GatewayEntities db, T model);
 
-        public abstract void Schedule(TK parameters, GatewayEntities db, IList<ModelErrorCollection> errorCollection,
+        public abstract IList<Database.Schedule> Schedule(TK parameters, GatewayEntities db, IList<ModelErrorCollection> errorCollection,
             IList<string> jobKeys);
 
         protected virtual Database.Schedule GetSchedule(GatewayEntities db, long id, string key)
         {
-            if (id == 0 && key != null)
-            {
-                return db.Schedules
-                           .Where(x => x.ScheduleKey == key)
-                           .Include("RiskBatchConfiguration")
-                           .Include("RequestConfiguration")
-                           .Include("ParentSchedule")
-                           .Include("Children")
-                           .SingleOrDefault() ??
-                       new Database.Schedule { ScheduleKey = key };
-            }
+            var schedule = db.Schedules
+                .Where(x => id == 0 && key != null ? x.ScheduleKey == key : x.ScheduleId == id)
+                .Include("RiskBatchConfiguration")
+                .Include("RequestConfiguration")
+                .Include("ParentSchedule")
+                .Include("Children")
+                .SingleOrDefault();
 
-            return db.Schedules
-                       .Where(x => x.ScheduleId == id)
-                       .Include("RiskBatchConfiguration")
-                       .Include("RequestConfiguration")
-                       .Include("ParentSchedule")
-                       .Include("Children")
-                       .SingleOrDefault() ??
-                   new Database.Schedule {ScheduleKey = key};
+            if (schedule != null)
+                return schedule;
+
+            schedule = new Database.Schedule { ScheduleKey = key };
+            db.Schedules.Add(schedule);
+
+            return schedule;
         }
 
         protected virtual void AssignSchedule(Database.Schedule entity, TK parameters)
@@ -168,17 +176,11 @@ namespace Gateway.Web.Services.Schedule
             }
         }
 
-        protected virtual bool TrySaveSchedule(Database.Schedule entity, TK parameters, GatewayEntities db)
+        protected virtual bool TryScheduleBatch(Database.Schedule entity, TK parameters, GatewayEntities db)
         {
             try
             {
                 ScheduleBatch(entity, entity.ScheduleGroup, parameters.IsAsync);
-
-                if (!entity.IsUpdating)
-                {
-                    db.Schedules.Add(entity);
-                }
-
                 return true;
             }
             catch (Exception ex)

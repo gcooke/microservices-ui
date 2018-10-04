@@ -166,10 +166,16 @@ namespace Gateway.Web.Services.Schedule
             }
 
             _scheduler.RemoveScheduledWebRequest(entity.ScheduleKey);
+
+            var scheduledJobs = entity.ScheduledJobs.ToList();
+            foreach (var scheduledJob in scheduledJobs)
+            {
+                db.ScheduledJobs.Remove(scheduledJob);
+            }
+
             db.Schedules.Remove(entity);
 
-            db.ScheduledJobs.RemoveRange(entity.ScheduledJobs);
-            if(entity.RequestConfigurationId != null)
+            if (entity.RequestConfigurationId != null)
                 db.RequestConfigurations.Remove(entity.RequestConfiguration);
 
             if (!saveChanges)
