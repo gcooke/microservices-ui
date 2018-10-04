@@ -29,8 +29,9 @@ namespace Gateway.Web.Services.Schedule
             return parameters;
         }
 
-        public override void Schedule(BatchScheduleParameters parameters, GatewayEntities db, IList<ModelErrorCollection> errorCollection, IList<string> jobKeys)
+        public override IList<Database.Schedule> Schedule(BatchScheduleParameters parameters, GatewayEntities db, IList<ModelErrorCollection> errorCollection, IList<string> jobKeys)
         {
+            var schedules = new List<Database.Schedule>();
             foreach (var config in parameters.Configurations)
             {
                 foreach (var tradeSource in parameters.TradeSources)
@@ -52,12 +53,11 @@ namespace Gateway.Web.Services.Schedule
                     if (parameters.ModifyParent) HandleParentSchedule(entity, parameters);
                     if (parameters.ModifyChildren) HandleChildSchedules(entity, parameters);
 
-                    if (!TrySaveSchedule(entity, parameters, db))
-                    {
-                        Scheduler.RemoveScheduledWebRequest(key);
-                    }
+                    schedules.Add(entity);
                 }
             }
+
+            return schedules;
         }
 
         protected override RedstoneRequest GetRequest(Database.Schedule schedule, DateTime? businessDate = null)

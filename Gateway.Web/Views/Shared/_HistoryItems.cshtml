@@ -131,9 +131,9 @@
                     <a href="~/User/History?id=@history.Id&login=@history.User" class="hoverlink">@history.UserFormatted</a>
                 </td>
                 <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
-                    <div data-toggle="tooltip" title="@history.Resource">
+                    <a href="@(Url.Action("Summary", "Request", new { correlationId = history.CorrelationId }))" data-toggle="tooltip" title="@history.Resource">
                         @history.Resource
-                    </div>
+                    </a>
                 </td>
                 <td>@history.StartFormatted</td>
                 <td>
