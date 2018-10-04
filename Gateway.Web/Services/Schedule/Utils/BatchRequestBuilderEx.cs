@@ -19,6 +19,9 @@ namespace Gateway.Web.Services.Schedule.Utils
 
         public static RedstoneRequest ToRequest(this Database.Schedule schedule, DateTime? businessDate = null)
         {
+            if (schedule.ScheduleId == 0)
+                throw new Exception("Unable to create request for scheduling - Schedule Id is set to 0.");
+
             if (schedule.RiskBatchConfigurationId.HasValue)
             {
                 var batchRequest = RedstoneRequestBuilder

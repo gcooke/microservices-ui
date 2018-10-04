@@ -29,8 +29,9 @@ namespace Gateway.Web.Services.Schedule
             return parameters;
         }
 
-        public override void Schedule(RedstoneRequestParameters parameters, GatewayEntities db, IList<ModelErrorCollection> errorCollection, IList<string> jobKeys)
+        public override IList<Database.Schedule> Schedule(RedstoneRequestParameters parameters, GatewayEntities db, IList<ModelErrorCollection> errorCollection, IList<string> jobKeys)
         {
+            var schedules = new List<Database.Schedule>();
             var config = db.RequestConfigurations.SingleOrDefault(x => x.RequestConfigurationId == parameters.RequestConfigurationId);
             if (config == null)
             {
@@ -73,7 +74,7 @@ namespace Gateway.Web.Services.Schedule
             if (errors.Any())
             {
                 errorCollection.Add(errors);
-                return;
+                return schedules;
             }
 
             jobKeys.Add(key);
@@ -83,11 +84,8 @@ namespace Gateway.Web.Services.Schedule
             if (parameters.ModifyParent) HandleParentSchedule(entity, parameters);
             if (parameters.ModifyChildren) HandleChildSchedules(entity, parameters);
 
-            if (!TrySaveSchedule(entity, parameters, db))
-            {
-                Scheduler.RemoveScheduledWebRequest(key);
-                db.RequestConfigurations.Remove(config);
-            }
+            schedules.Add(entity);
+            return schedules;
         }
 
         protected string GenerateKey(RequestConfiguration configuration)

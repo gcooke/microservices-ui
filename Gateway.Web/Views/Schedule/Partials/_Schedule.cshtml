@@ -15,7 +15,7 @@
                         }
                         else
                         {
-                            @Html.CheckBox("select-" + item.ScheduleKey, new { @class = "select-schedule select-schedule-" + @Model.GroupId, @data_id = item.ScheduleId, disabled = true })
+                            @Html.CheckBox("select-" + item.ScheduleKey, new { disabled = true })
                         }
                     </td>
                     <td style="width: 73%;">
@@ -35,21 +35,13 @@
                         @if (item.IsEnabled)
                         {
                             <span class="m-l-5" style="margin-top: 2px" id="@item.Key">
-                                @item.Name.Truncate(75)
-                                @if (item.ChildrenCount > 0)
-                                {
-                                    <span>(@item.ChildrenCount)</span>
-                                }
+                                @item.Name.Truncate(100)
                             </span>
                         }
                         else
                         {
                             <span class="m-l-5" style="margin-top: 2px; color: darkgray" id="@item.Key">
-                                @item.Name.Truncate(75)
-                                @if (item.ChildrenCount > 0)
-                                {
-                                    <span>(@item.ChildrenCount)</span>
-                                }
+                                @item.Name.Truncate(100)
                             </span>
                         }
                     </td>
