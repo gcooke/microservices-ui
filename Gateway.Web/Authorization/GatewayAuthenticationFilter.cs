@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using System.Web.Mvc.Filters;
 using Bagl.Cib.MSF.ClientAPI.Provider;
 using CommonServiceLocator;
+using Unity;
 
 namespace Gateway.Web.Authorization
 {
@@ -17,7 +18,8 @@ namespace Gateway.Web.Authorization
                 return;
             }
 
-            var authenticationProvider = ServiceLocator.Current.GetInstance<IAuthenticationProvider>();
+            var container = (IUnityContainer)context.HttpContext.Items["container"];
+            var authenticationProvider = container.Resolve<IAuthenticationProvider>();
 
             if (authenticationProvider == null)
             {
@@ -29,11 +31,25 @@ namespace Gateway.Web.Authorization
             var requestCookie = context.HttpContext.Request.Cookies["SIGMA_AUTH"];
             if (string.IsNullOrWhiteSpace(requestCookie?.Value))
             {
+                var impersonationProvider = container.Resolve<IImpersonationProvider>();
+
+                if (impersonationProvider == null)
+                {
+                    Log(context, "Unable to find instance of IImpersonationProvider.");
+                    throw new ArgumentNullException("IImpersonationProvider");
+                }
+
                 var message = "Trying to get token for user " + context.HttpContext.User.Identity.Name;
                 Log(context, message);
 
-                authenticationProvider.Authenticate();
-                var token = authenticationProvider.GetToken();
+
+                var tokenTask = impersonationProvider.GetToken(context.HttpContext.User.Identity.Name);
+                if (!tokenTask.Wait(TimeSpan.FromSeconds(30)))
+                {
+                    throw new Exception("Unable to get impersonation token from gateway");
+                }
+                var token = tokenTask.Result.Replace(@"""","");
+                authenticationProvider.SetToken(token);
                 var expiry = DateTime.Now.AddHours(5);
 
                 if (string.IsNullOrEmpty(token))

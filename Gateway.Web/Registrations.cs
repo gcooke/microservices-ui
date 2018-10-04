@@ -36,6 +36,8 @@ namespace Gateway.Web
             information.RegisterType<IBasicRestService, BasicRestService>(Scope.Singleton);
             information.RegisterType<IRoleService, RoleService>(Scope.Singleton);
             information.RegisterType<IAuthenticationProvider, AuthenticationProvider>(Scope.ContainerSingleton);
+            information.RegisterType<IImpersonationProvider, ImpersonationProvider>(Scope.ContainerSingleton);
+
             information.RegisterType<IDateTimeProvider, DateTimeProvider>(Scope.Singleton);
             information.RegisterType<IRoleService, RoleService>(Scope.Singleton);
             information.RegisterType<IFileService, FileService>(Scope.Singleton);
