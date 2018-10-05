@@ -26,45 +26,19 @@ namespace Gateway.Web
     {
         public static void Register(ISystemInformation information)
         {
-            SetupLogging(information);
+            // Setup Logging
+            information.LoggingInformation.LogPath = information.GetSetting("LogLocation");
+            information.LoggingInformation.FileLogLevel.SetLogLevel(information.GetSetting("ConsoleLogLevel"));
+            information.LoggingInformation.FileLogLevel.SetLogLevel(information.GetSetting("FileLogLevel"));
+            information.LoggingInformation.ImportantLogLevel.SetLogLevel(information.GetSetting("ImportantLogLevel"));
             information.RegisterType<ILogFileService, LogFileService>(Scope.Singleton);
             information.RegisterType<ILoggingService, DefaultLoggingService>(Scope.Singleton);
-            information.RegisterType<IGatewayDatabaseService, GatewayDatabaseService>(Scope.Singleton);
-            information.RegisterType<IGatewayService, GatewayService>(Scope.Singleton);
-            information.RegisterType<IRestService, RestService>(Scope.Singleton);
-            information.RegisterType<IGatewayRestService, GatewayRestService>(Scope.Singleton);
-            information.RegisterType<IBasicRestService, BasicRestService>(Scope.Singleton);
-            information.RegisterType<IRoleService, RoleService>(Scope.Singleton);
-            information.RegisterType<IAuthenticationProvider, AuthenticationProvider>(Scope.ContainerSingleton);
-            information.RegisterType<IImpersonationProvider, ImpersonationProvider>(Scope.ContainerSingleton);
-
-            information.RegisterType<IDateTimeProvider, DateTimeProvider>(Scope.Singleton);
-            information.RegisterType<IRoleService, RoleService>(Scope.Singleton);
-            information.RegisterType<IFileService, FileService>(Scope.Singleton);
-            information.RegisterType<IDifferentialArchiveService, DifferentialArchiveService>(Scope.Singleton);
-            information.RegisterType<IDifferentialDownloadService, DifferentialDownloadService>(Scope.Singleton);
-            information.RegisterType<IDateTimeProvider, DateTimeProvider>(Scope.Singleton);
-            information.RegisterType<IRiskReportMonitoringService, RiskReportMonitoringService>(Scope.Singleton);
-            information.RegisterType<IGateway, Bagl.Cib.MSF.ClientAPI.Gateway.Gateway>(Scope.Singleton);
-            information.RegisterType<ISimpleRestService, SimpleRestService>(Scope.Singleton);
             information.RegisterType<ILogsService, LogsService>(Scope.Singleton);
-            information.RegisterType<IRedisConnectionProvider, RedisConnectionProvider>(Scope.Singleton);
-            information.RegisterType<IActiveDirectoryService, ActiveDirectoryService>(Scope.Singleton);
-            information.RegisterType<IServerDiagnosticsService, ServerDiagnosticsService>(Scope.Singleton);
-            information.RegisterType<IBatchConfigService, BatchConfigService>(Scope.Singleton);
-            information.RegisterType<IScheduleDataService, ScheduleDataService>(Scope.Singleton);
-            information.RegisterType<IRedstoneWebRequestScheduler, RedstoneWebRequestScheduler>(Scope.Singleton);
-            information.RegisterType<IBatchConfigDataService, BatchConfigDataService>(Scope.Singleton);
-            information.RegisterType<IScheduleService<ScheduleBatchModel>, RedstoneBatchScheduleService>(Scope.Singleton);
-            information.RegisterType<IScheduleService<ScheduleWebRequestModel>, RedstoneRequestScheduleService>(Scope.Singleton);
-            information.RegisterType<IScheduleGroupService, ScheduleGroupService>(Scope.Singleton);
-            information.RegisterType<IRequestConfigurationService, RequestConfigurationService>(Scope.Singleton);
-            information.RegisterType<IParentRequestDetailProvider, ParentRequestDetailProvider>(Scope.Singleton);
-            RegisterRedisOptions(information);
-        }
 
-        private static void RegisterRedisOptions(ISystemInformation information)
-        {
+
+            //Register Redis 
+            information.RegisterType<IRedisConnectionProvider, RedisConnectionProvider>(Scope.Singleton);
+
             var redisOptions = new ConfigurationOptions()
             {
                 ClientName = AppDomain.CurrentDomain.FriendlyName,
@@ -82,14 +56,44 @@ namespace Gateway.Web
             };
 
             information.RegisterInstance(options, Scope.Singleton);
+
+
+            information.RegisterType<IGatewayDatabaseService, GatewayDatabaseService>(Scope.Singleton);            
+            information.RegisterType<IDateTimeProvider, DateTimeProvider>(Scope.Singleton);
+            information.RegisterType<IFileService, FileService>(Scope.Singleton);
+            information.RegisterType<IDifferentialArchiveService, DifferentialArchiveService>(Scope.Singleton);
+            information.RegisterType<IDifferentialDownloadService, DifferentialDownloadService>(Scope.Singleton);
+            information.RegisterType<IDateTimeProvider, DateTimeProvider>(Scope.Singleton);         
+            
+            information.RegisterType<IActiveDirectoryService, ActiveDirectoryService>(Scope.Singleton);
+            information.RegisterType<IBatchConfigService, BatchConfigService>(Scope.Singleton);
+            information.RegisterType<IScheduleDataService, ScheduleDataService>(Scope.Singleton);
+            information.RegisterType<IRedstoneWebRequestScheduler, RedstoneWebRequestScheduler>(Scope.Singleton);
+            information.RegisterType<IBatchConfigDataService, BatchConfigDataService>(Scope.Singleton);
+            information.RegisterType<IScheduleService<ScheduleBatchModel>, RedstoneBatchScheduleService>(Scope.Singleton);
+            information.RegisterType<IScheduleService<ScheduleWebRequestModel>, RedstoneRequestScheduleService>(Scope.Singleton);
+            information.RegisterType<IScheduleGroupService, ScheduleGroupService>(Scope.Singleton);
+            information.RegisterType<IRequestConfigurationService, RequestConfigurationService>(Scope.Singleton);
+
+            //Reset Services Registrations
+            information.RegisterType<IRestService, RestService>(Scope.ContainerSingleton);
+            information.RegisterType<IRoleService, RoleService>(Scope.ContainerSingleton);
+            information.RegisterType<IRiskReportMonitoringService, RiskReportMonitoringService>(Scope.ContainerSingleton);
+            information.RegisterType<IGateway, Bagl.Cib.MSF.ClientAPI.Gateway.Gateway>(Scope.ContainerSingleton);
+            information.RegisterType<ISimpleRestService, SimpleRestService>(Scope.ContainerSingleton);
+            information.RegisterType<IParentRequestDetailProvider, ParentRequestDetailProvider>(Scope.ContainerSingleton);
+            information.RegisterType<IAuthenticationProvider, AuthenticationProvider>(Scope.ContainerSingleton);
+            information.RegisterType<IImpersonationProvider, ImpersonationProvider>(Scope.ContainerSingleton);
+            information.RegisterType<IGatewayService, GatewayService>(Scope.ContainerSingleton);
+            information.RegisterType<IBasicRestService, BasicRestService>(Scope.ContainerSingleton);
+            information.RegisterType<IGatewayRestService, GatewayRestService>(Scope.ContainerSingleton);
+            information.RegisterType<IServerDiagnosticsService, ServerDiagnosticsService>(Scope.ContainerSingleton);
         }
+
 
         private static void SetupLogging(ISystemInformation information)
         {
-            information.LoggingInformation.LogPath = information.GetSetting("LogLocation");
-            information.LoggingInformation.FileLogLevel.SetLogLevel(information.GetSetting("ConsoleLogLevel"));
-            information.LoggingInformation.FileLogLevel.SetLogLevel(information.GetSetting("FileLogLevel"));
-            information.LoggingInformation.ImportantLogLevel.SetLogLevel(information.GetSetting("ImportantLogLevel"));
+
         }
 
         private static void SetLogLevel(this LogLevel value, string logLevel)
