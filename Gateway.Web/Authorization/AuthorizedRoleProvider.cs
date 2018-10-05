@@ -1,8 +1,11 @@
 ﻿using System.Linq;
+using System.Web;
 using System.Web.Security;
 using Bagl.Cib.MIT.Logging;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
+using Bagl.Cib.MSF.ClientAPI.Provider;
 using CommonServiceLocator;
+using Unity;
 
 namespace Gateway.Web.Authorization
 {
@@ -18,7 +21,9 @@ namespace Gateway.Web.Authorization
 
         public override bool IsUserInRole(string username, string roleName)
         {
-            var roleService = ServiceLocator.Current.GetInstance<IRoleService>();
+            var container = (IUnityContainer)HttpContext.Current.Items["container"];
+            var roleService = container.Resolve<IRoleService>();
+
             var userDetail = roleService.GetUserDetail(username);
             if (userDetail != null)
             {
@@ -29,7 +34,8 @@ namespace Gateway.Web.Authorization
 
         public override string[] GetRolesForUser(string username)
         {
-            var roleService = ServiceLocator.Current.GetInstance<IRoleService>();
+            var container = (IUnityContainer)HttpContext.Current.Items["container"];
+            var roleService = container.Resolve<IRoleService>();
             var userDetail = roleService.GetUserDetail(username);
             if (userDetail != null)
             {
