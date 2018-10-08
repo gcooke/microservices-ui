@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Web;
 using System.Web.Security;
 using Bagl.Cib.MIT.Logging;
@@ -24,7 +25,13 @@ namespace Gateway.Web.Authorization
             var container = (IUnityContainer)HttpContext.Current.Items["container"];
             var roleService = container.Resolve<IRoleService>();
 
+            var authprovider = container.Resolve<IAuthenticationProvider>();
+            var currenttoken = authprovider.GetToken();
+            _logger.Info($"Checking Right for user : {username} against role {roleName} using Token {currenttoken}");
             var userDetail = roleService.GetUserDetail(username);
+            _logger.Info($"Roles Returned : {String.Join(",",userDetail.Roles.Select(e => e.Name))}");
+            _logger.Info($"Sites Returned : {String.Join(",", userDetail.Sites)}");
+
             if (userDetail != null)
             {
                 return userDetail.HasRole(roleName);
@@ -36,7 +43,18 @@ namespace Gateway.Web.Authorization
         {
             var container = (IUnityContainer)HttpContext.Current.Items["container"];
             var roleService = container.Resolve<IRoleService>();
+
+            var authprovider = container.Resolve<IAuthenticationProvider>();
+            var currenttoken = authprovider.GetToken();
+            _logger.Info($"Checking Right for user : {username} using Token {currenttoken}");
+
+
             var userDetail = roleService.GetUserDetail(username);
+
+            _logger.Info($"Roles Returned : {String.Join(",", userDetail?.Roles.Select(e => e.Name))}");
+            _logger.Info($"Sites Returned : {String.Join(",", userDetail?.Sites)}");
+
+
             if (userDetail != null)
             {
                 return userDetail.Roles

@@ -67,7 +67,8 @@ namespace Gateway.Web
                 SqlServerConnectionString = schedulingConnectionString
             });
 
-
+            var locator = new UnityServiceLocator(_container);
+            ServiceLocator.SetLocatorProvider(() => locator);
         }
 
         protected void Application_BeginRequest(object sender, EventArgs e)
@@ -76,9 +77,6 @@ namespace Gateway.Web
             HttpContext.Current.Items["container"] = childContainer;
             var resolver = new UnityDependencyResolver(childContainer);
             DependencyResolver.SetResolver(resolver);
-
-            var locator = new UnityServiceLocator(_container);
-            ServiceLocator.SetLocatorProvider(() => locator);
         }
 
         protected void Application_EndRequest(object sender, EventArgs e)
