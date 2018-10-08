@@ -9,7 +9,6 @@ using Bagl.Cib.MIT.Redis;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
 using Bagl.Cib.MSF.ClientAPI.Provider;
 using Gateway.Web.Database;
-using Gateway.Web.Models.Schedule;
 using Gateway.Web.Models.Schedule.Input;
 using Gateway.Web.Services;
 using Gateway.Web.Services.Batches;
