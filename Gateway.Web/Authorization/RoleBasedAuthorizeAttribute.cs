@@ -16,6 +16,9 @@ namespace Gateway.Web.Authorization
             {
                 // The user is not in any of the listed roles => 
                 // show the unauthorized view
+
+
+
                 filterContext.Result = new RedirectResult("~/Error/Unauthorized");
             }
             else

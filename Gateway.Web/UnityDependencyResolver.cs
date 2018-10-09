@@ -6,6 +6,7 @@ using Unity;
 namespace Gateway.Web
 {
     public class UnityDependencyResolver : IDependencyResolver
+
     {
         private readonly IUnityContainer _container;
 

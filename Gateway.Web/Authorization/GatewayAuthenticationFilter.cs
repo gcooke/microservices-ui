@@ -2,6 +2,7 @@
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Filters;
+using Absa.Cib.JwtAuthentication;
 using Bagl.Cib.MSF.ClientAPI.Provider;
 using CommonServiceLocator;
 using Unity;
@@ -31,22 +32,22 @@ namespace Gateway.Web.Authorization
             var requestCookie = context.HttpContext.Request.Cookies["SIGMA_AUTH"];
             if (string.IsNullOrWhiteSpace(requestCookie?.Value))
             {
-                var impersonationProvider = container.Resolve<IImpersonationProvider>();
+                var jwtClaimsService = container.Resolve<IJwtClaimsService>();
 
-                if (impersonationProvider == null)
+                if (jwtClaimsService == null)
                 {
-                    Log(context, "Unable to find instance of IImpersonationProvider.");
-                    throw new ArgumentNullException("IImpersonationProvider");
+                    Log(context, "Unable to find instance of IJwtClaimsService.");
+                    throw new ArgumentNullException("IJwtClaimsService");
                 }
 
                 var message = "Trying to get token for user " + context.HttpContext.User.Identity.Name;
                 Log(context, message);
 
 
-                var tokenTask = impersonationProvider.GetToken(context.HttpContext.User.Identity.Name);
+                var tokenTask = jwtClaimsService.GetClaimsToken(context.HttpContext.User.Identity.Name);
                 if (!tokenTask.Wait(TimeSpan.FromSeconds(30)))
                 {
-                    throw new Exception("Unable to get impersonation token from gateway");
+                    throw new Exception("Unable to get token from data services.");
                 }
                 var token = tokenTask.Result.Replace(@"""","");
                 authenticationProvider.SetToken(token);

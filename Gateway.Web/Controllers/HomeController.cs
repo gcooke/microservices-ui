@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Bagl.Cib.MIT.IoC;
 using Bagl.Cib.MIT.Logging;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
 using Gateway.Web.Authorization;
@@ -24,7 +25,8 @@ namespace Gateway.Web.Controllers
         public HomeController(IGatewayDatabaseService dataService,
             IServerDiagnosticsService serverDiagnosticsService,
             ILoggingService loggingService,
-            IGatewayRestService gateway )
+            IGatewayRestService gateway
+            )
             : base(loggingService)
         {
             _dataService = dataService;
