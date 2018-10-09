@@ -133,7 +133,7 @@ namespace Gateway.Web.Database
                 for (var index = 0; index < list.Count - 1; index++)
                 {
                     // Only mark results as discard if there is a later run of the same name
-                    if (list[index].Resource != list[index + 1].Resource) continue;
+                    if (list[index].BatchName != list[index + 1].BatchName) continue;
                     list[index].Text = "Results discarded";
                     list[index].State = StateItemState.Unknown;
                     list[index + 1].IsRerun = true;
@@ -313,6 +313,8 @@ namespace Gateway.Web.Database
         public DateTime Date { get; private set; }
 
         public string Resource { get; private set; }
+
+        public string BatchName => $"{Site}-{Name}";
 
         public string Version { get; private set; }
 
