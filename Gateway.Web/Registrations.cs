@@ -18,6 +18,8 @@ using Gateway.Web.Services.Monitoring.RiskReports;
 using Gateway.Web.Services.Monitoring.ServerDiagnostics;
 using Gateway.Web.Services.Schedule;
 using Gateway.Web.Services.Schedule.Interfaces;
+using System.Web.Mvc;
+using Gateway.Web.Controllers;
 
 namespace Gateway.Web
 {
@@ -25,6 +27,28 @@ namespace Gateway.Web
     {
         public static void Register(ISystemInformation information)
         {
+            //Controller Registrations
+            information.RegisterType<AddInController>(Scope.ContainerSingleton);
+            information.RegisterType<BaseController>(Scope.ContainerSingleton);
+            information.RegisterType<BatchController>(Scope.ContainerSingleton);
+            information.RegisterType<BatchScheduleController>(Scope.ContainerSingleton);
+            information.RegisterType<ControllerController>(Scope.ContainerSingleton);
+            information.RegisterType<ControllersController>(Scope.ContainerSingleton);
+            information.RegisterType<DownloadsController>(Scope.ContainerSingleton);
+            information.RegisterType<GroupController>(Scope.ContainerSingleton);
+            information.RegisterType<HomeController>(Scope.ContainerSingleton);
+            information.RegisterType<MarketDataController>(Scope.ContainerSingleton);
+            information.RegisterType<MonitoringController>(Scope.ContainerSingleton);
+            information.RegisterType<PermissionController>(Scope.ContainerSingleton);
+            information.RegisterType<ReleaseProcessController>(Scope.ContainerSingleton);
+            information.RegisterType<RequestController>(Scope.ContainerSingleton);
+            information.RegisterType<RequestScheduleController>(Scope.ContainerSingleton);
+            information.RegisterType<ScheduleController>(Scope.ContainerSingleton);
+            information.RegisterType<SecurityController>(Scope.ContainerSingleton);
+            information.RegisterType<ServerResourceController>(Scope.ContainerSingleton);
+            information.RegisterType<UserController>(Scope.ContainerSingleton);
+            information.RegisterType<UtilsController>(Scope.ContainerSingleton);
+
             // Setup Logging
             information.LoggingInformation.LogPath = information.GetSetting("LogLocation");
             information.LoggingInformation.FileLogLevel.SetLogLevel(information.GetSetting("ConsoleLogLevel"));
@@ -73,6 +97,7 @@ namespace Gateway.Web
             information.RegisterType<IScheduleService<ScheduleWebRequestModel>, RedstoneRequestScheduleService>(Scope.Singleton);
             information.RegisterType<IScheduleGroupService, ScheduleGroupService>(Scope.Singleton);
             information.RegisterType<IRequestConfigurationService, RequestConfigurationService>(Scope.Singleton);
+            information.RegisterType<IHttpClientProvider, HttpClientProvider>(Scope.Singleton);
 
             //Reset Services Registrations
             information.RegisterType<IRestService, RestService>(Scope.ContainerSingleton);
@@ -87,6 +112,12 @@ namespace Gateway.Web
             information.RegisterType<IBasicRestService, BasicRestService>(Scope.ContainerSingleton);
             information.RegisterType<IGatewayRestService, GatewayRestService>(Scope.ContainerSingleton);
             information.RegisterType<IServerDiagnosticsService, ServerDiagnosticsService>(Scope.ContainerSingleton);
+
+
+            Absa.Cib.Authorization.Extensions.Registration.Register(information);
+            Absa.Cib.Authorization.Extensions.Registration.RegisterCertificates(information);
+            Absa.Cib.JwtAuthentication.Registrations.Register(information);
+            Absa.Cib.JwtAuthentication.Registrations.RegisterCertificates(information);
         }
 
 

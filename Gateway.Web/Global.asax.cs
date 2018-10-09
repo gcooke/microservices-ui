@@ -69,6 +69,7 @@ namespace Gateway.Web
 
             var locator = new UnityServiceLocator(_container);
             ServiceLocator.SetLocatorProvider(() => locator);
+            DependencyResolver.SetResolver(new UnityDependencyResolver(_container));
         }
 
         protected void Application_BeginRequest(object sender, EventArgs e)
