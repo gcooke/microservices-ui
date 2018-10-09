@@ -17,6 +17,7 @@ namespace Gateway.Web.Database
         public DateTime EndUtc { get; set; }
         public XElement Data { get; set; }
         public IDictionary<string, Tuple<int, int>> CalculationPricingRequestResults { get; set; }
+        public string Name { get; set; }
 
         public ExtendedBatchSummary()
         {

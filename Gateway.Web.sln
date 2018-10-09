@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27428.2037
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gateway.Web", "Gateway.Web\Gateway.Web.csproj", "{0320F0B5-EF96-4D8C-8F7E-32460EC5ED62}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configuration", "Configuration", "{E000579C-5A9C-4BC1-B161-E77D95113667}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gateway.Web.Tests", "Gateway.Web.Tests\Gateway.Web.Tests.csproj", "{089E91A5-ABEB-4DD6-B36F-1AAF8B4C5B4E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UAT", "UAT", "{855287C5-50EE-4B60-9EC7-475B8B3CE6D0}"
 EndProject
