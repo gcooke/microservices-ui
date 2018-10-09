@@ -7,7 +7,6 @@ using Absa.Cib.MIT.TaskScheduling.Models;
 using Bagl.Cib.MIT.Logging;
 using Gateway.Web.Database;
 using Gateway.Web.Enums;
-using Gateway.Web.Models.Schedule;
 using Gateway.Web.Models.Schedule.Input;
 using Gateway.Web.Services.Schedule.Models;
 using Gateway.Web.Services.Schedule.Utils;
