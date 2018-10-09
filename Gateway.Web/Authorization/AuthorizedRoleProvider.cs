@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Web;
 using System.Web.Security;
+using Absa.Cib.Authorization.Extensions;
 using Bagl.Cib.MIT.Logging;
-using Bagl.Cib.MSF.ClientAPI.Gateway;
 using Bagl.Cib.MSF.ClientAPI.Provider;
 using CommonServiceLocator;
 using Unity;
@@ -23,18 +23,20 @@ namespace Gateway.Web.Authorization
         public override bool IsUserInRole(string username, string roleName)
         {
             var container = (IUnityContainer)HttpContext.Current.Items["container"];
-            var roleService = container.Resolve<IRoleService>();
+            var authen = container.Resolve<IAuthenticationProvider>();
+            var currenttoken = authen.GetToken();
+            var auhtorize = container.Resolve<IAuthorizationProvider>();
+            var roles = auhtorize.GetClaims<string>(currenttoken, ClaimTypes.Role);
 
-            var authprovider = container.Resolve<IAuthenticationProvider>();
-            var currenttoken = authprovider.GetToken();
-            _logger.Info($"Checking Right for user : {username} against role {roleName} using Token {currenttoken}");
-            var userDetail = roleService.GetUserDetail(username);
-            _logger.Info($"Roles Returned : {String.Join(",",userDetail.Roles.Select(e => e.Name))}");
-            _logger.Info($"Sites Returned : {String.Join(",", userDetail.Sites)}");
-
-            if (userDetail != null)
+            if (roles != null)
             {
-                return userDetail.HasRole(roleName);
+                return roles.Where(e => e.Equals(roleName,StringComparison.InvariantCultureIgnoreCase)).Any();
+            }
+            else
+            {
+                _logger.Info($"Checking Right for user : {username} using Token {currenttoken}");
+                _logger.Info($"Roles in Token : {String.Join(",", roles)}");
+                _logger.Error($"User {username} is not in role {roleName}");
             }
             return false;
         }
@@ -42,28 +44,20 @@ namespace Gateway.Web.Authorization
         public override string[] GetRolesForUser(string username)
         {
             var container = (IUnityContainer)HttpContext.Current.Items["container"];
-            var roleService = container.Resolve<IRoleService>();
-
-            var authprovider = container.Resolve<IAuthenticationProvider>();
-            var currenttoken = authprovider.GetToken();
-            _logger.Info($"Checking Right for user : {username} using Token {currenttoken}");
-
-
-            var userDetail = roleService.GetUserDetail(username);
-
-            _logger.Info($"Roles Returned : {String.Join(",", userDetail?.Roles.Select(e => e.Name))}");
-            _logger.Info($"Sites Returned : {String.Join(",", userDetail?.Sites)}");
-
-
-            if (userDetail != null)
+            var authen = container.Resolve<IAuthenticationProvider>();
+            var currenttoken = authen.GetToken();
+            var auhtorize = container.Resolve<IAuthorizationProvider>();
+            var roles = auhtorize.GetClaims<string>(currenttoken, ClaimTypes.Role);
+            
+            if (roles != null)
             {
-                return userDetail.Roles
-                    .Where(r => r.SystemName == "Redstone Dashboard")
-                    .Select(r => r.Name).ToArray();
+                return roles.ToArray();
             }
             else
             {
-                _logger.ErrorFormat("User {0} does not have roles defined for Dashboard access.", username);
+                _logger.Info($"Checking Right for user : {username} using Token {currenttoken}");
+                _logger.Info($"Roles in Token : {String.Join(",", roles)}");
+                _logger.Error($"User {username} does not have roles defined for Dashboard access.");
             }
             return new string[] { };
         }
