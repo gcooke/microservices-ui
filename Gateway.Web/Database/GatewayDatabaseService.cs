@@ -544,6 +544,17 @@ namespace Gateway.Web.Database
 
                 foreach (var item in dbSummary)
                 {
+                    var resource = item.request.Resource;
+
+                    if (item.request.Controller.ToLower() != "riskbatch")
+                        continue;
+
+                    var scheduleId = long.Parse(resource.Split('/')[2]);
+                    var schedule = database.Schedules.SingleOrDefault(x => x.ScheduleId == scheduleId);
+
+                    if (schedule == null)
+                        continue;
+
                     var pricingRequests = database.Requests
                         .Join(responses, r => r.CorrelationId, rs => rs.CorrelationId,
                             (rq, rs) => new { request = rq, response = rs })
@@ -569,6 +580,7 @@ namespace Gateway.Web.Database
 
                     var summary = item.batch.ToModel(item.request, item.response);
                     summary.CalculationPricingRequestResults = pricingResults;
+                    summary.Name = schedule.RiskBatchConfiguration?.Type;
                     results.Add(summary);
                 }
                 return results;
