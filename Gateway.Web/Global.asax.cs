@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Diagnostics;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
@@ -8,6 +9,7 @@ using Absa.Cib.MIT.TaskScheduling.Client;
 using Absa.Cib.MIT.TaskScheduling.Models;
 using Bagl.Cib.MIT.IoC;
 using Bagl.Cib.MIT.IoC.Models;
+using Bagl.Cib.MIT.IoC.Service;
 using Bagl.Cib.MIT.Logging;
 using CommonServiceLocator;
 using Gateway.Web.Authorization;
@@ -36,6 +38,8 @@ namespace Gateway.Web
             ControllerIcon = "~/content/img/controller." + Environment + ".png";
             SiteLogo = "~/Content/img/Redstone." + Environment + ".png";
 
+
+
             AreaRegistration.RegisterAllAreas();
 
             // Add handle error attribute and authorize attribute to entire site.
@@ -51,8 +55,17 @@ namespace Gateway.Web
 
             BundleTable.EnableOptimizations = true;
             _container = new UnityContainer();
-            var information = new SystemInformation("Redstone.UI", Environment, SessionKeyType.Application,
-                new string[0], _container);            
+            var information = new SystemInformation("Redstone.UI", Environment, SessionKeyType.Application, new string[0], _container);
+
+            //if (Debugger.IsAttached)
+            //{
+            //    var localconfigfile = @"C:\Temp\GlobalConfiguration.xml";
+            //    information.AddSetting("CentralConfigurationFile", localconfigfile);
+            //    Console.WriteLine("Using CentralConfigurationFile " + localconfigfile);
+            //}
+
+            CentralConfigurationService.ApplyCentralConfiguration(information);
+
             Registrations.Register(information);
             _container.Resolve<ILoggingService>().Initialize(information.LoggingInformation);
             

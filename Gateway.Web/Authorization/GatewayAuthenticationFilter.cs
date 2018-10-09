@@ -43,31 +43,42 @@ namespace Gateway.Web.Authorization
                 var message = "Trying to get token for user " + context.HttpContext.User.Identity.Name;
                 Log(context, message);
 
-
-                var tokenTask = jwtClaimsService.GetClaimsToken(context.HttpContext.User.Identity.Name);
-                if (!tokenTask.Wait(TimeSpan.FromSeconds(30)))
+                try
                 {
-                    throw new Exception("Unable to get token from data services.");
-                }
-                var token = tokenTask.Result.Replace(@"""","");
-                authenticationProvider.SetToken(token);
-                var expiry = DateTime.Now.AddHours(5);
+                    var tokenTask = jwtClaimsService.GetClaimsToken(context.HttpContext.User.Identity.Name);
+                    tokenTask.Wait();
 
-                if (string.IsNullOrEmpty(token))
-                {
-                    message = "Token generation failed. Please see logs";
-                    Log(context, message);
-                    token = "INVALID";
-                    expiry = DateTime.Now.AddMinutes(5);
-                }
-                else
-                {
-                    message = "Token generated: " + (token.Length > 50 ? token.Substring(0, 50) : token) + "...";
-                    Log(context, message);
-                }
 
-                var httpCookie = new HttpCookie("SIGMA_AUTH", token) { Expires = expiry };
-                context.HttpContext.Response.Cookies.Add(httpCookie);
+
+
+                    if (!tokenTask.Wait(TimeSpan.FromSeconds(30)))
+                    {
+                        throw new Exception("Unable to get token from data services.");
+                    }
+                    var token = tokenTask.Result.Replace(@"""", "");
+                    authenticationProvider.SetToken(token);
+                    var expiry = DateTime.Now.AddHours(5);
+
+                    if (string.IsNullOrEmpty(token))
+                    {
+                        message = "Token generation failed. Please see logs";
+                        Log(context, message);
+                        token = "INVALID";
+                        expiry = DateTime.Now.AddMinutes(5);
+                    }
+                    else
+                    {
+                        message = "Token generated: " + (token.Length > 50 ? token.Substring(0, 50) : token) + "...";
+                        Log(context, message);
+                    }
+
+                    var httpCookie = new HttpCookie("SIGMA_AUTH", token) { Expires = expiry };
+                    context.HttpContext.Response.Cookies.Add(httpCookie);
+                }
+                catch (Exception ex)
+                {
+                    ex.ToString();
+                }
             }
 
             if (requestCookie != null && requestCookie.Value != "INVALID")
