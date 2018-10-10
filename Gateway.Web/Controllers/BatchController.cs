@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Bagl.Cib.MIT.Logging;
 using Gateway.Web.Enums;
 using Gateway.Web.Models.Batches;
 using Gateway.Web.Services.Batches.Interfaces;
@@ -10,11 +11,13 @@ using Gateway.Web.Services.Batches.Interfaces;
 namespace Gateway.Web.Controllers
 {
     [RoutePrefix("Batch")]
-    public class BatchController : Controller
+    public class BatchController : BaseController
     {
         private readonly IBatchConfigService _riskBatchConfigService;
 
-        public BatchController(IBatchConfigService riskBatchConfigService)
+        public BatchController(IBatchConfigService riskBatchConfigService, 
+            ILoggingService loggingService)
+           :base(loggingService)
         {
             _riskBatchConfigService = riskBatchConfigService;
         }

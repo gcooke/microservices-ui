@@ -5,50 +5,50 @@ VisualStudioVersion = 15.0.27428.2037
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gateway.Web", "Gateway.Web\Gateway.Web.csproj", "{0320F0B5-EF96-4D8C-8F7E-32460EC5ED62}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configuration", "Configuration", "{E000579C-5A9C-4BC1-B161-E77D95113667}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UAT", "UAT", "{855287C5-50EE-4B60-9EC7-475B8B3CE6D0}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PROD", "PROD", "{000A16F4-8E10-428B-A634-55CCE0253F31}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gateway.Web.Tests", "Gateway.Web.Tests\Gateway.Web.Tests.csproj", "{089E91A5-ABEB-4DD6-B36F-1AAF8B4C5B4E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DEV", "DEV", "{1A5D72C6-0A4A-4B8A-B337-6CBB3B0176C4}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configuration", "Configuration", "{BE7972A3-D1EB-48FB-BE0B-66A26F445DD7}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "intra", "intra", "{C8ADB20F-F851-4CC5-ACB7-2CC569AAEDE0}"
-	ProjectSection(SolutionItems) = preProject
-		Configuration\DEV\intra\appsettings.config = Configuration\DEV\intra\appsettings.config
-		Configuration\DEV\intra\connectionstrings.config = Configuration\DEV\intra\connectionstrings.config
-	EndProjectSection
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DEV", "DEV", "{251FEC39-43E1-42BB-A23A-72E787F8720C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "corp", "corp", "{1F90B9BF-462D-441E-BDD4-8DB091898D07}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UAT", "UAT", "{B8D4D991-2B65-4C0B-BBEE-CFA63589F045}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PROD", "PROD", "{3577F3A9-5F37-4EE1-AAFD-F63F8AA7696D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "corp", "corp", "{85FCAA17-A265-4AE1-8510-6E8A01E16FBF}"
 	ProjectSection(SolutionItems) = preProject
 		Configuration\DEV\corp\appsettings.config = Configuration\DEV\corp\appsettings.config
 		Configuration\DEV\corp\connectionstrings.config = Configuration\DEV\corp\connectionstrings.config
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "intra", "intra", "{19F1B882-F815-4770-84FD-2063C22B24D0}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "intra", "intra", "{345F3105-33A3-41C0-86E9-4AECD25B35E5}"
 	ProjectSection(SolutionItems) = preProject
-		Configuration\PROD\intra\appsettings.config = Configuration\PROD\intra\appsettings.config
-		Configuration\PROD\intra\connectionstrings.config = Configuration\PROD\intra\connectionstrings.config
+		Configuration\DEV\intra\appsettings.config = Configuration\DEV\intra\appsettings.config
+		Configuration\DEV\intra\connectionstrings.config = Configuration\DEV\intra\connectionstrings.config
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "corp", "corp", "{6469DB15-43A6-47FE-9BD6-F52E4184FD6A}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "corp", "corp", "{3127FE4F-FEE2-4D56-8477-A63B97C8ABB6}"
 	ProjectSection(SolutionItems) = preProject
 		Configuration\PROD\corp\appsettings.config = Configuration\PROD\corp\appsettings.config
 		Configuration\PROD\corp\connectionstrings.config = Configuration\PROD\corp\connectionstrings.config
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "intra", "intra", "{5DF0883C-324D-4606-9EB3-D568BC5EFF56}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "intra", "intra", "{F3C9DAB6-6A74-4A19-BDAA-338CF40FB2D6}"
 	ProjectSection(SolutionItems) = preProject
-		Configuration\UAT\intra\appsettings.config = Configuration\UAT\intra\appsettings.config
-		Configuration\UAT\intra\connectionstrings.config = Configuration\UAT\intra\connectionstrings.config
+		Configuration\PROD\intra\appsettings.config = Configuration\PROD\intra\appsettings.config
+		Configuration\PROD\intra\connectionstrings.config = Configuration\PROD\intra\connectionstrings.config
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "corp", "corp", "{CD803DBB-2967-4030-8E0B-F1FF031AAF7F}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "corp", "corp", "{6B70E333-D08A-4DED-8455-7A137B5FB69A}"
 	ProjectSection(SolutionItems) = preProject
 		Configuration\UAT\corp\appsettings.config = Configuration\UAT\corp\appsettings.config
 		Configuration\UAT\corp\connectionstrings.config = Configuration\UAT\corp\connectionstrings.config
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "intra", "intra", "{42133ABA-4241-4060-A235-FDD864384FDE}"
+	ProjectSection(SolutionItems) = preProject
+		Configuration\UAT\intra\appsettings.config = Configuration\UAT\intra\appsettings.config
+		Configuration\UAT\intra\connectionstrings.config = Configuration\UAT\intra\connectionstrings.config
 	EndProjectSection
 EndProject
 Global
@@ -70,15 +70,15 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{855287C5-50EE-4B60-9EC7-475B8B3CE6D0} = {E000579C-5A9C-4BC1-B161-E77D95113667}
-		{000A16F4-8E10-428B-A634-55CCE0253F31} = {E000579C-5A9C-4BC1-B161-E77D95113667}
-		{1A5D72C6-0A4A-4B8A-B337-6CBB3B0176C4} = {E000579C-5A9C-4BC1-B161-E77D95113667}
-		{C8ADB20F-F851-4CC5-ACB7-2CC569AAEDE0} = {1A5D72C6-0A4A-4B8A-B337-6CBB3B0176C4}
-		{1F90B9BF-462D-441E-BDD4-8DB091898D07} = {1A5D72C6-0A4A-4B8A-B337-6CBB3B0176C4}
-		{19F1B882-F815-4770-84FD-2063C22B24D0} = {000A16F4-8E10-428B-A634-55CCE0253F31}
-		{6469DB15-43A6-47FE-9BD6-F52E4184FD6A} = {000A16F4-8E10-428B-A634-55CCE0253F31}
-		{5DF0883C-324D-4606-9EB3-D568BC5EFF56} = {855287C5-50EE-4B60-9EC7-475B8B3CE6D0}
-		{CD803DBB-2967-4030-8E0B-F1FF031AAF7F} = {855287C5-50EE-4B60-9EC7-475B8B3CE6D0}
+		{251FEC39-43E1-42BB-A23A-72E787F8720C} = {BE7972A3-D1EB-48FB-BE0B-66A26F445DD7}
+		{B8D4D991-2B65-4C0B-BBEE-CFA63589F045} = {BE7972A3-D1EB-48FB-BE0B-66A26F445DD7}
+		{3577F3A9-5F37-4EE1-AAFD-F63F8AA7696D} = {BE7972A3-D1EB-48FB-BE0B-66A26F445DD7}
+		{85FCAA17-A265-4AE1-8510-6E8A01E16FBF} = {251FEC39-43E1-42BB-A23A-72E787F8720C}
+		{345F3105-33A3-41C0-86E9-4AECD25B35E5} = {251FEC39-43E1-42BB-A23A-72E787F8720C}
+		{3127FE4F-FEE2-4D56-8477-A63B97C8ABB6} = {3577F3A9-5F37-4EE1-AAFD-F63F8AA7696D}
+		{F3C9DAB6-6A74-4A19-BDAA-338CF40FB2D6} = {3577F3A9-5F37-4EE1-AAFD-F63F8AA7696D}
+		{6B70E333-D08A-4DED-8455-7A137B5FB69A} = {B8D4D991-2B65-4C0B-BBEE-CFA63589F045}
+		{42133ABA-4241-4060-A235-FDD864384FDE} = {B8D4D991-2B65-4C0B-BBEE-CFA63589F045}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35

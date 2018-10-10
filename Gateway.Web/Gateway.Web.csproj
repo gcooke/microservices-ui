@@ -49,11 +49,11 @@
     <Reference Include="Absa.Cib.Authorization.Extensions, Version=1.0.55.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Absa.Cib.Authorization.Extensions.1.0.55\lib\net452\Absa.Cib.Authorization.Extensions.dll</HintPath>
     </Reference>
-    <Reference Include="Absa.Cib.Caching, Version=1.1.301.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Absa.Cib.JwtAuthentication.1.1.301\lib\net452\Absa.Cib.Caching.dll</HintPath>
+    <Reference Include="Absa.Cib.Caching, Version=1.1.305.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Absa.Cib.JwtAuthentication.1.1.305\lib\net452\Absa.Cib.Caching.dll</HintPath>
     </Reference>
-    <Reference Include="Absa.Cib.JwtAuthentication, Version=1.1.301.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Absa.Cib.JwtAuthentication.1.1.301\lib\net452\Absa.Cib.JwtAuthentication.dll</HintPath>
+    <Reference Include="Absa.Cib.JwtAuthentication, Version=1.1.305.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Absa.Cib.JwtAuthentication.1.1.305\lib\net452\Absa.Cib.JwtAuthentication.dll</HintPath>
     </Reference>
     <Reference Include="Absa.Cib.MIT.Redis.IoC, Version=1.0.28.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Bagl.Cib.MIT.Redis.IoC.1.0.28\lib\net452\Absa.Cib.MIT.Redis.IoC.dll</HintPath>
@@ -86,11 +86,11 @@
     <Reference Include="Bagl.Cib.MIT.StatePublisher, Version=1.0.28.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Bagl.Cib.MIT.StatePublisher.1.0.28\lib\net452\Bagl.Cib.MIT.StatePublisher.dll</HintPath>
     </Reference>
-    <Reference Include="Bagl.Cib.MSF.ClientAPI, Version=1.1.301.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Bagl.Cib.MSF.ClientAPI.1.1.301\lib\net452\Bagl.Cib.MSF.ClientAPI.dll</HintPath>
+    <Reference Include="Bagl.Cib.MSF.ClientAPI, Version=1.1.305.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bagl.Cib.MSF.ClientAPI.1.1.305\lib\net452\Bagl.Cib.MSF.ClientAPI.dll</HintPath>
     </Reference>
-    <Reference Include="Bagl.Cib.MSF.Contracts, Version=1.1.301.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Bagl.Cib.MSF.ClientAPI.1.1.301\lib\net452\Bagl.Cib.MSF.Contracts.dll</HintPath>
+    <Reference Include="Bagl.Cib.MSF.Contracts, Version=1.1.305.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bagl.Cib.MSF.ClientAPI.1.1.305\lib\net452\Bagl.Cib.MSF.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="CommonServiceLocator, Version=2.0.4.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
       <HintPath>..\packages\Unity.5.8.11\lib\net46\CommonServiceLocator.dll</HintPath>

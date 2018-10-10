@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Bagl.Cib.MIT.Logging;
 using Bagl.Cib.MIT.Redis;
 using Gateway.Web.Database;
 using Controller = System.Web.Mvc.Controller;
@@ -10,11 +11,13 @@ using Controller = System.Web.Mvc.Controller;
 namespace Gateway.Web.Controllers
 {
     [RoutePrefix("ServerResource")]
-    public class ServerResourceController : Controller
+    public class ServerResourceController : BaseController
     {
         private readonly IGatewayDatabaseService _databaseService;
 
-        public ServerResourceController(IGatewayDatabaseService databaseService)
+        public ServerResourceController(IGatewayDatabaseService databaseService,
+            ILoggingService loggingService)
+            :base(loggingService)
         {
             _databaseService = databaseService;
         }

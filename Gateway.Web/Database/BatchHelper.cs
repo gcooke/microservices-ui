@@ -111,9 +111,6 @@ namespace Gateway.Web.Database
             var result = new Dictionary<string, List<RiskBatchResult>>();
             if (results != null)
             {
-                var defaultBatchName = "Counterparty";
-                var defaultQuotesName = "Quotes";
-
                 foreach (var row in results)
                 {
                     // Determine site
@@ -123,7 +120,7 @@ namespace Gateway.Web.Database
                     if (site == null) site = resource;
 
                     var target = GetOrAdd(result, site, reportDate);
-                    target.Update(row, site, defaultBatchName, defaultQuotesName);
+                    target.Update(row, site);
                     target.UpdateErrors(row, errorData);
                 }
             }
@@ -136,7 +133,7 @@ namespace Gateway.Web.Database
                 for (var index = 0; index < list.Count - 1; index++)
                 {
                     // Only mark results as discard if there is a later run of the same name
-                    if (list[index].Resource != list[index + 1].Resource) continue;
+                    if (list[index].BatchName != list[index + 1].BatchName) continue;
                     list[index].Text = "Results discarded";
                     list[index].State = StateItemState.Unknown;
                     list[index + 1].IsRerun = true;
@@ -190,7 +187,6 @@ namespace Gateway.Web.Database
 
         private List<BatchSummary> GetBatchSummaries(DateTime valuationDate)
         {
-            _gateway.SetGatewayUrlForService("managementinterface", "Official", "http://localhost:7001/");
             var response = _gateway.Get("managementinterface", $"batch/{valuationDate:yyyy-MM-dd}/summary",
                 CancellationToken.None);
 
@@ -258,7 +254,7 @@ namespace Gateway.Web.Database
             }
         }
 
-        public void Update(ExtendedBatchSummary row, string site, string defaultBatchName, string defaultQuotesName)
+        public void Update(ExtendedBatchSummary row, string site)
         {
             CorrelationId = row.CorrelationId;
             Started = row.StartUtc.ToLocalTime();
@@ -282,45 +278,7 @@ namespace Gateway.Web.Database
                 State = StateItemState.Error;
             }
 
-            // Determine name
-            if (Resource != site) // i.e. sub-calc
-            {
-                var siteBoundedByHyphens =
-                    Resource.IndexOf("-" + site + "-", StringComparison.CurrentCultureIgnoreCase);
-                var isNewFormatBatch =
-                    Resource.IndexOf("runriskbatch/", StringComparison.CurrentCultureIgnoreCase) >= 0;
-                if (siteBoundedByHyphens >= 0)
-                {
-                    // [Type]-[Site]-[Date:yyyy-MM-dd]
-                    var displayName = Resource.Substring(0, Resource.IndexOf("-"));
-                    if (displayName.ToUpper() == "QUOTES")
-                        Name = defaultQuotesName;
-                    else
-                        Name = displayName.ToPascalCase(true, CultureInfo.CurrentUICulture);
-                }
-                else if (isNewFormatBatch)
-                {
-                    var startIndex = Resource.IndexOf("/batch/", StringComparison.CurrentCultureIgnoreCase);
-                    var endIndex = Resource.IndexOf("/date", StringComparison.CurrentCultureIgnoreCase);
-                    Name = Resource.Substring(startIndex + 7, endIndex - startIndex - 7).Replace("_", " ");
-                }
-                else
-                {
-                    Name = defaultBatchName;
-                }
-            }
-            else
-            {
-                Name = Resource;
-            }
-
-            if (Name.StartsWith(site, StringComparison.CurrentCultureIgnoreCase))
-                Name = Name.Substring(site.Length);
-            site = site.Replace("_", " ");
-            if (Name.StartsWith(site, StringComparison.CurrentCultureIgnoreCase))
-                Name = Name.Substring(site.Length);
-
-            Name = Name.MaxLength(30);
+            Name = row.Name.MaxLength(30);
 
             //Time = string.Format("{0:ddd HH:mm}-{1:ddd HH:mm}", Started, Completed);
             Time = string.Format("{0:ddd HH:mm}", Completed);
@@ -355,6 +313,8 @@ namespace Gateway.Web.Database
         public DateTime Date { get; private set; }
 
         public string Resource { get; private set; }
+
+        public string BatchName => $"{Site}-{Name}";
 
         public string Version { get; private set; }
 
