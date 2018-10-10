@@ -33,7 +33,6 @@ namespace Gateway.Web.Services
             var config = new RedisContainerConfiguration()
             {
                 Namespace = string.Empty,
-                AutoRetry = false
             };
 
             return new RedisList(loggingService, _provider, config);
@@ -309,8 +308,7 @@ namespace Gateway.Web.Services
             _connectionProvider = connectionProvider;
             _configuration = configuration;
 
-            _database = configuration.OverrideDatabase != -1 ? _configuration.OverrideDatabase
-                : _connectionProvider.Options.RedisOptions.DefaultDatabase ?? -1;
+            _database = 0;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

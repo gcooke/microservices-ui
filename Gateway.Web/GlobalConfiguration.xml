@@ -1,0 +1,79 @@
+<Configuration>
+	<Common>
+		<add key="DatabaseServer">
+			<environment key="PROD" value="JHBPSM05031V05A\MOPL_MAIN1_PROD"/>
+			<environment key="UAT" value="JHBDCM05010V05A\HSCE_UAT"/>
+			<environment key="DEV" value="JHBDCM05011V05A\HSCE_DEV"/>
+		</add>
+		<add key="GatewayDatabase" value="Gateway" />
+		<add key="PnRFODatabase" value="PnRFO" />
+		<add key="SndTradeDbDatabase" value="SndTradeDB" />
+		<add key="SigmaDatabase" value="Sigma" />
+		<add key="EntityFrameworkConnectionFormat" value="metadata=res://*/%EntityName%.csdl|res://*/%EntityName%.ssdl|res://*/%EntityName%.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=%DatabaseServer%;initial catalog=%Database%;integrated security=True;MultipleActiveResultSets=True;App=EntityFramework&quot;"></add>		
+		<add key="RedisConnection">
+			<environment key="PROD" value="JHBPSM020001294:6379" />
+			<environment key="UAT" value="ZADRNBRAPP1085.corp.dsarena.com" />
+			<environment key="DEV" value="ZADRNBRAPP1086.corp.dsarena.com:6379" />
+		</add>
+		 <add key="TradeFeedRedisConnection">
+			<environment key="PROD" value="JHBPSM020001301:6379" />
+			<environment key="UAT" value="JHBPSM020001295.6379" />
+			<environment key="DEV" value="localhost:6379" />
+		</add>
+		<add key="TokenIssuer">
+			<environment key="PROD" value="https://abcap-foutils.intra.absa.co.za/" />
+			<environment key="UAT" value="https://abcap-foutils-uat.intra.absa.co.za/" />
+			<environment key="DEV" value="https://sigma-dev.intra.absa.co.za/" />
+		</add>
+		<add key="RedstoneBaseUrl">
+			<environment key="PROD" value="https://abcap-foutils.intra.absa.co.za:7010/" />
+			<environment key="UAT" value="https://abcap-foutils-uat.intra.absa.co.za:7010/" />
+			<environment key="DEV" value="https://sigma-dev.intra.absa.co.za:7010/" />
+		</add>
+		<add key="MEServer" value="MEPDN.JHB" />
+		<add key="FaRoAServers">
+			<environment key="PROD" value="22.38.28.48:9102" />
+			<environment key="UAT" value="22.38.28.48:9102" />
+			<environment key="DEV" value="22.38.28.48:9102" />
+		</add>
+		<add key="FaSAServers">
+			<environment key="PROD" value="10.110.92.132:9102,10.110.92.133:9102" />
+			<environment key="UAT" value="10.110.92.132:9102,10.110.92.133:9102" />
+			<environment key="DEV" value="10.110.92.132:9102,10.110.92.133:9102" />
+		</add>
+        <add key="HadoopServers">
+			<environment key="PROD" value="http://jhbpsr020000142.intranet.barcapint.com:50070/;http://jhbpsr020000143.intranet.barcapint.com:50070/;http://jhbpsr020000144.intranet.barcapint.com:50070/" />
+			<environment key="UAT" value="http://jhbpsr020000063.intranet.barcapint.com:50070/;http://jhbpsr020000064.intranet.barcapint.com:50070/;http://jhbpsr020000065.intranet.barcapint.com:50070/" />
+			<environment key="DEV" value="http://jhbdsr020000016.intranet.barcapint.com:50070/;http://jhbdsr020000017.intranet.barcapint.com:50070/;http://jhbdsr020000018.intranet.barcapint.com:50070/" />
+		</add>
+		<add key="FaRoAUsername" value="SDF_AF_GEN_WRITE"/>
+		<add key="FaSAUsername" value="SDF_WRITE_PRD"/>
+		<add key="LimitsFileLocationSA" value="\\risksecureftp\LimitService\{0}\limits.csv" />
+		<add key="LimitsFileLocationRoA" value="\\CZADBCC2APP0001\FA_Africa\Redstone\Limits\All Limits.{0}.csv" />
+		<add key="FrontCacheSaWebSvc" value="net.tcp://jhbpsm02561n01.intranet.barcapint.com/FrontCacheService.svc" />
+		<add key="PaPHostSA">
+			<environment key="PROD" value="http://jhbpsm020000890:8090/AMBAProxy/default"/>
+			<environment key="UAT" value="http://jhbpsm020000757:8901/AMBAProxy/default"/>
+			<environment key="DEV" value="http://jhbpsm020000757:8901/AMBAProxy/default"/>
+		</add>
+		<add key="PaPHostRoA">		
+			<environment key="PROD" value="http://jhbpsm020000889:8090/AMBAProxy/default"/>
+			<environment key="UAT" value="http://jhbpsm020000758:8901/AMBAProxy/default"/>
+			<environment key="DEV" value="http://jhbpsm020000757:8901/AMBAProxy/default"/>
+		</add>
+		<add key="LibraAgreementService">
+			<environment key="PROD" value="baseUrl=https://digitalsg.intra.absa.co.za:9697/;systemAccount=corp/SVC-sigma-libra-prod;password=5C8z23aYLmrT;apiId=9c3d7dbf-0615-4a26-8dae-4396c1b98624" />
+			<environment key="UAT" value="baseUrl=https://digitalsg-uat.barcapint.com:9697/;systemAccount=corp/SVC-sigma-libra-uat;password=FVl7ER11w2ll;apiId=254cec71-7cd9-471c-be89-e14ad9131dee" />
+			<environment key="DEV" value="baseUrl=https://digitalsg-uat.barcapint.com:9697/;systemAccount=corp/SVC-sigma-libra-uat;password=FVl7ER11w2ll;apiId=254cec71-7cd9-471c-be89-e14ad9131dee" />
+		</add>
+	</Common>
+	<Applications>
+		<Application name="TradeFeed">
+			<add key="FrontCacheQueue">
+				<environment key="PROD" value="host=JBMWFARM01-LIVE.intranet.barcapint.com;port=1421;channel=PNRJB.CLIENTS.00;queueManager=MQFJBL01;queueName=PRV.FRONTCACHETRADEFEED.PNR.LIVE.JB.00;securityExit=BCPKIJCExit_70R(SECSEND)"/>
+				<environment key="UAT" value="host=JBMWFARM01-UAT.intranet.barcapint.com;port=1431;channel=PNRJB.CLIENTS.00;queueManager=MQFJBT01;queueName=PRV.FRONTCACHETRADEFEED.PNR.T01.JB.00;securityExit=BCPKIJCExit_70R(SECSEND)"/>
+				<environment key="DEV" value="host=JBMWFARM01-DEV.intranet.barcapint.com;port=1421;channel=PNRJB.CLIENTS.UN;queueManager=MQFJBD01;queueName=PRV.FRONTCACHETRADEFEED.PNR.D01.JB.00"/>
+			</add>			
+		</Application>
+	</Applications>
+</Configuration>
