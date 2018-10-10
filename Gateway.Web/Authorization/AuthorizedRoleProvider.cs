@@ -25,6 +25,13 @@ namespace Gateway.Web.Authorization
             var container = (IUnityContainer)HttpContext.Current.Items["container"];
             var authen = container.Resolve<IAuthenticationProvider>();
             var currenttoken = authen.GetToken();
+            if (string.IsNullOrEmpty(currenttoken))
+            {
+                _logger.Info($"No Token Found IsUserInRole for {username}");
+                return false;
+            }
+               
+
             var auhtorize = container.Resolve<IAuthorizationProvider>();
             var roles = auhtorize.GetClaims<string>(currenttoken, ClaimTypes.Role);
 
@@ -46,6 +53,13 @@ namespace Gateway.Web.Authorization
             var container = (IUnityContainer)HttpContext.Current.Items["container"];
             var authen = container.Resolve<IAuthenticationProvider>();
             var currenttoken = authen.GetToken();
+
+            if (string.IsNullOrEmpty(currenttoken))
+            {
+                _logger.Info($"No Token Found GetRolesForUser for {username}");
+                return new string[] { };
+            }
+
             var auhtorize = container.Resolve<IAuthorizationProvider>();
             var roles = auhtorize.GetClaims<string>(currenttoken, ClaimTypes.Role);
             
