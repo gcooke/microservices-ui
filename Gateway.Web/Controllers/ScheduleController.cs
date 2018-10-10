@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using Bagl.Cib.MIT.Logging;
 using Gateway.Web.Models.Schedule;
 using Gateway.Web.Models.Schedule.Input;
 using Gateway.Web.Models.Schedule.Output;
@@ -13,7 +14,7 @@ using Newtonsoft.Json;
 namespace Gateway.Web.Controllers
 {
     [RoutePrefix("Schedule")]
-    public class ScheduleController : Controller
+    public class ScheduleController : BaseController
     {
         private readonly IBatchConfigDataService _batchConfigDataService;
         private readonly IScheduleDataService _scheduleDataService;
@@ -25,7 +26,8 @@ namespace Gateway.Web.Controllers
             IBatchConfigDataService batchConfigDataService,
             IScheduleService<ScheduleBatchModel> scheduleBatchService,
             IScheduleService<ScheduleWebRequestModel> scheduleWebRequestService,
-            IScheduleGroupService scheduleGroupService)
+            IScheduleGroupService scheduleGroupService, ILoggingService loggingService)
+            :base(loggingService)
         {
             _scheduleDataService = scheduleDataService;
             _batchConfigDataService = batchConfigDataService;
