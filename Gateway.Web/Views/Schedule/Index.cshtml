@@ -32,7 +32,7 @@
                     <div class="form-group">
                         @Html.Label("Search")
                         <div class="input-group">
-                            @Html.HiddenFor(x => x.BusinessDate)
+                            @Html.Hidden("BusinessDate", Model.BusinessDate.ToString("yyyy-MM-dd"))
                             @Html.TextBoxFor(m => m.SearchTerm, new {@name = "searchTerm", @class = "form-control", @placeholder = "Search for batch...", @style = "margin-top: 0 !important"})
                             <span class="input-group-btn">
                                 <button class="btn btn-default" type="submit" style="margin: 0 !important">

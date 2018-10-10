@@ -106,10 +106,13 @@ namespace Gateway.Web.Services.Schedule
                         .GetNextOccurrences(startDate, endDate)
                         .ToList();
 
-                    if (occurrences.Any())
+                    if (!occurrences.Any())
                     {
-                        groupModel.NextOccurrence = occurrences.First();
+                        groupModels.Remove(groupModel);
+                        continue;
                     }
+
+                    groupModel.NextOccurrence = occurrences.First();
 
                     foreach (var schedule in rootChildren)
                     {
