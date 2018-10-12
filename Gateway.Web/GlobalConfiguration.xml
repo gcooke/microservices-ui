@@ -17,8 +17,8 @@
 		</add>
 		 <add key="TradeFeedRedisConnection">
 			<environment key="PROD" value="JHBPSM020001301:6379" />
-			<environment key="UAT" value="JHBPSM020001295.6379" />
-			<environment key="DEV" value="localhost:6379" />
+			<environment key="UAT" value="JHBPSM020001301:6379" />
+			<environment key="DEV" value="JHBPSM020001301:6379" />
 		</add>
 		<add key="TokenIssuer">
 			<environment key="PROD" value="https://abcap-foutils.intra.absa.co.za/" />
