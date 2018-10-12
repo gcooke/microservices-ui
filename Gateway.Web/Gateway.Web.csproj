@@ -675,6 +675,7 @@
     <Content Include="Content\img\Redstone.DEV.png" />
     <Content Include="Content\img\Redstone.PROD.png" />
     <Content Include="Content\img\Redstone.UAT.png" />
+    <Content Include="Content\img\rerun.png" />
     <Content Include="Content\js\bootstrap-datepaginator.min.js" />
     <Content Include="Content\js\bootstrap-datepicker.js" />
     <Content Include="Content\js\bootstrap-quick-search.js" />

@@ -97,7 +97,6 @@ namespace Gateway.Web.Database
                 item.Items.Clear();
                 foreach (var nonOverwrittenResult in nonOverwrittenResults)
                 {
-                    nonOverwrittenResult.IsRerun = false;
                     item.Items.Add(nonOverwrittenResult);
                 }
             }
@@ -147,9 +146,9 @@ namespace Gateway.Web.Database
         {
             public int Compare(RiskBatchResult x, RiskBatchResult y)
             {
-                if (x.Resource != y.Resource)
+                if (x.BatchName != y.BatchName)
                 {
-                    return x.Resource.CompareTo(y.Resource);
+                    return x.BatchName.CompareTo(y.BatchName);
                 }
 
                 return x.Started.CompareTo(y.Started);
@@ -258,7 +257,7 @@ namespace Gateway.Web.Database
         {
             CorrelationId = row.CorrelationId;
             Started = row.StartUtc.ToLocalTime();
-            TimeTakenMs = (int) (row.EndUtc - row.StartUtc).TotalMilliseconds;
+            TimeTakenMs = (int)(row.EndUtc - row.StartUtc).TotalMilliseconds;
             Completed = Started.AddMilliseconds(TimeTakenMs);
             Resource = row.Resource;
             Version = row.ControllerVersion;
@@ -280,10 +279,41 @@ namespace Gateway.Web.Database
 
             Name = row.Name.MaxLength(30);
 
+            Trades = row.Trades;
+            PricingRequests = row.PricingRequests;
+            MarketDataRequests = row.MarketDataRequests;
+            RiskDataRequests = row.RiskDataRequests;
+
             //Time = string.Format("{0:ddd HH:mm}-{1:ddd HH:mm}", Started, Completed);
             Time = string.Format("{0:ddd HH:mm}", Completed);
             Duration = string.Format("{0}", FormatTimeTaken());
+
+
+            if (State != StateItemState.Okay) return;
+            
+            // Some additional rules that affect batch results
+            if (Trades <= 0)
+            {
+                Text = "No Trades";
+                State = StateItemState.Warn;
+                return;
+            }
+
+            if (PricingRequests <= 0)
+            {
+                Text = "No Pricing Requests";
+                State = StateItemState.Warn;
+                return;
+            }
+
+            if (RiskDataRequests < PricingRequests)
+            {
+                Text = "Not enough risk data calls";
+                State = StateItemState.Warn;
+                return;
+            }
         }
+        
 
         public void UpdateErrors(ExtendedBatchSummary row, List<BatchSummary> errorData)
         {
@@ -341,6 +371,11 @@ namespace Gateway.Web.Database
         public bool IsRerun { get; set; }
 
         public string Duration { get; set; }
+
+        public long? Trades { get; set; }
+        public long? PricingRequests { get; set; }
+        public long? MarketDataRequests { get; set; }
+        public long? RiskDataRequests { get; set; }
 
         private string FormatTimeTaken()
         {
