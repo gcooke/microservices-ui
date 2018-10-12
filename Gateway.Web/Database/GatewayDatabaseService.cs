@@ -555,12 +555,17 @@ namespace Gateway.Web.Database
                     if (schedule == null)
                         continue;
 
-                    var pricingRequests = database.Requests
-                        .Join(responses, r => r.CorrelationId, rs => rs.CorrelationId,
-                            (rq, rs) => new { request = rq, response = rs })
-                        .Where(x => x.request.ParentCorrelationId == item.request.CorrelationId)
-                        .Where(x => x.request.Controller.ToLower() == "pricing")
-                        .Select(x => new { x.request.CorrelationId, x.request.Resource, x.response.ResultCode });
+                    // Get all children
+                    var children = GetChildRequests(database, item.request.CorrelationId);
+                    ChildRequest[] pricingRequests, marketDataRequests, riskDataRequests, tradeStoreRequests;
+                    if (!children.TryGetValue("pricing", out pricingRequests))
+                        pricingRequests = new ChildRequest[0];
+                    if (!children.TryGetValue("marketdata", out marketDataRequests))
+                        marketDataRequests = new ChildRequest[0];
+                    if (!children.TryGetValue("riskdata", out riskDataRequests))
+                        riskDataRequests = new ChildRequest[0];
+                    if (!children.TryGetValue("tradestore", out tradeStoreRequests))
+                        tradeStoreRequests = new ChildRequest[0];
 
                     var pricingResults = new Dictionary<string, Tuple<int, int>>();
                     foreach (var pricingRequest in pricingRequests)
@@ -581,10 +586,28 @@ namespace Gateway.Web.Database
                     var summary = item.batch.ToModel(item.request, item.response);
                     summary.CalculationPricingRequestResults = pricingResults;
                     summary.Name = schedule.RiskBatchConfiguration?.Type;
+
+                    summary.Trades = tradeStoreRequests.Sum(r => r.Size);
+                    summary.PricingRequests = pricingRequests.Length;
+                    summary.MarketDataRequests = marketDataRequests.Length;
+                    summary.RiskDataRequests = riskDataRequests.Length;
+
                     results.Add(summary);
                 }
                 return results;
             }
+        }
+
+        private Dictionary<string, ChildRequest[]> GetChildRequests(GatewayEntities database, Guid correlationId)
+        {
+            return database.Requests
+                .Join(database.Responses, r => r.CorrelationId, rs => rs.CorrelationId,
+                    (rq, rs) => new { request = rq, response = rs })
+                .Where(x => x.request.ParentCorrelationId == correlationId)
+                .ToArray()
+                .Select(x => new ChildRequest(x.request.CorrelationId, x.request.Controller, x.request.Resource, x.response.ResultCode, x.response.Size))
+                .GroupBy(c => c.Controller)
+                .ToDictionary(g => g.Key, g => g.ToArray());
         }
 
         public ResourceConfigModel GetConfiguredServers()
@@ -594,11 +617,11 @@ namespace Gateway.Web.Database
                 ResourceConfigModel model = new ResourceConfigModel();
 
 
-                model.Configs =  database.Servers.Select(s => new ItemResourceConfig
+                model.Configs = database.Servers.Select(s => new ItemResourceConfig
                 {
-                    Name = s.Name ,
-                    DisplayName = s.Name + "/" +  s.Domain,
-                    AllowableResources = s.ServerExternalResources.Select(ser=>new ExternalResourceConfig
+                    Name = s.Name,
+                    DisplayName = s.Name + "/" + s.Domain,
+                    AllowableResources = s.ServerExternalResources.Select(ser => new ExternalResourceConfig
                     {
                         Name = ser.ExternalResource.Name,
                         Type = ser.ExternalResource.Type
@@ -760,6 +783,24 @@ namespace Gateway.Web.Database
 
             var lastIndex = resource.LastIndexOf('-');
             return resource.Substring(lastIndex + 1).Trim();
+        }
+    }
+
+    internal class ChildRequest
+    {
+        public Guid CorrelationId { get; }
+        public string Resource { get; }
+        public string Controller { get; }
+        public int ResultCode { get; }
+        public int? Size { get; }
+
+        public ChildRequest(Guid correlationId, string controller, string resource, int resultCode, int? size)
+        {
+            CorrelationId = correlationId;
+            Controller = controller;
+            Resource = resource;
+            ResultCode = resultCode;
+            Size = size;
         }
     }
 

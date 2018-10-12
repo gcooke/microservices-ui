@@ -22,72 +22,97 @@
             <div>
                 <table class="datatable table report-table" id="searchable-table" style="width: 100%; white-space: nowrap">
                     <thead>
-                    <tr>
-                        <td class="table-header" style="width: 40px;"></td>
-                        <td class="table-header" style="width: 440px;">Batch</td>
-                        <td class="table-header" style="width: 180px;">Time Taken</td>
-                        <td class="table-header" style="width: 140px;">Errors</td>
-                        <td class="table-header" style="width: 140px;">Status</td>
-                    </tr>
+                        <tr>
+                            <td class="table-header" style="width: 40px;"></td>
+                            <td class="table-header" style="width: 280px;">Batch</td>
+                            <td class="table-header" style="width: 140px;">Time Taken</td>
+                            <td class="table-header" style="width: 50px;">Trades</td>
+                            <td class="table-header" style="width: 50px;">Market Data</td>
+                            <td class="table-header" style="width: 50px;">Pricing</td>
+                            <td class="table-header" style="width: 50px;">Risk Data</td>
+                            <td class="table-header" style="width: 140px;">Errors</td>
+                            <td class="table-header" style="width: 140px;">Status</td>
+                        </tr>
                     </thead>
                     <tbody>
-                    @foreach (var group in Model.Items)
-                    {
-                        <tr class="report-table-summary-row">
-                            <td><a class="monitoring-report-trigger" data-group-trigger="@group.Name.Replace(" ","-")">[+]</a></td>
-                            <td colspan="3">@group.Name</td>
-                            <td><span class="state_okay">@group.CompleteRuns<span>/</span>@group.TotalRuns <span>Complete</span></span></td>
-                        </tr>
-
-                        foreach (var item in group.Items)
+                        @foreach (var group in Model.Items)
                         {
-                            <tr class="report-table-detail-row report-table-detail-row-hidden @group.Name.Replace(" ","-")">
-                                <td></td>
+                            <tr class="report-table-summary-row">
+                                <td><a class="monitoring-report-trigger" data-group-trigger="@group.Name.Replace(" ","-")">[+]</a></td>
+                                <td colspan="7">@group.Name</td>
                                 <td>
-                                    @if (!string.IsNullOrEmpty(item.Link))
+                                    @if (group.CompleteRuns == 0 && group.TotalRuns > 0)
                                     {
-                                        <a href="@Url.Content((string) item.Link)">
-                                            @item.Name
-                                        </a>
+                                        <span class="state_fail">@group.CompleteRuns<span>/</span>@group.TotalRuns <span>Complete</span></span>
+                                    }
+                                    else if (group.CompleteRuns < group.TotalRuns)
+                                    {
+                                        <span class="state_warn">@group.CompleteRuns<span>/</span>@group.TotalRuns <span>Complete</span></span>
                                     }
                                     else
                                     {
-                                        <div>
-                                            @item.Name
-                                        </div>
-                                    }
-                                </td>
-                                <td style="text-align: left; color: #C0C0C0; padding-left: 5px">@item.Time (@item.Duration)</td>
-                                <td>
-                                    @if (item.ErrorCount.HasValue && item.ErrorCount > 0)
-                                    {
-                                        <a href="~/Batch/@group.Name/@item.Name/@item.CorrelationId">@item.ErrorCount.Value Error(s)</a>
-                                    }
-                                    else
-                                    {
-                                        <span>No Errors</span>
-                                    }
-                                </td>
-                                <td>
-                                    @switch ((StateItemState)item.State)
-                                    {
-                                        case StateItemState.Unknown:
-                                            <div class="state_unknown">@item.Text</div>
-                                            break;
-                                        case StateItemState.Okay:
-                                            <div class="state_okay">@item.Text</div>
-                                            break;
-                                        case StateItemState.Warn:
-                                            <div class="state_warn">@item.Text</div>
-                                            break;
-                                        case StateItemState.Error:
-                                            <div class="state_fail">@item.Text</div>
-                                            break;
+                                        <span class="state_okay">@group.CompleteRuns<span>/</span>@group.TotalRuns <span>Complete</span></span>
                                     }
                                 </td>
                             </tr>
+
+                            foreach (var item in group.Items)
+                            {
+                                <tr class="report-table-detail-row report-table-detail-row-hidden @group.Name.Replace(" ","-")">
+                                    <td></td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(item.Link))
+                                        {
+                                            <a href="@Url.Content((string) item.Link)">
+                                                @item.Name
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <div>
+                                                @item.Name
+                                            </div>
+                                        }
+                                        @if (item.IsRerun)
+                                        {
+                                            <img src="../../Content/img/rerun.png" alt="rerun" />
+                                        }
+                                    </td>
+                                    <td style="text-align: left; color: #C0C0C0; padding-left: 5px">@item.Time (@item.Duration)</td>
+                                    <td style="text-align: center; padding-left: 5px">@item.Trades</td>
+                                    <td style="text-align: center; padding-left: 5px">@item.MarketDataRequests</td>
+                                    <td style="text-align: center; padding-left: 5px">@item.PricingRequests</td>
+                                    <td style="text-align: center; padding-left: 5px">@item.RiskDataRequests</td>
+                                    <td>
+                                        @if (item.ErrorCount.HasValue && item.ErrorCount > 0)
+                                        {
+                                            <a href="~/Batch/@group.Name/@item.Name/@item.CorrelationId">@item.ErrorCount.Value Error(s)</a>
+                                        }
+                                        else
+                                        {
+                                            <span>No Errors</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @switch ((StateItemState)item.State)
+                                        {
+                                            case StateItemState.Unknown:
+                                                <div class="state_unknown">@item.Text</div>
+                                                break;
+                                            case StateItemState.Okay:
+                                                <div class="state_okay">@item.Text</div>
+                                                break;
+                                            case StateItemState.Warn:
+                                                <div class="state_warn">@item.Text</div>
+                                                break;
+                                            case StateItemState.Error:
+                                                <div class="state_fail">@item.Text</div>
+                                                break;
+                                        }
+                                    </td>
+                                </tr>
+                            }
                         }
-                    }
                     </tbody>
                 </table>
             </div>

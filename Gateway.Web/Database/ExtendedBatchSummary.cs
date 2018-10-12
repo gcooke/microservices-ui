@@ -19,6 +19,11 @@ namespace Gateway.Web.Database
         public IDictionary<string, Tuple<int, int>> CalculationPricingRequestResults { get; set; }
         public string Name { get; set; }
 
+        public long? Trades { get; set; }
+        public long? PricingRequests { get; set; }
+        public long? MarketDataRequests { get; set; }
+        public long? RiskDataRequests { get; set; }
+
         public ExtendedBatchSummary()
         {
             this.CalculationPricingRequestResults = new Dictionary<string, Tuple<int, int>>();
