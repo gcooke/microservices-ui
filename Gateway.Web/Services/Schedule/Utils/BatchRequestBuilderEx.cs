@@ -4,6 +4,7 @@ using System.Linq;
 using Absa.Cib.MIT.TaskScheduling.Models;
 using Absa.Cib.MIT.TaskScheduling.Models.Builders.RedstoneRequest;
 using Absa.Cib.MIT.TaskScheduling.Models.Enum;
+using Absa.Cib.MIT.TaskScheduling.Server.Services.Executable;
 using Bagl.Cib.MSF.Contracts.Compression;
 using Newtonsoft.Json;
 using RestSharp;
@@ -67,6 +68,15 @@ namespace Gateway.Web.Services.Schedule.Utils
             }
 
             return webRequest;
+        }
+
+        public static ExecutableOptions ToExecutableOptions(this Database.Schedule schedule)
+        {
+            var executableOptions = new ExecutableOptions();
+            executableOptions.ScheduleId = schedule.ScheduleId;
+            executableOptions.PathToExe = schedule.ExecutableConfiguration?.ExecutablePath;
+            executableOptions.CommandLineArguments.Add(schedule.ExecutableConfiguration?.CommandLineArguments);
+            return executableOptions;
         }
 
         private static void AddChildRequest(RedstoneRequest parent, IList<Database.Schedule> children)

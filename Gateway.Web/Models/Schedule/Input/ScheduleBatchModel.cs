@@ -22,4 +22,20 @@ namespace Gateway.Web.Models.Schedule.Input
             ConfigurationIdList = new List<string>();
         }
     }
+
+    public class ScheduleExecutableModel : BaseScheduleModel
+    {
+        [Required]
+        [Display(Name = "Name")]
+        public string Name { get; set; }
+
+        [Required]
+        [Display(Name = "Path to Executable")]
+        public string PathToExe { get; set; }
+
+        [Display(Name = "Command Line Arguments")]
+        public string Arguments { get; set; }
+
+        public long? ExecutableConfigurationId { get; set; }
+    }
 }

@@ -46,6 +46,7 @@ namespace Gateway.Web.Database
         public virtual DbSet<RequestConfiguration> RequestConfigurations { get; set; }
         public virtual DbSet<Schedule> Schedules { get; set; }
         public virtual DbSet<RiskBatchConfiguration> RiskBatchConfigurations { get; set; }
+        public virtual DbSet<ExecutableConfiguration> ExecutableConfigurations { get; set; }
     
         public virtual ObjectResult<spGetRequestStats_Result> spGetRequestStats(Nullable<System.DateTime> start, string controller)
         {

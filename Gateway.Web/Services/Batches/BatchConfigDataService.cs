@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using Gateway.Web.Database;
 using Gateway.Web.Services.Batches.Interfaces;
@@ -33,6 +34,7 @@ namespace Gateway.Web.Services.Batches
             {
                 var items = db.Schedules
                     .Include("RiskBatchConfiguration")
+                    .Include("ExecutableConfiguration")
                     .Include("RequestConfiguration")
                     .Include("ParentSchedule")
                     .Include("Children")

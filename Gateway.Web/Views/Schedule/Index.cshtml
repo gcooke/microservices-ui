@@ -44,7 +44,7 @@
                 }
             </div>
         </div>
-        
+
         <div class="row">
             <div class="col-sm-12">
                 <div id="paginator" data-current-date="@Model.BusinessDate.ToString("yyyy-MM-dd")"></div>
@@ -64,7 +64,7 @@
                 {
                     foreach (var batch in Model.Groups.Groups)
                     {
-                        var url = @Url.Content("~/Schedule/Group/Rerun/"+@batch.GroupId+"/" + @Model.BusinessDate.ToString("yyyy-MM-dd") + "?searchTerm="+@Model.SearchTerm);
+                        var url = @Url.Content("~/Schedule/Group/Rerun/" + @batch.GroupId + "/" + @Model.BusinessDate.ToString("yyyy-MM-dd") + "?searchTerm=" + @Model.SearchTerm);
                         <div class="panel panel-primary" style="border-color: #990505">
                             <div class="panel-heading" style="background: #990505; border-color: #990505">
                                 @batch.FriendScheduledTime
@@ -83,6 +83,10 @@
                                                         @if (item.Type.ToLower() == "request")
                                                         {
                                                             <span class="label label-danger" style="padding: 2px !important;">@item.Type</span>
+                                                        }
+                                                        else if (item.Type.ToLower() == "executable")
+                                                        {
+                                                            <span class="label label-warning" style="padding: 2px !important;">@item.Type</span>
                                                         }
                                                         else
                                                         {

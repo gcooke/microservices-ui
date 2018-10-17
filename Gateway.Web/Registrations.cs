@@ -92,9 +92,11 @@ namespace Gateway.Web
             information.RegisterType<IBatchConfigService, BatchConfigService>(Scope.Singleton);
             information.RegisterType<IScheduleDataService, ScheduleDataService>(Scope.Singleton);
             information.RegisterType<IRedstoneWebRequestScheduler, RedstoneWebRequestScheduler>(Scope.Singleton);
+            information.RegisterType<IExecutableScheduler, ExecutableScheduler>(Scope.Singleton);
             information.RegisterType<IBatchConfigDataService, BatchConfigDataService>(Scope.Singleton);
             information.RegisterType<IScheduleService<ScheduleBatchModel>, RedstoneBatchScheduleService>(Scope.Singleton);
             information.RegisterType<IScheduleService<ScheduleWebRequestModel>, RedstoneRequestScheduleService>(Scope.Singleton);
+            information.RegisterType<IScheduleService<ScheduleExecutableModel>, ExecutableScheduleService>(Scope.Singleton);
             information.RegisterType<IScheduleGroupService, ScheduleGroupService>(Scope.Singleton);
             information.RegisterType<IRequestConfigurationService, RequestConfigurationService>(Scope.Singleton);
             information.RegisterType<IHttpClientProvider, HttpClientProvider>(Scope.Singleton);

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace Gateway.Web.Database
+﻿namespace Gateway.Web.Database
 {
     public partial class Schedule
     {
@@ -19,6 +14,11 @@ namespace Gateway.Web.Database
                 if (RequestConfiguration != null)
                 {
                     return $"{RequestConfiguration.Name}";
+                }
+
+                if (ExecutableConfiguration != null)
+                {
+                    return $"{ExecutableConfiguration.Name}";
                 }
 
                 return string.Empty;
@@ -39,6 +39,11 @@ namespace Gateway.Web.Database
                     return $"{RequestConfiguration.Name}";
                 }
 
+                if (ExecutableConfiguration != null)
+                {
+                    return $"{ExecutableConfiguration.Name}";
+                }
+
                 return string.Empty;
             }
         }
@@ -57,10 +62,13 @@ namespace Gateway.Web.Database
                     return "REQUEST";
                 }
 
+                if (ExecutableConfiguration != null)
+                {
+                    return "EXECUTABLE";
+                }
+
                 return string.Empty;
             }
         }
-
-        public bool IsUpdating => ScheduleId != 0;
     }
 }
