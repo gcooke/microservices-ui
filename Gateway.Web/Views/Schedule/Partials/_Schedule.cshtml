@@ -27,6 +27,10 @@
                         {
                             <span class="label label-danger" style="padding: 2px !important;">@item.Type</span>
                         }
+                        else if (item.Type.ToLower() == "executable")
+                        {
+                            <span class="label label-warning" style="padding: 2px !important;">@item.Type</span>
+                        }
                         else
                         {
                             <span class="label label-info" style="padding: 2px !important;">@item.Type</span>
@@ -64,6 +68,10 @@
                                         @if (item.IsBatch)
                                         {
                                             <a href="~/Schedule/Batch/@item.ScheduleId/Enable">Enable</a>
+                                        }
+                                        @if (item.IsExe)
+                                        {
+                                            <a href="~/Schedule/Executable/@item.ScheduleId/Enable">Enable</a>
                                         }
                                         else
                                         {

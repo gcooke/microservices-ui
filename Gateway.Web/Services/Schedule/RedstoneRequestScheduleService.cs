@@ -6,7 +6,6 @@ using Absa.Cib.MIT.TaskScheduling.Client.Scheduler;
 using Absa.Cib.MIT.TaskScheduling.Models;
 using Bagl.Cib.MIT.Logging;
 using Gateway.Web.Database;
-using Gateway.Web.Models.Schedule;
 using Gateway.Web.Models.Schedule.Input;
 using Gateway.Web.Services.Schedule.Models;
 using Gateway.Web.Services.Schedule.Utils;
@@ -14,12 +13,15 @@ using Newtonsoft.Json;
 
 namespace Gateway.Web.Services.Schedule
 {
-    public class RedstoneRequestScheduleService : BaseScheduleService<ScheduleWebRequestModel, RedstoneRequestParameters>
+    public class RedstoneRequestScheduleService : BaseScheduleService<ScheduleWebRequestModel, RedstoneRequestParameters, RedstoneRequest>
     {
+        private readonly IRedstoneWebRequestScheduler _scheduler;
+
         public RedstoneRequestScheduleService(IRedstoneWebRequestScheduler scheduler, 
             ILoggingService loggingService) : 
-            base(scheduler, loggingService)
+            base(loggingService)
         {
+            _scheduler = scheduler;
         }
 
         protected override RedstoneRequestParameters GetParameters(GatewayEntities db, ScheduleWebRequestModel model)
@@ -27,6 +29,11 @@ namespace Gateway.Web.Services.Schedule
             var parameters = new RedstoneRequestParameters();
             parameters.Populate(db, model);
             return parameters;
+        }
+
+        protected override void RemoveSchedule(string key)
+        {
+            _scheduler.RemoveScheduledWebRequest(key);
         }
 
         public override IList<Database.Schedule> Schedule(RedstoneRequestParameters parameters, GatewayEntities db, IList<ModelErrorCollection> errorCollection, IList<string> jobKeys)
@@ -93,9 +100,19 @@ namespace Gateway.Web.Services.Schedule
             return $"REQUEST={configuration.Name}";
         }
 
-        protected override RedstoneRequest GetRequest(Database.Schedule schedule, DateTime? businessDate = null)
+        protected override RedstoneRequest GetJob(Database.Schedule schedule, DateTime? businessDate = null)
         {
             return schedule.ToRequest(businessDate);
+        }
+
+        protected override void ScheduleTask(RedstoneRequest item, string key, string cron)
+        {
+            _scheduler.ScheduleWebRequest(item, key, cron);
+        }
+
+        protected override void ScheduleTaskAsync(RedstoneRequest item, string key, string cron)
+        {
+            _scheduler.ScheduleAsyncWebRequest(item, key, cron);
         }
 
         protected virtual void AssignSchedule(Database.Schedule entity, RedstoneRequestParameters parameters, RequestConfiguration configuration)

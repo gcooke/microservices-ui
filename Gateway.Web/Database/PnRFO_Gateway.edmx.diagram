@@ -27,6 +27,8 @@
         <AssociationConnector Association="GatewayModel.FK_ScheduledJob_Schedule" />
         <EntityTypeShape EntityType="GatewayModel.RiskBatchConfiguration" Width="1.5" PointX="7" PointY="7.75" />
         <AssociationConnector Association="GatewayModel.FK_Schedule_RiskBatchConfiguration" />
+        <EntityTypeShape EntityType="GatewayModel.ExecutableConfiguration" Width="1.5" PointX="8.2444439475631555" PointY="2.7287334961484806" />
+        <AssociationConnector Association="GatewayModel.FK_Schedule_ExecutableConfiguration" />
         </Diagram>
         <EntityTypeShape EntityType="GatewayModel.ControllerExternalResource" Width="1.5" PointX="13.625" PointY="3.25" />
         <EntityTypeShape EntityType="GatewayModel.ExternalResource" Width="1.5" PointX="11.375" PointY="3.875" />
