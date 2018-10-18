@@ -317,10 +317,8 @@ namespace Gateway.Web.Database
 
         public void UpdateErrors(ExtendedBatchSummary row, List<BatchSummary> errorData)
         {
-            var errors = errorData.Where(x =>
-                    x.LegalEntity.ToUpper().Contains(Site.ToUpper()) &&
-                    x.LegalEntity.ToUpper().Contains(Name.ToUpper()))
-                .ToList();
+            var batchName = $"{Site.ToUpper()} - {Name.ToUpper()}";
+            var errors = errorData.Where(x => x.LegalEntity.ToUpper() == batchName).ToList();
 
             if (!errors.Any())
             {
@@ -334,7 +332,7 @@ namespace Gateway.Web.Database
                 return;
             }
 
-            var error = errors.FirstOrDefault(x => x.LegalEntity.ToUpper() == $"{Site.ToUpper()}-{Name.ToUpper()}");
+            var error = errors.FirstOrDefault(x => x.LegalEntity.ToUpper() == batchName);
             ErrorCount = error?.TotalErrorCount;
         }
 
