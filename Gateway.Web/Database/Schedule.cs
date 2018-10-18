@@ -32,6 +32,7 @@ namespace Gateway.Web.Database
         public string FundingCurrency { get; set; }
         public string ReportingCurrency { get; set; }
         public Nullable<bool> IsEnabled { get; set; }
+        public Nullable<long> ExecutableConfigurationId { get; set; }
     
         public virtual RequestConfiguration RequestConfiguration { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -41,5 +42,6 @@ namespace Gateway.Web.Database
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ScheduledJob> ScheduledJobs { get; set; }
         public virtual RiskBatchConfiguration RiskBatchConfiguration { get; set; }
+        public virtual ExecutableConfiguration ExecutableConfiguration { get; set; }
     }
 }

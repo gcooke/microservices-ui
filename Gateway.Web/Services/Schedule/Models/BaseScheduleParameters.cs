@@ -40,6 +40,8 @@ namespace Gateway.Web.Services.Schedule.Models
                 var parentId = long.Parse(model.Parent);
                 Parent = db.Schedules
                     .Include("RiskBatchConfiguration")
+                    .Include("ExecutableConfiguration")
+                    .Include("ExecutableConfiguration")
                     .Include("RequestConfiguration")
                     .Include("ParentSchedule")
                     .Include("Children")

@@ -72,6 +72,15 @@
           <Property Name="Description" Type="varchar" MaxLength="500" />
           <Property Name="ExcludedServers" Type="nvarchar" MaxLength="1000" />
         </EntityType>
+        <EntityType Name="ExecutableConfiguration">
+          <Key>
+            <PropertyRef Name="ExecutableConfigurationId" />
+          </Key>
+          <Property Name="ExecutableConfigurationId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ExecutablePath" Type="varchar(max)" Nullable="false" />
+          <Property Name="CommandLineArguments" Type="varchar(max)" />
+          <Property Name="Name" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
         <EntityType Name="Link">
           <Key>
             <PropertyRef Name="Id" />
@@ -176,6 +185,7 @@
           <Property Name="Parent" Type="bigint" />
           <Property Name="RequestConfigurationId" Type="bigint" />
           <Property Name="RiskBatchConfigurationId" Type="bigint" />
+          <Property Name="ExecutableConfigurationId" Type="bigint" />
           <Property Name="TradeSource" Type="varchar(max)" />
           <Property Name="Site" Type="varchar" MaxLength="500" />
           <Property Name="FundingCurrency" Type="varchar" MaxLength="3" />
@@ -254,6 +264,18 @@
             </Principal>
             <Dependent Role="ControllerExternalResource">
               <PropertyRef Name="ExternalResourceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Schedule_ExecutableConfiguration">
+          <End Role="ExecutableConfiguration" Type="Self.ExecutableConfiguration" Multiplicity="0..1" />
+          <End Role="Schedule" Type="Self.Schedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ExecutableConfiguration">
+              <PropertyRef Name="ExecutableConfigurationId" />
+            </Principal>
+            <Dependent Role="Schedule">
+              <PropertyRef Name="ExecutableConfigurationId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -397,14 +419,14 @@
         <Function Name="spGetRequestChildSummary" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="correllationId" Type="uniqueidentifier" Mode="In" />
         </Function>
-        <Function Name="spGetRequestCounts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+        <Function Name="spGetJobCounts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Start" Type="datetime" Mode="In" />
         </Function>
-        <Function Name="spGetRequestStats" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+        <Function Name="spGetJobStats" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Start" Type="datetime" Mode="In" />
           <Parameter Name="Controller" Type="nvarchar" Mode="In" />
         </Function>
-        <Function Name="spGetRequestStatsAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+        <Function Name="spGetJobStatsAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Start" Type="datetime" Mode="In" />
         </Function>
         <Function Name="spGetResponseStatsAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
@@ -424,6 +446,7 @@
           <EntitySet Name="ServerExternalResource" EntityType="Self.ServerExternalResource" Schema="config" store:Type="Tables" />
           <EntitySet Name="BatchStats" EntityType="Self.BatchStats" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Controller" EntityType="Self.Controller" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ExecutableConfiguration" EntityType="Self.ExecutableConfiguration" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Link" EntityType="Self.Link" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Payload" EntityType="Self.Payload" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Request" EntityType="Self.Request" Schema="dbo" store:Type="Tables" />
@@ -444,6 +467,10 @@
           <AssociationSet Name="FK_ControllerExternalResource_ExternalResourceId" Association="Self.FK_ControllerExternalResource_ExternalResourceId">
             <End Role="ExternalResource" EntitySet="ExternalResource" />
             <End Role="ControllerExternalResource" EntitySet="ControllerExternalResource" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Schedule_ExecutableConfiguration" Association="Self.FK_Schedule_ExecutableConfiguration">
+            <End Role="ExecutableConfiguration" EntitySet="ExecutableConfiguration" />
+            <End Role="Schedule" EntitySet="Schedule" />
           </AssociationSet>
           <AssociationSet Name="FK_Schedule_RequestConfiguration" Association="Self.FK_Schedule_RequestConfiguration">
             <End Role="RequestConfiguration" EntitySet="RequestConfiguration" />
@@ -572,11 +599,11 @@
             <End Role="Controller" EntitySet="Controllers" />
             <End Role="Version" EntitySet="Versions" />
           </AssociationSet>
-          <FunctionImport Name="spGetRequestStats" ReturnType="Collection(GatewayModel.spGetRequestStats_Result)">
+          <FunctionImport Name="spGetJobStats" ReturnType="Collection(GatewayModel.spGetJobStats_Result)">
             <Parameter Name="Start" Mode="In" Type="DateTime" />
             <Parameter Name="Controller" Mode="In" Type="String" />
           </FunctionImport>
-          <FunctionImport Name="spGetRequestStatsAll" ReturnType="Collection(GatewayModel.spGetRequestStatsAll_Result)">
+          <FunctionImport Name="spGetJobStatsAll" ReturnType="Collection(GatewayModel.spGetJobStatsAll_Result)">
           <Parameter Name="Start" Mode="In" Type="DateTime" />
           </FunctionImport>
           <FunctionImport Name="spGetTimeStats" ReturnType="Collection(GatewayModel.spGetTimeStats_Result)">
@@ -628,7 +655,7 @@
           <EntitySet Name="Links" EntityType="GatewayModel.Link" />
           <FunctionImport Name="spGetControllerStates" ReturnType="Collection(GatewayModel.spGetControllerStates_Result)" />
           <EntitySet Name="BatchStats" EntityType="GatewayModel.BatchStat" />
-          <FunctionImport Name="spGetRequestCounts" ReturnType="Collection(GatewayModel.spGetRequestCounts_Result)">
+          <FunctionImport Name="spGetJobCounts" ReturnType="Collection(GatewayModel.spGetJobCounts_Result)">
           <Parameter Name="Start" Mode="In" Type="DateTime" />
           </FunctionImport>
           <FunctionImport Name="spGetIncompleteRequestCount" ReturnType="Collection(GatewayModel.spGetIncompleteRequestCount_Result)">
@@ -679,13 +706,18 @@
             <End Role="RiskBatchConfiguration" EntitySet="RiskBatchConfigurations" />
             <End Role="Schedule" EntitySet="Schedules" />
           </AssociationSet>
+          <EntitySet Name="ExecutableConfigurations" EntityType="GatewayModel.ExecutableConfiguration" />
+          <AssociationSet Name="FK_Schedule_ExecutableConfiguration" Association="GatewayModel.FK_Schedule_ExecutableConfiguration">
+            <End Role="ExecutableConfiguration" EntitySet="ExecutableConfigurations" />
+            <End Role="Schedule" EntitySet="Schedules" />
+          </AssociationSet>
           </EntityContainer>
-        <ComplexType Name="spGetRequestStats_Result">
+        <ComplexType Name="spGetJobStats_Result">
           <Property Type="DateTime" Name="Date" Nullable="true" />
           <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
           <Property Type="Int32" Name="Count" Nullable="true" />
         </ComplexType>
-        <ComplexType Name="spGetRequestStatsAll_Result">
+        <ComplexType Name="spGetJobStatsAll_Result">
           <Property Type="DateTime" Name="Date" Nullable="true" />
           <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
           <Property Type="Int32" Name="Count" Nullable="true" />
@@ -916,7 +948,7 @@
           <Property Name="Controller" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="ControllerVersion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
-        <ComplexType Name="spGetRequestCounts_Result">
+        <ComplexType Name="spGetJobCounts_Result">
           <Property Type="DateTime" Name="Hour" Nullable="true" Precision="23" />
           <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
           <Property Type="Int32" Name="Count" Nullable="true" />
@@ -1071,6 +1103,8 @@
           <Property Name="FundingCurrency" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
           <Property Name="ReportingCurrency" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
           <Property Name="IsEnabled" Type="Boolean" />
+          <Property Name="ExecutableConfigurationId" Type="Int64" />
+          <NavigationProperty Name="ExecutableConfiguration" Relationship="GatewayModel.FK_Schedule_ExecutableConfiguration" FromRole="Schedule" ToRole="ExecutableConfiguration" />
         </EntityType>
         <Association Name="FK_Schedule_RequestConfiguration">
           <End Type="GatewayModel.RequestConfiguration" Role="RequestConfiguration" Multiplicity="0..1" />
@@ -1148,6 +1182,28 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="ExecutableConfiguration">
+          <Key>
+            <PropertyRef Name="ExecutableConfigurationId" />
+          </Key>
+          <Property Name="ExecutableConfigurationId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ExecutablePath" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="CommandLineArguments" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Schedules" Relationship="GatewayModel.FK_Schedule_ExecutableConfiguration" FromRole="ExecutableConfiguration" ToRole="Schedule" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <Association Name="FK_Schedule_ExecutableConfiguration">
+          <End Type="GatewayModel.ExecutableConfiguration" Role="ExecutableConfiguration" Multiplicity="0..1" />
+          <End Type="GatewayModel.Schedule" Role="Schedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ExecutableConfiguration">
+              <PropertyRef Name="ExecutableConfigurationId" />
+            </Principal>
+            <Dependent Role="Schedule">
+              <PropertyRef Name="ExecutableConfigurationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1219,18 +1275,18 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="spGetRequestStats" FunctionName="GatewayModel.Store.spGetRequestStats">
+          <FunctionImportMapping FunctionImportName="spGetJobStats" FunctionName="GatewayModel.Store.spGetJobStats">
             <ResultMapping>
-              <ComplexTypeMapping TypeName="GatewayModel.spGetRequestStats_Result">
+              <ComplexTypeMapping TypeName="GatewayModel.spGetJobStats_Result">
                 <ScalarProperty Name="Date" ColumnName="Date" />
                 <ScalarProperty Name="Controller" ColumnName="Controller" />
                 <ScalarProperty Name="Count" ColumnName="Count" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="spGetRequestStatsAll" FunctionName="GatewayModel.Store.spGetRequestStatsAll">
+          <FunctionImportMapping FunctionImportName="spGetJobStatsAll" FunctionName="GatewayModel.Store.spGetJobStatsAll">
             <ResultMapping>
-              <ComplexTypeMapping TypeName="GatewayModel.spGetRequestStatsAll_Result">
+              <ComplexTypeMapping TypeName="GatewayModel.spGetJobStatsAll_Result">
                 <ScalarProperty Name="Date" ColumnName="Date" />
                 <ScalarProperty Name="Controller" ColumnName="Controller" />
                 <ScalarProperty Name="Count" ColumnName="Count" />
@@ -1504,9 +1560,9 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="spGetRequestCounts" FunctionName="GatewayModel.Store.spGetRequestCounts">
+          <FunctionImportMapping FunctionImportName="spGetJobCounts" FunctionName="GatewayModel.Store.spGetJobCounts">
             <ResultMapping>
-              <ComplexTypeMapping TypeName="GatewayModel.spGetRequestCounts_Result">
+              <ComplexTypeMapping TypeName="GatewayModel.spGetJobCounts_Result">
                 <ScalarProperty Name="Hour" ColumnName="Hour" />
                 <ScalarProperty Name="Controller" ColumnName="Controller" />
                 <ScalarProperty Name="Count" ColumnName="Count" />
@@ -1598,6 +1654,7 @@
           <EntitySetMapping Name="Schedules">
             <EntityTypeMapping TypeName="GatewayModel.Schedule">
               <MappingFragment StoreEntitySet="Schedule">
+                <ScalarProperty Name="ExecutableConfigurationId" ColumnName="ExecutableConfigurationId" />
                 <ScalarProperty Name="IsEnabled" ColumnName="IsEnabled" />
                 <ScalarProperty Name="ReportingCurrency" ColumnName="ReportingCurrency" />
                 <ScalarProperty Name="FundingCurrency" ColumnName="FundingCurrency" />
@@ -1625,6 +1682,16 @@
                 <ScalarProperty Name="TradeSourceType" ColumnName="TradeSourceType" />
                 <ScalarProperty Name="Type" ColumnName="Type" />
                 <ScalarProperty Name="ConfigurationId" ColumnName="ConfigurationId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ExecutableConfigurations">
+            <EntityTypeMapping TypeName="GatewayModel.ExecutableConfiguration">
+              <MappingFragment StoreEntitySet="ExecutableConfiguration">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="CommandLineArguments" ColumnName="CommandLineArguments" />
+                <ScalarProperty Name="ExecutablePath" ColumnName="ExecutablePath" />
+                <ScalarProperty Name="ExecutableConfigurationId" ColumnName="ExecutableConfigurationId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

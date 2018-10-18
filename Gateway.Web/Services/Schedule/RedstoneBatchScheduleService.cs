@@ -13,12 +13,15 @@ using Gateway.Web.Services.Schedule.Utils;
 
 namespace Gateway.Web.Services.Schedule
 {
-    public class RedstoneBatchScheduleService : BaseScheduleService<ScheduleBatchModel, BatchScheduleParameters>
+    public class RedstoneBatchScheduleService : BaseScheduleService<ScheduleBatchModel, BatchScheduleParameters, RedstoneRequest>
     {
+        private readonly IRedstoneWebRequestScheduler _scheduler;
+
         public RedstoneBatchScheduleService(IRedstoneWebRequestScheduler scheduler, 
             ILoggingService loggingService) : 
-            base(scheduler, loggingService)
+            base(loggingService)
         {
+            _scheduler = scheduler;
         }
 
         protected override BatchScheduleParameters GetParameters(GatewayEntities db, ScheduleBatchModel model)
@@ -26,6 +29,11 @@ namespace Gateway.Web.Services.Schedule
             var parameters = new BatchScheduleParameters();
             parameters.Populate(db, model);
             return parameters;
+        }
+
+        protected override void RemoveSchedule(string key)
+        {
+            _scheduler.RemoveScheduledWebRequest(key);
         }
 
         public override IList<Database.Schedule> Schedule(BatchScheduleParameters parameters, GatewayEntities db, IList<ModelErrorCollection> errorCollection, IList<string> jobKeys)
@@ -59,9 +67,19 @@ namespace Gateway.Web.Services.Schedule
             return schedules;
         }
 
-        protected override RedstoneRequest GetRequest(Database.Schedule schedule, DateTime? businessDate = null)
+        protected override RedstoneRequest GetJob(Database.Schedule schedule, DateTime? businessDate = null)
         {
             return schedule.ToRequest(businessDate);
+        }
+
+        protected override void ScheduleTask(RedstoneRequest item, string key, string cron)
+        {
+            _scheduler.ScheduleWebRequest(item, key, cron);
+        }
+
+        protected override void ScheduleTaskAsync(RedstoneRequest item, string key, string cron)
+        {
+            _scheduler.ScheduleAsyncWebRequest(item, key, cron);
         }
 
         protected string GenerateKey(RiskBatchConfiguration configuration, string tradeSource)

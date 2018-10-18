@@ -150,6 +150,7 @@ namespace Gateway.Web.Services.Batches
                 var items = db.Schedules
                     .Include("RiskBatchConfiguration")
                     .Include("RequestConfiguration")
+                    .Include("ExecutableConfiguration")
                     .Include("ParentSchedule")
                     .Include("Children")
                     .ToList();
