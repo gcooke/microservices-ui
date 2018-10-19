@@ -18,17 +18,14 @@ using ScheduleGroup = Gateway.Web.Database.ScheduleGroup;
 
 namespace Gateway.Web.Services.Schedule
 {
-    public abstract class BaseScheduleService<T, TK> : IScheduleService<T>
+    public abstract class BaseScheduleService<T, TK, TKK> : IScheduleService<T>
         where T : BaseScheduleModel
         where TK : BaseScheduleParameters
     {
-        protected IRedstoneWebRequestScheduler Scheduler;
         protected ILogger Logger;
 
-        protected BaseScheduleService(IRedstoneWebRequestScheduler scheduler,
-            ILoggingService loggingService)
+        protected BaseScheduleService(ILoggingService loggingService)
         {
-            Scheduler = scheduler;
             Logger = loggingService.GetLogger(this);
         }
 
@@ -49,7 +46,7 @@ namespace Gateway.Web.Services.Schedule
                     {
                         if (!TryScheduleBatch(schedule, parameters, db))
                         {
-                            Scheduler.RemoveScheduledWebRequest(schedule.ScheduleKey);
+                            RemoveSchedule(schedule.ScheduleKey);
                             if(schedule.RequestConfiguration != null)
                                 db.RequestConfigurations.Remove(schedule.RequestConfiguration);
                             db.Schedules.Remove(schedule);
@@ -106,7 +103,7 @@ namespace Gateway.Web.Services.Schedule
                     }
                 }
 
-                ScheduleBatch(schedule, group, isAsync);
+                ScheduleTask(schedule, group, isAsync);
                 schedule.GroupId = group.GroupId;
                 schedule.IsEnabled = true;
 
@@ -116,6 +113,8 @@ namespace Gateway.Web.Services.Schedule
 
         protected abstract TK GetParameters(GatewayEntities db, T model);
 
+        protected abstract void RemoveSchedule(string key);
+
         public abstract IList<Database.Schedule> Schedule(TK parameters, GatewayEntities db, IList<ModelErrorCollection> errorCollection,
             IList<string> jobKeys);
 
@@ -124,6 +123,7 @@ namespace Gateway.Web.Services.Schedule
             var schedule = db.Schedules
                 .Where(x => id == 0 && key != null ? x.ScheduleKey == key : x.ScheduleId == id)
                 .Include("RiskBatchConfiguration")
+                .Include("ExecutableConfiguration")
                 .Include("RequestConfiguration")
                 .Include("ParentSchedule")
                 .Include("Children")
@@ -180,7 +180,7 @@ namespace Gateway.Web.Services.Schedule
         {
             try
             {
-                ScheduleBatch(entity, entity.ScheduleGroup, parameters.IsAsync);
+                ScheduleTask(entity, entity.ScheduleGroup, parameters.IsAsync);
                 return true;
             }
             catch (Exception ex)
@@ -190,28 +190,28 @@ namespace Gateway.Web.Services.Schedule
             }
         }
 
-        protected virtual void ScheduleBatch(Database.Schedule entity, ScheduleGroup group, bool isAsync)
+        protected virtual void ScheduleTask(Database.Schedule entity, ScheduleGroup group, bool isAsync)
         {
-            Scheduler.RemoveScheduledWebRequest(entity.ScheduleKey);
+            RemoveSchedule(entity.ScheduleKey);
 
             if (group == null)
             {
-                Scheduler.RemoveScheduledWebRequest(entity.ParentSchedule.ScheduleKey);
-                var parent = GetRequest(entity.ParentSchedule);
+                RemoveSchedule(entity.ParentSchedule.ScheduleKey);
+                var parent = GetJob(entity.ParentSchedule);
                 var cron = entity.ParentSchedule.ScheduleGroup.Schedule;
                 if (isAsync)
-                    Scheduler.ScheduleAsyncWebRequest(parent, entity.ParentSchedule.ScheduleKey, cron);
+                    ScheduleTaskAsync(parent, entity.ParentSchedule.ScheduleKey, cron);
                 else
-                    Scheduler.ScheduleWebRequest(parent, entity.ParentSchedule.ScheduleKey, cron);
+                    ScheduleTask(parent, entity.ParentSchedule.ScheduleKey, cron);
             }
             else
             {
-                var request = GetRequest(entity);
+                var request = GetJob(entity);
                 var cron = group.Schedule;
                 if (isAsync)
-                    Scheduler.ScheduleAsyncWebRequest(request, entity.ScheduleKey, cron);
+                    ScheduleTaskAsync(request, entity.ScheduleKey, cron);
                 else
-                    Scheduler.ScheduleWebRequest(request, entity.ScheduleKey, cron);
+                    ScheduleTask(request, entity.ScheduleKey, cron);
             }
         }
 
@@ -221,10 +221,14 @@ namespace Gateway.Web.Services.Schedule
             foreach (var jobKey in jobKeys)
             {
                 Logger.Error(ex, $"Removing job key, {jobKey}, from schedule.");
-                Scheduler.RemoveScheduledWebRequest(jobKey);
+                RemoveSchedule(jobKey);
             }
         }
 
-        protected abstract RedstoneRequest GetRequest(Database.Schedule schedule, DateTime? businessDate = null);
+        protected abstract TKK GetJob(Database.Schedule schedule, DateTime? businessDate = null);
+
+        protected abstract void ScheduleTask(TKK item, string key, string cron);
+
+        protected abstract void ScheduleTaskAsync(TKK item, string key, string cron);
     }
 }

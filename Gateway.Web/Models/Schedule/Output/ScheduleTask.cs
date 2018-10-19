@@ -51,6 +51,7 @@ namespace Gateway.Web.Models.Schedule.Output
         public bool IsEnabled { get; set; }
 
         public bool IsBatch { get; set; }
+        public bool IsExe { get; set; }
 
         public ScheduleTask(string type)
         {

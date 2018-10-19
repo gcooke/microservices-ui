@@ -45,7 +45,7 @@ namespace Gateway.Web.Controllers
 
             var date = businessDate.Value.Date;
 
-            var startDate = DateTime.Now.Date.AddMinutes(-1);
+            var startDate = date.Date.AddMinutes(-1);
             var endDate = startDate.AddHours(24);
             var scheduleGroups = _scheduleGroupService.GetScheduleGroups(startDate, endDate, searchTerm, false, false);
 

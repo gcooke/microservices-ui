@@ -55,8 +55,8 @@
     <Reference Include="Absa.Cib.MIT.Redis.IoC, Version=1.0.31.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Bagl.Cib.MIT.Redis.IoC.1.0.31\lib\net452\Absa.Cib.MIT.Redis.IoC.dll</HintPath>
     </Reference>
-    <Reference Include="Absa.Cib.MIT.TaskScheduling, Version=1.1.34.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Absa.Cib.MIT.TaskScheduling.1.1.34\lib\net46\Absa.Cib.MIT.TaskScheduling.dll</HintPath>
+    <Reference Include="Absa.Cib.MIT.TaskScheduling, Version=1.1.39.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Absa.Cib.MIT.TaskScheduling.1.1.39\lib\net46\Absa.Cib.MIT.TaskScheduling.dll</HintPath>
     </Reference>
     <Reference Include="Bagl.Cib.MIT.Cube, Version=1.0.40.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Bagl.Cib.MIT.Cube.1.0.40\lib\net452\Bagl.Cib.MIT.Cube.dll</HintPath>
@@ -316,8 +316,12 @@
     <Compile Include="Authorization\GatewayAuthenticationFilter.cs" />
     <Compile Include="Authorization\RoleBasedAuthorizeAttribute.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\ExecutableScheduleController.cs" />
     <Compile Include="Controllers\BatchScheduleController.cs" />
     <Compile Include="Controllers\RequestScheduleController.cs" />
+    <Compile Include="Database\ExecutableConfiguration.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
     <Compile Include="Database\RequestConfiguration.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
@@ -588,7 +592,9 @@
     <Compile Include="Services\Schedule\BaseScheduleService.cs" />
     <Compile Include="Services\Schedule\Interfaces\IRequestConfigurationService.cs" />
     <Compile Include="Services\Schedule\Models\BaseScheduleParameters.cs" />
+    <Compile Include="Services\Schedule\Models\ExecutableScheduleParameters.cs" />
     <Compile Include="Services\Schedule\Models\RedstoneRequestParameters.cs" />
+    <Compile Include="Services\Schedule\ExecutableScheduleService.cs" />
     <Compile Include="Services\Schedule\RedstoneRequestScheduleService.cs" />
     <Compile Include="Services\Schedule\Utils\BatchRequestBuilderEx.cs" />
     <Compile Include="Services\Schedule\ScheduleGroupService.cs" />
@@ -615,6 +621,7 @@
     <Compile Include="Services\Monitoring\ServerDiagnostics\ServerDiagnosticsService.cs" />
     <Compile Include="Services\ProcessInformation.cs" />
     <Compile Include="Services\QueueInformation.cs" />
+    <Compile Include="Services\Schedule\Utils\ScheduleExecutableModelEx.cs" />
     <Compile Include="Services\Schedule\Utils\ScheduleBatchModelEx.cs" />
     <Compile Include="Services\Schedule\Utils\ScheduleGroupEx.cs" />
     <Compile Include="Services\Schedule\Utils\ScheduleTaskEx.cs" />
@@ -861,6 +868,7 @@
     <Content Include="Views\Schedule\Partials\_ScheduleWebRequest.cshtml" />
     <Content Include="Views\RequestSchedule\Create.cshtml" />
     <Content Include="Views\Monitoring\RiskBatchDetail.cshtml" />
+    <Content Include="Views\ExecutableSchedule\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />

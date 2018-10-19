@@ -14,11 +14,13 @@ namespace Gateway.Web.Services.Schedule
 {
     public class ScheduleDataService : IScheduleDataService
     {
+        private readonly IExecutableScheduler _executableScheduler;
         private readonly IRedstoneWebRequestScheduler _scheduler;
 
-        public ScheduleDataService(
+        public ScheduleDataService(IExecutableScheduler executableScheduler, 
             IRedstoneWebRequestScheduler scheduler)
         {
+            _executableScheduler = executableScheduler;
             _scheduler = scheduler;
         }
 
@@ -30,6 +32,7 @@ namespace Gateway.Web.Services.Schedule
                     .Where(x => scheduleIdList.Contains(x.ScheduleId))
                     .Include("RiskBatchConfiguration")
                     .Include("RequestConfiguration")
+                    .Include("ExecutableConfiguration")
                     .Include("ParentSchedule")
                     .Include("Children")
                     .ToList()
@@ -45,6 +48,7 @@ namespace Gateway.Web.Services.Schedule
                 var entity = db.Schedules
                     .Include("RiskBatchConfiguration")
                     .Include("RequestConfiguration")
+                    .Include("ExecutableConfiguration")
                     .Include("ParentSchedule")
                     .Include("Children")
                     .SingleOrDefault(x => x.ScheduleId == id);
@@ -63,6 +67,7 @@ namespace Gateway.Web.Services.Schedule
                 var entity = db.Schedules
                     .Include("RiskBatchConfiguration")
                     .Include("RequestConfiguration")
+                    .Include("ExecutableConfiguration")
                     .Include("ParentSchedule")
                     .Include("Children")
                     .SingleOrDefault(x => x.ScheduleId == id);
@@ -82,12 +87,12 @@ namespace Gateway.Web.Services.Schedule
                     .Where(x => scheduleIdList.Contains(x.ScheduleId))
                     .Include("RiskBatchConfiguration")
                     .Include("RequestConfiguration")
+                    .Include("ExecutableConfiguration")
                     .Include("ParentSchedule")
                     .Include("Children")
                     .ToList();
             }
         }
-
 
         public IDictionary<string, string> GetDailyStatuses(DateTime now)
         {
@@ -149,6 +154,7 @@ namespace Gateway.Web.Services.Schedule
                 .Where(x => x.ScheduleId == id)
                 .Include("RiskBatchConfiguration")
                 .Include("RequestConfiguration")
+                .Include("ExecutableConfiguration")
                 .Include("ParentSchedule")
                 .Include("Children")
                 .SingleOrDefault();
@@ -192,6 +198,7 @@ namespace Gateway.Web.Services.Schedule
                 .Where(x => x.RiskBatchConfigurationId == id)
                 .Include("RiskBatchConfiguration")
                 .Include("RequestConfiguration")
+                .Include("ExecutableConfiguration")
                 .Include("ParentSchedule")
                 .Include("Children");
 
@@ -216,6 +223,12 @@ namespace Gateway.Web.Services.Schedule
                 if (batch == null)
                     return;
 
+                if (batch.ExecutableConfiguration != null)
+                {
+                    _executableScheduler.EnqueueExecutable(batch.ToExecutableOptions());
+                    return;
+                }
+
                 _scheduler.EnqueueAsyncWebRequest(batch.ToRequest(businessDate));
             }
         }
@@ -227,6 +240,7 @@ namespace Gateway.Web.Services.Schedule
                 var batches = db.Schedules
                     .Include("RiskBatchConfiguration")
                     .Include("RequestConfiguration")
+                    .Include("ExecutableConfiguration")
                     .Include("ParentSchedule")
                     .Include("Children")
                     .Where(GetSearchCriteria(searchTerm))
@@ -251,6 +265,7 @@ namespace Gateway.Web.Services.Schedule
                     .Where(x => x.ScheduleId == id)
                     .Include("RiskBatchConfiguration")
                     .Include("RequestConfiguration")
+                    .Include("ExecutableConfiguration")
                     .Include("ParentSchedule")
                     .Include("Children")
                     .SingleOrDefault();
