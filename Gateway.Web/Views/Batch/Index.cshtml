@@ -77,7 +77,7 @@
                         </tr>
                     }
 
-                    @foreach (var item in Model.BatchConfigModels)
+                    @foreach (var item in Model.BatchConfigModels.OrderBy(x => x.Type).ThenBy(x => x.TradeSourceType))
                     {
                         <tr>
                             <td>@Html.CheckBox("select-" + @item.Type, new { @class = "select-config", @data_id = @item.ConfigurationId })</td>

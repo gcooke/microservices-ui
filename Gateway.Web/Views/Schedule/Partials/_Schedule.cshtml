@@ -7,7 +7,7 @@
         <table class="batch-table" style="width: 100%; border: none !important;">
             @foreach (var item in Model.Tasks)
             {
-                <tr class="batch-schedule-container" style="padding: 20px !important;" data-tt-branch="@item.HasChildren" data-tt-id="@item.ScheduleId" data-tt-parent-id="@item.ParentId">
+                <tr title="@item.Type: @item.Name" class="batch-schedule-container" style="padding: 20px !important;" data-tt-branch="@item.HasChildren" data-tt-id="@item.ScheduleId" data-tt-parent-id="@item.ParentId">
                     <td style="width: 7%;">
                         @if (item.IsEnabled)
                         {

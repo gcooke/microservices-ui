@@ -8,7 +8,7 @@
             {
                 if (RiskBatchConfiguration != null)
                 {
-                    return $"{RiskBatchConfiguration.Type} - {TradeSource}";
+                    return $"{RiskBatchConfiguration.Type} - {TradeSource} ({RiskBatchConfiguration.TradeSourceType})";
                 }
 
                 if (RequestConfiguration != null)
@@ -31,7 +31,7 @@
             {
                 if (RiskBatchConfiguration != null)
                 {
-                    return $"{RiskBatchConfiguration.Type} - {TradeSource}";
+                    return $"{RiskBatchConfiguration.Type} - {TradeSource} ({RiskBatchConfiguration.TradeSourceType})";
                 }
 
                 if (RequestConfiguration != null)

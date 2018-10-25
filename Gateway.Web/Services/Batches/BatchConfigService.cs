@@ -207,18 +207,18 @@ namespace Gateway.Web.Services.Batches
             if (batchConfigModel.IsUpdating)
             {
                 var existingItem = db.RiskBatchConfigurations.SingleOrDefault(x => x.ConfigurationId == batchConfigModel.ConfigurationId);
-                if (existingItem != null && existingItem.Type == batchConfigModel.Type)
+                if (existingItem != null && existingItem.Type == batchConfigModel.Type && existingItem.TradeSourceType == batchConfigModel.TradeSourceType)
                 {
                     return true;
                 }
 
-                if (existingItem != null && existingItem.Type != batchConfigModel.Type)
+                if (existingItem != null && (existingItem.Type != batchConfigModel.Type || existingItem.TradeSourceType != batchConfigModel.TradeSourceType))
                 {
-                    return db.RiskBatchConfigurations.Count(x => x.Type == batchConfigModel.Type) == 0;
+                    return db.RiskBatchConfigurations.Count(x => x.Type == batchConfigModel.Type && x.TradeSourceType == batchConfigModel.TradeSourceType) == 0;
                 }
             }
 
-            return db.RiskBatchConfigurations.Count(x => x.Type == batchConfigModel.Type) == 0;
+            return db.RiskBatchConfigurations.Count(x => x.Type == batchConfigModel.Type && x.TradeSourceType == batchConfigModel.TradeSourceType) == 0;
         }
     }
 }
