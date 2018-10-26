@@ -43,7 +43,10 @@ namespace Gateway.Web.Services.Schedule
             {
                 foreach (var tradeSource in parameters.TradeSources)
                 {
-                    var key = GenerateKey(config, tradeSource);
+                    var source = tradeSource.Key;
+                    var site = tradeSource.Value;
+
+                    var key = GenerateKey(config, source);
                     var entity = GetSchedule(db, parameters.ScheduleId, key);
                     var errors = parameters.Validate(entity);
 
@@ -55,7 +58,7 @@ namespace Gateway.Web.Services.Schedule
 
                     jobKeys.Add(key);
 
-                    AssignSchedule(entity, parameters, config, tradeSource);
+                    AssignSchedule(entity, parameters, config, source, site);
 
                     if (parameters.ModifyParent) HandleParentSchedule(entity, parameters);
                     if (parameters.ModifyChildren) HandleChildSchedules(entity, parameters);
@@ -87,21 +90,12 @@ namespace Gateway.Web.Services.Schedule
             return $"BATCH={configuration.ConfigurationId}-TRADESOURCE={tradeSource.ToUpper().Trim()}";
         }
 
-        protected virtual void AssignSchedule(Database.Schedule entity, BatchScheduleParameters parameters, RiskBatchConfiguration configuration, string tradeSource)
+        protected virtual void AssignSchedule(Database.Schedule entity, BatchScheduleParameters parameters, RiskBatchConfiguration configuration, string tradeSource, string site)
         {
             base.AssignSchedule(entity, parameters);
             entity.RiskBatchConfigurationId = configuration.ConfigurationId;
             entity.TradeSource = tradeSource.Trim();
-            entity.Site = tradeSource.Trim();
-
-            TradeSourceType tradeSourceType;
-            if (Enum.TryParse(configuration.TradeSourceType, out tradeSourceType))
-                return;
-
-            if (tradeSourceType == TradeSourceType.Site)
-            {
-                entity.Site = tradeSource;
-            }
+            entity.Site = site ?? tradeSource;
         }
     }
 }
