@@ -11,7 +11,7 @@ namespace Gateway.Web.Services.Schedule.Models
     {
         public IList<RiskBatchConfiguration> Configurations { get; set; }
 
-        public IList<string> TradeSources { get; set; }
+        public IDictionary<string,string> TradeSources { get; set; }
 
         public override void Populate(GatewayEntities db, BaseScheduleModel model)
         {
@@ -26,8 +26,26 @@ namespace Gateway.Web.Services.Schedule.Models
                 .Where(x => m.ConfigurationIdList.Contains(x.ConfigurationId.ToString()))
                 .ToList();
 
-            TradeSources = m.TradeSources.Split(',');
+            TradeSources = GetTradeSources(m.TradeSources);
             IsAsync = true;
+        }
+
+        private IDictionary<string, string> GetTradeSources(string tradeSources)
+        {
+            var sources = tradeSources.Split(',');
+            var tradeSourcesMap = new Dictionary<string, string>();
+
+            foreach (var source in sources)
+            {
+                var parts = source.Split(';');
+
+                if (tradeSourcesMap.ContainsKey(parts[0]))
+                    continue;
+                
+                tradeSourcesMap.Add(parts[0], parts.Length > 1 ? parts[1] : null);
+            }
+
+            return tradeSourcesMap;
         }
     }
 }

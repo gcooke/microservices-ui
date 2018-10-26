@@ -64,8 +64,8 @@
                                         </div>
                                         <div class="tab-pane fade" id="trade-sources">
                                             <div class="form-group">
-                                                @Html.LabelFor(m => m.TradeSources, new {@class = "control-label"})
-                                                @Html.TextAreaFor(m => m.TradeSources, new {@rows = "25", @name = "TradeSources", Placeholder = "The trade source configuration.\n\nCan be either:\n- Site(s) name\n- Portfolio Id(s)\n- Counterparty Id(s)\n- Serialized trade dto's (persisted/what-if calculation)\n\nFor each item in the list a seperate workflow is started. On re-running a user can choose which (or all) trade source to trigger.", @class = "form-control"})
+                                                @Html.LabelFor(m => m.TradeSources, new { @class = "control-label" })
+                                                @Html.TextAreaFor(m => m.TradeSources, new { @rows = "25", @name = "TradeSources", Placeholder = "This is a comma-separated list.\n\nPlease note when providing a PORTFOLIO or COUNTERPARTY, the SITE also needs to be provided in the form:\n<{SdsId}|{Portfolio Name}>;{Site}\n\nFor example,\n\nVOE;SOUTH_AFRICA,\nBOTSWANA,\n21293201;KENYA", @class = "form-control" })
                                             </div>
                                         </div>
                                         <div class="tab-pane fade" id="group">
