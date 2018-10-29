@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Web.Mvc;
-using Bagl.Cib.MIT.IoC;
-using Bagl.Cib.MIT.Logging;
+﻿using Bagl.Cib.MIT.Logging;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
 using Gateway.Web.Authorization;
 using Gateway.Web.Database;
-using Gateway.Web.Models.Controllers;
 using Gateway.Web.Models.Home;
 using Gateway.Web.Models.Monitoring;
 using Gateway.Web.Services.Monitoring.ServerDiagnostics;
 using Gateway.Web.Utils;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Web.Mvc;
 
 namespace Gateway.Web.Controllers
 {

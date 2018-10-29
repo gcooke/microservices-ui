@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Entity;
 using System.Linq;
 using Absa.Cib.MIT.TaskScheduling.Client.Scheduler;
+using Bagl.Cib.MIT.IoC;
 using Gateway.Web.Database;
 using Gateway.Web.Models.Schedule.Output;
 using Gateway.Web.Services.Schedule.Interfaces;
@@ -16,17 +18,20 @@ namespace Gateway.Web.Services.Schedule
     {
         private readonly IExecutableScheduler _executableScheduler;
         private readonly IRedstoneWebRequestScheduler _scheduler;
+        private readonly string ConnectionString;
 
         public ScheduleDataService(IExecutableScheduler executableScheduler, 
-            IRedstoneWebRequestScheduler scheduler)
+            IRedstoneWebRequestScheduler scheduler,
+            ISystemInformation systemInformation)
         {
             _executableScheduler = executableScheduler;
             _scheduler = scheduler;
+            ConnectionString = systemInformation.GetConnectionString("GatewayDatabase", "Database.PnRFO_Gateway");
         }
 
         public IList<ScheduleTask> GetScheduleTasks(IEnumerable<long> scheduleIdList)
         {
-            using (var db = new GatewayEntities())
+            using (var db = new GatewayEntities(ConnectionString))
             {
                 return db.Schedules
                     .Where(x => scheduleIdList.Contains(x.ScheduleId))
@@ -43,7 +48,7 @@ namespace Gateway.Web.Services.Schedule
 
         public ScheduleTask GetScheduleTask(long id)
         {
-            using (var db = new GatewayEntities())
+            using (var db = new GatewayEntities(ConnectionString))
             {
                 var entity = db.Schedules
                     .Include("RiskBatchConfiguration")
@@ -62,7 +67,7 @@ namespace Gateway.Web.Services.Schedule
 
         public Database.Schedule GetSchedule(long id)
         {
-            using (var db = new GatewayEntities())
+            using (var db = new GatewayEntities(ConnectionString))
             {
                 var entity = db.Schedules
                     .Include("RiskBatchConfiguration")
@@ -81,7 +86,7 @@ namespace Gateway.Web.Services.Schedule
 
         public IList<Database.Schedule> GetSchedules(IEnumerable<long> scheduleIdList)
         {
-            using (var db = new GatewayEntities())
+            using (var db = new GatewayEntities(ConnectionString))
             {
                 return db.Schedules
                     .Where(x => scheduleIdList.Contains(x.ScheduleId))
@@ -96,7 +101,7 @@ namespace Gateway.Web.Services.Schedule
 
         public IDictionary<string, string> GetDailyStatuses(DateTime now)
         {
-            using (var db = new GatewayEntities())
+            using (var db = new GatewayEntities(ConnectionString))
             {
                 var data = new Dictionary<string, string>();
                 var date = new DateTime(now.Year, now.Month, now.Day).Date;
@@ -149,7 +154,7 @@ namespace Gateway.Web.Services.Schedule
 
         public void DeleteSchedule(long id, GatewayEntities db = null, bool saveChanges = true)
         {
-            db = db ?? new GatewayEntities();
+            db = db ?? new GatewayEntities(ConnectionString);
             var entity = db.Schedules
                 .Where(x => x.ScheduleId == id)
                 .Include("RiskBatchConfiguration")
@@ -193,7 +198,7 @@ namespace Gateway.Web.Services.Schedule
 
         public void DeleteForConfiguration(long id, GatewayEntities db = null, bool saveChanges = true)
         {
-            db = db ?? new GatewayEntities();
+            db = db ?? new GatewayEntities(ConnectionString);
             var entities = db.Schedules
                 .Where(x => x.RiskBatchConfigurationId == id)
                 .Include("RiskBatchConfiguration")
@@ -216,7 +221,7 @@ namespace Gateway.Web.Services.Schedule
 
         public void RerunTask(long id, DateTime businessDate)
         {
-            using (var db = new GatewayEntities())
+            using (var db = new GatewayEntities(ConnectionString))
             {
                 var batch = db.Schedules.SingleOrDefault(x => x.ScheduleId == id);
 
@@ -235,7 +240,7 @@ namespace Gateway.Web.Services.Schedule
 
         public void RerunTaskGroup(long id, DateTime businessDate, string searchTerm)
         {
-            using (var db = new GatewayEntities())
+            using (var db = new GatewayEntities(ConnectionString))
             {
                 var batches = db.Schedules
                     .Include("RiskBatchConfiguration")
@@ -259,7 +264,7 @@ namespace Gateway.Web.Services.Schedule
 
         public void DisableSchedule(long id)
         {
-            using (var db = new GatewayEntities())
+            using (var db = new GatewayEntities(ConnectionString))
             {
                 var schedule = db.Schedules
                     .Where(x => x.ScheduleId == id)

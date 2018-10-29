@@ -15,6 +15,7 @@ using CommonServiceLocator;
 using Gateway.Web.Authorization;
 using Gateway.Web.ModelBindersConverters;
 using Gateway.Web.Models.Schedule.Input;
+using Gateway.Web.Services.Schedule.Utils;
 using Unity;
 using Unity.ServiceLocation;
 
@@ -59,13 +60,24 @@ namespace Gateway.Web
 
             CentralConfigurationService.ApplyCentralConfiguration(information);
 
+            var dns = information.GetSetting("DnsName", "abcap-foutils.intra.absa.co.za");
+            var authurl = $"https://{dns}";
+
+            BatchRequestBuilderEx.AuthUrl = authurl;
+            BatchRequestBuilderEx.BaseUrl = information.GetSetting("redstonebaseurl", "https://abcap-foutils.intra.absa.co.za:7010/");
+            BatchRequestBuilderEx.AuthQuery = information.GetSetting("AuthQuery", "authorization/oauth/token");
+
+            information.AddSetting("LocalGateway", dns);
+
+
             Registrations.Register(information);
             _container.Resolve<ILoggingService>().Initialize(information.LoggingInformation);
             
             var systemInformation = _container.Resolve<ISystemInformation>();
             var schedulingConnectionString = systemInformation.GetSetting("SchedulingConnectionString");
 
-            SigmaHomePage = systemInformation.GetSetting("AuthUrl", "https://abcap-foutils.intra.absa.co.za");
+;
+            SigmaHomePage = $"https://{dns}";
 
             var schedulingClientProvider = new SchedulingClientProvider();
             schedulingClientProvider.Setup(new SchedulingClientOptions
