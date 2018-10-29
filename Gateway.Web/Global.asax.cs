@@ -64,7 +64,7 @@ namespace Gateway.Web
             var authurl = $"https://{dns}";
 
             BatchRequestBuilderEx.AuthUrl = authurl;
-            BatchRequestBuilderEx.BaseUrl = information.GetSetting("redstonebaseurl", "https://abcap-foutils.intra.absa.co.za:7010/");
+            BatchRequestBuilderEx.BaseUrl = information.GetSetting("redstonebaseurl", "https://abcap-foutils.intra.absa.co.za:7010/")+"Api/";
             BatchRequestBuilderEx.AuthQuery = information.GetSetting("AuthQuery", "authorization/oauth/token");
 
             information.AddSetting("LocalGateway", dns);
