@@ -65,7 +65,7 @@ namespace Gateway.Web
             var redisOptions = new ConfigurationOptions()
             {
                 ClientName = AppDomain.CurrentDomain.FriendlyName,
-                EndPoints = { information.GetSetting("Redis.ConnectionStr", "localhost") },
+                EndPoints = { information.GetSetting("redisconnection", "localhost") },
                 ConnectTimeout = 20000,
                 SyncTimeout = 10000,
                 AllowAdmin = false,

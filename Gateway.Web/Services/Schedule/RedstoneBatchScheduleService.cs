@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Absa.Cib.MIT.TaskScheduling.Client.Scheduler;
 using Absa.Cib.MIT.TaskScheduling.Models;
+using Bagl.Cib.MIT.IoC;
 using Bagl.Cib.MIT.Logging;
 using Gateway.Web.Database;
 using Gateway.Web.Enums;
@@ -18,8 +19,9 @@ namespace Gateway.Web.Services.Schedule
         private readonly IRedstoneWebRequestScheduler _scheduler;
 
         public RedstoneBatchScheduleService(IRedstoneWebRequestScheduler scheduler, 
-            ILoggingService loggingService) : 
-            base(loggingService)
+            ILoggingService loggingService,
+            ISystemInformation systemInformation) : 
+            base(loggingService, systemInformation)
         {
             _scheduler = scheduler;
         }

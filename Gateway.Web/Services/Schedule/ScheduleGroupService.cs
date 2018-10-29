@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
+﻿using Bagl.Cib.MIT.IoC;
 using Gateway.Web.Database;
-using Gateway.Web.Models.Schedule;
-using Gateway.Web.Models.Schedule.Input;
 using Gateway.Web.Services.Schedule.Interfaces;
 using Gateway.Web.Services.Schedule.Utils;
 using Gateway.Web.Utils;
 using NCrontab;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
 using ScheduleGroup = Gateway.Web.Models.Schedule.Output.ScheduleGroup;
 
 namespace Gateway.Web.Services.Schedule
@@ -16,16 +15,18 @@ namespace Gateway.Web.Services.Schedule
     public class ScheduleGroupService : IScheduleGroupService
     {
         private readonly IScheduleDataService _scheduleDataService;
+        public readonly string ConnectionString;
 
-        public ScheduleGroupService(IScheduleDataService scheduleDataService)
+        public ScheduleGroupService(IScheduleDataService scheduleDataService, ISystemInformation systemInformation)
         {
             _scheduleDataService = scheduleDataService;
+            ConnectionString = systemInformation.GetConnectionString("GatewayDatabase", "Database.PnRFO_Gateway");
         }
 
         public IList<ScheduleGroup> GetScheduleGroups(DateTime startDate, DateTime endDate, string searchTerm = null,
             bool includeAllGroups = false, bool includeDisabledTasks = true)
         {
-            using (var db = new GatewayEntities())
+            using (var db = new GatewayEntities(ConnectionString))
             {
                 var groups = GetGroups(startDate, endDate, searchTerm);
                 var runGroups = new List<ScheduleGroup>();
@@ -83,7 +84,7 @@ namespace Gateway.Web.Services.Schedule
 
         public IList<ScheduleGroup> GetGroups(DateTime startDate, DateTime endDate, string searchTerm = null)
         {
-            using (var db = new GatewayEntities())
+            using (var db = new GatewayEntities(ConnectionString))
             {
                 var groups = db.ScheduleGroups
                     .Include("Schedules")
@@ -131,7 +132,7 @@ namespace Gateway.Web.Services.Schedule
 
         public IList<ScheduleGroup> GetGroups(IList<long> idList)
         {
-            using (var db = new GatewayEntities())
+            using (var db = new GatewayEntities(ConnectionString))
             {
                 var groups = db.ScheduleGroups
                     .Where(x => idList.Contains(x.GroupId))
@@ -165,7 +166,7 @@ namespace Gateway.Web.Services.Schedule
 
         public ScheduleGroup GetGroup(long id)
         {
-            using (var db = new GatewayEntities())
+            using (var db = new GatewayEntities(ConnectionString))
             {
                 var group = db.ScheduleGroups
                     .SingleOrDefault(x => x.GroupId == id);
@@ -210,7 +211,7 @@ namespace Gateway.Web.Services.Schedule
 
         public long CreateOrUpdate(string cron, string name = null)
         {
-            using (var db = new GatewayEntities())
+            using (var db = new GatewayEntities(ConnectionString))
             {
                 var entity = db.ScheduleGroups.SingleOrDefault(x => x.Schedule == cron);
 
@@ -241,7 +242,7 @@ namespace Gateway.Web.Services.Schedule
 
         public void Delete(long groupId)
         {
-            using (var db = new GatewayEntities())
+            using (var db = new GatewayEntities(ConnectionString))
             {
                 var entity = db.ScheduleGroups.SingleOrDefault(x => x.GroupId == groupId);
 

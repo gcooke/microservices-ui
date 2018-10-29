@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Absa.Cib.MIT.TaskScheduling.Client.Scheduler;
 using Absa.Cib.MIT.TaskScheduling.Server.Services.Executable;
+using Bagl.Cib.MIT.IoC;
 using Bagl.Cib.MIT.Logging;
 using Gateway.Web.Database;
 using Gateway.Web.Models.Schedule.Input;
@@ -16,8 +17,9 @@ namespace Gateway.Web.Services.Schedule
         private readonly IExecutableScheduler _scheduler;
 
         public ExecutableScheduleService(IExecutableScheduler scheduler, 
-            ILoggingService loggingService)
-            : base(loggingService)
+            ILoggingService loggingService,
+            ISystemInformation systemInformation)
+            : base(loggingService, systemInformation)
         {
             _scheduler = scheduler;
         }
