@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Absa.Cib.MIT.TaskScheduling.Client.Scheduler;
 using Absa.Cib.MIT.TaskScheduling.Models;
+using Bagl.Cib.MIT.IoC;
 using Bagl.Cib.MIT.Logging;
 using Gateway.Web.Database;
 using Gateway.Web.Models.Schedule;
@@ -23,15 +24,17 @@ namespace Gateway.Web.Services.Schedule
         where TK : BaseScheduleParameters
     {
         protected ILogger Logger;
+        public readonly string ConnectionString;
 
-        protected BaseScheduleService(ILoggingService loggingService)
+        protected BaseScheduleService(ILoggingService loggingService, ISystemInformation systemInformation)
         {
             Logger = loggingService.GetLogger(this);
+            ConnectionString = systemInformation.GetConnectionString("GatewayDatabase", "Database.PnRFO_Gateway");
         }
 
         public IList<ModelErrorCollection> ScheduleBatches(T model)
         {
-            using (var db = new GatewayEntities())
+            using (var db = new GatewayEntities(ConnectionString))
             {
                 var jobKeys = new List<string>();
                 var errorCollection = new List<ModelErrorCollection>();
@@ -80,7 +83,7 @@ namespace Gateway.Web.Services.Schedule
 
         public void RescheduleBatches(long id, long? groupId = null, string key = null)
         {
-            using (var db = new GatewayEntities())
+            using (var db = new GatewayEntities(ConnectionString))
             {
                 var schedule = GetSchedule(db, id, key);
 

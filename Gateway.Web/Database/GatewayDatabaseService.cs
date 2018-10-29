@@ -6,6 +6,7 @@ using System.Data.Entity.Core.Objects;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Web.Mvc;
+using Bagl.Cib.MIT.IoC;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Controllers;
 using Gateway.Web.Models.Home;
@@ -21,16 +22,18 @@ namespace Gateway.Web.Database
 {
     public class GatewayDatabaseService : IGatewayDatabaseService
     {
-        public GatewayDatabaseService()
+        public readonly string ConnectionString = String.Empty;
+
+        public GatewayDatabaseService(ISystemInformation systemInformation)
         {
-            //PnRFO_GatewayEntities
+            ConnectionString = systemInformation.GetConnectionString("GatewayDatabase", "Database.PnRFO_Gateway");
         }
 
         public List<Models.Controllers.ControllerStats> GetControllerStatistics(DateTime start)
         {
             var result = new List<Models.Controllers.ControllerStats>();
 
-            using (var database = new GatewayEntities())
+            using (var database = new GatewayEntities(ConnectionString))
             {
                 // Get stats
                 var stats = new ResponseStats(database.spGetResponseStatsAll(start));
@@ -60,7 +63,7 @@ namespace Gateway.Web.Database
 
         public List<string> GetControllerNames()
         {
-            using (var database = new GatewayEntities())
+            using (var database = new GatewayEntities(ConnectionString))
             {
                 return database.Controllers.OrderBy(c => c.Name).Select(x => x.Name).ToList();
             }
@@ -69,7 +72,7 @@ namespace Gateway.Web.Database
         public List<HistoryItem> GetRecentRequests(DateTime start)
         {
             var result = new List<HistoryItem>();
-            using (var database = new GatewayEntities())
+            using (var database = new GatewayEntities(ConnectionString))
             {
                 var items = database.spGetRecentRequestsAll(start, "");
                 foreach (var item in items)
@@ -83,7 +86,7 @@ namespace Gateway.Web.Database
         public List<HistoryItem> GetRecentRequests(string controller, DateTime start)
         {
             var result = new List<HistoryItem>();
-            using (var database = new GatewayEntities())
+            using (var database = new GatewayEntities(ConnectionString))
             {
                 var items = database.spGetRecentRequests(start, controller);
                 foreach (var item in items)
@@ -97,7 +100,7 @@ namespace Gateway.Web.Database
         public List<HistoryItem> GetRecentUserRequests(string user, DateTime start)
         {
             var result = new List<HistoryItem>();
-            using (var database = new GatewayEntities())
+            using (var database = new GatewayEntities(ConnectionString))
             {
                 var items = database.spGetRecentUserRequests(start, user);
                 foreach (var item in items)
@@ -110,7 +113,7 @@ namespace Gateway.Web.Database
 
         public ResponseStats GetResponseStats(DateTime start)
         {
-            using (var database = new GatewayEntities())
+            using (var database = new GatewayEntities(ConnectionString))
             {
                 return new ResponseStats(database.spGetResponseStatsAll(start));
             }
@@ -119,7 +122,7 @@ namespace Gateway.Web.Database
         public AliasesModel GetAliases()
         {
             var result = new AliasesModel();
-            using (var database = new GatewayEntities())
+            using (var database = new GatewayEntities(ConnectionString))
             {
                 var versions = database.Versions.Where(v => v.Status.Name != "Deleted").ToArray();
                 foreach (var version in versions)
@@ -148,7 +151,7 @@ namespace Gateway.Web.Database
 
         public RequestsChartModel GetControllerRequestSummary(string name, DateTime start)
         {
-            using (var database = new GatewayEntities())
+            using (var database = new GatewayEntities(ConnectionString))
             {
                 var controller = database.Controllers.FirstOrDefault(c => c.Name == name);
                 if (controller == null)
@@ -173,7 +176,7 @@ namespace Gateway.Web.Database
 
         public TimeChartModel GetControllerTimeSummary(string name, DateTime start)
         {
-            using (var database = new GatewayEntities())
+            using (var database = new GatewayEntities(ConnectionString))
             {
                 var controller = database.Controllers.FirstOrDefault(c => c.Name == name);
                 if (controller == null)
@@ -198,7 +201,7 @@ namespace Gateway.Web.Database
         public LinksModel GetLinks()
         {
             var result = new LinksModel();
-            using (var database = new GatewayEntities())
+            using (var database = new GatewayEntities(ConnectionString))
             {
                 var items = database.Links.ToArray().Select(l => l.ToModel());
                 result.Items.AddRange(items);
@@ -208,7 +211,7 @@ namespace Gateway.Web.Database
 
         public void DeleteLink(long id)
         {
-            using (var database = new GatewayEntities())
+            using (var database = new GatewayEntities(ConnectionString))
             {
                 var item = database.Links.FirstOrDefault(l => l.Id == id);
                 if (item != null)
@@ -219,7 +222,7 @@ namespace Gateway.Web.Database
 
         public void AddLink(LinkModel link)
         {
-            using (var database = new GatewayEntities())
+            using (var database = new GatewayEntities(ConnectionString))
             {
                 var target = database.Links.Create();
                 target.Name = link.Name;
@@ -236,7 +239,7 @@ namespace Gateway.Web.Database
         {
             var result = new Summary();
             var id = Guid.Parse(correlationId);
-            using (var database = new GatewayEntities())
+            using (var database = new GatewayEntities(ConnectionString))
             {
                 var request = database.Requests.FirstOrDefault(r => r.CorrelationId == id);
                 var response = database.Responses.FirstOrDefault(r => r.CorrelationId == id);
@@ -255,7 +258,7 @@ namespace Gateway.Web.Database
         public List<HistoryItem> GetRequestChildren(Guid correlationId)
         {
             var result = new List<HistoryItem>();
-            using (var database = new GatewayEntities())
+            using (var database = new GatewayEntities(ConnectionString))
             {
                 var items = database.spGetChildRequests(correlationId);
                 foreach (var item in items)
@@ -270,7 +273,7 @@ namespace Gateway.Web.Database
         {
             var result = new Payloads();
             var id = Guid.Parse(correlationId);
-            using (var database = new GatewayEntities())
+            using (var database = new GatewayEntities(ConnectionString))
             {
                 var request = database.Requests.FirstOrDefault(r => r.CorrelationId == id);
                 result.CorrelationId = id;
@@ -304,7 +307,7 @@ namespace Gateway.Web.Database
             var result = new Transitions();
             var id = Guid.Parse(correlationId);
             result.CorrelationId = id;
-            using (var database = new GatewayEntities())
+            using (var database = new GatewayEntities(ConnectionString))
             {
                 var items = database.RequestChanges.Where(r => r.CorrelationId == id).ToArray();
                 foreach (var item in items)
@@ -317,7 +320,7 @@ namespace Gateway.Web.Database
 
         public PayloadData GetPayload(long id)
         {
-            using (var database = new GatewayEntities())
+            using (var database = new GatewayEntities(ConnectionString))
             {
                 var payload = database.Payloads.FirstOrDefault(p => p.Id == id);
                 return new PayloadData(payload);
@@ -327,7 +330,7 @@ namespace Gateway.Web.Database
         public ReportsModel GetUsage()
         {
             var result = new ReportsModel("Usage Report");
-            using (var database = new GatewayEntities())
+            using (var database = new GatewayEntities(ConnectionString))
             {
                 var rows = database.spGetUserReport(DateTime.Today.AddDays(-7));
                 var target = new UserRecentRequests();
@@ -399,7 +402,7 @@ namespace Gateway.Web.Database
         public IEnumerable<ControllerState> GetControllerStates(IDictionary<string, ServerDiagnostics> serverDiagnostics)
         {
             var result = new List<ControllerState>();
-            using (var database = new GatewayEntities())
+            using (var database = new GatewayEntities(ConnectionString))
             {
                 var items = database.spGetControllerStates();
                 foreach (var item in items.GroupBy(i => i.Controller))
@@ -436,7 +439,7 @@ namespace Gateway.Web.Database
 
         public IEnumerable<string> GetVersions(string controllerName)
         {
-            using (var database = new GatewayEntities())
+            using (var database = new GatewayEntities(ConnectionString))
             {
                 var controller = database.Controllers.FirstOrDefault(x => x.Name.ToLower() == controllerName.ToLower());
 
@@ -449,7 +452,7 @@ namespace Gateway.Web.Database
 
         public IEnumerable<string> GetActiveVersions(string controllerName)
         {
-            using (var database = new GatewayEntities())
+            using (var database = new GatewayEntities(ConnectionString))
             {
                 var controller = database.Controllers.FirstOrDefault(x => x.Name.ToLower() == controllerName.ToLower());
 
@@ -469,7 +472,7 @@ namespace Gateway.Web.Database
 
         public IEnumerable<string> GetActiveVersions()
         {
-            using (var database = new GatewayEntities())
+            using (var database = new GatewayEntities(ConnectionString))
             {
                 var activeStatus = database.Status.SingleOrDefault(x => x.Name.ToLower() == "Active");
 
@@ -485,7 +488,7 @@ namespace Gateway.Web.Database
 
         public IEnumerable<Status> GetVersionStatuses()
         {
-            using (var database = new GatewayEntities())
+            using (var database = new GatewayEntities(ConnectionString))
             {
                 return database.Status.Where(s => s.Name != "Deleted").ToList();
             }
@@ -493,7 +496,7 @@ namespace Gateway.Web.Database
 
         public bool HasStatusChanged(string controllerName, string versionName, string status, string alias)
         {
-            using (var database = new GatewayEntities())
+            using (var database = new GatewayEntities(ConnectionString))
             {
                 var controller = database.Controllers
                     .Where(c => c.Name == controllerName).Select(c => c).First();
@@ -529,7 +532,7 @@ namespace Gateway.Web.Database
         {
             var results = new List<ExtendedBatchSummary>();
 
-            using (var database = new GatewayEntities())
+            using (var database = new GatewayEntities(ConnectionString))
             {
                 var batchStats = database.BatchStats;
                 var requests = database.Requests;
@@ -612,7 +615,7 @@ namespace Gateway.Web.Database
 
         public ResourceConfigModel GetConfiguredServers()
         {
-            using (var database = new GatewayEntities())
+            using (var database = new GatewayEntities(ConnectionString))
             {
                 ResourceConfigModel model = new ResourceConfigModel();
 
@@ -643,7 +646,7 @@ namespace Gateway.Web.Database
 
         public ResourceConfigModel GetControllerResources()
         {
-            using (var database = new GatewayEntities())
+            using (var database = new GatewayEntities(ConnectionString))
             {
                 ResourceConfigModel model = new ResourceConfigModel();
 
@@ -674,7 +677,7 @@ namespace Gateway.Web.Database
 
         public void DeleteServerResourceLink(string serverName, string resourceName)
         {
-            using (var database = new GatewayEntities())
+            using (var database = new GatewayEntities(ConnectionString))
             {
                 var toDelete = database.ServerExternalResources.Where(sr =>
                     sr.ExternalResource.Name == resourceName && sr.Server.Name == serverName);
@@ -687,7 +690,7 @@ namespace Gateway.Web.Database
 
         public void AddServerResourceLink(string serverName, string resourceName)
         {
-            using (var database = new GatewayEntities())
+            using (var database = new GatewayEntities(ConnectionString))
             {
                 var existing = database.ServerExternalResources.Where(sr =>
                     sr.ExternalResource.Name == resourceName && sr.Server.Name == serverName);
@@ -714,7 +717,7 @@ namespace Gateway.Web.Database
 
         public void DeleteControllerResourceLink(string controllerName, string resourceName)
         {
-            using (var database = new GatewayEntities())
+            using (var database = new GatewayEntities(ConnectionString))
             {
                 var toDelete = database.ControllerExternalResources.Where(sr =>
                     sr.ExternalResource.Name == resourceName && sr.Controller.Name == controllerName);
@@ -727,7 +730,7 @@ namespace Gateway.Web.Database
 
         public void AddControllerResourceLink(string controllerName, string resourceName)
         {
-            using (var database = new GatewayEntities())
+            using (var database = new GatewayEntities(ConnectionString))
             {
                 var existing = database.ControllerExternalResources.Where(sr =>
                     sr.ExternalResource.Name == resourceName && sr.Controller.Name == controllerName);
@@ -753,7 +756,7 @@ namespace Gateway.Web.Database
 
         private HistoricalSummary GetHistoricalCounts(DateTime start)
         {
-            using (var database = new GatewayEntities())
+            using (var database = new GatewayEntities(ConnectionString))
             {
                 var results = database.spGetRequestCounts(start)
                                       .Select(r => r.ToModel())

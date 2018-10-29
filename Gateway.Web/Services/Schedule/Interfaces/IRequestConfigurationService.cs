@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Bagl.Cib.MIT.IoC;
 using Gateway.Web.Database;
 
 namespace Gateway.Web.Services.Schedule.Interfaces
@@ -14,9 +15,16 @@ namespace Gateway.Web.Services.Schedule.Interfaces
 
     public class RequestConfigurationService : IRequestConfigurationService
     {
+        public string ConnectionString;
+
+        public RequestConfigurationService(ISystemInformation systemInformation)
+        {
+            ConnectionString = systemInformation.GetConnectionString("GatewayDatabase", "Database.PnRFO_Gateway");
+        }
+
         public IList<RequestConfiguration> GetRequestConfigurations()
         {
-            using (var db = new GatewayEntities())
+            using (var db = new GatewayEntities(ConnectionString))
             {
                 return db.RequestConfigurations.ToList();
             }
@@ -24,7 +32,7 @@ namespace Gateway.Web.Services.Schedule.Interfaces
 
         public RequestConfiguration GetRequestConfiguration(long id)
         {
-            using (var db = new GatewayEntities())
+            using (var db = new GatewayEntities(ConnectionString))
             {
                 var item = db.RequestConfigurations.SingleOrDefault(x => x.RequestConfigurationId == id);
 

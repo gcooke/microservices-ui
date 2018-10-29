@@ -1,25 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.DirectoryServices.AccountManagement;
-using System.IdentityModel.Tokens;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using Absa.Cib.JwtAuthentication;
+using Bagl.Cib.MSF.ClientAPI.Provider;
+using System;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Filters;
-using Absa.Cib.JwtAuthentication;
-using Absa.Cib.JwtAuthentication.Components;
-using Absa.Cib.JwtAuthentication.Database;
-using Absa.Cib.JwtAuthentication.Models;
-using Bagl.Cib.MIT.Redis;
-using Bagl.Cib.MIT.Redis.Caching;
-using Bagl.Cib.MSF.ClientAPI.Provider;
-using StackExchange.Redis;
 using Unity;
-using Unity.Interception.Utilities;
-using Claim = System.Security.Claims.Claim;
 
 namespace Gateway.Web.Authorization
 {

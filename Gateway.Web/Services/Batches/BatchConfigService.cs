@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Bagl.Cib.MIT.IoC;
 using Gateway.Web.Database;
 using Gateway.Web.Models.Batches;
 using Gateway.Web.Services.Batches.Interfaces;
@@ -14,15 +15,17 @@ namespace Gateway.Web.Services.Batches
     public class BatchConfigService : IBatchConfigService
     {
         private readonly IScheduleDataService _scheduleDataService;
+        public string ConnectionString;
 
-        public BatchConfigService(IScheduleDataService scheduleDataService)
+        public BatchConfigService(IScheduleDataService scheduleDataService, ISystemInformation systemInformation)
         {
             _scheduleDataService = scheduleDataService;
+            ConnectionString = systemInformation.GetConnectionString("GatewayDatabase", "Database.PnRFO_Gateway");
         }
 
         public BatchConfigModel CreateConfiguration(BatchConfigModel batchConfigModel)
         {
-            using (var db = new GatewayEntities())
+            using (var db = new GatewayEntities(ConnectionString))
             {
                 if (!IsUniqueConfiguration(db, batchConfigModel))
                 {
@@ -38,7 +41,7 @@ namespace Gateway.Web.Services.Batches
 
         public BatchConfigModel UpdateConfiguration(BatchConfigModel batchConfigModel)
         {
-            using (var db = new GatewayEntities())
+            using (var db = new GatewayEntities(ConnectionString))
             {
                 if (!IsUniqueConfiguration(db, batchConfigModel))
                 {
@@ -60,7 +63,7 @@ namespace Gateway.Web.Services.Batches
 
         public BatchConfigModel DeleteConfiguration(long id)
         {
-            using (var db = new GatewayEntities())
+            using (var db = new GatewayEntities(ConnectionString))
             {
                 var entity = db.RiskBatchConfigurations.SingleOrDefault(x => x.ConfigurationId == id);
 
@@ -80,7 +83,7 @@ namespace Gateway.Web.Services.Batches
 
         public BatchConfigModel GetConfiguration(long id)
         {
-            using (var db = new GatewayEntities())
+            using (var db = new GatewayEntities(ConnectionString))
             {
                 var entity = db.RiskBatchConfigurations.SingleOrDefault(x => x.ConfigurationId == id);
 
@@ -95,7 +98,7 @@ namespace Gateway.Web.Services.Batches
 
         public BatchConfigList GetConfigurations(int offset, int pageSize, string searchTerm)
         {
-            using (var db = new GatewayEntities())
+            using (var db = new GatewayEntities(ConnectionString))
             {
                 var totalItems = db.RiskBatchConfigurations.Count();
                 var entities = db.RiskBatchConfigurations
@@ -120,7 +123,7 @@ namespace Gateway.Web.Services.Batches
 
         public IList<BatchConfigModel> GetConfigurationTypes()
         {
-            using (var db = new GatewayEntities())
+            using (var db = new GatewayEntities(ConnectionString))
             {
                 return db.RiskBatchConfigurations
                     .Select(x => new { x.Type, x.ConfigurationId})
@@ -135,7 +138,7 @@ namespace Gateway.Web.Services.Batches
 
         public IEnumerable<ScheduleGroup> GetScheduleGroups()
         {
-            using (var db = new GatewayEntities())
+            using (var db = new GatewayEntities(ConnectionString))
             {
                 var items = db.ScheduleGroups
                     .ToList();
@@ -145,7 +148,7 @@ namespace Gateway.Web.Services.Batches
 
         public IEnumerable<Database.Schedule> GetSchedules()
         {
-            using (var db = new GatewayEntities())
+            using (var db = new GatewayEntities(ConnectionString))
             {
                 var items = db.Schedules
                     .Include("RiskBatchConfiguration")
@@ -160,7 +163,7 @@ namespace Gateway.Web.Services.Batches
 
         public IList<BatchConfigModel> GetConfigurationTypes(IEnumerable<long> configurationIdList)
         {
-            using (var db = new GatewayEntities())
+            using (var db = new GatewayEntities(ConnectionString))
             {
                 return db.RiskBatchConfigurations
                     .Where(x => configurationIdList.Contains(x.ConfigurationId))
@@ -176,7 +179,7 @@ namespace Gateway.Web.Services.Batches
 
         public BatchConfigModel GetConfiguration(string type)
         {
-            using (var db = new GatewayEntities())
+            using (var db = new GatewayEntities(ConnectionString))
             {
                 var entity = db.RiskBatchConfigurations.SingleOrDefault(x => x.Type.ToLower() == type.ToLower());
 

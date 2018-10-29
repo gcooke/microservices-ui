@@ -13,9 +13,9 @@ namespace Gateway.Web.Services.Schedule.Utils
 {
     public static class BatchRequestBuilderEx
     {
-        private static readonly string AuthUrl = System.Configuration.ConfigurationManager.AppSettings["AuthUrl"];
-        private static readonly string BaseUrl = System.Configuration.ConfigurationManager.AppSettings["BaseUrl"];
-        private static readonly string AuthQuery = System.Configuration.ConfigurationManager.AppSettings["AuthQuery"];
+        public  static string AuthUrl = String.Empty;
+        public static string BaseUrl = String.Empty;
+        public static string AuthQuery = String.Empty; 
         private static string _query = "RiskBatch/Official/Batch/Run/%id%/%valuationDate%";
 
         public static RedstoneRequest ToRequest(this Database.Schedule schedule, DateTime? businessDate = null)

@@ -17,11 +17,17 @@ namespace Gateway.Web.Database
     
     public partial class GatewayEntities : DbContext
     {
-        public GatewayEntities()
-            : base("name=GatewayEntities")
+        //public GatewayEntities()
+        //    : base("name=GatewayEntities")
+        //{
+        //}
+
+        public GatewayEntities(string connectionstring)
+            : base(connectionstring)
         {
+
         }
-    
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             throw new UnintentionalCodeFirstException();
