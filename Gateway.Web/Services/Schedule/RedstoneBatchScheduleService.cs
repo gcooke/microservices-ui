@@ -97,7 +97,7 @@ namespace Gateway.Web.Services.Schedule
             base.AssignSchedule(entity, parameters);
             entity.RiskBatchConfigurationId = configuration.ConfigurationId;
             entity.TradeSource = tradeSource.Trim();
-            entity.Site = site ?? tradeSource;
+            entity.Site = site?.Trim() ?? tradeSource.Trim();
         }
     }
 }
