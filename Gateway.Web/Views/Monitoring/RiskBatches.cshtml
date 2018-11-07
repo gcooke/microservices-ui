@@ -63,13 +63,13 @@
                                     <td>
                                         @if (!string.IsNullOrEmpty(item.Link))
                                         {
-                                            <a href="@Url.Content((string) item.Link)">
+                                            <a href="@Url.Content((string) item.Link)" data-toggle="tooltip" title="@item.FullName">
                                                 @item.Name
                                             </a>
                                         }
                                         else
                                         {
-                                            <div>
+                                            <div data-toggle="tooltip" title="@item.FullName">
                                                 @item.Name
                                             </div>
                                         }
