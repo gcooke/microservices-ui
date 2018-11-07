@@ -3,6 +3,7 @@
     public abstract class StateItem
     {
         public string Name { get; set; }
+        public string FullName { get; set; }
         public string Time { get; set; }
         public StateItemState State { get; set; }
         public string Text { get; set; }
