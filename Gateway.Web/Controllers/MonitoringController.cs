@@ -69,7 +69,7 @@ namespace Gateway.Web.Controllers
         {
             var helper = new BatchHelper(_dataService, _gateway, _cache);
             var reportDate = helper.GetPreviousWorkday();
-            var batches = await helper.GetRiskBatchReportModel(reportDate);
+            var batches = await helper.GetRiskBatchReportModelAsync(reportDate);
             return View("RiskBatches", batches);
         }
 

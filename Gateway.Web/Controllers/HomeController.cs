@@ -8,8 +8,10 @@ using Gateway.Web.Services.Monitoring.ServerDiagnostics;
 using Gateway.Web.Utils;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Bagl.Cib.MIT.IoC;
 using Bagl.Cib.MIT.Redis.Caching;
 
 namespace Gateway.Web.Controllers
@@ -19,25 +21,27 @@ namespace Gateway.Web.Controllers
     {
         private readonly IGatewayDatabaseService _dataService;
         private readonly IServerDiagnosticsService _serverDiagnosticsService;
-        private readonly IGatewayRestService _gateway;
-        private IRedisCache _cache;
+        private readonly IBatchHelper _batchHelper;
+        private readonly ISystemInformation _systemInformation;
+        private readonly IDatabaseStateProvider _databaseStateProvider;
 
         public HomeController(IGatewayDatabaseService dataService,
             IServerDiagnosticsService serverDiagnosticsService,
             ILoggingService loggingService,
             IGatewayRestService gateway,
-            IRedisCache cache
-            )
+            IBatchHelper batchHelper,
+            ISystemInformation systemInformation,
+            IDatabaseStateProvider databaseStateProvider)
             : base(loggingService)
         {
             _dataService = dataService;
             _serverDiagnosticsService = serverDiagnosticsService;
-            _gateway = gateway;
-            _cache = cache;
+            _batchHelper = batchHelper;
+            _systemInformation = systemInformation;
+            _databaseStateProvider = databaseStateProvider;
         }
 
-
-        //[OutputCache(Duration = 60, VaryByParam = "none")]
+        [OutputCache(Duration = 60, VaryByParam = "none")]
         public async Task<ActionResult> Index(string sortOrder)
         {
             if (string.IsNullOrEmpty(sortOrder))
@@ -51,20 +55,30 @@ namespace Gateway.Web.Controllers
             ViewBag.Controller = "Home";
             ViewBag.Action = "Index";
 
+            var reportDate = _batchHelper.GetPreviousWorkday();
+            var batchestask = _batchHelper.GetRiskBatchReportModelAsync(reportDate);
 
-            var serverDiagnostics = _serverDiagnosticsService.Get();
-            if(serverDiagnostics != null)
+
+            var servicetask = GetServiceStateAsync();
+            var databasetask = GetDatabaseStateAsync();
+            var serverDiagnosticstask = _serverDiagnosticsService.GetAsync();
+
+            Task[] tasks = { servicetask, databasetask, serverDiagnosticstask, batchestask };
+            Task.WaitAll(tasks);
+
+            var serverDiagnostics = serverDiagnosticstask.Result;
+
+            var controllers = _dataService.GetControllerStates(serverDiagnostics);
+
+            if (serverDiagnostics != null)
                 serverDiagnostics = FormatServerDiagnostics(serverDiagnostics);
 
-            var helper = new BatchHelper(_dataService, _gateway, _cache);
-            var reportDate = helper.GetPreviousWorkday();
-            var batches = await helper.GetRiskBatchReportModel(reportDate);
-
             var model = new IndexModel();            
-            model.Controllers.AddRange(_dataService.GetControllerStates(serverDiagnostics));
-            model.Services.AddRange(GetServiceState());
-            model.Databases.AddRange(GetDatabaseState());
-            model.Batches.AddRange(batches.Items);
+            model.Controllers.AddRange(controllers);
+            model.Services.AddRange(servicetask.Result);
+            model.Databases.AddRange(databasetask.Result);
+            model.Batches.AddRange(batchestask.Result.Items);
+
             if (serverDiagnostics != null)
                 model.Servers.AddRange(serverDiagnostics.Values);
             
@@ -72,18 +86,38 @@ namespace Gateway.Web.Controllers
             return View("Index", model);
         }
         
-        public IEnumerable<ServiceState> GetServiceState()
+        public async Task<List<ServiceState>> GetServiceStateAsync()
         {
-            yield return new ServiceState("Gateway (003)", DateTime.Now, StateItemState.Unknown, "Unknown");
-            yield return new ServiceState("Gateway (144)", DateTime.Now, StateItemState.Unknown, "Unknown");
-            yield return new ServiceState("ScalingService (144)", DateTime.Now, StateItemState.Unknown, "Unknown");
-            yield return new ServiceState("Redis (144)", DateTime.Now, StateItemState.Unknown, "Unknown");
+            return await Task.Factory.StartNew(() =>
+            {
+                var servicestates = new List<ServiceState>();
+                servicestates.Add(new ServiceState("Gateway (003)", DateTime.Now, StateItemState.Unknown, "Unknown"));
+                servicestates.Add(new ServiceState("Gateway (144)", DateTime.Now, StateItemState.Unknown, "Unknown"));
+                servicestates.Add(new ServiceState("ScalingService (144)", DateTime.Now, StateItemState.Unknown, "Unknown"));
+                servicestates.Add(new ServiceState("Redis (144)", DateTime.Now, StateItemState.Unknown, "Unknown"));
+
+                return servicestates;
+            }).ConfigureAwait(false);
         }
 
-        public IEnumerable<DatabaseState> GetDatabaseState()
+        public async Task<List<DatabaseState>> GetDatabaseStateAsync()
         {
-            yield return new DatabaseState("Gateway", DateTime.Now, StateItemState.Unknown, "Unknown");
-            yield return new DatabaseState("PnRFO", DateTime.Now, StateItemState.Unknown, "Unknown");
+
+            var databases = _systemInformation
+                .GetSetting("Databases", "GatewayDatabase;PnRFODatabase;SndTradeDbDatabase;SigmaDatabase").Split(';')
+                .ToList();
+
+            return await Task.Factory.StartNew(() =>
+            {
+                var databaseStates = new List<DatabaseState>();
+
+                foreach (var database in databases)
+                {
+                    databaseStates.Add(_databaseStateProvider.GetDatabaseState(database));
+                }
+
+                return databaseStates;
+            }).ConfigureAwait(false);
         }
 
         public IDictionary<string, ServerDiagnostics> FormatServerDiagnostics(IDictionary<string, ServerDiagnostics> serverDiagnostics)
@@ -162,5 +196,10 @@ namespace Gateway.Web.Controllers
             var path = Request.Url.GetLeftPart(UriPartial.Authority);
             return Redirect(path + "/Reporting");
         }
+    }
+
+    public interface IDatabaseStateProvider
+    {
+        DatabaseState GetDatabaseState(string DatabaseConfigId);
     }
 }

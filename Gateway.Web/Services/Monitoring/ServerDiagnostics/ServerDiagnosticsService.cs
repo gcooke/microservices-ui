@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
+using Gateway.Web.Models.Home;
 using Newtonsoft.Json;
 
 namespace Gateway.Web.Services.Monitoring.ServerDiagnostics
@@ -26,5 +29,14 @@ namespace Gateway.Web.Services.Monitoring.ServerDiagnostics
             var payload = response.Content.GetPayloadAsString();
             return JsonConvert.DeserializeObject<Dictionary<string, Models.Monitoring.ServerDiagnostics>>(payload);
         }
+
+        public async Task<IDictionary<string, Models.Monitoring.ServerDiagnostics>> GetAsync()
+        {
+            return await Task.Factory.StartNew(() =>
+            { 
+                return this.Get();
+            }).ConfigureAwait(false);
+        }
+
     }
 }

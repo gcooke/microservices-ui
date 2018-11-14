@@ -115,6 +115,10 @@ namespace Gateway.Web
             information.RegisterType<IGatewayRestService, GatewayRestService>(Scope.ContainerSingleton);
             information.RegisterType<IServerDiagnosticsService, ServerDiagnosticsService>(Scope.ContainerSingleton);
 
+
+            information.RegisterType<IBatchHelper, BatchHelper>(Scope.ContainerSingleton);
+            information.RegisterType<IDatabaseStateProvider, DatabaseStateProvider>(Scope.ContainerSingleton);
+
             Absa.Cib.Authorization.Extensions.Registration.Register(information);
             Absa.Cib.Authorization.Extensions.Registration.RegisterCertificates(information);
             Absa.Cib.JwtAuthentication.Registrations.Register(information);
