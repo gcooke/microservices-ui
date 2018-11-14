@@ -54,7 +54,7 @@ namespace Gateway.Web.Database
 
         public async Task<RiskBatchModel> GetRiskBatchReportModelAsync(DateTime reportDate)
         {
-            const string key = @"{BatchReporting}\RiskBatchReport";
+            const string key = @"{BatchReporting}:RiskBatchReport";
             var cachedmodel = _cache.Get<RiskBatchModel>(key);
             if (cachedmodel != null)
                 return cachedmodel;
