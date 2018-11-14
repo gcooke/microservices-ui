@@ -10,17 +10,20 @@ namespace Gateway.Web.Authorization
 {
     public class GatewayAuthenticationFilter : IAuthenticationFilter
     {
+        public static  string AuthCockieName = "SIGMA_AUTH";
         private static string _claimKeyNameSpace = "{Security}";
 
         public void OnAuthentication(AuthenticationContext context)
         {
             if (!context.HttpContext.User.Identity.IsAuthenticated)
             {
-                context.Result = new HttpUnauthorizedResult();
+                var authtoken = context.HttpContext.Request.Cookies[AuthCockieName]; 
+                if (authtoken == null)
+                    context.Result = new HttpUnauthorizedResult();
                 return;
             }
 
-            var container = (IUnityContainer)context.HttpContext.Items["container"];
+            var container = (IUnityContainer)context.HttpContext.Items[MvcApplication.ContainerKey];
             var authenticationProvider = container.Resolve<IAuthenticationProvider>();
 
             if (authenticationProvider == null)
@@ -30,7 +33,7 @@ namespace Gateway.Web.Authorization
                 throw new Exception(message);
             }
 
-            var requestCookie = context.HttpContext.Request.Cookies["SIGMA_AUTH"];
+            var requestCookie = context.HttpContext.Request.Cookies[AuthCockieName];
             if (string.IsNullOrWhiteSpace(requestCookie?.Value))
             {
                 var jwtClaimsService = container.Resolve<IJwtClaimsService>();
@@ -70,7 +73,7 @@ namespace Gateway.Web.Authorization
                         Log(context, message);
                     }
 
-                    var httpCookie = new HttpCookie("SIGMA_AUTH", token) { Expires = expiry };
+                    var httpCookie = new HttpCookie(AuthCockieName, token) { Expires = expiry };
                     context.HttpContext.Response.Cookies.Add(httpCookie);
                 }
                 catch (Exception ex)
@@ -81,6 +84,10 @@ namespace Gateway.Web.Authorization
 
             if (requestCookie != null && requestCookie.Value != "INVALID")
                 authenticationProvider.SetToken(requestCookie.Value);
+
+            if(!authenticationProvider.HasToken())
+                context.Result = new HttpUnauthorizedResult();
+            
         }
 
         private void Log(AuthenticationContext context, string message)

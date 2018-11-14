@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Bagl.Cib.MIT.Redis.Caching;
 
 namespace Gateway.Web.Controllers
 {
@@ -19,19 +20,24 @@ namespace Gateway.Web.Controllers
         private readonly IGatewayDatabaseService _dataService;
         private readonly IServerDiagnosticsService _serverDiagnosticsService;
         private readonly IGatewayRestService _gateway;
+        private IRedisCache _cache;
 
         public HomeController(IGatewayDatabaseService dataService,
             IServerDiagnosticsService serverDiagnosticsService,
             ILoggingService loggingService,
-            IGatewayRestService gateway
+            IGatewayRestService gateway,
+            IRedisCache cache
             )
             : base(loggingService)
         {
             _dataService = dataService;
             _serverDiagnosticsService = serverDiagnosticsService;
             _gateway = gateway;
+            _cache = cache;
         }
 
+
+        //[OutputCache(Duration = 60, VaryByParam = "none")]
         public async Task<ActionResult> Index(string sortOrder)
         {
             if (string.IsNullOrEmpty(sortOrder))
@@ -50,7 +56,7 @@ namespace Gateway.Web.Controllers
             if(serverDiagnostics != null)
                 serverDiagnostics = FormatServerDiagnostics(serverDiagnostics);
 
-            var helper = new BatchHelper(_dataService, _gateway);
+            var helper = new BatchHelper(_dataService, _gateway, _cache);
             var reportDate = helper.GetPreviousWorkday();
             var batches = await helper.GetRiskBatchReportModel(reportDate);
 

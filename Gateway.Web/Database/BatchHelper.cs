@@ -1,30 +1,42 @@
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
-using Bagl.Cib.MSF.ClientAPI.Model;
 using Gateway.Web.Models.Home;
 using Gateway.Web.Utils;
 using Newtonsoft.Json;
-using RestSharp.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Bagl.Cib.MIT.Redis.Caching;
 
 namespace Gateway.Web.Database
 {
     public class BatchHelper
     {
-        private const string AllCountries =
-            "Botswana,Ghana,Kenya,Mauritius_IBD,Mauritius_Onshore,Mozambique,South_Africa,Seychelles,Tanzania,Tanzania_NBC,Uganda,Zambia";
+        private string[] AllCountries = {
+            "Mauritius_Onshore",
+            "Mauritius_IBD",
+            "South_Africa",
+            "Tanzania_NBC",
+            "Seychelles",
+            "Mozambique",
+            "Botswana",
+            "Tanzania",
+            "Uganda",
+            "Zambia",
+            "Ghana",
+            "Kenya"
+        };
 
         private readonly IGatewayDatabaseService _database;
         private readonly IGatewayRestService _gateway;
+        private readonly IRedisCache _cache;
 
-        public BatchHelper(IGatewayDatabaseService database, IGatewayRestService gateway)
+        public BatchHelper(IGatewayDatabaseService database, IGatewayRestService gateway, IRedisCache cache)
         {
             _database = database;
             _gateway = gateway;
+            _cache = cache;
         }
 
         public BatchDetail GetBatchDetails(string name, DateTime reportDate, Guid correlationId)
@@ -41,21 +53,30 @@ namespace Gateway.Web.Database
             return data;
         }
 
-        public Task<RiskBatchModel> GetRiskBatchReportModel(DateTime reportDate)
+        public async Task<RiskBatchModel> GetRiskBatchReportModel(DateTime reportDate)
         {
+            var cachedmodel = _cache.Get<RiskBatchModel>("RiskBatchReport");
+            if (cachedmodel != null)
+                return cachedmodel;
+
+
+
             var model = new RiskBatchModel();
 
             // Get data
-            var results = _database.GetBatchSummaryStats(reportDate, reportDate.AddDays(1));
+            var statsTask = _database.GetBatchSummaryStatsAsync(reportDate, reportDate.AddDays(1));
 
             // Get error date
-            var errorData = GetBatchSummaries(reportDate);
+            var errorTask = GetBatchSummariesAsync(reportDate);
+
+            Task[] tasks = {statsTask, errorTask};
+            Task.WaitAll(tasks);
 
             // Get list of sites (order descending in length so that matches are done correctly)
-            var sites = AllCountries.Split(',').OrderByDescending(s => s.Length).ToArray();
+            var sites = AllCountries;
 
             // Convert to Dictionary
-            var runs = GetResults(results, sites, reportDate, errorData);
+            var runs = GetResults(statsTask.Result, sites, reportDate, errorTask.Result);
 
             // Run through each site
             foreach (var site in sites.OrderBy(s => s))
@@ -101,7 +122,9 @@ namespace Gateway.Web.Database
                 }
             }
 
-            return Task.FromResult(model);
+            _cache.Add("RiskBatchReport", model);
+
+            return model;
         }
 
         private Dictionary<string, List<RiskBatchResult>> GetResults(List<ExtendedBatchSummary> results, string[] sites,
@@ -184,18 +207,21 @@ namespace Gateway.Web.Database
             return result;
         }
 
-        private List<BatchSummary> GetBatchSummaries(DateTime valuationDate)
+        private async Task<List<BatchSummary>> GetBatchSummariesAsync(DateTime valuationDate)
         {
-            var response = _gateway.Get("managementinterface", $"batch/{valuationDate:yyyy-MM-dd}/summary",
-                CancellationToken.None);
+            return await Task.Factory.StartNew(() =>
+            {
+                var response = _gateway.Get("managementinterface", $"batch/{valuationDate:yyyy-MM-dd}/summary",
+                    CancellationToken.None);
 
-            if (!response.Successfull || response.Content?.Payload == null)
-                return new List<BatchSummary>();
+                if (!response.Successfull || response.Content?.Payload == null)
+                    return new List<BatchSummary>();
 
-            var payload = response.Content.GetPayloadAsString();
-            var data = JsonConvert.DeserializeObject<List<BatchSummary>>(payload);
+                var payload = response.Content.GetPayloadAsString();
+                var data = JsonConvert.DeserializeObject<List<BatchSummary>>(payload);
 
-            return data;
+                return data;
+            }).ConfigureAwait(false);
         }
     }
 
@@ -217,17 +243,19 @@ namespace Gateway.Web.Database
             Items = new List<RiskBatchResult>();
         }
 
-        public string Name { get; private set; }
+        public string Name { get; set; }
 
         public int TotalRuns => Items.Count;
 
+        [JsonIgnore]
         public int CompleteRuns
         {
             get { return Items.Count(x => x.State == StateItemState.Okay); }
         }
 
-        public List<RiskBatchResult> Items { get; private set; }
+        public List<RiskBatchResult> Items { get; set; }
 
+        [JsonIgnore]
         public List<RiskBatchResult> IncompleteItems
         {
             get { return Items.Where(x => x.State != StateItemState.Okay).ToList(); }
