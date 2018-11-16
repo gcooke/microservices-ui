@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Bagl.Cib.MIT.Logging;
+using Bagl.Cib.MIT.Redis.Caching;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
 using Gateway.Web.Authorization;
 using Gateway.Web.Database;
@@ -18,15 +19,18 @@ namespace Gateway.Web.Controllers
         private readonly IRiskReportMonitoringService _riskReportMonitoringService;
         private readonly IGatewayDatabaseService _dataService;
         private readonly IGatewayRestService _gateway;
+        private IRedisCache _cache;
 
         public MonitoringController(ILoggingService loggingService,
             IRiskReportMonitoringService riskReportMonitoringService,
             IGatewayDatabaseService dataService,
-            IGatewayRestService gateway) : base(loggingService)
+            IGatewayRestService gateway,
+            IRedisCache cache) : base(loggingService)
         {
             _riskReportMonitoringService = riskReportMonitoringService;
             _dataService = dataService;
             _gateway = gateway;
+            _cache = cache;
         }
 
         public ActionResult Index()
@@ -63,9 +67,9 @@ namespace Gateway.Web.Controllers
 
         public async Task<ActionResult> RiskBatches()
         {
-            var helper = new BatchHelper(_dataService, _gateway);
+            var helper = new BatchHelper(_dataService, _gateway, _cache);
             var reportDate = helper.GetPreviousWorkday();
-            var batches = await helper.GetRiskBatchReportModel(reportDate);
+            var batches = await helper.GetRiskBatchReportModelAsync(reportDate);
             return View("RiskBatches", batches);
         }
 
@@ -73,7 +77,7 @@ namespace Gateway.Web.Controllers
         [Route("Batch/{site}/{name}/{correlationId}")]
         public ActionResult RiskBatchDetail(string site, string name, Guid correlationId)
         {
-            var helper = new BatchHelper(_dataService, _gateway);
+            var helper = new BatchHelper(_dataService, _gateway , _cache);
             var reportDate = helper.GetPreviousWorkday();
             var detail = helper.GetBatchDetails($"{site.ToUpper()}-{name}", reportDate, correlationId);
             return View("RiskBatchDetail", detail);

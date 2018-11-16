@@ -7,7 +7,7 @@ namespace Gateway.Web.Models.Home
         public DatabaseState(string name, DateTime last, StateItemState state, string text)
         {
             Name = name;            
-            Time = state == StateItemState.Okay ? "Okay" : "?% Full";
+            Time = state == StateItemState.Okay ? "Okay" : "Warning";
             State = state;
             Text = text;
         }

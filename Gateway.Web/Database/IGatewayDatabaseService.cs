@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Controllers;
 using Gateway.Web.Models.Home;
@@ -73,7 +74,7 @@ namespace Gateway.Web.Database
 
         bool HasStatusChanged(string controller, string version, string status, string alias);
 
-        List<ExtendedBatchSummary> GetBatchSummaryStats(DateTime @from, DateTime to);
+        Task<List<ExtendedBatchSummary>> GetBatchSummaryStatsAsync(DateTime @from, DateTime to);
         ResourceConfigModel GetConfiguredServers();
         ResourceConfigModel GetControllerResources();
 

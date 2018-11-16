@@ -319,12 +319,21 @@
     <Compile Include="Controllers\ExecutableScheduleController.cs" />
     <Compile Include="Controllers\BatchScheduleController.cs" />
     <Compile Include="Controllers\RequestScheduleController.cs" />
+    <Compile Include="Database\BatchCommentDto.cs" />
+    <Compile Include="Database\BatchDetail.cs" />
+    <Compile Include="Database\BatchExecution.cs" />
+    <Compile Include="Database\BatchIssues.cs" />
+    <Compile Include="Database\BatchSummary.cs" />
     <Compile Include="Database\ExecutableConfiguration.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
+    <Compile Include="Database\IBatchHelper.cs" />
     <Compile Include="Database\RequestConfiguration.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
+    <Compile Include="Database\RiskBatchGroup.cs" />
+    <Compile Include="Database\RiskBatchModel.cs" />
+    <Compile Include="Database\RiskBatchResult.cs" />
     <Compile Include="Database\Schedule.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
@@ -589,6 +598,7 @@
     <Compile Include="Services\BasicRestService.cs" />
     <Compile Include="Models\Batches\BatchConfigModel.cs" />
     <Compile Include="Services\Batches\BatchConfigDataService.cs" />
+    <Compile Include="Services\DatabaseStateProvider.cs" />
     <Compile Include="Services\Schedule\BaseScheduleService.cs" />
     <Compile Include="Services\Schedule\Interfaces\IRequestConfigurationService.cs" />
     <Compile Include="Services\Schedule\Models\BaseScheduleParameters.cs" />
