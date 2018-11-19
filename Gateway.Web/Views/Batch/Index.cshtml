@@ -38,23 +38,12 @@
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <table class="datatable table report-table" id="searchable-table">
                     <thead>
-                        <tr>
-                            <td></td>
-                            <td colspan="3">Details</td>
-                            <td colspan="3">Output</td>
-                            <td colspan="2">Currency</td>
-                            <td></td>
-                        </tr>
                         <tr style="background: #990505;">
                             <td>@Html.CheckBox("select-all", new { @class = "select-all-trigger", @data_children = "select-config" })</td>
                             <td>Type</td>
-                            <td>Trade Source Type</td>
-                            <td>Market Data Map</td>
                             <td>Type</td>
                             <td>Tag</td>
                             <td>State TTL (Minutes)</td>
-                            <td>Reporting</td>
-                            <td>Funding</td>
                             <td></td>
                         </tr>
                         <tr style="background: #ddd;">
@@ -77,18 +66,14 @@
                         </tr>
                     }
 
-                    @foreach (var item in Model.BatchConfigModels.OrderBy(x => x.Type).ThenBy(x => x.TradeSourceType))
+                    @foreach (var item in Model.BatchConfigModels.OrderBy(x => x.Type))
                     {
                         <tr>
                             <td>@Html.CheckBox("select-" + @item.Type, new { @class = "select-config", @data_id = @item.ConfigurationId })</td>
                             <td><a href="~/Schedule?SearchTerm=@item.Type">@item.Type</a></td>
-                            <td>@item.TradeSourceType</td>
-                            <td>@item.MarketDataMapName</td>
                             <td>@item.OutputType</td>
                             <td>@item.OutputTag</td>
                             <td>@item.StateTtlMinutes</td>
-                            <td>@item.ReportingCurrency</td>
-                            <td>@item.FundingCurrency</td>
                             <td>
                                 <a href="~/Schedule/Batch/Create/@item.ConfigurationId" class="text-center glyphicon glyphicon glyphicon-dashboard"></a>
                                 <a href="~/Batch/Update/@item.ConfigurationId" class="text-center glyphicon glyphicon-pencil"></a>

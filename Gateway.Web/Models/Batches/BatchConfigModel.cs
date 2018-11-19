@@ -20,16 +20,6 @@ namespace Gateway.Web.Models.Batches
         public string Type { get; set; }
 
         [Required]
-        [Display(Name = "Trade Source Type")]
-        [StringLength(100, ErrorMessage = "Trade Source Type cannot be longer than 100 characters.")]
-        public string TradeSourceType { get; set; }
-
-        [Required]
-        [Display(Name = "Market Data Map")]
-        [StringLength(100, ErrorMessage = "Trade Source Type cannot be longer than 100 characters.")]
-        public string MarketDataMapName { get; set; }
-
-        [Required]
         [Display(Name = "Output Type")]
         [StringLength(100, ErrorMessage = "Output Type cannot be longer than 100 characters.")]
         public string OutputType { get; set; }
@@ -44,16 +34,6 @@ namespace Gateway.Web.Models.Batches
         [RegularExpression(@"^[0-9]*$", ErrorMessage = "The State Time to Live (Minutes) field name must contain numbers only.")]
         public int? StateTtlMinutes { get; set; }
 
-        [Required]
-        [Display(Name = "Reporting Currency")]
-        [StringLength(3, ErrorMessage = "Reporting Currency cannot be longer than 3 characters.")]
-        public string ReportingCurrency { get; set; }
-
-        [Required]
-        [Display(Name = "Funding Currency")]
-        [StringLength(3, ErrorMessage = "Funding Currency cannot be longer than 3 characters.")]
-        public string FundingCurrency { get; set; }
-
         public bool CreateAnother { get; set; }
 
         public bool IsSelected { get; set; }
@@ -64,30 +44,11 @@ namespace Gateway.Web.Models.Batches
 
         public int ScheduleCount { get; set; }
         
-        public IList<SelectListItem> TradeSourceTypes
-        {
-            get
-            {
-                var values = Enum.GetValues(typeof(TradeSourceType)).Cast<TradeSourceType>();
-                return values.Select(x => new SelectListItem { Value = x.ToString(), Text = x.ToString() }).ToList();
-            }
-        }
-
         public IList<SelectListItem> OutputTypes
         {
             get
             {
                 var values = Enum.GetValues(typeof(OutputType)).Cast<OutputType>();
-                return values.Select(x => new SelectListItem { Value = x.ToString(), Text = x.ToString() }).ToList();
-            }
-        }
-
-
-        public IList<SelectListItem> MarketDataMaps
-        {
-            get
-            {
-                var values = Enum.GetValues(typeof(MarketDataMap)).Cast<MarketDataMap>();
                 return values.Select(x => new SelectListItem { Value = x.ToString(), Text = x.ToString() }).ToList();
             }
         }

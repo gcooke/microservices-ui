@@ -6,9 +6,9 @@
         {
             get
             {
-                if (RiskBatchConfiguration != null)
+                if (RiskBatchSchedule != null)
                 {
-                    return $"{RiskBatchConfiguration.Type} - {TradeSource} ({RiskBatchConfiguration.TradeSourceType})";
+                    return $"{RiskBatchSchedule.RiskBatchConfiguration.Type} - {RiskBatchSchedule.TradeSource} ({RiskBatchSchedule.TradeSourceType})";
                 }
 
                 if (RequestConfiguration != null)
@@ -29,9 +29,9 @@
         {
             get
             {
-                if (RiskBatchConfiguration != null)
+                if (RiskBatchSchedule != null)
                 {
-                    return $"{RiskBatchConfiguration.Type} - {TradeSource} ({RiskBatchConfiguration.TradeSourceType})";
+                    return $"{RiskBatchSchedule.RiskBatchConfiguration.Type} - {RiskBatchSchedule.TradeSource} ({RiskBatchSchedule.TradeSourceType})";
                 }
 
                 if (RequestConfiguration != null)
@@ -52,7 +52,7 @@
         {
             get
             {
-                if (RiskBatchConfiguration != null)
+                if (RiskBatchSchedule != null)
                 {
                     return "BATCH";
                 }

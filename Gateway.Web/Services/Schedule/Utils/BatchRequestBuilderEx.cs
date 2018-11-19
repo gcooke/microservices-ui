@@ -23,7 +23,7 @@ namespace Gateway.Web.Services.Schedule.Utils
             if (schedule.ScheduleId == 0)
                 throw new Exception("Unable to create request for scheduling - Schedule Id is set to 0.");
 
-            if (schedule.RiskBatchConfigurationId.HasValue)
+            if (schedule.RiskBatchScheduleId.HasValue)
             {
                 var batchRequest = RedstoneRequestBuilder
                     .Create()

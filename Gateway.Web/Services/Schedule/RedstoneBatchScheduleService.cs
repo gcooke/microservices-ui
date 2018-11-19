@@ -7,10 +7,10 @@ using Absa.Cib.MIT.TaskScheduling.Models;
 using Bagl.Cib.MIT.IoC;
 using Bagl.Cib.MIT.Logging;
 using Gateway.Web.Database;
-using Gateway.Web.Enums;
 using Gateway.Web.Models.Schedule.Input;
 using Gateway.Web.Services.Schedule.Models;
 using Gateway.Web.Services.Schedule.Utils;
+using Newtonsoft.Json;
 
 namespace Gateway.Web.Services.Schedule
 {
@@ -43,12 +43,9 @@ namespace Gateway.Web.Services.Schedule
             var schedules = new List<Database.Schedule>();
             foreach (var config in parameters.Configurations)
             {
-                foreach (var tradeSource in parameters.TradeSources)
+                foreach (var tradeSourceParameter in parameters.TradeSources)
                 {
-                    var source = tradeSource.Key;
-                    var site = tradeSource.Value;
-
-                    var key = GenerateKey(config, source);
+                    var key = GenerateKey(config, tradeSourceParameter.TradeSource);
                     var entity = GetSchedule(db, parameters.ScheduleId, key);
                     var errors = parameters.Validate(entity);
 
@@ -60,16 +57,36 @@ namespace Gateway.Web.Services.Schedule
 
                     jobKeys.Add(key);
 
-                    AssignSchedule(entity, parameters, config, source, site);
+                    var riskBatchSchedule = GetRiskBatchSchedule(db, config.ConfigurationId, tradeSourceParameter) ?? new RiskBatchSchedule();
+                    if (riskBatchSchedule.RiskBatchScheduleId == 0 && entity.ScheduleId != 0)
+                        entity = new Database.Schedule() { ScheduleKey = key };
+
+                    AssignSchedule(entity, riskBatchSchedule, parameters, tradeSourceParameter, config.ConfigurationId);
 
                     if (parameters.ModifyParent) HandleParentSchedule(entity, parameters);
                     if (parameters.ModifyChildren) HandleChildSchedules(entity, parameters);
+
+                    if (riskBatchSchedule.RiskBatchScheduleId == 0)
+                    {
+                        riskBatchSchedule.Schedules.Add(entity);
+                        db.RiskBatchSchedules.Add(riskBatchSchedule);
+                    }
 
                     schedules.Add(entity);
                 }
             }
 
             return schedules;
+        }
+
+        private RiskBatchSchedule GetRiskBatchSchedule(GatewayEntities db, long configurationId, TradeSourceParameter tradeSource)
+        {
+            return db.RiskBatchSchedules
+                .Where(x => x.RiskBatchConfigurationId == configurationId)
+                .Where(x => x.TradeSourceType == tradeSource.TradeSourceType)
+                .Where(x => x.TradeSource == tradeSource.TradeSource)
+                .Where(x => x.Site == tradeSource.Site)
+                .SingleOrDefault();
         }
 
         protected override RedstoneRequest GetJob(Database.Schedule schedule, DateTime? businessDate = null)
@@ -92,12 +109,17 @@ namespace Gateway.Web.Services.Schedule
             return $"BATCH={configuration.ConfigurationId}-TRADESOURCE={tradeSource.ToUpper().Trim()}";
         }
 
-        protected virtual void AssignSchedule(Database.Schedule entity, BatchScheduleParameters parameters, RiskBatchConfiguration configuration, string tradeSource, string site)
+        protected virtual void AssignSchedule(Database.Schedule entity, RiskBatchSchedule riskBatchSchedule, BatchScheduleParameters parameters, TradeSourceParameter tradeSourceParameter, long configurationId)
         {
             base.AssignSchedule(entity, parameters);
-            entity.RiskBatchConfigurationId = configuration.ConfigurationId;
-            entity.TradeSource = tradeSource.Trim();
-            entity.Site = site?.Trim() ?? tradeSource.Trim();
+            riskBatchSchedule.RiskBatchConfigurationId = configurationId;
+            riskBatchSchedule.TradeSourceType = tradeSourceParameter.TradeSourceType.Trim();
+            riskBatchSchedule.TradeSource = tradeSourceParameter.TradeSource.Trim();
+            riskBatchSchedule.Site = tradeSourceParameter.Site?.Trim() ?? tradeSourceParameter.TradeSource.Trim();
+            riskBatchSchedule.MarketDataMap = tradeSourceParameter.MarketDataMap?.Trim();
+            riskBatchSchedule.FundingCurrency = tradeSourceParameter.FundingCurrency?.Trim();
+            riskBatchSchedule.ReportingCurrency = tradeSourceParameter.ReportingCurrency?.Trim();
+            riskBatchSchedule.AdditionalProperties = JsonConvert.SerializeObject(parameters.Properties);
         }
     }
 }

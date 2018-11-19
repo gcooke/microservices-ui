@@ -17,17 +17,11 @@ namespace Gateway.Web.Database
     
     public partial class GatewayEntities : DbContext
     {
-        //public GatewayEntities()
-        //    : base("name=GatewayEntities")
-        //{
-        //}
-
-        public GatewayEntities(string connectionstring)
-            : base(connectionstring)
+        public GatewayEntities(string connectionString)
+            : base(connectionString)
         {
-
         }
-
+    
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             throw new UnintentionalCodeFirstException();
@@ -50,11 +44,12 @@ namespace Gateway.Web.Database
         public virtual DbSet<ScheduleGroup> ScheduleGroups { get; set; }
         public virtual DbSet<ScheduledJob> ScheduledJobs { get; set; }
         public virtual DbSet<RequestConfiguration> RequestConfigurations { get; set; }
-        public virtual DbSet<Schedule> Schedules { get; set; }
-        public virtual DbSet<RiskBatchConfiguration> RiskBatchConfigurations { get; set; }
         public virtual DbSet<ExecutableConfiguration> ExecutableConfigurations { get; set; }
+        public virtual DbSet<RiskBatchConfiguration> RiskBatchConfigurations { get; set; }
+        public virtual DbSet<RiskBatchSchedule> RiskBatchSchedules { get; set; }
+        public virtual DbSet<Schedule> Schedules { get; set; }
     
-        public virtual ObjectResult<spGetRequestStats_Result> spGetRequestStats(Nullable<System.DateTime> start, string controller)
+        public virtual ObjectResult<spGetJobStats_Result> spGetJobStats(Nullable<System.DateTime> start, string controller)
         {
             var startParameter = start.HasValue ?
                 new ObjectParameter("Start", start) :
@@ -64,16 +59,16 @@ namespace Gateway.Web.Database
                 new ObjectParameter("Controller", controller) :
                 new ObjectParameter("Controller", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetRequestStats_Result>("spGetRequestStats", startParameter, controllerParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetJobStats_Result>("spGetJobStats", startParameter, controllerParameter);
         }
     
-        public virtual ObjectResult<spGetRequestStatsAll_Result> spGetRequestStatsAll(Nullable<System.DateTime> start)
+        public virtual ObjectResult<spGetJobStatsAll_Result> spGetJobStatsAll(Nullable<System.DateTime> start)
         {
             var startParameter = start.HasValue ?
                 new ObjectParameter("Start", start) :
                 new ObjectParameter("Start", typeof(System.DateTime));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetRequestStatsAll_Result>("spGetRequestStatsAll", startParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetJobStatsAll_Result>("spGetJobStatsAll", startParameter);
         }
     
         public virtual ObjectResult<spGetTimeStats_Result> spGetTimeStats(Nullable<System.DateTime> start, string controller)
@@ -200,13 +195,13 @@ namespace Gateway.Web.Database
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetControllerStates_Result>("spGetControllerStates");
         }
     
-        public virtual ObjectResult<spGetRequestCounts_Result> spGetRequestCounts(Nullable<System.DateTime> start)
+        public virtual ObjectResult<spGetJobCounts_Result> spGetJobCounts(Nullable<System.DateTime> start)
         {
             var startParameter = start.HasValue ?
                 new ObjectParameter("Start", start) :
                 new ObjectParameter("Start", typeof(System.DateTime));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetRequestCounts_Result>("spGetRequestCounts", startParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetJobCounts_Result>("spGetJobCounts", startParameter);
         }
     
         public virtual ObjectResult<spGetIncompleteRequestCount_Result> spGetIncompleteRequestCount(Nullable<System.DateTime> time)
@@ -216,6 +211,28 @@ namespace Gateway.Web.Database
                 new ObjectParameter("time", typeof(System.DateTime));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetIncompleteRequestCount_Result>("spGetIncompleteRequestCount", timeParameter);
+        }
+    
+        public virtual ObjectResult<spGetRequestCounts_Result> spGetRequestCounts(Nullable<System.DateTime> start)
+        {
+            var startParameter = start.HasValue ?
+                new ObjectParameter("Start", start) :
+                new ObjectParameter("Start", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetRequestCounts_Result>("spGetRequestCounts", startParameter);
+        }
+    
+        public virtual ObjectResult<spGetRequestStats_Result> spGetRequestStats(Nullable<System.DateTime> start, string controller)
+        {
+            var startParameter = start.HasValue ?
+                new ObjectParameter("Start", start) :
+                new ObjectParameter("Start", typeof(System.DateTime));
+    
+            var controllerParameter = controller != null ?
+                new ObjectParameter("Controller", controller) :
+                new ObjectParameter("Controller", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetRequestStats_Result>("spGetRequestStats", startParameter, controllerParameter);
         }
     }
 }

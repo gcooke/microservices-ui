@@ -3,7 +3,12 @@
 		<add key="DatabaseServer">
 			<environment key="PROD" value="JHBPSM05031V05A\MOPL_MAIN1_PROD"/>
 			<environment key="UAT" value="JHBDCM05010V05A\HSCE_UAT"/>
-			<environment key="DEV" value="JHBDCM05011V05A\HSCE_DEV"/>
+			<environment key="DEV" value="ZAPRNBMSQL1045.corp.dsarena.com\SIGMA_MAIN1_DEV"/>
+		</add>
+		<add key="DnsName">
+			<environment key="PROD" value="abcap-foutils.intra.absa.co.za" />
+			<environment key="UAT" value="abcap-foutils-uat.intra.absa.co.za" />
+			<environment key="DEV" value="sigma-dev.absa.co.za" />
 		</add>
 		<add key="GatewayDatabase" value="Gateway" />
 		<add key="PnRFODatabase" value="PnRFO" />
@@ -13,22 +18,23 @@
 		<add key="RedisConnection">
 			<environment key="PROD" value="JHBPSM020001294:6379" />
 			<environment key="UAT" value="ZADRNBRAPP1085.corp.dsarena.com" />
-			<environment key="DEV" value="localhost:6379" />
+			<environment key="DEV" value="ZAPRNBRAPP1170.corp.dsarena.com:6379" />
 		</add>
 		 <add key="TradeFeedRedisConnection">
 			<environment key="PROD" value="JHBPSM020001301:6379" />
-			<environment key="UAT" value="JHBPSM020001295.6379" />
-			<environment key="DEV" value="localhost:6379" />
+			<environment key="UAT" value="JHBPSM020001301:6379" />
+			<environment key="DEV" value="JHBPSM020001301:6379" />
 		</add>
 		<add key="TokenIssuer">
 			<environment key="PROD" value="https://abcap-foutils.intra.absa.co.za/" />
 			<environment key="UAT" value="https://abcap-foutils-uat.intra.absa.co.za/" />
-			<environment key="DEV" value="https://sigma-dev.intra.absa.co.za/;https://sigma-dev.absa.co.za/" />
+			<environment key="DEV" value="https://sigma-dev.absa.co.za/" />
 		</add>
+		<add key="TokenAudience" value="*" />
 		<add key="RedstoneBaseUrl">
 			<environment key="PROD" value="https://abcap-foutils.intra.absa.co.za:7010/" />
 			<environment key="UAT" value="https://abcap-foutils-uat.intra.absa.co.za:7010/" />
-			<environment key="DEV" value="https://sigma-dev.intra.absa.co.za:7010/" />
+			<environment key="DEV" value="https://sigma-dev.absa.co.za:7010/" />
 		</add>
 		<add key="MEServer" value="MEPDN.JHB" />
 		<add key="FaRoAServers">
@@ -60,6 +66,11 @@
 			<environment key="PROD" value="http://jhbpsm020000889:8090/AMBAProxy/default"/>
 			<environment key="UAT" value="http://jhbpsm020000758:8901/AMBAProxy/default"/>
 			<environment key="DEV" value="http://jhbpsm020000757:8901/AMBAProxy/default"/>
+		</add>
+		<add key="LibraAgreementService">
+			<environment key="PROD" value="baseUrl=https://digitalsg.intra.absa.co.za:9697/;systemAccount=corp/SVC-sigma-libra-prod;password=5C8z23aYLmrT;apiId=9c3d7dbf-0615-4a26-8dae-4396c1b98624" />
+			<environment key="UAT"  value="baseUrl=https://digitalsg.intra.absa.co.za:9697/;systemAccount=corp/SVC-sigma-libra-prod;password=5C8z23aYLmrT;apiId=9c3d7dbf-0615-4a26-8dae-4396c1b98624" />
+			<environment key="DEV"  value="baseUrl=https://digitalsg.intra.absa.co.za:9697/;systemAccount=corp/SVC-sigma-libra-prod;password=5C8z23aYLmrT;apiId=9c3d7dbf-0615-4a26-8dae-4396c1b98624" />
 		</add>
 	</Common>
 	<Applications>

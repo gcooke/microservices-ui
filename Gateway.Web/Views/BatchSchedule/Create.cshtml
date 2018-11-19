@@ -47,6 +47,9 @@
                                             <a href="#trade-sources" data-toggle="tab">Trade Sources</a>
                                         </li>
                                         <li>
+                                            <a href="#properties" data-toggle="tab">Properties</a>
+                                        </li>
+                                        <li>
                                             <a href="#group" data-toggle="tab">Group</a>
                                         </li>
                                         <li>
@@ -58,23 +61,116 @@
                                     <div class="tab-content">
                                         <div class="tab-pane fade active in" id="batch-config">
                                             <div class="form-group">
-                                                @Html.LabelFor(m => m.ConfigurationIdList, new {@class = "control-label"})
-                                                @Html.ListBoxFor(m => m.ConfigurationIdList, Model.Types, new {@name = "ConfigurationIdList", @class = "form-control", style = "height: 500px;"})
+                                                @Html.LabelFor(m => m.ConfigurationIdList, new { @class = "control-label" })
+                                                @Html.ListBoxFor(m => m.ConfigurationIdList, Model.Types, new { @name = "ConfigurationIdList", @class = "form-control", style = "height: 500px;" })
                                             </div>
                                         </div>
                                         <div class="tab-pane fade" id="trade-sources">
                                             <div class="form-group">
-                                                @Html.LabelFor(m => m.TradeSources, new { @class = "control-label" })
-                                                @Html.TextAreaFor(m => m.TradeSources, new { @rows = "25", @name = "TradeSources", Placeholder = "This is a comma-separated list.\n\nPlease note when providing a PORTFOLIO or COUNTERPARTY, the SITE also needs to be provided in the form:\n<{SdsId}|{Portfolio Name}>;{Site}\n\nFor example,\n\nVOE;SOUTH_AFRICA,\nBOTSWANA,\n21293201;KENYA", @class = "form-control" })
+                                                @Html.LabelFor(m => m.TradeSourceType, new { @class = "control-label" })
+                                                @Html.DropDownListFor(m => m.TradeSourceType, Model.TradeSourceTypes, new { name = "TradeSourceType", @class = "form-control" })
+                                                <table style="width: 100%;" class="table table-bordered m-t-20">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Trade Source</th>
+                                                            <th>Site</th>
+                                                            <th>Market Data Map</th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="header-table-body" class="editable-table">
+                                                        @if (Model.TradeSources.Any(x => x.TradeSourceType != null))
+                                                        {
+                                                            foreach (var index in Enumerable.Range(0, Math.Max(1, Model.TradeSources.Count(x => x.TradeSourceType != null))))
+                                                            {
+                                                                <tr style="padding: 0 !important">
+                                                                    <td style="padding: 0 !important">
+                                                                        @Html.TextBoxFor(m => m.TradeSources[index].TradeSource, new { @class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;" })
+                                                                    </td>
+                                                                    <td style="padding: 0 !important">
+                                                                        @Html.TextBoxFor(m => m.TradeSources[index].Site, new { @class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;" })
+                                                                    </td>
+                                                                    <td style="padding: 0 !important">
+                                                                        @Html.TextBoxFor(m => m.TradeSources[index].MarketDataMap, new { @class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;" })
+                                                                    </td>
+                                                                    <td>
+                                                                        <a>[X]</a>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            if (Model.TradeSources.Count > 0)
+                                                            {
+                                                                <tr style="padding: 0 !important">
+                                                                    <td style="padding: 0 !important">@Html.TextBoxFor(m => m.TradeSources[0].TradeSource, new { @class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;" })</td>
+                                                                    <td style="padding: 0 !important">@Html.TextBoxFor(m => m.TradeSources[0].Site, new { @class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;" })</td>
+                                                                    <td style="padding: 0 !important">@Html.TextBoxFor(m => m.TradeSources[0].MarketDataMap, new { @class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;" })</td>
+                                                                    <td>
+                                                                        <a>[X]</a>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                                <a class="add-row-button" data-table-body="#header-table-body">Insert Row</a>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="properties">
+                                            <div class="form-group">
+                                                <table style="width: 100%;" class="table table-bordered m-t-20">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Name</th>
+                                                            <th>Value</th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="properties-table-body" class="editable-table">
+                                                        @if (Model.Properties.Any(x => x.Key != null))
+                                                        {
+                                                            foreach (var index in Enumerable.Range(0, Math.Max(1, Model.Properties.Count(x => x.Key != null))))
+                                                            {
+                                                                <tr style="padding: 0 !important">
+                                                                    <td style="padding: 0 !important">
+                                                                        @Html.TextBoxFor(m => m.Properties[index].Key, new { @class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;" })
+                                                                    </td>
+                                                                    <td style="padding: 0 !important">
+                                                                        @Html.TextBoxFor(m => m.Properties[index].Value, new { @class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;" })
+                                                                    </td>
+                                                                    <td>
+                                                                        <a>[X]</a>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            if (Model.Properties.Count > 0)
+                                                            {
+                                                                <tr style="padding: 0 !important">
+                                                                    <td style="padding: 0 !important">@Html.TextBoxFor(m => m.Properties[0].Key, new { @class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;" })</td>
+                                                                    <td style="padding: 0 !important">@Html.TextBoxFor(m => m.Properties[0].Value, new { @class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;" })</td>
+                                                                    <td>
+                                                                        <a>[X]</a>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                                <a class="add-row-button" data-table-body="#properties-table-body">Insert Row</a>
                                             </div>
                                         </div>
                                         <div class="tab-pane fade" id="group">
                                             <div class="form-group">
-                                                @Html.LabelFor(m => m.Group, new {@class = "control-label"})
+                                                @Html.LabelFor(m => m.Group, new { @class = "control-label" })
                                                 <small>A group is a collection of batches that will run at the same time of the day.</small>
-                                                @Html.DropDownListFor(m => m.Group, Model.Groups, new {@name = "Group", @class = "form-control"})
+                                                @Html.DropDownListFor(m => m.Group, Model.Groups, new { @name = "Group", @class = "form-control" })
                                                 <div class="input-group m-t-5">
-                                                    @Html.TextBoxFor(m => m.GroupName, new {@name = "GroupName", placeholder = "Input a cron expression for the group OR use the 'Generate Cron' button to generate one.", @class = "form-control", @style = "margin-top: 0 !important"})
+                                                    @Html.TextBoxFor(m => m.GroupName, new { @name = "GroupName", placeholder = "Input a cron expression for the group OR use the 'Generate Cron' button to generate one.", @class = "form-control", @style = "margin-top: 0 !important" })
                                                     <span class="input-group-btn">
                                                         <a href="https://crontab.guru/" target="_blank" class="btn btn-default" type="button">Generate Cron</a>
                                                     </span>
@@ -85,13 +181,13 @@
                                             @if (!Model.BulkUpdate)
                                             {
                                                 <div class="form-group">
-                                                    @Html.LabelFor(m => m.Parent, new {@class = "control-label"})
-                                                    @Html.DropDownListFor(m => m.Parent, Model.Parents, new {@name = "ConfigurationId", @class = "form-control"})
+                                                    @Html.LabelFor(m => m.Parent, new { @class = "control-label" })
+                                                    @Html.DropDownListFor(m => m.Parent, Model.Parents, new { @name = "ConfigurationId", @class = "form-control" })
                                                 </div>
 
                                                 <div class="form-group">
-                                                    @Html.LabelFor(m => m.Children, new {@class = "control-label"})
-                                                    @Html.ListBoxFor(m => m.Children, Model.ChildSchedules, new {@multiple = "true", @name = "ConfigurationId", @class = "form-control", style = "height: 500px;"})
+                                                    @Html.LabelFor(m => m.Children, new { @class = "control-label" })
+                                                    @Html.ListBoxFor(m => m.Children, Model.ChildSchedules, new { @multiple = "true", @name = "ConfigurationId", @class = "form-control", style = "height: 500px;" })
                                                 </div>
                                             }
                                             else

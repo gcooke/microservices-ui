@@ -107,12 +107,6 @@ namespace Gateway.Web.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    TradeSourceType tradeSourceType;
-                    if (!Enum.TryParse(model.TradeSourceType, out tradeSourceType))
-                    {
-                        ModelState.AddModelError(nameof(model.TradeSourceType), "Invalid Trade Source Type provided.");
-                    }
-
                     OutputType outputType;
                     if (!Enum.TryParse(model.OutputType, out outputType))
                     {

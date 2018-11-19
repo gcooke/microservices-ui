@@ -10,15 +10,14 @@ namespace Gateway.Web.Services.Batches.Utils
             return new BatchConfigModel
             {
                 ConfigurationId = config.ConfigurationId,
-                MarketDataMapName = config.MarketDataMapName,
                 OutputTag = config.OutputTag,
                 OutputType = config.OutputType,
                 StateTtlMinutes = config.StateTtlMinutes,
-                TradeSourceType = config.TradeSourceType,
                 Type = config.Type,
-                ReportingCurrency = config.ReportingCurrency,
-                FundingCurrency = config.FundingCurrency,
-                ScheduleCount = config.Schedules.Count
+                //MarketDataMapName = config.MarketDataMapName,
+                //TradeSourceType = config.TradeSourceType,
+                //ReportingCurrency = config.ReportingCurrency,
+                //FundingCurrency = config.FundingCurrency,
             };
         }
 
@@ -28,28 +27,28 @@ namespace Gateway.Web.Services.Batches.Utils
             return new RiskBatchConfiguration
             {
                 ConfigurationId = config.ConfigurationId,
-                MarketDataMapName = config.MarketDataMapName,
                 OutputTag = config.OutputTag,
                 OutputType = config.OutputType,
                 StateTtlMinutes = config.StateTtlMinutes ?? 0,
-                TradeSourceType = config.TradeSourceType,
                 Type = config.Type,
-                ReportingCurrency = config.ReportingCurrency,
-                FundingCurrency = config.FundingCurrency,
+                //MarketDataMapName = config.MarketDataMapName,
+                //TradeSourceType = config.TradeSourceType,
+                //ReportingCurrency = config.ReportingCurrency,
+                //FundingCurrency = config.FundingCurrency,
             };
         }
 
         public static void UpdateEntity(this RiskBatchConfiguration configuration, BatchConfigModel model)
         {
             configuration.ConfigurationId = model.ConfigurationId;
-            configuration.MarketDataMapName = model.MarketDataMapName;
             configuration.OutputTag = model.OutputTag;
             configuration.OutputType = model.OutputType;
             configuration.StateTtlMinutes = model.StateTtlMinutes ?? 0;
-            configuration.TradeSourceType = model.TradeSourceType;
             configuration.Type = model.Type;
-            configuration.ReportingCurrency = model.ReportingCurrency;
-            configuration.FundingCurrency = model.FundingCurrency;
+            //configuration.MarketDataMapName = model.MarketDataMapName;
+            //configuration.TradeSourceType = model.TradeSourceType;
+            //configuration.ReportingCurrency = model.ReportingCurrency;
+            //configuration.FundingCurrency = model.FundingCurrency;
         }
     }
 }
