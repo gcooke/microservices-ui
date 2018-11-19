@@ -39,7 +39,8 @@ namespace Gateway.Web.Services.Schedule.Models
             {
                 var parentId = long.Parse(model.Parent);
                 Parent = db.Schedules
-                    .Include("RiskBatchConfiguration")
+                    .Include("RiskBatchSchedule")
+                    .Include("RiskBatchSchedule.RiskBatchConfiguration")
                     .Include("ExecutableConfiguration")
                     .Include("ExecutableConfiguration")
                     .Include("RequestConfiguration")
@@ -54,7 +55,7 @@ namespace Gateway.Web.Services.Schedule.Models
             if (model.Children != null)
             {
                 Children = db.Schedules
-                    .Include("RiskBatchConfiguration")
+                    .Include("RiskBatchSchedule")
                     .Include("RequestConfiguration")
                     .Include("ParentSchedule")
                     .Include("Children")

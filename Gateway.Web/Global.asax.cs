@@ -50,6 +50,7 @@ namespace Gateway.Web
             GlobalFilters.Filters.Add(new GatewayAuthenticationFilter());
 
             ModelBinders.Binders[typeof(ScheduleWebRequestModel)] = new ScheduleWebRequestModelBinder();
+            ModelBinders.Binders[typeof(ScheduleBatchModel)] = new ScheduleBatchModelBinder();
 
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);

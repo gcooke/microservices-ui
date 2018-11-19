@@ -151,7 +151,8 @@ namespace Gateway.Web.Services.Batches
             using (var db = new GatewayEntities(ConnectionString))
             {
                 var items = db.Schedules
-                    .Include("RiskBatchConfiguration")
+                    .Include("RiskBatchSchedule")
+                    .Include("RiskBatchSchedule.RiskBatchConfiguration")
                     .Include("RequestConfiguration")
                     .Include("ExecutableConfiguration")
                     .Include("ParentSchedule")
@@ -198,10 +199,8 @@ namespace Gateway.Web.Services.Batches
                 return x => true;
 
             var term = s.ToLower();
-            return x => x.MarketDataMapName.ToLower().Contains(term) ||
-                        x.OutputTag.ToLower().Contains(term) ||
+            return x => x.OutputTag.ToLower().Contains(term) ||
                         x.OutputType.ToLower().Contains(term) ||
-                        x.TradeSourceType.ToLower().Contains(term) ||
                         x.Type.ToLower().Contains(term);
         }
 
@@ -210,18 +209,18 @@ namespace Gateway.Web.Services.Batches
             if (batchConfigModel.IsUpdating)
             {
                 var existingItem = db.RiskBatchConfigurations.SingleOrDefault(x => x.ConfigurationId == batchConfigModel.ConfigurationId);
-                if (existingItem != null && existingItem.Type == batchConfigModel.Type && existingItem.TradeSourceType == batchConfigModel.TradeSourceType)
+                if (existingItem != null && existingItem.Type == batchConfigModel.Type)
                 {
                     return true;
                 }
 
-                if (existingItem != null && (existingItem.Type != batchConfigModel.Type || existingItem.TradeSourceType != batchConfigModel.TradeSourceType))
+                if (existingItem != null && (existingItem.Type != batchConfigModel.Type))
                 {
-                    return db.RiskBatchConfigurations.Count(x => x.Type == batchConfigModel.Type && x.TradeSourceType == batchConfigModel.TradeSourceType) == 0;
+                    return db.RiskBatchConfigurations.Count(x => x.Type == batchConfigModel.Type) == 0;
                 }
             }
 
-            return db.RiskBatchConfigurations.Count(x => x.Type == batchConfigModel.Type && x.TradeSourceType == batchConfigModel.TradeSourceType) == 0;
+            return db.RiskBatchConfigurations.Count(x => x.Type == batchConfigModel.Type) == 0;
         }
     }
 }

@@ -19,7 +19,7 @@ namespace Gateway.Web.Services.Schedule.Utils
                 Name = schedule.Name,
                 Key = schedule.Key,
                 IsEnabled = schedule.IsEnabled ?? true,
-                IsBatch = schedule.RiskBatchConfigurationId != null,
+                IsBatch = schedule.RiskBatchScheduleId != null,
                 IsExe = schedule.ExecutableConfigurationId != null
             };
 

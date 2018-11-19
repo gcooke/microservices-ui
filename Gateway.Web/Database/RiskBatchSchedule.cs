@@ -12,22 +12,26 @@ namespace Gateway.Web.Database
     using System;
     using System.Collections.Generic;
     
-    public partial class RiskBatchConfiguration
+    public partial class RiskBatchSchedule
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public RiskBatchConfiguration()
+        public RiskBatchSchedule()
         {
-            this.RiskBatchSchedules = new HashSet<RiskBatchSchedule>();
+            this.Schedules = new HashSet<Schedule>();
         }
     
-        public long ConfigurationId { get; set; }
-        public string Type { get; set; }
-        public string OutputType { get; set; }
-        public string OutputTag { get; set; }
-        public int StateTtlMinutes { get; set; }
-        public int JobProcessorCount { get; set; }
+        public long RiskBatchScheduleId { get; set; }
+        public string TradeSource { get; set; }
+        public string Site { get; set; }
+        public string FundingCurrency { get; set; }
+        public string ReportingCurrency { get; set; }
+        public string MarketDataMap { get; set; }
+        public long RiskBatchConfigurationId { get; set; }
+        public string TradeSourceType { get; set; }
+        public string AdditionalProperties { get; set; }
     
+        public virtual RiskBatchConfiguration RiskBatchConfiguration { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<RiskBatchSchedule> RiskBatchSchedules { get; set; }
+        public virtual ICollection<Schedule> Schedules { get; set; }
     }
 }

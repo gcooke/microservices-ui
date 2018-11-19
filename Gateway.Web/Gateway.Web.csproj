@@ -334,6 +334,9 @@
     <Compile Include="Database\RiskBatchGroup.cs" />
     <Compile Include="Database\RiskBatchModel.cs" />
     <Compile Include="Database\RiskBatchResult.cs" />
+    <Compile Include="Database\RiskBatchSchedule.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
     <Compile Include="Database\Schedule.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
@@ -344,6 +347,22 @@
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\SchedulePartial.cs" />
+    <Compile Include="Database\spGetJobCounts_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\spGetJobStatsAll_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\spGetJobStats_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\spGetRequestCounts_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\spGetRequestStats_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ModelBindersConverters\ScheduleBatchModelBinder.cs" />
     <Compile Include="Models\Schedule\Input\BaseScheduleModel.cs" />
     <Compile Include="Models\Schedule\Output\ScheduleGroup.cs" />
     <Compile Include="Models\Schedule\Output\ScheduleStatus.cs" />
@@ -431,15 +450,6 @@
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\spGetRequestChildSummary_Result.cs">
-      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Database\spGetRequestCounts_Result.cs">
-      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Database\spGetRequestStatsAll_Result.cs">
-      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Database\spGetRequestStats_Result.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\Controller.cs">
@@ -873,9 +883,7 @@
     <Content Include="Views\Schedule\Delete.cshtml" />
     <Content Include="Views\Schedule\Index.cshtml" />
     <Content Include="Views\Schedule\Update.cshtml" />
-    <Content Include="Views\Schedule\Partials\_ScheduleBatch.cshtml" />
     <Content Include="Views\Schedule\Partials\_Schedule.cshtml" />
-    <Content Include="Views\Schedule\Partials\_ScheduleWebRequest.cshtml" />
     <Content Include="Views\RequestSchedule\Create.cshtml" />
     <Content Include="Views\Monitoring\RiskBatchDetail.cshtml" />
     <Content Include="Views\ExecutableSchedule\Create.cshtml" />

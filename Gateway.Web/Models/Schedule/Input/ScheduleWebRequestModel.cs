@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Absa.Cib.MIT.TaskScheduling.Models;
 using Absa.Cib.MIT.TaskScheduling.Models.Enum;
+using Gateway.Web.Enums;
 using WebGrease.Css.Extensions;
 
 namespace Gateway.Web.Models.Schedule.Input
@@ -44,6 +45,7 @@ namespace Gateway.Web.Models.Schedule.Input
 
         public IList<SelectListItem> ArgumentDataTypes => Enum.GetNames(typeof(ArgumentDataTypes))
             .Select(x => new SelectListItem { Value = x, Text = x }).ToList();
+
 
         public long? RequestConfigurationId { get; set; }
 

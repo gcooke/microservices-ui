@@ -60,16 +60,6 @@
                             </div>
 
                             <div class="form-group">
-                                @Html.LabelFor(m => m.TradeSourceType, new { @class = "control-label" })
-                                @Html.DropDownListFor(m => m.TradeSourceType, Model.TradeSourceTypes, new { @name = "TradeSourceType", Placeholder = "An indicator of how to retrieve trades based on the trade source value.", @class = "form-control" })
-                            </div>
-
-                            <div class="form-group">
-                                @Html.LabelFor(m => m.MarketDataMapName, new { @class = "control-label" })
-                                @Html.DropDownListFor(m => m.MarketDataMapName, Model.MarketDataMaps, new { @name = "MarketDataMapName", Placeholder = "The market data map to use when resolving market data.", @class = "form-control" })
-                            </div>
-
-                            <div class="form-group">
                                 @Html.LabelFor(m => m.OutputType, new { @class = "control-label" })
                                 @Html.DropDownListFor(m => m.OutputType, Model.OutputTypes, new { @name = "OutputType", Placeholder = "Whether to persist the results or return (e.g. nightly batch vs excel).", @class = "form-control" })
                             </div>
@@ -82,16 +72,6 @@
                             <div class="form-group">
                                 @Html.LabelFor(m => m.StateTtlMinutes, new { @class = "control-label" })
                                 @Html.TextBoxFor(m => m.StateTtlMinutes, new { @name = "StateTtlMinutes", Placeholder = "Number of minutes to keep calculation state in Redis (0 - state cleared at end of batch).", @class = "form-control" })
-                            </div>
-
-                            <div class="form-group">
-                                @Html.LabelFor(m => m.ReportingCurrency, new { @class = "control-label" })
-                                @Html.TextBoxFor(m => m.ReportingCurrency, new { @name = "ReportingCurrency", Placeholder = "Reporting Currency", @class = "form-control" })
-                            </div>
-
-                            <div class="form-group">
-                                @Html.LabelFor(m => m.FundingCurrency, new { @class = "control-label" })
-                                @Html.TextBoxFor(m => m.FundingCurrency, new { @name = "FundingCurrency", Placeholder = "Funding Currency", @class = "form-control" })
                             </div>
 
                             <div class="form-group" hidden="@Model.IsUpdating">

@@ -593,10 +593,10 @@ namespace Gateway.Web.Database
 
                     var summary = item.batch.ToModel(item.request, item.response);
                     summary.CalculationPricingRequestResults = pricingResults;
-                    if (schedule.RiskBatchConfiguration?.TradeSourceType == "Portfolio")
+                    if (schedule.RiskBatchSchedule?.TradeSourceType == "Portfolio")
                         summary.Name = schedule.Name;
                     else
-                        summary.Name = schedule.RiskBatchConfiguration?.Type;
+                        summary.Name = schedule.RiskBatchSchedule?.RiskBatchConfiguration.Type;
 
                     summary.Trades = tradeStoreRequests.Sum(r => r.Size);
                     summary.PricingRequests = pricingRequests.Length;
