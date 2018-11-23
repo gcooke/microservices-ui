@@ -1,30 +1,41 @@
+using Bagl.Cib.MSF.ClientAPI.Gateway;
+using Gateway.Web.Models.Home;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Bagl.Cib.MSF.ClientAPI.Gateway;
-using Bagl.Cib.MSF.ClientAPI.Model;
-using Gateway.Web.Models.Home;
-using Gateway.Web.Utils;
-using Newtonsoft.Json;
-using RestSharp.Extensions;
+using Bagl.Cib.MIT.Redis.Caching;
 
 namespace Gateway.Web.Database
 {
-    public class BatchHelper
+    public class BatchHelper : IBatchHelper
     {
-        private const string AllCountries =
-            "Botswana,Ghana,Kenya,Mauritius_IBD,Mauritius_Onshore,Mozambique,South_Africa,Seychelles,Tanzania,Tanzania_NBC,Uganda,Zambia";
+        private string[] AllCountries = {
+            "Mauritius_Onshore",
+            "Mauritius_IBD",
+            "South_Africa",
+            "Tanzania_NBC",
+            "Seychelles",
+            "Mozambique",
+            "Botswana",
+            "Tanzania",
+            "Uganda",
+            "Zambia",
+            "Ghana",
+            "Kenya"
+        };
 
         private readonly IGatewayDatabaseService _database;
         private readonly IGatewayRestService _gateway;
+        private readonly IRedisCache _cache;
 
-        public BatchHelper(IGatewayDatabaseService database, IGatewayRestService gateway)
+        public BatchHelper(IGatewayDatabaseService database, IGatewayRestService gateway, IRedisCache cache)
         {
             _database = database;
             _gateway = gateway;
+            _cache = cache;
         }
 
         public BatchDetail GetBatchDetails(string name, DateTime reportDate, Guid correlationId)
@@ -41,21 +52,29 @@ namespace Gateway.Web.Database
             return data;
         }
 
-        public Task<RiskBatchModel> GetRiskBatchReportModel(DateTime reportDate)
+        public async Task<RiskBatchModel> GetRiskBatchReportModelAsync(DateTime reportDate)
         {
+            const string key = @"{BatchReporting}:RiskBatchReport";
+            var cachedmodel = _cache.Get<RiskBatchModel>(key);
+            if (cachedmodel != null)
+                return cachedmodel;
+
             var model = new RiskBatchModel();
 
             // Get data
-            var results = _database.GetBatchSummaryStats(reportDate, reportDate.AddDays(1));
+            var statsTask = _database.GetBatchSummaryStatsAsync(reportDate, reportDate.AddDays(1));
 
             // Get error date
-            var errorData = GetBatchSummaries(reportDate);
+            var errorTask = GetBatchSummariesAsync(reportDate);
+
+            Task[] tasks = {statsTask, errorTask};
+            Task.WaitAll(tasks);
 
             // Get list of sites (order descending in length so that matches are done correctly)
-            var sites = AllCountries.Split(',').OrderByDescending(s => s.Length).ToArray();
+            var sites = AllCountries;
 
             // Convert to Dictionary
-            var runs = GetResults(results, sites, reportDate, errorData);
+            var runs = GetResults(statsTask.Result, sites, reportDate, errorTask.Result);
 
             // Run through each site
             foreach (var site in sites.OrderBy(s => s))
@@ -101,7 +120,9 @@ namespace Gateway.Web.Database
                 }
             }
 
-            return Task.FromResult(model);
+            _cache.Add(key, model);
+
+            return model;
         }
 
         private Dictionary<string, List<RiskBatchResult>> GetResults(List<ExtendedBatchSummary> results, string[] sites,
@@ -184,287 +205,21 @@ namespace Gateway.Web.Database
             return result;
         }
 
-        private List<BatchSummary> GetBatchSummaries(DateTime valuationDate)
+        private async Task<List<BatchSummary>> GetBatchSummariesAsync(DateTime valuationDate)
         {
-            var response = _gateway.Get("managementinterface", $"batch/{valuationDate:yyyy-MM-dd}/summary",
-                CancellationToken.None);
-
-            if (!response.Successfull || response.Content?.Payload == null)
-                return new List<BatchSummary>();
-
-            var payload = response.Content.GetPayloadAsString();
-            var data = JsonConvert.DeserializeObject<List<BatchSummary>>(payload);
-
-            return data;
-        }
-    }
-
-    public class RiskBatchModel
-    {
-        public RiskBatchModel()
-        {
-            Items = new List<RiskBatchGroup>();
-        }
-
-        public List<RiskBatchGroup> Items { get; private set; }
-    }
-
-    public class RiskBatchGroup
-    {
-        public RiskBatchGroup(string name)
-        {
-            Name = name;
-            Items = new List<RiskBatchResult>();
-        }
-
-        public string Name { get; private set; }
-
-        public int TotalRuns => Items.Count;
-
-        public int CompleteRuns
-        {
-            get { return Items.Count(x => x.State == StateItemState.Okay); }
-        }
-
-        public List<RiskBatchResult> Items { get; private set; }
-
-        public List<RiskBatchResult> IncompleteItems
-        {
-            get { return Items.Where(x => x.State != StateItemState.Okay).ToList(); }
-        }
-    }
-
-    public class RiskBatchResult : StateItem
-    {
-        public RiskBatchResult(string site, DateTime date)
-        {
-            Resource = site;
-            Date = date;
-            TargetCompletion = date.AddHours(31);
-            if (TargetCompletion < DateTime.Now)
+            return await Task.Factory.StartNew(() =>
             {
-                Text = "SLA Breached";
-                State = StateItemState.Warn;
-            }
-            else
-            {
-                Text = "No results";
-                State = StateItemState.Warn;
-            }
+                var response = _gateway.Get("managementinterface", $"batch/{valuationDate:yyyy-MM-dd}/summary",
+                    CancellationToken.None);
+
+                if (!response.Successfull || response.Content?.Payload == null)
+                    return new List<BatchSummary>();
+
+                var payload = response.Content.GetPayloadAsString();
+                var data = JsonConvert.DeserializeObject<List<BatchSummary>>(payload);
+
+                return data;
+            }).ConfigureAwait(false);
         }
-
-        public void Update(ExtendedBatchSummary row, string site)
-        {
-            CorrelationId = row.CorrelationId;
-            Started = row.StartUtc.ToLocalTime();
-            TimeTakenMs = (int)(row.EndUtc - row.StartUtc).TotalMilliseconds;
-            Completed = Started.AddMilliseconds(TimeTakenMs);
-            Resource = row.Resource;
-            Version = row.ControllerVersion;
-            Site = site;
-            State = StateItemState.Okay;
-            Link = "~/Request/Summary?correlationId=" + CorrelationId;
-
-            if (row.Successfull)
-            {
-                Text = "Complete";
-            }
-            else
-            {
-                var totalRequests = row.CalculationPricingRequestResults.Values.Sum(v => v.Item2);
-                var totalSuccess = row.CalculationPricingRequestResults.Values.Sum(v => v.Item1);
-                Text = string.Format("{0} pass / {1}", totalSuccess, totalRequests);
-                State = StateItemState.Error;
-            }
-
-            Name = row.Name.MaxLength(30);
-
-            Trades = row.Trades;
-            PricingRequests = row.PricingRequests;
-            MarketDataRequests = row.MarketDataRequests;
-            RiskDataRequests = row.RiskDataRequests;
-
-            //Time = string.Format("{0:ddd HH:mm}-{1:ddd HH:mm}", Started, Completed);
-            Time = string.Format("{0:ddd HH:mm}", Completed);
-            Duration = string.Format("{0}", FormatTimeTaken());
-
-
-            if (State != StateItemState.Okay) return;
-            
-            // Some additional rules that affect batch results
-            if (Trades <= 0)
-            {
-                Text = "No Trades";
-                State = StateItemState.Warn;
-                return;
-            }
-
-            if (PricingRequests <= 0)
-            {
-                Text = "No Pricing Requests";
-                State = StateItemState.Warn;
-                return;
-            }
-
-            if (RiskDataRequests < PricingRequests)
-            {
-                Text = "Not enough risk data calls";
-                State = StateItemState.Warn;
-                return;
-            }
-        }
-        
-
-        public void UpdateErrors(ExtendedBatchSummary row, List<BatchSummary> errorData)
-        {
-            var batchName = $"{Site.ToUpper()} - {Name.ToUpper()}";
-            var errors = errorData.Where(x => x.LegalEntity.ToUpper() == batchName).ToList();
-
-            if (!errors.Any())
-            {
-                ErrorCount = 0;
-                return;
-            }
-
-            if (errors.Count == 1)
-            {
-                ErrorCount = errors.First()?.TotalErrorCount;
-                return;
-            }
-
-            var error = errors.FirstOrDefault(x => x.LegalEntity.ToUpper() == batchName);
-            ErrorCount = error?.TotalErrorCount;
-        }
-
-        public Guid CorrelationId { get; private set; }
-
-        public DateTime Date { get; private set; }
-
-        public string Resource { get; private set; }
-
-        public string BatchName => $"{Site}-{Name}";
-
-        public string Version { get; private set; }
-
-        public string Site { get; private set; }
-
-        public DateTime TargetCompletion { get; private set; }
-
-        public DateTime Started { get; private set; }
-
-        public string StartedFormatted
-        {
-            get { return Started == DateTime.MinValue ? string.Empty : Started.ToString("ddd HH:mm"); }
-        }
-
-        public DateTime Completed { get; private set; }
-
-        public string CompletedFormatted
-        {
-            get { return Completed == DateTime.MinValue ? string.Empty : Completed.ToString("ddd HH:mm"); }
-        }
-
-        public long TimeTakenMs { get; private set; }
-
-        public bool IsRerun { get; set; }
-
-        public string Duration { get; set; }
-
-        public long? Trades { get; set; }
-        public long? PricingRequests { get; set; }
-        public long? MarketDataRequests { get; set; }
-        public long? RiskDataRequests { get; set; }
-
-        private string FormatTimeTaken()
-        {
-            return TimeTakenMs.FormatTimeTaken();
-        }
-
-        public int? ErrorCount { get; set; }
-    }
-
-    public class BatchSummary
-    {
-        public string LegalEntity { get; set; }
-        public string Controller { get; set; }
-        public string ControllerVersion { get; set; }
-        public DateTime? ValuationDate { get; set; }
-        public int ExecutionCount { get; set; }
-        public DateTime StartTime { get; set; }
-        public long Duration { get; set; }
-        public int TradeCount { get; set; }
-        public int FatalErrorCount { get; set; }
-        public int TotalErrorCount { get; set; }
-        public Guid RequestCorrelationId { get; set; }
-
-        public string TimeTakenMs => TimeSpan.FromMilliseconds(Duration).Humanize();
-
-        public string GetBatchName(string site)
-        {
-            return LegalEntity
-                .Replace(site, "")
-                .Replace(site.ToUpper(), "")
-                .Replace("-", "")
-                .Trim();
-        }
-    }
-
-    public class BatchDetail
-    {
-        public string LegalEntity { get; set; }
-        public DateTime ValuationDate { get; set; }
-        public IList<BatchExecution> BatchExecutions { get; set; }
-
-        public BatchDetail()
-        {
-            BatchExecutions = new List<BatchExecution>();
-        }
-
-        public string BatchName => LegalEntity
-            .Replace("-", " - ")
-            .Replace("_", " ");
-    }
-
-    public class BatchExecution
-    {
-        public BatchSummary Summary { get; set; }
-        public IList<BatchIssues> Issues { get; set; }
-        public long BatchStatId { get; set; }
-
-        public BatchExecution()
-        {
-            Issues = new List<BatchIssues>();
-        }
-    }
-
-    public class BatchIssues
-    {
-        public BatchCommentDto Issue { get; set; }
-        public IList<BatchCommentDto> Comments { get; set; }
-        public Dictionary<Guid, string> Occurences { get; set; }
-        public int OccurenceCount => Occurences.Count;
-
-        public BatchIssues()
-        {
-            Comments = new List<BatchCommentDto>();
-            Occurences = new Dictionary<Guid, string>();
-        }
-    }
-
-    public class BatchCommentDto
-    {
-        public int Id { get; set; }
-        public int BatchStatId { get; set; }
-        public Guid RequestCorrelationId { get; set; }
-        public Guid ParentRequestCorrelationId { get; set; }
-        public int BatchCommentType { get; set; }
-        public string ErrorMessage { get; set; }
-        public string ErrorDescription { get; set; }
-        public string ReportedBy { get; set; }
-        public string Controller { get; set; }
-        public string ControllerVersion { get; set; }
-        public DateTime ReportedAt { get; set; }
-        public string Resource { get; set; }
-        public int? ParentBatchCommentId { get; set; }
     }
 }

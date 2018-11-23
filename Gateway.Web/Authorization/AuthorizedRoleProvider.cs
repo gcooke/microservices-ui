@@ -22,16 +22,23 @@ namespace Gateway.Web.Authorization
 
         public override bool IsUserInRole(string username, string roleName)
         {
-            var container = (IUnityContainer)HttpContext.Current.Items["container"];
+            var container = (IUnityContainer)HttpContext.Current.Items[MvcApplication.ContainerKey];
             var authen = container.Resolve<IAuthenticationProvider>();
             var currenttoken = authen.GetToken();
+
             if (string.IsNullOrEmpty(currenttoken))
             {
-                _logger.Info($"No Token Found IsUserInRole for {username}");
-                return false;
+                var cookie = HttpContext.Current.Request.Cookies[GatewayAuthenticationFilter.AuthCockieName];
+
+                if (cookie == null)
+                {
+                    _logger.Info($"No Token Found IsUserInRole for {username}");
+                    return false;
+                }
+
+                authen.SetToken(cookie.Value);
             }
                
-
             var auhtorize = container.Resolve<IAuthorizationProvider>();
             var roles = auhtorize.GetClaims<string>(currenttoken, ClaimTypes.Role);
 
@@ -50,14 +57,21 @@ namespace Gateway.Web.Authorization
 
         public override string[] GetRolesForUser(string username)
         {
-            var container = (IUnityContainer)HttpContext.Current.Items["container"];
+            var container = (IUnityContainer)HttpContext.Current.Items[MvcApplication.ContainerKey];
             var authen = container.Resolve<IAuthenticationProvider>();
             var currenttoken = authen.GetToken();
 
             if (string.IsNullOrEmpty(currenttoken))
-            {
-                _logger.Info($"No Token Found GetRolesForUser for {username}");
-                return new string[] { };
+            {   
+                var cookie = HttpContext.Current.Request.Cookies[GatewayAuthenticationFilter.AuthCockieName];
+
+                if (cookie == null)
+                {
+                    _logger.Info($"No Token Found GetRolesForUser for {username}");
+                    return new string[] { };
+                }
+
+                authen.SetToken(cookie.Value);
             }
 
             var auhtorize = container.Resolve<IAuthorizationProvider>();

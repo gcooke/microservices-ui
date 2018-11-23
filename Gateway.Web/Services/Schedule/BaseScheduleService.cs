@@ -125,7 +125,8 @@ namespace Gateway.Web.Services.Schedule
         {
             var schedule = db.Schedules
                 .Where(x => id == 0 && key != null ? x.ScheduleKey == key : x.ScheduleId == id)
-                .Include("RiskBatchConfiguration")
+                .Include("RiskBatchSchedule")
+                .Include("RiskBatchSchedule.RiskBatchConfiguration")
                 .Include("ExecutableConfiguration")
                 .Include("RequestConfiguration")
                 .Include("ParentSchedule")
@@ -188,7 +189,7 @@ namespace Gateway.Web.Services.Schedule
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, $"Unable to save schedule for {entity.TradeSource}");
+                Logger.Error(ex, $"Unable to save schedule for {entity.RiskBatchSchedule?.TradeSource}");
                 return false;
             }
         }

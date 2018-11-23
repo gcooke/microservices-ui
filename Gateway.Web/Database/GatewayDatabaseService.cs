@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Bagl.Cib.MIT.IoC;
 using Gateway.Web.Models.Controller;
@@ -528,7 +529,7 @@ namespace Gateway.Web.Database
             return model.GetSummaryForSelectedControllers(controllers);
         }
 
-        public List<ExtendedBatchSummary> GetBatchSummaryStats(DateTime @from, DateTime to)
+        public async Task<List<ExtendedBatchSummary>> GetBatchSummaryStatsAsync(DateTime @from, DateTime to)
         {
             var results = new List<ExtendedBatchSummary>();
 
@@ -537,19 +538,21 @@ namespace Gateway.Web.Database
                 var batchStats = database.BatchStats;
                 var requests = database.Requests;
                 var responses = database.Responses;
-                var dbSummary = batchStats
+                var dbSummary = await batchStats
                     .Where(x => DbFunctions.TruncateTime(x.ValuationDate) >= from &&
-                                DbFunctions.TruncateTime(x.ValuationDate) < to)
+                                DbFunctions.TruncateTime(x.ValuationDate) < to
+                                //&& x.Controller == "riskbatch"
+                                )
                     .Join(requests, b => b.CorrelationId, r => r.CorrelationId, (b, r) => new { b, r })
                     .Join(responses, b => b.b.CorrelationId, r => r.CorrelationId,
                         (b, r) => new { batch = b.b, request = b.r, response = r })
-                    .ToArray();
+                    .ToArrayAsync().ConfigureAwait(false);
 
                 foreach (var item in dbSummary)
                 {
                     var resource = item.request.Resource;
 
-                    if (item.request.Controller.ToLower() != "riskbatch")
+                    if (item.request.Controller.ToLower() != "riskbatch") // Remove
                         continue;
 
                     var scheduleId = long.Parse(resource.Split('/')[2]);
@@ -563,11 +566,13 @@ namespace Gateway.Web.Database
                     ChildRequest[] pricingRequests, marketDataRequests, riskDataRequests, tradeStoreRequests;
                     if (!children.TryGetValue("pricing", out pricingRequests))
                         pricingRequests = new ChildRequest[0];
-                    if (!children.TryGetValue("marketdata", out marketDataRequests))
+
+
+                    if (!children.TryGetValue("marketdata", out marketDataRequests)) //Count only 
                         marketDataRequests = new ChildRequest[0];
-                    if (!children.TryGetValue("riskdata", out riskDataRequests))
+                    if (!children.TryGetValue("riskdata", out riskDataRequests)) //Count only 
                         riskDataRequests = new ChildRequest[0];
-                    if (!children.TryGetValue("tradestore", out tradeStoreRequests))
+                    if (!children.TryGetValue("tradestore", out tradeStoreRequests)) // Sum Size 
                         tradeStoreRequests = new ChildRequest[0];
 
                     var pricingResults = new Dictionary<string, Tuple<int, int>>();
@@ -588,10 +593,10 @@ namespace Gateway.Web.Database
 
                     var summary = item.batch.ToModel(item.request, item.response);
                     summary.CalculationPricingRequestResults = pricingResults;
-                    if (schedule.RiskBatchConfiguration?.TradeSourceType == "Portfolio")
+                    if (schedule.RiskBatchSchedule?.TradeSourceType == "Portfolio")
                         summary.Name = schedule.Name;
                     else
-                        summary.Name = schedule.RiskBatchConfiguration?.Type;
+                        summary.Name = schedule.RiskBatchSchedule?.RiskBatchConfiguration.Type;
 
                     summary.Trades = tradeStoreRequests.Sum(r => r.Size);
                     summary.PricingRequests = pricingRequests.Length;

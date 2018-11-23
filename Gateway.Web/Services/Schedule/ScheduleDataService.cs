@@ -35,7 +35,8 @@ namespace Gateway.Web.Services.Schedule
             {
                 return db.Schedules
                     .Where(x => scheduleIdList.Contains(x.ScheduleId))
-                    .Include("RiskBatchConfiguration")
+                    .Include("RiskBatchSchedule")
+                    .Include("RiskBatchSchedule.RiskBatchConfiguration")
                     .Include("RequestConfiguration")
                     .Include("ExecutableConfiguration")
                     .Include("ParentSchedule")
@@ -51,7 +52,8 @@ namespace Gateway.Web.Services.Schedule
             using (var db = new GatewayEntities(ConnectionString))
             {
                 var entity = db.Schedules
-                    .Include("RiskBatchConfiguration")
+                    .Include("RiskBatchSchedule")
+                    .Include("RiskBatchSchedule.RiskBatchConfiguration")
                     .Include("RequestConfiguration")
                     .Include("ExecutableConfiguration")
                     .Include("ParentSchedule")
@@ -70,7 +72,8 @@ namespace Gateway.Web.Services.Schedule
             using (var db = new GatewayEntities(ConnectionString))
             {
                 var entity = db.Schedules
-                    .Include("RiskBatchConfiguration")
+                    .Include("RiskBatchSchedule")
+                    .Include("RiskBatchSchedule.RiskBatchConfiguration")
                     .Include("RequestConfiguration")
                     .Include("ExecutableConfiguration")
                     .Include("ParentSchedule")
@@ -90,7 +93,8 @@ namespace Gateway.Web.Services.Schedule
             {
                 return db.Schedules
                     .Where(x => scheduleIdList.Contains(x.ScheduleId))
-                    .Include("RiskBatchConfiguration")
+                    .Include("RiskBatchSchedule")
+                    .Include("RiskBatchSchedule.RiskBatchConfiguration")
                     .Include("RequestConfiguration")
                     .Include("ExecutableConfiguration")
                     .Include("ParentSchedule")
@@ -157,7 +161,8 @@ namespace Gateway.Web.Services.Schedule
             db = db ?? new GatewayEntities(ConnectionString);
             var entity = db.Schedules
                 .Where(x => x.ScheduleId == id)
-                .Include("RiskBatchConfiguration")
+                .Include("RiskBatchSchedule")
+                .Include("RiskBatchSchedule.RiskBatchConfiguration")
                 .Include("RequestConfiguration")
                 .Include("ExecutableConfiguration")
                 .Include("ParentSchedule")
@@ -184,6 +189,9 @@ namespace Gateway.Web.Services.Schedule
                 db.ScheduledJobs.Remove(scheduledJob);
             }
 
+            if (entity.RiskBatchScheduleId != null)
+                db.RiskBatchSchedules.Remove(entity.RiskBatchSchedule);
+
             db.Schedules.Remove(entity);
 
             if (entity.RequestConfigurationId != null)
@@ -200,8 +208,9 @@ namespace Gateway.Web.Services.Schedule
         {
             db = db ?? new GatewayEntities(ConnectionString);
             var entities = db.Schedules
-                .Where(x => x.RiskBatchConfigurationId == id)
-                .Include("RiskBatchConfiguration")
+                .Where(x => x.RiskBatchSchedule != null && x.RiskBatchSchedule.RiskBatchConfigurationId == id)
+                .Include("RiskBatchSchedule")
+                .Include("RiskBatchSchedule.RiskBatchConfiguration")
                 .Include("RequestConfiguration")
                 .Include("ExecutableConfiguration")
                 .Include("ParentSchedule")
@@ -243,7 +252,8 @@ namespace Gateway.Web.Services.Schedule
             using (var db = new GatewayEntities(ConnectionString))
             {
                 var batches = db.Schedules
-                    .Include("RiskBatchConfiguration")
+                    .Include("RiskBatchSchedule")
+                    .Include("RiskBatchSchedule.RiskBatchConfiguration")
                     .Include("RequestConfiguration")
                     .Include("ExecutableConfiguration")
                     .Include("ParentSchedule")
@@ -268,7 +278,8 @@ namespace Gateway.Web.Services.Schedule
             {
                 var schedule = db.Schedules
                     .Where(x => x.ScheduleId == id)
-                    .Include("RiskBatchConfiguration")
+                    .Include("RiskBatchSchedule")
+                    .Include("RiskBatchSchedule.RiskBatchConfiguration")
                     .Include("RequestConfiguration")
                     .Include("ExecutableConfiguration")
                     .Include("ParentSchedule")
@@ -310,8 +321,8 @@ namespace Gateway.Web.Services.Schedule
                 return x => true;
 
             var terms = s.ToLower().Split(' ');
-            return x => terms.Any(y => (x.TradeSource != null && x.TradeSource.ToLower().Contains(y)) ||
-                                       (x.RiskBatchConfiguration != null && x.RiskBatchConfiguration.Type.ToLower().Contains(y)) ||
+            return x => terms.Any(y => (x.RiskBatchSchedule != null && x.RiskBatchSchedule.TradeSource != null && x.RiskBatchSchedule.TradeSource.ToLower().Contains(y)) ||
+                                       (x.RiskBatchSchedule != null && x.RiskBatchSchedule.RiskBatchConfiguration.Type.ToLower().Contains(y)) ||
                                        (x.RequestConfiguration != null && x.RequestConfiguration.Name.ToLower().Contains(y)));
         }
     }

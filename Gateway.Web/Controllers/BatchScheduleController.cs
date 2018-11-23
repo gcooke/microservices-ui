@@ -6,6 +6,7 @@ using Bagl.Cib.MIT.Logging;
 using Gateway.Web.Models.Schedule.Input;
 using Gateway.Web.Services.Batches.Interfaces;
 using Gateway.Web.Services.Schedule.Interfaces;
+using Gateway.Web.Services.Schedule.Models;
 using Gateway.Web.Services.Schedule.Utils;
 
 namespace Gateway.Web.Controllers
@@ -77,7 +78,7 @@ namespace Gateway.Web.Controllers
         {
             var idList = items.Split(',').Select(long.Parse).ToList();
             var schedules = _scheduleDataService.GetSchedules(idList)
-                .Where(x => x.RiskBatchConfigurationId != null)
+                .Where(x => x.RiskBatchScheduleId != null)
                 .ToList();
 
             var model = schedules.ToBatchInputModel();
@@ -127,33 +128,6 @@ namespace Gateway.Web.Controllers
             }
 
             return RedirectToAction("Update","Schedule");
-        }
-
-        [HttpPost]
-        public ActionResult AssignToGroup()
-        {
-            try
-            {
-                if (Request.Form["ConfigurationIdList"] == null)
-                    return RedirectToAction("Update", "Schedule");
-
-                var inputModel = new ScheduleBatchModel
-                {
-                    Group = Request.Form["Group"],
-                    Children = new List<string>(),
-                    Parent = null,
-                    ConfigurationIdList = Request.Form["ConfigurationIdList"].Split(','),
-                    TradeSources = Request.Form["TradeSources"]
-                };
-
-                _scheduleBatchService.ScheduleBatches(inputModel);
-            }
-            catch (Exception ex)
-            {
-                ModelState.AddModelError(string.Empty, ex.Message);
-            }
-
-            return RedirectToAction("Update", "Schedule");
         }
 
         [HttpGet]

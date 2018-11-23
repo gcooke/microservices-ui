@@ -9,14 +9,7 @@
             {
                 <tr title="@item.Type: @item.Name" class="batch-schedule-container" style="padding: 20px !important;" data-tt-branch="@item.HasChildren" data-tt-id="@item.ScheduleId" data-tt-parent-id="@item.ParentId">
                     <td style="width: 7%;">
-                        @if (item.IsEnabled)
-                        {
-                            @Html.CheckBox("select-" + item.ScheduleKey, new { @class = "select-schedule select-schedule-" + @Model.GroupId, @data_id = item.ScheduleId})
-                        }
-                        else
-                        {
-                            @Html.CheckBox("select-" + item.ScheduleKey, new { disabled = true })
-                        }
+                        @Html.CheckBox("select-" + item.ScheduleKey, new { @class = "select-schedule select-schedule-" + @Model.GroupId, @data_id = item.ScheduleId})
                     </td>
                     <td style="width: 73%;">
                         @if (!item.IsEnabled)

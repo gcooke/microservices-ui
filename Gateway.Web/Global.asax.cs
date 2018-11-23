@@ -23,6 +23,7 @@ namespace Gateway.Web
 {
     public class MvcApplication : System.Web.HttpApplication
     {
+        public const string ContainerKey = "container";
         private static UnityContainer _container;
 
         public static string Environment { get; set; }
@@ -49,6 +50,7 @@ namespace Gateway.Web
             GlobalFilters.Filters.Add(new GatewayAuthenticationFilter());
 
             ModelBinders.Binders[typeof(ScheduleWebRequestModel)] = new ScheduleWebRequestModelBinder();
+            ModelBinders.Binders[typeof(ScheduleBatchModel)] = new ScheduleBatchModelBinder();
 
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
@@ -71,14 +73,18 @@ namespace Gateway.Web
 
 
             Registrations.Register(information);
-            _container.Resolve<ILoggingService>().Initialize(information.LoggingInformation);
-            
-            var systemInformation = _container.Resolve<ISystemInformation>();
-            var schedulingConnectionString = systemInformation.GetSetting("SchedulingConnectionString");
+            var loggingservice = _container.Resolve<ILoggingService>();
+            loggingservice.Initialize(information.LoggingInformation);
+            var logger = loggingservice.GetLogger(this);
 
-;
+
+            var systemInformation = _container.Resolve<ISystemInformation>();
+            var database = systemInformation.GetSetting("GatewayDatabase");
+            var server = systemInformation.GetSetting("DatabaseServer");
+            var schedulingConnectionString = $"data source={server};initial catalog={database};integrated security=True;multipleactiveresultsets=True;application name=EntityFramework";
             SigmaHomePage = $"https://{dns}";
 
+            logger.Info($"SchedulingClientProvider : Using connection string:{schedulingConnectionString}");
             var schedulingClientProvider = new SchedulingClientProvider();
             schedulingClientProvider.Setup(new SchedulingClientOptions
             {
@@ -93,17 +99,17 @@ namespace Gateway.Web
         protected void Application_BeginRequest(object sender, EventArgs e)
         {
             var childContainer = _container.CreateChildContainer();
-            HttpContext.Current.Items["container"] = childContainer;
+            HttpContext.Current.Items[ContainerKey] = childContainer;
             var resolver = new UnityDependencyResolver(childContainer);
             DependencyResolver.SetResolver(resolver);
         }
 
         protected void Application_EndRequest(object sender, EventArgs e)
         {
-            var container = HttpContext.Current.Items["container"] as IUnityContainer;
+            var container = HttpContext.Current.Items[ContainerKey] as IUnityContainer;
             if (container == null) return;
             container.Dispose();
-            HttpContext.Current.Items.Remove("container");
+            HttpContext.Current.Items.Remove(ContainerKey);
         }
     }
 }

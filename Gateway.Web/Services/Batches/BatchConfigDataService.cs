@@ -43,7 +43,8 @@ namespace Gateway.Web.Services.Batches
             using (var db = new GatewayEntities(ConnectionString))
             {
                 var items = db.Schedules
-                    .Include("RiskBatchConfiguration")
+                    .Include("RiskBatchSchedule")
+                    .Include("RiskBatchSchedule.RiskBatchConfiguration")
                     .Include("ExecutableConfiguration")
                     .Include("RequestConfiguration")
                     .Include("ParentSchedule")

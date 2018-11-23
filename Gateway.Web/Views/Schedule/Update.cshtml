@@ -120,16 +120,6 @@
                                     @*Panel Body For Viewing Tasks in Group*@
                                     @Html.Partial("Partials/_Schedule", group)
                                 </div>
-
-                                <div class="tab-pane fade" id="batch-tab-@group.GroupId">
-                                    @*Panel Body For Adding Batch to a Group*@
-                                    @Html.Partial("Partials/_ScheduleBatch", group.ScheduleBatchModel)
-                                </div>
-
-                                <div class="tab-pane fade" id="web-tab-@group.GroupId">
-                                    @*Panel Body For Adding Web Request to a Group*@
-                                    @Html.Partial("Partials/_ScheduleWebRequest", group.ScheduleWebRequestModel)
-                                </div>
                             </div>
                         </div>
                     </div>
