@@ -58,14 +58,14 @@
     <Reference Include="Absa.Cib.MIT.TaskScheduling, Version=1.1.40.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Absa.Cib.MIT.TaskScheduling.1.1.40\lib\net46\Absa.Cib.MIT.TaskScheduling.dll</HintPath>
     </Reference>
-    <Reference Include="Bagl.Cib.MIT.Cube, Version=1.0.40.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Bagl.Cib.MIT.Cube.1.0.40\lib\net452\Bagl.Cib.MIT.Cube.dll</HintPath>
+    <Reference Include="Bagl.Cib.MIT.Cube, Version=1.0.43.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bagl.Cib.MIT.Cube.1.0.43\lib\net452\Bagl.Cib.MIT.Cube.dll</HintPath>
     </Reference>
     <Reference Include="Bagl.Cib.MIT.IO, Version=1.0.18.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Bagl.Cib.MIT.IO.1.0.18\lib\net452\Bagl.Cib.MIT.IO.dll</HintPath>
     </Reference>
-    <Reference Include="Bagl.Cib.MIT.IoC, Version=1.0.52.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Bagl.Cib.MIT.IoC.1.0.52\lib\net452\Bagl.Cib.MIT.IoC.dll</HintPath>
+    <Reference Include="Bagl.Cib.MIT.IoC, Version=1.0.53.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bagl.Cib.MIT.IoC.1.0.53\lib\net452\Bagl.Cib.MIT.IoC.dll</HintPath>
     </Reference>
     <Reference Include="Bagl.Cib.MIT.Logging, Version=1.0.29.0, Culture=neutral, PublicKeyToken=6d1ad0679d79c706, processorArchitecture=MSIL">
       <HintPath>..\packages\Bagl.Cib.MIT.Logging.1.0.29\lib\net452\Bagl.Cib.MIT.Logging.dll</HintPath>
@@ -86,11 +86,11 @@
     <Reference Include="Bagl.Cib.MIT.StatePublisher, Version=1.0.28.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Bagl.Cib.MIT.StatePublisher.1.0.28\lib\net452\Bagl.Cib.MIT.StatePublisher.dll</HintPath>
     </Reference>
-    <Reference Include="Bagl.Cib.MSF.ClientAPI, Version=1.1.323.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Bagl.Cib.MSF.ClientAPI.1.1.323\lib\net452\Bagl.Cib.MSF.ClientAPI.dll</HintPath>
+    <Reference Include="Bagl.Cib.MSF.ClientAPI, Version=1.1.404.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bagl.Cib.MSF.ClientAPI.1.1.404\lib\net452\Bagl.Cib.MSF.ClientAPI.dll</HintPath>
     </Reference>
-    <Reference Include="Bagl.Cib.MSF.Contracts, Version=1.1.323.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Bagl.Cib.MSF.ClientAPI.1.1.323\lib\net452\Bagl.Cib.MSF.Contracts.dll</HintPath>
+    <Reference Include="Bagl.Cib.MSF.Contracts, Version=1.1.404.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bagl.Cib.MSF.ClientAPI.1.1.404\lib\net452\Bagl.Cib.MSF.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="CommonServiceLocator, Version=2.0.4.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
       <HintPath>..\packages\Unity.5.8.11\lib\net46\CommonServiceLocator.dll</HintPath>
@@ -740,9 +740,6 @@
     <Content Include="Content\js\bootstrap.js" />
     <Content Include="Content\js\bootstrap.min.js" />
     <Content Include="appsettings.config">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="connectionstrings.config">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
