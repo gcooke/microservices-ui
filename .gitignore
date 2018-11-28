@@ -120,3 +120,5 @@ node_modules/
 orleans.codegen.cs
 /Controllers/
 /Publish
+
+Gateway\.Web/GlobalConfiguration\.xml
