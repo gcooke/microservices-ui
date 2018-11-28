@@ -9,8 +9,10 @@ using Gateway.Web.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceProcess;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Web.Services.Description;
 using Bagl.Cib.MIT.IoC;
 using Bagl.Cib.MIT.Redis.Caching;
 
@@ -73,7 +75,7 @@ namespace Gateway.Web.Controllers
             if (serverDiagnostics != null)
                 serverDiagnostics = FormatServerDiagnostics(serverDiagnostics);
 
-            var model = new IndexModel();            
+            var model = new IndexModel();
             model.Controllers.AddRange(controllers);
             model.Services.AddRange(servicetask.Result);
             model.Databases.AddRange(databasetask.Result);
@@ -81,20 +83,46 @@ namespace Gateway.Web.Controllers
 
             if (serverDiagnostics != null)
                 model.Servers.AddRange(serverDiagnostics.Values);
-            
+
             Response.AddHeader("Refresh", "60");
             return View("Index", model);
         }
-        
+
         public async Task<List<ServiceState>> GetServiceStateAsync()
         {
             return await Task.Factory.StartNew(() =>
             {
+                var serverslist = new List<string>();
+                var servers = _systemInformation.GetSetting("Servers", "ZAPRNBMAPP1186;ZAPRNBMAPP1187;ZAPRNBMAPP1296;JHBPSM020000759");
+                serverslist.AddRange(servers.Split(';'));
+                var serviceslist = new List<string>();
+                var services = _systemInformation.GetSetting("Services", "Absa.Cib.AuthorizationService;TaskScheduler;ScalingService;Gateway");
+                serviceslist.AddRange(services.Split(';'));
+
+
                 var servicestates = new List<ServiceState>();
-                servicestates.Add(new ServiceState("Gateway (003)", DateTime.Now, StateItemState.Unknown, "Unknown"));
-                servicestates.Add(new ServiceState("Gateway (144)", DateTime.Now, StateItemState.Unknown, "Unknown"));
-                servicestates.Add(new ServiceState("ScalingService (144)", DateTime.Now, StateItemState.Unknown, "Unknown"));
-                servicestates.Add(new ServiceState("Redis (144)", DateTime.Now, StateItemState.Unknown, "Unknown"));
+                foreach (var service in serviceslist)
+                {
+                    foreach (var server in serverslist)
+                    {
+                        var name = $"{service} ({server.Substring(server.Length - 4, 4)})";
+                        try
+                        {
+                            var sc = new ServiceController(service, server);
+                            servicestates.Add(new ServiceState(
+                                name,
+                                DateTime.Now,
+                                sc.Status == ServiceControllerStatus.Running ? StateItemState.Okay : StateItemState.Error,
+                                sc.Status.ToString()
+                            ));
+                        }
+                        catch (Exception e)
+                        {
+                            servicestates.Add(new ServiceState(name, DateTime.Now, StateItemState.Warn, "Not Found"));
+                        }
+
+                    }
+                }
 
                 return servicestates;
             }).ConfigureAwait(false);
