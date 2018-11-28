@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
+using Bagl.Cib.MSF.ClientAPI.Model;
 using Gateway.Web.Models.AddIn;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Controllers;
@@ -43,7 +44,7 @@ namespace Gateway.Web.Services
 
         ConfigurationModel GetControllerConfiguration(string name);
 
-        RestResponse UpdateControllerConfiguration(ConfigurationModel model);
+        GatewayResponse<string> UpdateControllerConfiguration(ConfigurationModel model);
 
         Models.Security.GroupsModel GetGroups();
 

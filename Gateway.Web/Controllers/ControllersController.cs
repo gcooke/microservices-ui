@@ -134,7 +134,7 @@ namespace Gateway.Web.Controllers
                     if (response.Successfull)
                         return RedirectToAction("Dashboard");
 
-                    ModelState.AddModelError(string.Empty, response.Content.Message);
+                    ModelState.AddModelError(string.Empty, response.Message);
                 }
             }
             catch (Exception ex)
