@@ -109,9 +109,12 @@ namespace Gateway.Web.Services
         public XElement[] GetReport(string report)
         {
             //var doc = Fetch("api/riskdata/latest/{0}", report);
+            var response = _gateway.Get<XElement>("riskdata", report).Result;
 
-            var result = _gateway.Get<XElement>("riskdata", report).Result;
-            return result.Body.Descendants("xVAReturnResult").ToArray();
+            if (!response.Successfull)
+                throw new RemoteGatewayException(response.Message);
+
+            return response.Body.Descendants("xVAReturnResult").ToArray();
         }
 
         public List<SiteModel> GetSites()
@@ -120,7 +123,7 @@ namespace Gateway.Web.Services
             var result = new List<SiteModel>();
 
             if (!response.Successfull)
-                return result;
+                throw new RemoteGatewayException(response.Message);
 
             var element = response.Body;
             element.Descendants("Site").ForEach(item => { result.Add(item.Deserialize<SiteModel>()); });
@@ -140,19 +143,18 @@ namespace Gateway.Web.Services
             var response = _gateway.Get<XElement>("Catalogue", query).Result;
 
             var result = new VersionsModel(name);
-            if (response.Successfull)
-            {
-                var element = response.Body;
-                var interim = new List<Version>();
-                foreach (var version in element.Descendants("Version"))
-                {
-                    var aliasA = version.Attribute("Alias");
-                    var alias = aliasA != null ? aliasA.Value : "";
-                    interim.Add(new Version(version.Attribute("Name").Value, alias, version.Attribute("Status").Value));
-                }
-                result.Versions.AddRange(interim.OrderBy(v => v.SemVar));
-            }
+            if (!response.Successfull)
+                throw new RemoteGatewayException(response.Message);
 
+            var element = response.Body;
+            var interim = new List<Version>();
+            foreach (var version in element.Descendants("Version"))
+            {
+                var aliasA = version.Attribute("Alias");
+                var alias = aliasA != null ? aliasA.Value : "";
+                interim.Add(new Version(version.Attribute("Name").Value, alias, version.Attribute("Status").Value));
+            }
+            result.Versions.AddRange(interim.OrderBy(v => v.SemVar));
             return result;
         }
 
@@ -183,7 +185,7 @@ namespace Gateway.Web.Services
         {
             var response = _gateway.Get<XElement>("Catalogue", string.Format("tree/{0}", correlationId)).Result;
             if (!response.Successfull)
-                return new RequestPayload { ChildRequests = new ChildRequests() };
+                throw new RemoteGatewayException(response.Message);
 
             return response.Body.DeserializeUsingDataContract<RequestPayload>();
         }
@@ -192,15 +194,14 @@ namespace Gateway.Web.Services
         {
             var response = _gateway.Get<XElement>("Catalogue", string.Format("controllers/{0}", name)).Result;
 
-            if (response.Successfull)
-            {
-                var element = response.Body;
+            if (!response.Successfull)
+                throw new RemoteGatewayException(response.Message);
 
-                foreach (var item in element.Descendants("Controller"))
-                {
-                    if (item.Attributes().Any(x => x.Name == "Name") && item.Attribute("Name").Value.Equals(name, StringComparison.InvariantCultureIgnoreCase))
-                        return item.Deserialize<ConfigurationModel>();
-                }
+            var element = response.Body;
+            foreach (var item in element.Descendants("Controller"))
+            {
+                if (item.Attributes().Any(x => x.Name == "Name") && item.Attribute("Name").Value.Equals(name, StringComparison.InvariantCultureIgnoreCase))
+                    return item.Deserialize<ConfigurationModel>();
             }
 
             return null;
@@ -217,16 +218,16 @@ namespace Gateway.Web.Services
             var response = _gateway.Get<XElement>("Security", "groups").Result;
 
             var result = new GroupsModel();
-            if (response.Successfull)
+            if (!response.Successfull)
+                throw new RemoteGatewayException(response.Message);
+
+            var element = response.Body;
+            var interim = new List<GroupModel>();
+            foreach (var item in element.Descendants("Group"))
             {
-                var element = response.Body;
-                var interim = new List<GroupModel>();
-                foreach (var item in element.Descendants("Group"))
-                {
-                    interim.Add(item.Deserialize<GroupModel>());
-                }
-                result.Items.AddRange(interim.OrderBy(v => v.Name));
+                interim.Add(item.Deserialize<GroupModel>());
             }
+            result.Items.AddRange(interim.OrderBy(v => v.Name));
 
             return result;
         }
@@ -236,20 +237,20 @@ namespace Gateway.Web.Services
             var query = string.Format("reports/{0}", name);
             var response = _gateway.Get<XElement>("Security", query).Result;
 
-            if (response.Successfull)
+            if (!response.Successfull)
+                throw new RemoteGatewayException(response.Message);
+
+            try
             {
-                try
-                {
-                    var element = response.Body;
-                    var model = element.Deserialize<ReportsModel>();
-                    model.Name = name;
-                    model.Tables.RemoveAll(t => t == null);
-                    return model;
-                }
-                catch (Exception ex)
-                {
-                    _logger.WarnFormat("Could not fetch report: ", ex.Message);
-                }
+                var element = response.Body;
+                var model = element.Deserialize<ReportsModel>();
+                model.Name = name;
+                model.Tables.RemoveAll(t => t == null);
+                return model;
+            }
+            catch (Exception ex)
+            {
+                _logger.WarnFormat("Could not fetch report: ", ex.Message);
             }
 
             var result = new ReportsModel();
@@ -264,22 +265,22 @@ namespace Gateway.Web.Services
                 var query = string.Format("reports/{0}/{1}", name, parameter);
                 var response = _gateway.Get<XElement>("Security", query).Result;
 
-                if (response.Successfull)
+                if (!response.Successfull)
+                    throw new RemoteGatewayException(response.Message);
+
+                try
                 {
-                    try
-                    {
-                        var element = response.Body;
-                        var model = element.Deserialize<ReportsModel>();
-                        model.Name = name;
-                        model.SupportsParameter = true;
-                        model.Parameter = parameter;
-                        model.Tables.RemoveAll(t => t == null);
-                        return model;
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.WarnFormat("Could not fetch report: ", ex.Message);
-                    }
+                    var element = response.Body;
+                    var model = element.Deserialize<ReportsModel>();
+                    model.Name = name;
+                    model.SupportsParameter = true;
+                    model.Parameter = parameter;
+                    model.Tables.RemoveAll(t => t == null);
+                    return model;
+                }
+                catch (Exception ex)
+                {
+                    _logger.WarnFormat("Could not fetch report: ", ex.Message);
                 }
             }
 
@@ -295,13 +296,11 @@ namespace Gateway.Web.Services
             var query = string.Format("groups/{0}", id);
             var response = _gateway.Get<XElement>("Security", query).Result;
 
-            var result = new GroupModel();
-            if (response.Successfull)
-            {
-                var element = response.Body;
-                result = element.Deserialize<GroupModel>();
-            }
+            if (!response.Successfull)
+                throw new RemoteGatewayException(response.Message);
 
+            var element = response.Body;
+            var result = element.Deserialize<GroupModel>();
             return result;
         }
 
@@ -310,12 +309,7 @@ namespace Gateway.Web.Services
             var query = "groups";
             var response = _gateway.Put<string, string>("Security", query, model.Serialize()).Result;
 
-            if (response.Successfull)
-            {
-                return null;
-            }
-
-            return new[] { response.Message };
+            return SuccessOrMessage(response);
         }
 
         public string[] DeleteGroup(long id)
@@ -323,12 +317,7 @@ namespace Gateway.Web.Services
             var query = string.Format("groups/{0}", id);
             var response = _gateway.Delete<string>("Security", query).Result;
 
-            if (response.Successfull)
-            {
-                return null;
-            }
-
-            return new[] { response.Message };
+            return SuccessOrMessage(response);
         }
 
         public UsersModel GetUsers()
@@ -336,16 +325,16 @@ namespace Gateway.Web.Services
             var response = _gateway.Get<XElement>("Security", "users").Result;
 
             var result = new UsersModel();
-            if (response.Successfull)
+            if (!response.Successfull)
+                throw new RemoteGatewayException(response.Message);
+
+            var element = response.Body;
+            var interim = new List<UserModel>();
+            foreach (var item in element.Descendants("User"))
             {
-                var element = response.Body;
-                var interim = new List<UserModel>();
-                foreach (var item in element.Descendants("User"))
-                {
-                    interim.Add(item.Deserialize<UserModel>());
-                }
-                result.Items.AddRange(interim.OrderBy(v => v.FullName));
+                interim.Add(item.Deserialize<UserModel>());
             }
+            result.Items.AddRange(interim.OrderBy(v => v.FullName));
 
             return result;
         }
@@ -413,31 +402,31 @@ namespace Gateway.Web.Services
         private void PopulateAddIns(ApplicationsModel target)
         {
             var response = _gateway.Get<XElement>("Security", "addins").Result;
-            if (response.Successfull)
+            if (!response.Successfull)
+                throw new RemoteGatewayException(response.Message);
+
+            var element = response.Body;
+            var interim = new List<AddInModel>();
+            foreach (var item in element.Descendants("AddIn"))
             {
-                var element = response.Body;
-                var interim = new List<AddInModel>();
-                foreach (var item in element.Descendants("AddIn"))
-                {
-                    interim.Add(item.Deserialize<AddInModel>());
-                }
-                target.Items.AddRange(interim.OrderBy(v => v.Name));
+                interim.Add(item.Deserialize<AddInModel>());
             }
+            target.Items.AddRange(interim.OrderBy(v => v.Name));
         }
 
         private void PopulateApplications(ApplicationsModel target)
         {
             var response = _gateway.Get<XElement>("Security", "applications").Result;
-            if (response.Successfull)
+            if (!response.Successfull)
+                throw new RemoteGatewayException(response.Message);
+
+            var element = response.Body;
+            var interim = new List<ApplicationModel>();
+            foreach (var item in element.Descendants("Application"))
             {
-                var element = response.Body;
-                var interim = new List<ApplicationModel>();
-                foreach (var item in element.Descendants("Application"))
-                {
-                    interim.Add(item.Deserialize<ApplicationModel>());
-                }
-                target.Items.AddRange(interim.OrderBy(v => v.Name));
+                interim.Add(item.Deserialize<ApplicationModel>());
             }
+            target.Items.AddRange(interim.OrderBy(v => v.Name));
         }
 
         public AddInModel GetAddIn(long id)
@@ -445,12 +434,11 @@ namespace Gateway.Web.Services
             var query = string.Format("addins/{0}", id);
             var response = _gateway.Get<XElement>("Security", query).Result;
 
-            var result = new AddInModel();
-            if (response.Successfull)
-            {
-                var element = response.Body;
-                result = element.Deserialize<AddInModel>();
-            }
+            if (!response.Successfull)
+                throw new RemoteGatewayException(response.Message);
+
+            var element = response.Body;
+            var result = element.Deserialize<AddInModel>();
 
             return result;
         }
@@ -461,13 +449,13 @@ namespace Gateway.Web.Services
             var response = _gateway.Get<XElement>("Security", query).Result;
 
             var result = new List<ApplicationVersionModel>();
-            if (response.Successfull)
+            if (!response.Successfull)
+                throw new RemoteGatewayException(response.Message);
+
+            var element = response.Body;
+            foreach (var model in DeserializeApplicationVersionItems(element).OrderByDescending(v => v.ActualVersion))
             {
-                var element = response.Body;
-                foreach (var model in DeserializeApplicationVersionItems(element).OrderByDescending(v => v.ActualVersion))
-                {
-                    result.Add(model);
-                }
+                result.Add(model);
             }
 
             return result;
@@ -479,13 +467,13 @@ namespace Gateway.Web.Services
             var response = _gateway.Get<XElement>("Security", query).Result;
 
             var result = new List<AddInVersionModel>();
-            if (response.Successfull)
+            if (!response.Successfull)
+                throw new RemoteGatewayException(response.Message);
+
+            var element = response.Body;
+            foreach (var model in DeserializeVersionItems(element).OrderByDescending(v => v.ActualVersion))
             {
-                var element = response.Body;
-                foreach (var model in DeserializeVersionItems(element).OrderByDescending(v => v.ActualVersion))
-                {
-                    result.Add(model);
-                }
+                result.Add(model);
             }
 
             return result;
@@ -496,12 +484,7 @@ namespace Gateway.Web.Services
             var query = "applications";
             var response = _gateway.Put<string, string>("Security", query, model.Serialize()).Result;
 
-            if (response.Successfull)
-            {
-                return null;
-            }
-
-            return new[] { response.Message };
+            return SuccessOrMessage(response);
         }
 
         public string[] Create(AddInModel model)
@@ -509,12 +492,7 @@ namespace Gateway.Web.Services
             var query = "addins";
             var response = _gateway.Put<string, string>("Security", query, model.Serialize()).Result;
 
-            if (response.Successfull)
-            {
-                return null;
-            }
-
-            return new[] { response.Message };
+            return SuccessOrMessage(response);
         }
 
         public string[] DeleteAddIn(long id)
@@ -522,12 +500,7 @@ namespace Gateway.Web.Services
             var query = string.Format("addins/{0}", id);
             var response = _gateway.Delete<string>("Security", query).Result;
 
-            if (response.Successfull)
-            {
-                return null;
-            }
-
-            return new[] { response.Message };
+            return SuccessOrMessage(response);
         }
 
         public PermissionsModel GetPermissions()
@@ -535,20 +508,20 @@ namespace Gateway.Web.Services
             var response = _gateway.Get<XElement>("Security", "permissions").Result;
 
             var result = new PermissionsModel();
-            if (response.Successfull)
+            if (!response.Successfull)
+                throw new RemoteGatewayException(response.Message);
+
+            var element = response.Body;
+            var interim = new List<PermissionModel>();
+            foreach (var item in element.Descendants("Permission"))
             {
-                var element = response.Body;
-                var interim = new List<PermissionModel>();
-                foreach (var item in element.Descendants("Permission"))
-                {
-                    interim.Add(item.Deserialize<PermissionModel>());
-                }
-                foreach (var system in interim.GroupBy(v => v.SystemName).OrderBy(v => v.Key))
-                {
-                    var sys = new SystemPermissions(system.Key);
-                    sys.Items.AddRange(system.OrderBy(v => v.Name));
-                    result.Items.Add(sys);
-                }
+                interim.Add(item.Deserialize<PermissionModel>());
+            }
+            foreach (var system in interim.GroupBy(v => v.SystemName).OrderBy(v => v.Key))
+            {
+                var sys = new SystemPermissions(system.Key);
+                sys.Items.AddRange(system.OrderBy(v => v.Name));
+                result.Items.Add(sys);
             }
 
             PopulateAvailableSystems(result);
@@ -561,7 +534,7 @@ namespace Gateway.Web.Services
             var result = new List<PortfolioModel>();
 
             if (!response.Successfull)
-                return result;
+                throw new RemoteGatewayException(response.Message);
 
             var element = response.Body;
             element.Descendants("Portfolio").ForEach(item => { result.Add(item.Deserialize<PortfolioModel>()); });
@@ -575,25 +548,21 @@ namespace Gateway.Web.Services
             var response = _gateway.Get<XElement>("Security", query).Result;
 
             var result = new PermissionModel();
-            if (response.Successfull)
-            {
-                var element = response.Body;
-                result = element.Deserialize<PermissionModel>();
-            }
+            if (!response.Successfull)
+                throw new RemoteGatewayException(response.Message);
+
+            var element = response.Body;
+            result = element.Deserialize<PermissionModel>();
 
             return result;
         }
+
         public string[] DeletePermission(long id)
         {
             var query = string.Format("permissions/{1}", id);
             var response = _gateway.Delete<string>("Security", query).Result;
 
-            if (response.Successfull)
-            {
-                return null;
-            }
-
-            return new[] { response.Body ?? response.Message };
+            return SuccessOrMessage(response);
         }
 
         public string[] DeleteGroupPortfolio(long id, long groupId)
@@ -601,12 +570,7 @@ namespace Gateway.Web.Services
             var query = string.Format("groups/{0}/portfolios/{1}", groupId, id);
             var response = _gateway.Delete<string>("Security", query).Result;
 
-            if (response.Successfull)
-            {
-                return null;
-            }
-
-            return new[] { response.Body ?? response.Message };
+            return SuccessOrMessage(response);
         }
 
         public string[] DeleteGroupPermission(long id, long groupId)
@@ -614,12 +578,7 @@ namespace Gateway.Web.Services
             var query = $"groups/{groupId}/permissions/{id}";
             var response = _gateway.Delete<string>("Security", query).Result;
 
-            if (response.Successfull)
-            {
-                return null;
-            }
-
-            return new[] { response.Body ?? response.Message };
+            return SuccessOrMessage(response);
         }
 
         public string[] Create(PermissionModel model)
@@ -627,12 +586,7 @@ namespace Gateway.Web.Services
             var query = "permissions";
             var response = _gateway.Put<string, string>("Security", query, model.Serialize()).Result;
 
-            if (response.Successfull)
-            {
-                return null;
-            }
-
-            return new[] { response.Body ?? response.Message };
+            return SuccessOrMessage(response);
         }
 
         public string[] InsertGroupPermission(long groupId, long permissionId)
@@ -640,12 +594,7 @@ namespace Gateway.Web.Services
             var query = string.Format("groups/{0}/permissions/{1}", groupId, permissionId);
             var response = _gateway.Put<string, string>("Security", query, string.Empty).Result;
 
-            if (response.Successfull)
-            {
-                return null;
-            }
-
-            return new[] { response.Message };
+            return SuccessOrMessage(response);
         }
 
         public ADGroupsModel GetGroupADGroups(long groupId)
@@ -654,16 +603,16 @@ namespace Gateway.Web.Services
             var response = _gateway.Get<XElement>("Security", query).Result;
 
             var result = new ADGroupsModel(groupId);
-            if (response.Successfull)
+            if (!response.Successfull)
+                throw new RemoteGatewayException(response.Message);
+
+            var element = response.Body;
+            var interim = new List<GroupActiveDirectory>();
+            foreach (var item in element.Descendants("GroupAD"))
             {
-                var element = response.Body;
-                var interim = new List<GroupActiveDirectory>();
-                foreach (var item in element.Descendants("GroupAD"))
-                {
-                    interim.Add(item.Deserialize<GroupActiveDirectory>());
-                }
-                result.Items.AddRange(interim.OrderBy(v => v.Name));
+                interim.Add(item.Deserialize<GroupActiveDirectory>());
             }
+            result.Items.AddRange(interim.OrderBy(v => v.Name));
 
             return result;
         }
@@ -673,12 +622,7 @@ namespace Gateway.Web.Services
             var query = string.Format("groups/{0}/adgroups/{1}", groupId, id);
             var response = _gateway.Delete<string>("Security", query).Result;
 
-            if (response.Successfull)
-            {
-                return null;
-            }
-
-            return new[] { response.Message };
+            return SuccessOrMessage(response);
         }
 
         public string[] Create(GroupActiveDirectory model)
@@ -687,12 +631,7 @@ namespace Gateway.Web.Services
             var payload = model.Serialize();
             var response = _gateway.Put<string, string>("Security", query, payload).Result;
 
-            if (response.Successfull)
-            {
-                return null;
-            }
-
-            return new[] { response.Message };
+            return SuccessOrMessage(response);
         }
 
         public Models.Group.PermissionsModel GetGroupPermisions(long groupId)
@@ -701,16 +640,16 @@ namespace Gateway.Web.Services
             var response = _gateway.Get<XElement>("Security", query).Result;
 
             var result = new Models.Group.PermissionsModel(groupId);
-            if (response.Successfull)
+            if (!response.Successfull)
+                throw new RemoteGatewayException(response.Message);
+
+            var element = response.Body;
+            var interim = new List<PermissionModel>();
+            foreach (var item in element.Descendants("Permission"))
             {
-                var element = response.Body;
-                var interim = new List<PermissionModel>();
-                foreach (var item in element.Descendants("Permission"))
-                {
-                    interim.Add(item.Deserialize<PermissionModel>());
-                }
-                result.Items.AddRange(interim.OrderBy(v => v.SystemName).ThenBy(v => v.Name));
+                interim.Add(item.Deserialize<PermissionModel>());
             }
+            result.Items.AddRange(interim.OrderBy(v => v.SystemName).ThenBy(v => v.Name));
 
             PopulateAvailablePermissions(result);
             return result;
@@ -722,16 +661,16 @@ namespace Gateway.Web.Services
             var response = _gateway.Get<XElement>("Security", query).Result;
 
             var result = new PortfoliosModel(groupId);
-            if (response.Successfull)
+            if (!response.Successfull)
+                throw new RemoteGatewayException(response.Message);
+
+            var element = response.Body;
+            var interim = new List<PortfolioModel>();
+            foreach (var item in element.Descendants("Portfolio"))
             {
-                var element = response.Body;
-                var interim = new List<PortfolioModel>();
-                foreach (var item in element.Descendants("Portfolio"))
-                {
-                    interim.Add(item.Deserialize<PortfolioModel>());
-                }
-                result.Items.AddRange(interim.OrderBy(v => v.Level).ThenBy(v => v.Name));
+                interim.Add(item.Deserialize<PortfolioModel>());
             }
+            result.Items.AddRange(interim.OrderBy(v => v.Level).ThenBy(v => v.Name));
 
             return result;
         }
@@ -742,16 +681,16 @@ namespace Gateway.Web.Services
             var response = _gateway.Get<XElement>("Security", query).Result;
 
             var result = new SitesModel(groupId);
-            if (response.Successfull)
+            if (!response.Successfull)
+                throw new RemoteGatewayException(response.Message);
+
+            var element = response.Body;
+            var interim = new List<SiteModel>();
+            foreach (var item in element.Descendants("Site"))
             {
-                var element = response.Body;
-                var interim = new List<SiteModel>();
-                foreach (var item in element.Descendants("Site"))
-                {
-                    interim.Add(item.Deserialize<SiteModel>());
-                }
-                result.Items.AddRange(interim.OrderBy(v => v.Name));
+                interim.Add(item.Deserialize<SiteModel>());
             }
+            result.Items.AddRange(interim.OrderBy(v => v.Name));
 
             PopulateAvailableSites(result);
             return result;
@@ -763,16 +702,17 @@ namespace Gateway.Web.Services
             var response = _gateway.Get<XElement>("Security", query).Result;
 
             var result = new Models.Group.UsersModel(groupId);
-            if (response.Successfull)
+            if (!response.Successfull)
+                throw new RemoteGatewayException(response.Message);
+
+            var element = response.Body;
+            var interim = new List<UserModel>();
+            foreach (var item in element.Descendants("User"))
             {
-                var element = response.Body;
-                var interim = new List<UserModel>();
-                foreach (var item in element.Descendants("User"))
-                {
-                    interim.Add(item.Deserialize<UserModel>());
-                }
-                result.Items.AddRange(interim.OrderBy(v => v.FullName));
+                interim.Add(item.Deserialize<UserModel>());
             }
+            result.Items.AddRange(interim.OrderBy(v => v.FullName));
+
             return result;
         }
 
@@ -781,12 +721,7 @@ namespace Gateway.Web.Services
             var query = string.Format("groups/{0}/sites/{1}", groupId, id);
             var response = _gateway.Delete<string>("Security", query).Result;
 
-            if (response.Successfull)
-            {
-                return null;
-            }
-
-            return new string[] { response.Message };
+            return SuccessOrMessage(response);
         }
 
         public string[] InsertGroupSite(long groupId, long siteId)
@@ -794,12 +729,7 @@ namespace Gateway.Web.Services
             var query = string.Format("groups/{0}/sites/{1}", groupId, siteId);
             var response = _gateway.Put<string, string>("Security", query, string.Empty).Result;
 
-            if (response.Successfull)
-            {
-                return null;
-            }
-
-            return new string[] { response.Message };
+            return SuccessOrMessage(response);
         }
 
         public Models.Group.AddInsModel GetGroupAddIns(long groupId)
@@ -854,12 +784,7 @@ namespace Gateway.Web.Services
             var query = string.Format("groups/{0}/addins", groupId);
             var response = _gateway.Put<string, string>("Security", query, addInVersion.Serialize()).Result;
 
-            if (response.Successfull)
-            {
-                return null;
-            }
-
-            return new string[] { response.Message };
+            return SuccessOrMessage(response);
         }
 
         public string[] InsertGroupApplicationVersion(long groupId, ApplicationVersionModel addInVersion)
@@ -867,12 +792,7 @@ namespace Gateway.Web.Services
             var query = string.Format("groups/{0}/applications", groupId);
             var response = _gateway.Put<string, string>("Security", query, addInVersion.Serialize()).Result;
 
-            if (response.Successfull)
-            {
-                return null;
-            }
-
-            return new string [] { response.Message };
+            return SuccessOrMessage(response);
         }
 
         public string[] DeleteGroupAddInVersion(long id, long groupId)
@@ -880,12 +800,7 @@ namespace Gateway.Web.Services
             var query = string.Format("groups/{0}/addins/{1}", groupId, id);
             var response = _gateway.Delete<string>("Security", query).Result;
 
-            if (response.Successfull)
-            {
-                return null;
-            }
-
-            return new string[] { response.Body ?? response.Message };
+            return SuccessOrMessage(response);
         }
 
         public string[] DeleteGroupApplicationVersion(long id, long groupId)
@@ -893,12 +808,7 @@ namespace Gateway.Web.Services
             var query = string.Format("groups/{0}/applications/{1}", groupId, id);
             var response = _gateway.Delete<string>("Security", query).Result;
 
-            if (response.Successfull)
-            {
-                return null;
-            }
-
-            return new string[] { response.Body ?? response.Message };
+            return SuccessOrMessage(response);
         }
 
         public string[] UpdateAssignedApplicationVersions(string @from, string to)
@@ -907,12 +817,7 @@ namespace Gateway.Web.Services
             var payload = string.Format("{0}|{1}", @from, @to);
             var response = _gateway.Put<string, string>("Security", query, payload).Result;
 
-            if (response.Successfull)
-            {
-                return null;
-            }
-
-            return new string[] { response.Body ?? response.Message };
+            return SuccessOrMessage(response);
         }
 
         public string[] UpdateAssignedAddInVersions(string @from, string to)
@@ -921,12 +826,7 @@ namespace Gateway.Web.Services
             var payload = string.Format("{0}|{1}", @from, @to);
             var response = _gateway.Put<string, string>("Security", query, payload).Result;
 
-            if (response.Successfull)
-            {
-                return null;
-            }
-
-            return new string[] { response.Body ?? response.Message };
+            return SuccessOrMessage(response);
         }
 
         public string[] RemoveUser(long id)
@@ -934,24 +834,14 @@ namespace Gateway.Web.Services
             var query = string.Format("users/{0}", id);
             var response = _gateway.Delete<string>("Security", query).Result;
 
-            if (response.Successfull)
-            {
-                return null;
-            }
-
-            return new string[] { response.Body ?? response.Message };
+            return SuccessOrMessage(response);
         }
 
         public string[] Create(UserModel model)
         {
             var response = _gateway.Put<string, string>("Security", "users", model.Serialize()).Result;
 
-            if (response.Successfull)
-            {
-                return null;
-            }
-
-            return new string[] { response.Body ?? response.Message };
+            return SuccessOrMessage(response);
         }
 
         public string[] InsertUserPortfolio(long userId, long portfolioId)
@@ -959,12 +849,7 @@ namespace Gateway.Web.Services
             var query = string.Format("users/{0}/portfolios/{1}", userId, portfolioId);
             var response = _gateway.Put<string, string>("Security", query, string.Empty).Result;
 
-            if (response.Successfull)
-            {
-                return null;
-            }
-
-            return new string[] { response.Body ?? response.Message };
+            return SuccessOrMessage(response);
         }
 
         public Models.User.PortfoliosModel GetUserPortfolios(long userId)
@@ -991,12 +876,7 @@ namespace Gateway.Web.Services
             var query = string.Format("users/{0}/portfolios/{1}", userId, portfolioId);
             var response = _gateway.Delete<string>("Security", query).Result;
 
-            if (response.Successfull)
-            {
-                return null;
-            }
-
-            return new string[] { response.Body ?? response.Message };
+            return SuccessOrMessage(response);
         }
 
         public string[] InsertUserSite(long userId, long siteId)
@@ -1004,12 +884,7 @@ namespace Gateway.Web.Services
             var query = string.Format("users/{0}/sites/{1}", userId, siteId);
             var response = _gateway.Put<string, string>("Security", query, string.Empty).Result;
 
-            if (response.Successfull)
-            {
-                return null;
-            }
-
-            return new string[] { response.Body ?? response.Message };
+            return SuccessOrMessage(response);
         }
 
         public Models.User.SitesModel GetUserSites(long userId)
@@ -1035,12 +910,7 @@ namespace Gateway.Web.Services
             var query = string.Format("users/{0}/sites/{1}", userId, siteId);
             var response = _gateway.Delete<string>("Security", query).Result;
 
-            if (response.Successfull)
-            {
-                return null;
-            }
-
-            return new string[] { response.Body ?? response.Message };
+            return SuccessOrMessage(response);
         }
 
         public string[] InsertUserGroup(long userId, long groupId)
@@ -1048,12 +918,7 @@ namespace Gateway.Web.Services
             var query = string.Format("users/{0}/groups/{1}", userId, groupId);
             var response = _gateway.Put<string, string>("Security", query, string.Empty).Result;
 
-            if (response.Successfull)
-            {
-                return null;
-            }
-
-            return new string[] { response.Body ?? response.Message };
+            return SuccessOrMessage(response);
         }
 
         public string[] RemoveUserGroup(long userId, long groupId)
@@ -1061,12 +926,7 @@ namespace Gateway.Web.Services
             var query = string.Format("users/{0}/groups/{1}", userId, groupId);
             var response = _gateway.Delete<string>("Security", query).Result;
 
-            if (response.Successfull)
-            {
-                return null;
-            }
-
-            return new string[] { response.Body ?? response.Message };
+            return SuccessOrMessage(response);
         }
 
         public Models.User.AddInsModel GetUserAddInVersions(long userId)
@@ -1137,12 +997,7 @@ namespace Gateway.Web.Services
             var query = string.Format("users/{0}/addins/{1}", userId, addInVersionId);
             var response = _gateway.Delete<string>("Security", query).Result;
 
-            if (response.Successfull)
-            {
-                return null;
-            }
-
-            return new string[] { response.Body ?? response.Message };
+            return SuccessOrMessage(response);
         }
 
         public string[] DeleteUserApplicationVersions(long userId, long applicationVersionId)
@@ -1150,12 +1005,7 @@ namespace Gateway.Web.Services
             var query = string.Format("users/{0}/applications/{1}", userId, applicationVersionId);
             var response = _gateway.Delete<string>("Security", query).Result;
 
-            if (response.Successfull)
-            {
-                return null;
-            }
-
-            return new string[] { response.Body ?? response.Message };
+            return SuccessOrMessage(response);
         }
 
         public string[] InsertUserAddInVersions(long groupId, AddInVersionModel addInVersion)
@@ -1163,12 +1013,7 @@ namespace Gateway.Web.Services
             var query = string.Format("users/{0}/addins", groupId);
             var response = _gateway.Put<string, string>("Security", query, addInVersion.Serialize()).Result;
 
-            if (response.Successfull)
-            {
-                return null;
-            }
-
-            return new string[] { response.Body ?? response.Message };
+            return SuccessOrMessage(response);
         }
 
         public string[] InsertUserApplicationVersions(long groupId, ApplicationVersionModel version)
@@ -1176,12 +1021,7 @@ namespace Gateway.Web.Services
             var query = string.Format("users/{0}/applications", groupId);
             var response = _gateway.Put<string, string>("Security", query, version.Serialize()).Result;
 
-            if (response.Successfull)
-            {
-                return null;
-            }
-
-            return new string[] { response.Body ?? response.Message };
+            return SuccessOrMessage(response);
         }
 
         public IEnumerable<BusinessFunction> GetBusinessFunctions()
@@ -1204,12 +1044,7 @@ namespace Gateway.Web.Services
             var query = "businessfunctions";
             var response = _gateway.Post<string, string>("security", query, model.Serialize()).Result;
 
-            if (response.Successfull)
-            {
-                return null;
-            }
-
-            return new string[] { response.Message };
+            return SuccessOrMessage(response);
         }
 
         public string[] DeleteBusinessFunction(int id)
@@ -1217,12 +1052,7 @@ namespace Gateway.Web.Services
             var query = string.Format("businessfunctions/{0}", id);
             var response = _gateway.Delete<string>("security", query).Result;
 
-            if (response.Successfull)
-            {
-                return null;
-            }
-
-            return new String [] { response.Message };
+            return SuccessOrMessage(response);
         }
 
         public IEnumerable<GroupType> GetGroupTypes()
@@ -1245,12 +1075,7 @@ namespace Gateway.Web.Services
             var query = "grouptypes";
             var response = _gateway.Post<String, string>("security", query, model.Serialize()).Result;
 
-            if (response.Successfull)
-            {
-                return null;
-            }
-
-            return new string[] { response.Message };
+            return SuccessOrMessage(response);
         }
 
         public string[] DeleteGroupType(int id)
@@ -1258,12 +1083,7 @@ namespace Gateway.Web.Services
             var query = string.Format("grouptypes/{0}", id);
             var response = _gateway.Delete<string>("security", query).Result;
 
-            if (response.Successfull)
-            {
-                return null;
-            }
-
-            return new string[] { response.Message };
+            return SuccessOrMessage(response);
         }
 
         public bool GenerateDocumentation(string id, string version)
@@ -1282,12 +1102,7 @@ namespace Gateway.Web.Services
             var query = string.Format("groups/{0}/businessfunction/{1}", groupId, businessFunctionId);
             var response = _gateway.Put<string, string>("security", query, null).Result;
 
-            if (response.Successfull)
-            {
-                return null;
-            }
-
-            return new string[] { response.Message };
+            return SuccessOrMessage(response);
         }
 
         private string GetDefaultKnownGateways(string environment)
@@ -1646,6 +1461,18 @@ namespace Gateway.Web.Services
             public string Server { get; }
 
             public XDocument Document { get; }
+        }
+
+        private string[] SuccessOrMessage(GatewayResponse<string> response)
+        {
+            // Return null as this is considered success.
+            if (response.Successfull)
+            {
+                return null;
+            }
+
+            // Return the error message (either in body or message).
+            return new[] { response.Body ?? response.Message };
         }
     }
     
