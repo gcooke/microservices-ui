@@ -780,10 +780,8 @@ namespace Gateway.Web.Services
             var query = string.Format("groups/{0}/sites/{1}", groupId, id);
             var response = _gateway.Delete<string>("Security", query).Result;
 
-            if (response.Successfull)
-            {
-                return null;
-            }
+            if (!response.Successfull)
+                throw new RemoteGatewayException(response.Message);
 
             return new[] { response.Message };
         }
@@ -1641,6 +1639,14 @@ namespace Gateway.Web.Services
             public string Server { get; }
 
             public XDocument Document { get; }
+        }
+    }
+
+    public class RemoteGatewayException : Exception
+    {
+        public RemoteGatewayException(string message)
+            : base(message)
+        {
         }
     }
 }
