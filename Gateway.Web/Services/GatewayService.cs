@@ -31,6 +31,7 @@ using GroupsModel = Gateway.Web.Models.Security.GroupsModel;
 using PermissionsModel = Gateway.Web.Models.Security.PermissionsModel;
 using PortfoliosModel = Gateway.Web.Models.Group.PortfoliosModel;
 using SitesModel = Gateway.Web.Models.Group.SitesModel;
+using String = System.String;
 using UsersModel = Gateway.Web.Models.Security.UsersModel;
 using Version = Gateway.Web.Models.Controller.Version;
 using VersionsModel = Gateway.Web.Models.Controller.VersionsModel;
@@ -780,10 +781,12 @@ namespace Gateway.Web.Services
             var query = string.Format("groups/{0}/sites/{1}", groupId, id);
             var response = _gateway.Delete<string>("Security", query).Result;
 
-            if (!response.Successfull)
-                throw new RemoteGatewayException(response.Message);
+            if (response.Successfull)
+            {
+                return null;
+            }
 
-            return new[] { response.Message };
+            return new string[] { response.Message };
         }
 
         public string[] InsertGroupSite(long groupId, long siteId)
@@ -796,7 +799,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Message };
+            return new string[] { response.Message };
         }
 
         public Models.Group.AddInsModel GetGroupAddIns(long groupId)
@@ -816,32 +819,34 @@ namespace Gateway.Web.Services
         {
             var query = string.Format("groups/{0}/addins", groupId);
             var response = _gateway.Get<XElement>("Security", query).Result;
-            if (response.Successfull)
+
+            if (!response.Successfull)
+                throw new RemoteGatewayException(response.Message);
+
+            var element = response.Body;
+            var interim = new List<GroupAddInVersionModel>();
+            foreach (var item in element.Descendants("GroupAddInVersion"))
             {
-                var element = response.Body;
-                var interim = new List<GroupAddInVersionModel>();
-                foreach (var item in element.Descendants("GroupAddInVersion"))
-                {
-                    interim.Add(item.Deserialize<GroupAddInVersionModel>());
-                }
-                target.AddIns.AddRange(interim.OrderBy(v => v.Name));
+                interim.Add(item.Deserialize<GroupAddInVersionModel>());
             }
+            target.AddIns.AddRange(interim.OrderBy(v => v.Name));
         }
 
         private void PopulateApplicationVersions(Models.Group.AddInsModel target, long groupId)
         {
             var query = string.Format("groups/{0}/applications", groupId);
             var response = _gateway.Get<XElement>("Security", query).Result;
-            if (response.Successfull)
+
+            if (!response.Successfull)
+                throw new RemoteGatewayException(response.Message);
+
+            var element = response.Body;
+            var interim = new List<GroupApplicationVersionModel>();
+            foreach (var item in element.Descendants("GroupApplicationVersion"))
             {
-                var element = response.Body;
-                var interim = new List<GroupApplicationVersionModel>();
-                foreach (var item in element.Descendants("GroupApplicationVersion"))
-                {
-                    interim.Add(item.Deserialize<GroupApplicationVersionModel>());
-                }
-                target.Applications.AddRange(interim.OrderBy(v => v.Name));
+                interim.Add(item.Deserialize<GroupApplicationVersionModel>());
             }
+            target.Applications.AddRange(interim.OrderBy(v => v.Name));
         }
 
         public string[] InsertGroupAddInVersion(long groupId, AddInVersionModel addInVersion)
@@ -854,7 +859,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Message };
+            return new string[] { response.Message };
         }
 
         public string[] InsertGroupApplicationVersion(long groupId, ApplicationVersionModel addInVersion)
@@ -867,7 +872,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Message };
+            return new string [] { response.Message };
         }
 
         public string[] DeleteGroupAddInVersion(long id, long groupId)
@@ -880,7 +885,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Body ?? response.Message };
+            return new string[] { response.Body ?? response.Message };
         }
 
         public string[] DeleteGroupApplicationVersion(long id, long groupId)
@@ -893,7 +898,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Body ?? response.Message };
+            return new string[] { response.Body ?? response.Message };
         }
 
         public string[] UpdateAssignedApplicationVersions(string @from, string to)
@@ -907,7 +912,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Body ?? response.Message };
+            return new string[] { response.Body ?? response.Message };
         }
 
         public string[] UpdateAssignedAddInVersions(string @from, string to)
@@ -921,7 +926,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Body ?? response.Message };
+            return new string[] { response.Body ?? response.Message };
         }
 
         public string[] RemoveUser(long id)
@@ -934,7 +939,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Body ?? response.Message };
+            return new string[] { response.Body ?? response.Message };
         }
 
         public string[] Create(UserModel model)
@@ -946,7 +951,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Body ?? response.Message };
+            return new string[] { response.Body ?? response.Message };
         }
 
         public string[] InsertUserPortfolio(long userId, long portfolioId)
@@ -959,7 +964,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Body ?? response.Message };
+            return new string[] { response.Body ?? response.Message };
         }
 
         public Models.User.PortfoliosModel GetUserPortfolios(long userId)
@@ -967,20 +972,18 @@ namespace Gateway.Web.Services
             var query = string.Format("users/{0}/portfolios", userId);
             var response = _gateway.Get<XElement>("Security", query).Result;
 
-            if (response.Successfull)
-            {
-                var element = response.Body;
-                var model = element.Deserialize<Models.User.PortfoliosModel>();
+            if (!response.Successfull)
+                throw new RemoteGatewayException(response.Message);
 
-                var portfolios = GetPortfolios();
+            var element = response.Body;
+            var model = element.Deserialize<Models.User.PortfoliosModel>();
 
-                model.AvailablePortfolios.AddRange(
-                    portfolios.Select(item => new SelectListItem { Value = item.Id.ToString(), Text = item.Name }));
+            var portfolios = GetPortfolios();
 
-                return model;
-            }
+            model.AvailablePortfolios.AddRange(
+                portfolios.Select(item => new SelectListItem { Value = item.Id.ToString(), Text = item.Name }));
 
-            return null;
+            return model;
         }
 
         public string[] RemoveUserPortfolio(long userId, long portfolioId)
@@ -993,7 +996,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Body ?? response.Message };
+            return new string[] { response.Body ?? response.Message };
         }
 
         public string[] InsertUserSite(long userId, long siteId)
@@ -1006,7 +1009,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Body ?? response.Message };
+            return new string[] { response.Body ?? response.Message };
         }
 
         public Models.User.SitesModel GetUserSites(long userId)
@@ -1015,7 +1018,7 @@ namespace Gateway.Web.Services
             var response = _gateway.Get<XElement>("Security", query).Result;
 
             if (!response.Successfull)
-                return null;
+                throw new RemoteGatewayException(response.Message);
 
             var element = response.Body;
             var model = element.Deserialize<Models.User.SitesModel>();
@@ -1037,7 +1040,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Body ?? response.Message };
+            return new string[] { response.Body ?? response.Message };
         }
 
         public string[] InsertUserGroup(long userId, long groupId)
@@ -1050,7 +1053,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Body ?? response.Message };
+            return new string[] { response.Body ?? response.Message };
         }
 
         public string[] RemoveUserGroup(long userId, long groupId)
@@ -1063,7 +1066,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Body ?? response.Message };
+            return new string[] { response.Body ?? response.Message };
         }
 
         public Models.User.AddInsModel GetUserAddInVersions(long userId)
@@ -1084,25 +1087,25 @@ namespace Gateway.Web.Services
             var query = string.Format("users/{0}/addins", userId);
             var response = _gateway.Get<XElement>("Security", query).Result;
 
-            if (response.Successfull)
+            if (!response.Successfull)
+                throw new RemoteGatewayException(response.Message);
+
+            var element = response.Body;
+            target.Login = element.Descendants("Login").First().Value;
+
+            var interim = new List<UserAddInVersionModel>();
+            foreach (var item in element.Descendants("UserAddInVersion"))
             {
-                var element = response.Body;
-                target.Login = element.Descendants("Login").First().Value;
-
-                var interim = new List<UserAddInVersionModel>();
-                foreach (var item in element.Descendants("UserAddInVersion"))
-                {
-                    interim.Add(item.Deserialize<UserAddInVersionModel>());
-                }
-                target.AddIns.AddRange(interim.OrderBy(v => v.Name));
-
-                var groupValues = new List<GroupAddInVersionModel>();
-                foreach (var item in element.Descendants("GroupAddInVersion"))
-                {
-                    groupValues.Add(item.Deserialize<GroupAddInVersionModel>());
-                }
-                target.GroupExcelAddInVersions.AddRange(groupValues.OrderBy(v => v.Name));
+                interim.Add(item.Deserialize<UserAddInVersionModel>());
             }
+            target.AddIns.AddRange(interim.OrderBy(v => v.Name));
+
+            var groupValues = new List<GroupAddInVersionModel>();
+            foreach (var item in element.Descendants("GroupAddInVersion"))
+            {
+                groupValues.Add(item.Deserialize<GroupAddInVersionModel>());
+            }
+            target.GroupExcelAddInVersions.AddRange(groupValues.OrderBy(v => v.Name));
         }
 
         private void PopulateApplicationVersions(Models.User.AddInsModel target, long userId)
@@ -1110,23 +1113,23 @@ namespace Gateway.Web.Services
             var query = string.Format("users/{0}/applications", userId);
             var response = _gateway.Get<XElement>("Security", query).Result;
 
-            if (response.Successfull)
-            {
-                var element = response.Body;
-                var interim = new List<UserApplicationVersionModel>();
-                foreach (var item in element.Descendants("UserApplicationVersion"))
-                {
-                    interim.Add(item.Deserialize<UserApplicationVersionModel>());
-                }
-                target.Applications.AddRange(interim.OrderBy(v => v.Name));
+            if (!response.Successfull)
+                throw new RemoteGatewayException(response.Message);
 
-                var groupValues = new List<GroupApplicationVersionModel>();
-                foreach (var item in element.Descendants("GroupApplicationVersion"))
-                {
-                    groupValues.Add(item.Deserialize<GroupApplicationVersionModel>());
-                }
-                target.GroupApplicationVersions.AddRange(groupValues.OrderBy(v => v.Name));
+            var element = response.Body;
+            var interim = new List<UserApplicationVersionModel>();
+            foreach (var item in element.Descendants("UserApplicationVersion"))
+            {
+                interim.Add(item.Deserialize<UserApplicationVersionModel>());
             }
+            target.Applications.AddRange(interim.OrderBy(v => v.Name));
+
+            var groupValues = new List<GroupApplicationVersionModel>();
+            foreach (var item in element.Descendants("GroupApplicationVersion"))
+            {
+                groupValues.Add(item.Deserialize<GroupApplicationVersionModel>());
+            }
+            target.GroupApplicationVersions.AddRange(groupValues.OrderBy(v => v.Name));
         }
 
         public string[] DeleteUserAddInVersions(long userId, long addInVersionId)
@@ -1139,7 +1142,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Body ?? response.Message };
+            return new string[] { response.Body ?? response.Message };
         }
 
         public string[] DeleteUserApplicationVersions(long userId, long applicationVersionId)
@@ -1152,7 +1155,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Body ?? response.Message };
+            return new string[] { response.Body ?? response.Message };
         }
 
         public string[] InsertUserAddInVersions(long groupId, AddInVersionModel addInVersion)
@@ -1165,7 +1168,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Body ?? response.Message };
+            return new string[] { response.Body ?? response.Message };
         }
 
         public string[] InsertUserApplicationVersions(long groupId, ApplicationVersionModel version)
@@ -1178,7 +1181,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Body ?? response.Message };
+            return new string[] { response.Body ?? response.Message };
         }
 
         public IEnumerable<BusinessFunction> GetBusinessFunctions()
@@ -1187,7 +1190,7 @@ namespace Gateway.Web.Services
             var response = _gateway.Get<XElement>("security", query).Result;
 
             if (!response.Successfull)
-                return null;
+                throw new RemoteGatewayException(response.Message);
 
             var element = response.Body;
 
@@ -1206,7 +1209,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Message };
+            return new string[] { response.Message };
         }
 
         public string[] DeleteBusinessFunction(int id)
@@ -1219,7 +1222,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Message };
+            return new String [] { response.Message };
         }
 
         public IEnumerable<GroupType> GetGroupTypes()
@@ -1228,7 +1231,7 @@ namespace Gateway.Web.Services
             var response = _gateway.Get<XElement>("security", query).Result;
 
             if (!response.Successfull)
-                return null;
+                throw new RemoteGatewayException(response.Message);
 
             var element = response.Body;
 
@@ -1247,7 +1250,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Message };
+            return new string[] { response.Message };
         }
 
         public string[] DeleteGroupType(int id)
@@ -1260,14 +1263,18 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Message };
+            return new string[] { response.Message };
         }
 
         public bool GenerateDocumentation(string id, string version)
         {
             var query = string.Format("controllers/{0}/versions/{1}/documentation", id, version);
             var response = _gateway.Put<string, string>("Catalogue", query, string.Empty).Result;
-            return response.Successfull;
+
+            if(!response.Successfull)
+                throw new RemoteGatewayException(response.Message);
+
+            return true;
         }
 
         public string[] UpdateGroupBusinessFunction(string groupId, string businessFunctionId)
@@ -1280,7 +1287,7 @@ namespace Gateway.Web.Services
                 return null;
             }
 
-            return new[] { response.Message };
+            return new string[] { response.Message };
         }
 
         private string GetDefaultKnownGateways(string environment)
@@ -1375,7 +1382,7 @@ namespace Gateway.Web.Services
 
                 if (response.Result.StatusCode != HttpStatusCode.OK)
                 {
-                    return null;
+                    throw new RemoteGatewayException(response.Result.ReasonPhrase);
                 }
 
                 var responseContent = response.Result.Content.ReadAsStringAsync();
@@ -1393,7 +1400,7 @@ namespace Gateway.Web.Services
             {
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
-                    return null;
+                    throw new RemoteGatewayException(response.ReasonPhrase);
                 }
 
                 return await response.Content.ReadAsStringAsync();
@@ -1423,78 +1430,78 @@ namespace Gateway.Web.Services
         {
             var response = _gateway.Get<XElement>("Security", "systems").Result;
 
-            if (response.Successfull)
-            {
-                var element = response.Body;
-                var interim = new List<SelectListItem>();
-                foreach (var item in element.Descendants("SystemName"))
-                {
-                    var model = item.Deserialize<SystemNameModel>();
-                    var foo = new SelectListItem { Text = model.Name, Value = model.Id.ToString() };
-                    interim.Add(foo);
-                }
+            if (!response.Successfull)
+                throw new RemoteGatewayException(response.Message);
 
-                target.AvailableSystems.AddRange(interim.OrderBy(v => v.Text));
+            var element = response.Body;
+            var interim = new List<SelectListItem>();
+            foreach (var item in element.Descendants("SystemName"))
+            {
+                var model = item.Deserialize<SystemNameModel>();
+                var foo = new SelectListItem { Text = model.Name, Value = model.Id.ToString() };
+                interim.Add(foo);
             }
+
+            target.AvailableSystems.AddRange(interim.OrderBy(v => v.Text));
         }
 
         private void PopulateAvailablePermissions(Models.Group.PermissionsModel target)
         {
             var response = _gateway.Get<XElement>("Security", "permissions").Result;
 
-            if (response.Successfull)
-            {
-                var element = response.Body;
-                var interim = new List<SelectListItem>();
-                foreach (var item in element.Descendants("Permission"))
-                {
-                    var model = item.Deserialize<PermissionModel>();
-                    var foo = new SelectListItem
-                    {
-                        Text = string.Format("{0} - {1}", model.SystemName, model.Name),
-                        Value = model.Id.ToString()
-                    };
-                    interim.Add(foo);
-                }
+            if (!response.Successfull)
+                throw new RemoteGatewayException(response.Message);
 
-                target.AvailablePermissions.AddRange(interim.OrderBy(v => v.Text));
+            var element = response.Body;
+            var interim = new List<SelectListItem>();
+            foreach (var item in element.Descendants("Permission"))
+            {
+                var model = item.Deserialize<PermissionModel>();
+                var foo = new SelectListItem
+                {
+                    Text = string.Format("{0} - {1}", model.SystemName, model.Name),
+                    Value = model.Id.ToString()
+                };
+                interim.Add(foo);
             }
+
+            target.AvailablePermissions.AddRange(interim.OrderBy(v => v.Text));
         }
 
         private void PopulateAvailableSites(SitesModel target)
         {
             var response = _gateway.Get<XElement>("Security", "sites").Result;
 
-            if (response.Successfull)
-            {
-                var element = response.Body;
-                var interim = new List<SelectListItem>();
-                foreach (var item in element.Descendants("Site"))
-                {
-                    var model = item.Deserialize<SiteModel>();
-                    var foo = new SelectListItem { Text = model.Name, Value = model.Id.ToString() };
-                    interim.Add(foo);
-                }
+            if (!response.Successfull)
+                throw new RemoteGatewayException(response.Message);
 
-                target.AvailableSites.AddRange(interim.OrderBy(v => v.Text));
+            var element = response.Body;
+            var interim = new List<SelectListItem>();
+            foreach (var item in element.Descendants("Site"))
+            {
+                var model = item.Deserialize<SiteModel>();
+                var foo = new SelectListItem { Text = model.Name, Value = model.Id.ToString() };
+                interim.Add(foo);
             }
+
+            target.AvailableSites.AddRange(interim.OrderBy(v => v.Text));
         }
 
         private IEnumerable<SelectListItem> GetAvailableApplicationVersions()
         {
             var response = _gateway.Get<XElement>("Security", "applications/versions").Result;
 
-            if (response.Successfull)
+            if (!response.Successfull)
+                throw new RemoteGatewayException(response.Message);
+
+            var element = response.Body;
+            foreach (var model in DeserializeApplicationVersionItems(element).OrderByDescending(v => v.ActualVersion))
             {
-                var element = response.Body;
-                foreach (var model in DeserializeApplicationVersionItems(element).OrderByDescending(v => v.ActualVersion))
+                yield return new SelectListItem
                 {
-                    yield return new SelectListItem
-                    {
-                        Text = string.Format("{0} - {1}", model.Application, model.Version),
-                        Value = string.Format("{0}|{1}|Application", model.Application, model.Version)
-                    };
-                }
+                    Text = string.Format("{0} - {1}", model.Application, model.Version),
+                    Value = string.Format("{0}|{1}|Application", model.Application, model.Version)
+                };
             }
         }
 
@@ -1502,17 +1509,17 @@ namespace Gateway.Web.Services
         {
             var response = _gateway.Get<XElement>("Security", "applications/versions/referenced").Result;
 
-            if (response.Successfull)
+            if (!response.Successfull)
+                throw new RemoteGatewayException(response.Message);
+
+            var element = response.Body;
+            foreach (var model in DeserializeApplicationVersionItems(element).OrderByDescending(v => v.ActualVersion))
             {
-                var element = response.Body;
-                foreach (var model in DeserializeApplicationVersionItems(element).OrderByDescending(v => v.ActualVersion))
+                yield return new SelectListItem
                 {
-                    yield return new SelectListItem
-                    {
-                        Text = string.Format("{0} - {1}", model.Application, model.Version),
-                        Value = string.Format("{0}|{1}|Application", model.Application, model.Version)
-                    };
-                }
+                    Text = string.Format("{0} - {1}", model.Application, model.Version),
+                    Value = string.Format("{0}|{1}|Application", model.Application, model.Version)
+                };
             }
         }
 
@@ -1520,17 +1527,17 @@ namespace Gateway.Web.Services
         {
             var response = _gateway.Get<XElement>("Security", "addins/versions").Result;
 
-            if (response.Successfull)
+            if (!response.Successfull)
+                throw new RemoteGatewayException(response.Message);
+
+            var element = response.Body;
+            foreach (var model in DeserializeVersionItems(element).OrderByDescending(v => v.ActualVersion))
             {
-                var element = response.Body;
-                foreach (var model in DeserializeVersionItems(element).OrderByDescending(v => v.ActualVersion))
+                yield return new SelectListItem
                 {
-                    yield return new SelectListItem
-                    {
-                        Text = string.Format("{0} - {1}", model.AddIn, model.Version),
-                        Value = string.Format("{0}|{1}|Add-In", model.AddIn, model.Version)
-                    };
-                }
+                    Text = string.Format("{0} - {1}", model.AddIn, model.Version),
+                    Value = string.Format("{0}|{1}|Add-In", model.AddIn, model.Version)
+                };
             }
         }
 
@@ -1538,17 +1545,17 @@ namespace Gateway.Web.Services
         {
             var response = _gateway.Get<XElement>("Security", "addins/versions/referenced").Result;
 
-            if (response.Successfull)
+            if (!response.Successfull)
+                throw new RemoteGatewayException(response.Message);
+
+            var element = response.Body;
+            foreach (var model in DeserializeVersionItems(element).OrderByDescending(v => v.ActualVersion))
             {
-                var element = response.Body;
-                foreach (var model in DeserializeVersionItems(element).OrderByDescending(v => v.ActualVersion))
+                yield return new SelectListItem
                 {
-                    yield return new SelectListItem
-                    {
-                        Text = string.Format("{0} - {1}", model.AddIn, model.Version),
-                        Value = string.Format("{0}|{1}|Add-In", model.AddIn, model.Version)
-                    };
-                }
+                    Text = string.Format("{0} - {1}", model.AddIn, model.Version),
+                    Value = string.Format("{0}|{1}|Add-In", model.AddIn, model.Version)
+                };
             }
         }
 
@@ -1592,7 +1599,7 @@ namespace Gateway.Web.Services
             var result = new List<MonikerCheckResult>();
 
             if (!response.Successfull)
-                return result;
+                throw new RemoteGatewayException(response.Message);
 
             var element = response.Body.ToString().Deserialize<MarketDataResponse>();
 
@@ -1641,6 +1648,7 @@ namespace Gateway.Web.Services
             public XDocument Document { get; }
         }
     }
+    
 
     public class RemoteGatewayException : Exception
     {
