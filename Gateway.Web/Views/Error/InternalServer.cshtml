@@ -1,11 +1,12 @@
-﻿@model System.Web.Mvc.HandleErrorInfo
+﻿@using Gateway.Web.Utils
+@model System.Web.Mvc.HandleErrorInfo
 @{
     ViewBag.Title = "Error";
 }
 
 <div class="hero-unit">
 
-    <h3>Internal Server Error</h3>
+    <h3>@Model.Exception.GetType().Name.AddWordspaces()</h3>
 
     @if (Model != null)
     {
