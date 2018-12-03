@@ -92,36 +92,46 @@ namespace Gateway.Web.Controllers
         {
             return await Task.Factory.StartNew(() =>
             {
-                var serverslist = new List<string>();
-                var servers = _systemInformation.GetSetting("Servers", "ZAPRNBMAPP1186;ZAPRNBMAPP1187;ZAPRNBMAPP1296;JHBPSM020000759");
-                serverslist.AddRange(servers.Split(';'));
-                var serviceslist = new List<string>();
-                var services = _systemInformation.GetSetting("Services", "Absa.Cib.AuthorizationService;TaskScheduler;ScalingService;Gateway");
-                serviceslist.AddRange(services.Split(';'));
-
-
                 var servicestates = new List<ServiceState>();
-                foreach (var service in serviceslist)
-                {
-                    foreach (var server in serverslist)
-                    {
-                        var name = $"{service} ({server.Substring(server.Length - 4, 4)})";
-                        try
-                        {
-                            var sc = new ServiceController(service, server);
-                            servicestates.Add(new ServiceState(
-                                name,
-                                DateTime.Now,
-                                sc.Status == ServiceControllerStatus.Running ? StateItemState.Okay : StateItemState.Error,
-                                sc.Status.ToString()
-                            ));
-                        }
-                        catch (Exception e)
-                        {
-                            servicestates.Add(new ServiceState(name, DateTime.Now, StateItemState.Warn, "Not Found"));
-                        }
 
+                try
+                {
+
+                    var serverslist = new List<string>();
+                    var servers = _systemInformation.GetSetting("Servers", "");
+                    serverslist.AddRange(servers.Split(';'));
+                    var serviceslist = new List<string>();
+                    var services = _systemInformation.GetSetting("Services", "Absa.Cib.AuthorizationService;TaskScheduler;ScalingService;Gateway");
+                    serviceslist.AddRange(services.Split(';'));
+                    
+                    foreach (var service in serviceslist)
+                    {
+                        foreach (var server in serverslist)
+                        {
+                            var servername = server.Substring(0, server.IndexOf('.'));
+                            var name = $"{service} ({servername.Substring(servername.Length - 4, 4)})";
+                            try
+                            {
+                                var sc = new ServiceController(service, server);
+                                servicestates.Add(new ServiceState(
+                                    name,
+                                    DateTime.Now,
+                                    sc.Status == ServiceControllerStatus.Running
+                                        ? StateItemState.Okay
+                                        : StateItemState.Error,
+                                    sc.Status.ToString()
+                                ));
+                            }
+                            catch
+                            {
+                                // Unused
+                            }
+                        }
                     }
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex,"Unable to get Services on framework.");
                 }
 
                 return servicestates;
@@ -139,10 +149,17 @@ namespace Gateway.Web.Controllers
             {
                 var databaseStates = new List<DatabaseState>();
 
-                foreach (var database in databases)
+                try
                 {
-                    databaseStates.Add(_databaseStateProvider.GetDatabaseState(database));
+                    foreach (var database in databases)
+                    {
+                        databaseStates.Add(_databaseStateProvider.GetDatabaseState(database));
+                    }
                 }
+                catch (Exception e)
+                {
+                    _logger.Error(e,"Unable to get database statuses");
+                }          
 
                 return databaseStates;
             }).ConfigureAwait(false);
