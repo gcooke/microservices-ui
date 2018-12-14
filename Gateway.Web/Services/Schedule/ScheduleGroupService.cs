@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using Gateway.Web.Models.Schedule.Output;
 using ScheduleGroup = Gateway.Web.Models.Schedule.Output.ScheduleGroup;
 
 namespace Gateway.Web.Services.Schedule
@@ -28,19 +29,16 @@ namespace Gateway.Web.Services.Schedule
         {
             using (var db = new GatewayEntities(ConnectionString))
             {
-                var groups = GetGroups(startDate, endDate, searchTerm);
-                var runGroups = new List<ScheduleGroup>();
-
                 string status = null;
                 if (!string.IsNullOrWhiteSpace(searchTerm) && searchTerm.Contains("status:"))
                 {
                     var statusIndex = searchTerm.IndexOf("status:", StringComparison.Ordinal);
-                    if (statusIndex > 0)
-                    {
-                        searchTerm = searchTerm.Substring(0, statusIndex - 1).Trim();
-                    }
-                    status = searchTerm.Substring(statusIndex + "status:".Length);
+                    status = searchTerm.Substring(statusIndex + "status:".Length).Trim();
+                    searchTerm = statusIndex > 0 ? searchTerm.Substring(0, statusIndex - 1).Trim() : string.Empty;
                 }
+
+                var groups = GetGroups(startDate, endDate, searchTerm);
+                var runGroups = new List<ScheduleGroup>();
 
                 foreach (var group in groups)
                 {
@@ -51,15 +49,24 @@ namespace Gateway.Web.Services.Schedule
                         group.Tasks = group.Tasks.Where(x => x.IsEnabled).ToList();
                     }
 
+                    var tasks = new List<ScheduleTask>();
                     foreach (var task in group.Tasks)
                     {
                         var jobList = db.ScheduledJobs
                             .Where(x => x.ScheduleId == task.ScheduleId)
                             .Where(x => x.BusinessDate > startDate && x.BusinessDate < endDate)
-                            .Where(x => status == null || x.Status.ToLower() == status.ToLower())
                             .ToList();
 
                         var lastJob = jobList.LastOrDefault();
+
+                        if (!string.IsNullOrWhiteSpace(status))
+                        {
+                            if (lastJob == null)
+                                continue;
+
+                            if (lastJob.Status.ToLower() != status.ToLower())
+                                continue;
+                        }
 
                         if (lastJob == null)
                         {
@@ -72,8 +79,10 @@ namespace Gateway.Web.Services.Schedule
                         task.RequestId = lastJob.RequestId;
                         task.StartedAt = lastJob.StartedAt;
                         task.FinishedAt = lastJob.FinishedAt;
+                        tasks.Add(task);
                     }
 
+                    group.Tasks = tasks;
                     runGroups.Add(group);
                 }
 
