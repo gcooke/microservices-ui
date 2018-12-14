@@ -138,12 +138,9 @@ function getStatusHtml(value) {
     var icon = getIcon(value);
 
     if (value.RequestId !== null) {
-        html = "<a target='_blank' href='Request/Summary?correlationId=" + value.RequestId + "'>" +
-            "<span style='color: " + color + "'>" +
-            "<span class='" + icon +"'></span> " +
-            value.Status +
-            "</span>" +
-            "</a>";
+        html = 
+            "<span class='" + icon + "' style='color: " + color + "'></span>" +
+            " <a target='_blank' href='Request/Summary?correlationId=" + value.RequestId + "' style='color: " + color + "'>" + value.Status + "</a>";
     } else {
         html = "<span style='color: " + color + "'>" +
             "<span class='"+icon+"'></span> " +
@@ -152,7 +149,7 @@ function getStatusHtml(value) {
     }
 
     if ((value.Status === 'Succeeded' || value.Status === 'Failed') && value.Retries !== null && value.Retries > 0) {
-        html += " <span style='padding: 0 !important; color: " + color + ";'><span class='glyphicon glyphicon-retweet'></span> " + value.Retries + "</span>";
+        html += " <span class='glyphicon glyphicon-retweet' style='padding: 0 !important; margin-left: 5px; color: " + color + ";' title='This item has been rerun one or more times.'></span>";
     }
 
     return html;

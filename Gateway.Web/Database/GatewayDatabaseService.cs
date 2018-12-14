@@ -84,12 +84,20 @@ namespace Gateway.Web.Database
             return result;
         }
 
-        public List<HistoryItem> GetRecentRequests(string controller, DateTime start)
+        public List<HistoryItem> GetRecentRequests(string controller, DateTime start, string search = null)
         {
             var result = new List<HistoryItem>();
             using (var database = new GatewayEntities(ConnectionString))
             {
-                var items = database.spGetRecentRequests(start, controller);
+                var items = database.spGetRecentRequests(start, controller).ToList();
+
+                if (!string.IsNullOrWhiteSpace(search))
+                {
+                    items = items
+                        .Where(x => x.Resource.Contains(search))
+                        .ToList();
+                }
+
                 foreach (var item in items)
                 {
                     result.Add(item.ToModel());
