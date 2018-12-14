@@ -205,7 +205,7 @@ namespace Gateway.Web.Controllers
             return View(model);
         }
 
-        public ActionResult History(string id, string sortOrder)
+        public ActionResult History(string id, string sortOrder, string search = null)
         {
             if (string.IsNullOrEmpty(sortOrder))
             {
@@ -217,7 +217,7 @@ namespace Gateway.Web.Controllers
             ViewBag.SortDirection = sortOrder.EndsWith("_desc") ? "" : "_desc";
             ViewBag.Controller = "Controller";
 
-            var items = _dataService.GetRecentRequests(id, DateTime.Today.AddDays(-7));
+            var items = _dataService.GetRecentRequests(id, DateTime.Today.AddDays(-7), search);
 
             var model = new HistoryModel(id);
             model.Requests.AddRange(items, sortOrder);

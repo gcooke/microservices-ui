@@ -20,7 +20,7 @@ namespace Gateway.Web.Database
 
         List<HistoryItem> GetRecentRequests(DateTime start);
 
-        List<HistoryItem> GetRecentRequests(string controller, DateTime start);
+        List<HistoryItem> GetRecentRequests(string controller, DateTime start, string search = null);
 
         List<HistoryItem> GetRecentUserRequests(string user, DateTime start);
 
