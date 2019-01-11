@@ -42,12 +42,12 @@ namespace Gateway.Web.Database
         public virtual DbSet<Server> Servers { get; set; }
         public virtual DbSet<ServerExternalResource> ServerExternalResources { get; set; }
         public virtual DbSet<ScheduleGroup> ScheduleGroups { get; set; }
-        public virtual DbSet<ScheduledJob> ScheduledJobs { get; set; }
         public virtual DbSet<RequestConfiguration> RequestConfigurations { get; set; }
         public virtual DbSet<ExecutableConfiguration> ExecutableConfigurations { get; set; }
         public virtual DbSet<RiskBatchConfiguration> RiskBatchConfigurations { get; set; }
         public virtual DbSet<RiskBatchSchedule> RiskBatchSchedules { get; set; }
         public virtual DbSet<Schedule> Schedules { get; set; }
+        public virtual DbSet<ScheduledJob> ScheduledJobs { get; set; }
     
         public virtual ObjectResult<spGetJobStats_Result> spGetJobStats(Nullable<System.DateTime> start, string controller)
         {
@@ -142,19 +142,6 @@ namespace Gateway.Web.Database
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetChildRequests_Result>("spGetChildRequests", correlationIdParameter);
         }
     
-        public virtual ObjectResult<spGetRecentRequests_Result> spGetRecentRequests(Nullable<System.DateTime> start, string controller)
-        {
-            var startParameter = start.HasValue ?
-                new ObjectParameter("Start", start) :
-                new ObjectParameter("Start", typeof(System.DateTime));
-    
-            var controllerParameter = controller != null ?
-                new ObjectParameter("Controller", controller) :
-                new ObjectParameter("Controller", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetRecentRequests_Result>("spGetRecentRequests", startParameter, controllerParameter);
-        }
-    
         public virtual ObjectResult<spGetRecentRequestsAll_Result> spGetRecentRequestsAll(Nullable<System.DateTime> start, string controller)
         {
             var startParameter = start.HasValue ?
@@ -233,6 +220,23 @@ namespace Gateway.Web.Database
                 new ObjectParameter("Controller", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetRequestStats_Result>("spGetRequestStats", startParameter, controllerParameter);
+        }
+    
+        public virtual ObjectResult<spGetRecentRequests_Result> spGetRecentRequests(Nullable<System.DateTime> start, string controller, string searchString)
+        {
+            var startParameter = start.HasValue ?
+                new ObjectParameter("Start", start) :
+                new ObjectParameter("Start", typeof(System.DateTime));
+    
+            var controllerParameter = controller != null ?
+                new ObjectParameter("Controller", controller) :
+                new ObjectParameter("Controller", typeof(string));
+    
+            var searchStringParameter = searchString != null ?
+                new ObjectParameter("SearchString", searchString) :
+                new ObjectParameter("SearchString", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetRecentRequests_Result>("spGetRecentRequests", startParameter, controllerParameter, searchStringParameter);
         }
     }
 }
