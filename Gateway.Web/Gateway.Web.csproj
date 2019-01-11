@@ -357,6 +357,9 @@
     <Compile Include="Database\spGetJobStats_Result.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
+    <Compile Include="Database\spGetRecentRequests_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
     <Compile Include="Database\spGetRequestCounts_Result.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
@@ -442,9 +445,6 @@
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\spGetRecentRequestsAll_Result.cs">
-      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Database\spGetRecentRequests_Result.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\spGetRecentUserRequests_Result.cs">
