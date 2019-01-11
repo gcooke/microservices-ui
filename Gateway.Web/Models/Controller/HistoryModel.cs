@@ -11,5 +11,7 @@ namespace Gateway.Web.Models.Controller
         }
 
         public List<HistoryItem> Requests { get; private set; }
+
+        public string SearchText { get; set; }
     }
 }
