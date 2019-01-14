@@ -42,8 +42,8 @@
                                     Additional Filters ...
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li><a href="~/Schedule?SearchTerm=status%3Afailed">Only Failed Runs</a></li>
-                                    <li><a href="~/Schedule?SearchTerm=status%3Asucceeded">Only Succeeded Runs</a></li>
+                                    <li><a href="~/Schedule?businessDate=@Model.BusinessDate.ToString("yyyy-MM-dd")&SearchTerm=status%3Afailed">Only Failed Runs</a></li>
+                                    <li><a href="~/Schedule?businessDate=@Model.BusinessDate.ToString("yyyy-MM-dd")&SearchTerm=status%3Asucceeded">Only Succeeded Runs</a></li>
                                 </ul>
                             </span>
                         </div>
