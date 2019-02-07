@@ -205,7 +205,7 @@ namespace Gateway.Web.Controllers
             return View(model);
         }
 
-        public ActionResult History(string id, string sortOrder, string search = null)
+        public ActionResult History(string id, string sortOrder, string search = null, string searchResultsText = null)
         {
             if (string.IsNullOrEmpty(sortOrder))
             {
@@ -222,6 +222,7 @@ namespace Gateway.Web.Controllers
             var model = new HistoryModel(id);
             model.Requests.AddRange(items, sortOrder);
             model.Requests.SetRelativePercentages();
+            model.SearchText = search == null ? null : $"Showing results for '{searchResultsText ?? search}'";
             return View(model);
         }
 

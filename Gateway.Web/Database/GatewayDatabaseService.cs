@@ -89,7 +89,7 @@ namespace Gateway.Web.Database
             var result = new List<HistoryItem>();
             using (var database = new GatewayEntities(ConnectionString))
             {
-                var items = database.spGetRecentRequests(start, controller).ToList();
+                var items = database.spGetRecentRequests(start, controller, search).ToList();
 
                 if (!string.IsNullOrWhiteSpace(search))
                 {

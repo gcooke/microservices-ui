@@ -20,7 +20,7 @@
             <div class="col-sm-6">
                 <a href="~/Schedule/Update"
                    class="btn btn-default pull-right m-t-15">
-                    Edit Schedule  <i class="fa fa-angle-down" aria-hidden="true"></i>
+                    Edit Schedule
                 </a>
             </div>
         </div>
@@ -38,6 +38,13 @@
                                 <button class="btn btn-default" type="submit" style="margin: 0 !important">
                                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                                 </button>
+                                <button type="button" class="btn btn-default dropdown-toggle" style="margin: 0 !important; border-left: 0 !important" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Additional Filters ...
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="~/Schedule?businessDate=@Model.BusinessDate.ToString("yyyy-MM-dd")&SearchTerm=status%3Afailed">Only Failed Runs</a></li>
+                                    <li><a href="~/Schedule?businessDate=@Model.BusinessDate.ToString("yyyy-MM-dd")&SearchTerm=status%3Asucceeded">Only Succeeded Runs</a></li>
+                                </ul>
                             </span>
                         </div>
                     </div>
@@ -109,7 +116,7 @@
                                                                 ...
                                                             </button>
                                                             <ul class="dropdown-menu">
-                                                                <li><a target="_blank" href="~/Controller/History/RiskBatch?search=@item.ScheduleId">View All Runs</a></li>
+                                                                <li><a target="_blank" href="~/Controller/History/RiskBatch?search=@item.ScheduleId&searchResultsText=@item.Name">View All Runs</a></li>
                                                             </ul>
                                                         </div>
                                                     </td>

@@ -13,10 +13,16 @@
 
 <div id="page-content-wrapper">
     <div class="hero-unit">
-        <h3 class="text-lowercase">Last @Model.Requests.Count requests</h3>
+        <h3 class="text-lowercase">
+            @if (!string.IsNullOrWhiteSpace(Model.SearchText))
+            {
+                @Model.SearchText <span>-</span> 
+            }
+            Last @Model.Requests.Count requests
+        </h3>
         <br />
         <div class="containerx bulk">
-            @{ Html.RenderPartial("_HistoryItems", (List<HistoryItem>)@Model.Requests); }
+            @{ Html.RenderPartial("_HistoryItems", (List<HistoryItem>) @Model.Requests); }
         </div>
     </div>
 </div>

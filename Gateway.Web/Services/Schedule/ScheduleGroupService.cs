@@ -71,6 +71,7 @@ namespace Gateway.Web.Services.Schedule
                         if (lastJob == null)
                         {
                             task.Status = "Not Started";
+                            tasks.Add(task);
                             continue;
                         }
 

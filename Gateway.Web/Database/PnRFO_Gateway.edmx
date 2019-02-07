@@ -138,7 +138,7 @@
             <PropertyRef Name="RequestConfigurationId" />
           </Key>
           <Property Name="RequestConfigurationId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="varchar" MaxLength="80" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="100" />
           <Property Name="Payload" Type="varchar(max)" Nullable="false" />
           <Property Name="Verb" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="Url" Type="varchar" MaxLength="500" Nullable="false" />
@@ -425,6 +425,7 @@
         <Function Name="spGetRecentRequests" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Start" Type="datetime" Mode="In" />
           <Parameter Name="Controller" Type="nvarchar" Mode="In" />
+          <Parameter Name="SearchString" Type="nvarchar(max)" Mode="In" />
         </Function>
         <Function Name="spGetRecentRequestsAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Start" Type="datetime" Mode="In" />
@@ -475,7 +476,7 @@
           <EntitySet Name="Status" EntityType="Self.Status" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="StatusChange" EntityType="Self.StatusChange" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Version" EntityType="Self.Version" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="ScheduledJob" EntityType="Self.ScheduledJob" Schema="HangFire" store:Type="Tables" />
+          <EntitySet Name="ScheduledJob" EntityType="Self.ScheduledJob" Schema="Hangfire" store:Type="Tables" />
           <AssociationSet Name="FK_ControllerExternalResource_ControllerId" Association="Self.FK_ControllerExternalResource_ControllerId">
             <End Role="Controller" EntitySet="Controller" />
             <End Role="ControllerExternalResource" EntitySet="ControllerExternalResource" />
@@ -656,10 +657,6 @@
           <FunctionImport Name="spGetChildRequests" ReturnType="Collection(GatewayModel.spGetChildRequests_Result)">
           <Parameter Name="correlationId" Mode="In" Type="Guid" />
           </FunctionImport>
-          <FunctionImport Name="spGetRecentRequests" ReturnType="Collection(GatewayModel.spGetRecentRequests_Result)">
-            <Parameter Name="Start" Mode="In" Type="DateTime" />
-            <Parameter Name="Controller" Mode="In" Type="String" />
-          </FunctionImport>
           <FunctionImport Name="spGetRecentRequestsAll" ReturnType="Collection(GatewayModel.spGetRecentRequestsAll_Result)">
             <Parameter Name="Start" Mode="In" Type="DateTime" />
             <Parameter Name="Controller" Mode="In" Type="String" />
@@ -702,7 +699,6 @@
             <End Role="ServerExternalResource" EntitySet="ServerExternalResources" />
           </AssociationSet>
           <EntitySet Name="ScheduleGroups" EntityType="GatewayModel.ScheduleGroup" />
-          <EntitySet Name="ScheduledJobs" EntityType="GatewayModel.ScheduledJob" />
           <EntitySet Name="RequestConfigurations" EntityType="GatewayModel.RequestConfiguration" />
           <EntitySet Name="ExecutableConfigurations" EntityType="GatewayModel.ExecutableConfiguration" />
           <EntitySet Name="RiskBatchConfigurations" EntityType="GatewayModel.RiskBatchConfiguration" />
@@ -732,10 +728,6 @@
             <End Role="ScheduleGroup" EntitySet="ScheduleGroups" />
             <End Role="Schedule" EntitySet="Schedules" />
           </AssociationSet>
-          <AssociationSet Name="FK_ScheduledJob_Schedule" Association="GatewayModel.FK_ScheduledJob_Schedule">
-            <End Role="Schedule" EntitySet="Schedules" />
-            <End Role="ScheduledJob" EntitySet="ScheduledJobs" />
-          </AssociationSet>
           <FunctionImport Name="spGetRequestCounts" ReturnType="Collection(GatewayModel.spGetRequestCounts_Result)">
           <Parameter Name="Start" Mode="In" Type="DateTime" />
           </FunctionImport>
@@ -743,6 +735,16 @@
             <Parameter Name="Start" Mode="In" Type="DateTime" />
             <Parameter Name="Controller" Mode="In" Type="String" />
           </FunctionImport>
+          <FunctionImport Name="spGetRecentRequests" ReturnType="Collection(GatewayModel.spGetRecentRequests_Result)">
+            <Parameter Name="Start" Mode="In" Type="DateTime" />
+            <Parameter Name="Controller" Mode="In" Type="String" />
+            <Parameter Name="SearchString" Mode="In" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="ScheduledJobs" EntityType="GatewayModel.ScheduledJob" />
+          <AssociationSet Name="FK_ScheduledJob_Schedule" Association="GatewayModel.FK_ScheduledJob_Schedule">
+            <End Role="Schedule" EntitySet="Schedules" />
+            <End Role="ScheduledJob" EntitySet="ScheduledJobs" />
+          </AssociationSet>
           </EntityContainer>
         <ComplexType Name="spGetJobStats_Result">
           <Property Type="DateTime" Name="Date" Nullable="true" />
@@ -852,25 +854,6 @@
           <Property Name="UpdateTimeUtc" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
         <ComplexType Name="spGetChildRequests_Result">
-          <Property Type="Guid" Name="CorrelationId" Nullable="false" />
-          <Property Type="String" Name="User" Nullable="false" MaxLength="100" />
-          <Property Type="String" Name="IpAddress" Nullable="false" MaxLength="100" />
-          <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
-          <Property Type="String" Name="Version" Nullable="false" MaxLength="100" />
-          <Property Type="String" Name="Resource" Nullable="false" MaxLength="255" />
-          <Property Type="String" Name="RequestType" Nullable="false" MaxLength="10" />
-          <Property Type="Int32" Name="Priority" Nullable="false" />
-          <Property Type="Boolean" Name="IsAsync" Nullable="false" />
-          <Property Type="DateTime" Name="StartUtc" Nullable="false" Precision="23" />
-          <Property Type="DateTime" Name="EndUtc" Nullable="true" Precision="23" />
-          <Property Type="Int32" Name="QueueTimeMs" Nullable="true" />
-          <Property Type="Int32" Name="TimeTakeMs" Nullable="true" />
-          <Property Type="Int32" Name="ResultCode" Nullable="true" />
-          <Property Type="String" Name="ResultMessage" Nullable="true" />
-          <Property Type="DateTime" Name="UpdateTimeUtc" Nullable="false" Precision="23" />
-          <Property Type="String" Name="Status" Nullable="false" MaxLength="100" />
-        </ComplexType>
-        <ComplexType Name="spGetRecentRequests_Result">
           <Property Type="Guid" Name="CorrelationId" Nullable="false" />
           <Property Type="String" Name="User" Nullable="false" MaxLength="100" />
           <Property Type="String" Name="IpAddress" Nullable="false" MaxLength="100" />
@@ -1087,26 +1070,12 @@
           <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Schedules" Relationship="GatewayModel.FK_Schedule_ScheduleGroup" FromRole="ScheduleGroup" ToRole="Schedule" />
         </EntityType>
-        <EntityType Name="ScheduledJob">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ScheduleId" Type="Int64" Nullable="false" />
-          <Property Name="JobId" Type="String" Nullable="false" MaxLength="2000" FixedLength="false" Unicode="false" />
-          <Property Name="BusinessDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="RequestId" Type="Guid" />
-          <Property Name="StartedAt" Type="DateTime" Precision="3" />
-          <Property Name="FinishedAt" Type="DateTime" Precision="3" />
-          <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Schedule" Relationship="GatewayModel.FK_ScheduledJob_Schedule" FromRole="ScheduledJob" ToRole="Schedule" />
-        </EntityType>
         <EntityType Name="RequestConfiguration">
           <Key>
             <PropertyRef Name="RequestConfigurationId" />
           </Key>
           <Property Name="RequestConfigurationId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="Payload" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="Verb" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="Url" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
@@ -1244,6 +1213,49 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="spGetRequestCounts_Result">
+          <Property Type="DateTime" Name="Hour" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="Count" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="spGetRequestStats_Result">
+          <Property Type="DateTime" Name="Date" Nullable="true" />
+          <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="Count" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="spGetRecentRequests_Result">
+          <Property Type="Guid" Name="CorrelationId" Nullable="false" />
+          <Property Type="String" Name="User" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="IpAddress" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Version" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Resource" Nullable="false" MaxLength="255" />
+          <Property Type="String" Name="RequestType" Nullable="false" MaxLength="10" />
+          <Property Type="Int32" Name="Priority" Nullable="false" />
+          <Property Type="Boolean" Name="IsAsync" Nullable="false" />
+          <Property Type="DateTime" Name="StartUtc" Nullable="false" Precision="23" />
+          <Property Type="DateTime" Name="EndUtc" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="QueueTimeMs" Nullable="true" />
+          <Property Type="Int32" Name="TimeTakeMs" Nullable="true" />
+          <Property Type="Int32" Name="ResultCode" Nullable="true" />
+          <Property Type="String" Name="ResultMessage" Nullable="true" />
+          <Property Type="DateTime" Name="UpdateTimeUtc" Nullable="false" Precision="23" />
+          <Property Type="String" Name="Status" Nullable="true" MaxLength="250" />
+        </ComplexType>
+        <EntityType Name="ScheduledJob">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ScheduleId" Type="Int64" Nullable="false" />
+          <Property Name="JobId" Type="String" Nullable="false" MaxLength="2000" FixedLength="false" Unicode="false" />
+          <Property Name="BusinessDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RequestId" Type="Guid" />
+          <Property Name="StartedAt" Type="DateTime" Precision="3" />
+          <Property Name="FinishedAt" Type="DateTime" Precision="3" />
+          <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Schedule" Relationship="GatewayModel.FK_ScheduledJob_Schedule" FromRole="ScheduledJob" ToRole="Schedule" />
+        </EntityType>
         <Association Name="FK_ScheduledJob_Schedule">
           <End Type="GatewayModel.Schedule" Role="Schedule" Multiplicity="1" />
           <End Type="GatewayModel.ScheduledJob" Role="ScheduledJob" Multiplicity="*" />
@@ -1256,16 +1268,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <ComplexType Name="spGetRequestCounts_Result">
-          <Property Type="DateTime" Name="Hour" Nullable="true" Precision="23" />
-          <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
-          <Property Type="Int32" Name="Count" Nullable="true" />
-        </ComplexType>
-        <ComplexType Name="spGetRequestStats_Result">
-          <Property Type="DateTime" Name="Date" Nullable="true" />
-          <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
-          <Property Type="Int32" Name="Count" Nullable="true" />
-        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1471,29 +1473,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="spGetRecentRequests" FunctionName="GatewayModel.Store.spGetRecentRequests">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="GatewayModel.spGetRecentRequests_Result">
-                <ScalarProperty Name="CorrelationId" ColumnName="CorrelationId" />
-                <ScalarProperty Name="User" ColumnName="User" />
-                <ScalarProperty Name="IpAddress" ColumnName="IpAddress" />
-                <ScalarProperty Name="Controller" ColumnName="Controller" />
-                <ScalarProperty Name="Version" ColumnName="Version" />
-                <ScalarProperty Name="Resource" ColumnName="Resource" />
-                <ScalarProperty Name="RequestType" ColumnName="RequestType" />
-                <ScalarProperty Name="Priority" ColumnName="Priority" />
-                <ScalarProperty Name="IsAsync" ColumnName="IsAsync" />
-                <ScalarProperty Name="StartUtc" ColumnName="StartUtc" />
-                <ScalarProperty Name="EndUtc" ColumnName="EndUtc" />
-                <ScalarProperty Name="QueueTimeMs" ColumnName="QueueTimeMs" />
-                <ScalarProperty Name="TimeTakeMs" ColumnName="TimeTakeMs" />
-                <ScalarProperty Name="ResultCode" ColumnName="ResultCode" />
-                <ScalarProperty Name="ResultMessage" ColumnName="ResultMessage" />
-                <ScalarProperty Name="UpdateTimeUtc" ColumnName="UpdateTimeUtc" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="spGetRecentRequestsAll" FunctionName="GatewayModel.Store.spGetRecentRequestsAll">
             <ResultMapping>
               <ComplexTypeMapping TypeName="GatewayModel.spGetRecentRequestsAll_Result">
@@ -1659,20 +1638,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="ScheduledJobs">
-            <EntityTypeMapping TypeName="GatewayModel.ScheduledJob">
-              <MappingFragment StoreEntitySet="ScheduledJob">
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="FinishedAt" ColumnName="FinishedAt" />
-                <ScalarProperty Name="StartedAt" ColumnName="StartedAt" />
-                <ScalarProperty Name="RequestId" ColumnName="RequestId" />
-                <ScalarProperty Name="BusinessDate" ColumnName="BusinessDate" />
-                <ScalarProperty Name="JobId" ColumnName="JobId" />
-                <ScalarProperty Name="ScheduleId" ColumnName="ScheduleId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="RequestConfigurations">
             <EntityTypeMapping TypeName="GatewayModel.RequestConfiguration">
               <MappingFragment StoreEntitySet="RequestConfiguration">
@@ -1755,6 +1720,43 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetRecentRequests" FunctionName="GatewayModel.Store.spGetRecentRequests">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GatewayModel.spGetRecentRequests_Result">
+                <ScalarProperty Name="CorrelationId" ColumnName="CorrelationId" />
+                <ScalarProperty Name="User" ColumnName="User" />
+                <ScalarProperty Name="IpAddress" ColumnName="IpAddress" />
+                <ScalarProperty Name="Controller" ColumnName="Controller" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+                <ScalarProperty Name="Resource" ColumnName="Resource" />
+                <ScalarProperty Name="RequestType" ColumnName="RequestType" />
+                <ScalarProperty Name="Priority" ColumnName="Priority" />
+                <ScalarProperty Name="IsAsync" ColumnName="IsAsync" />
+                <ScalarProperty Name="StartUtc" ColumnName="StartUtc" />
+                <ScalarProperty Name="EndUtc" ColumnName="EndUtc" />
+                <ScalarProperty Name="QueueTimeMs" ColumnName="QueueTimeMs" />
+                <ScalarProperty Name="TimeTakeMs" ColumnName="TimeTakeMs" />
+                <ScalarProperty Name="ResultCode" ColumnName="ResultCode" />
+                <ScalarProperty Name="ResultMessage" ColumnName="ResultMessage" />
+                <ScalarProperty Name="UpdateTimeUtc" ColumnName="UpdateTimeUtc" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="ScheduledJobs">
+            <EntityTypeMapping TypeName="GatewayModel.ScheduledJob">
+              <MappingFragment StoreEntitySet="ScheduledJob">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="FinishedAt" ColumnName="FinishedAt" />
+                <ScalarProperty Name="StartedAt" ColumnName="StartedAt" />
+                <ScalarProperty Name="RequestId" ColumnName="RequestId" />
+                <ScalarProperty Name="BusinessDate" ColumnName="BusinessDate" />
+                <ScalarProperty Name="JobId" ColumnName="JobId" />
+                <ScalarProperty Name="ScheduleId" ColumnName="ScheduleId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

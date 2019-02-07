@@ -76,23 +76,6 @@ namespace Gateway.Web
             loggingservice.Initialize(information.LoggingInformation);
             var logger = loggingservice.GetLogger(this);
 
-
-            try
-            {
-                var test = information.Resolve<IBatchHelper>();
-                //  IServerDiagnosticsService
-                //IGatewayRestService
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-                throw;
-            }
-
-
-
-
             var systemInformation = _container.Resolve<ISystemInformation>();
             var database = systemInformation.GetSetting("GatewayDatabase");
             var server = systemInformation.GetSetting("DatabaseServer");
