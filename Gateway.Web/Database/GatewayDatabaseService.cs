@@ -411,16 +411,26 @@ namespace Gateway.Web.Database
         public IEnumerable<ControllerState> GetControllerStates(IDictionary<string, ServerDiagnostics> serverDiagnostics)
         {
             var result = new List<ControllerState>();
-            using (var database = new GatewayEntities(ConnectionString))
+
+            try
             {
-                var items = database.spGetControllerStates();
-                foreach (var item in items.GroupBy(i => i.Controller))
+                using (var database = new GatewayEntities(ConnectionString))
                 {
-                    var controllerState = item.ToArray().ToModel();
-                    SetControllerStatistics(controllerState, serverDiagnostics);
-                    result.Add(controllerState);
+                    var items = database.spGetControllerStates().ToList();
+                    foreach (var item in items.GroupBy(i => i.Controller))
+                    {
+                        var controllerState = item.ToArray().ToModel();
+                        SetControllerStatistics(controllerState, serverDiagnostics);
+                        result.Add(controllerState);
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                ex.ToString();
+            }
+
+
             return result;
         }
 

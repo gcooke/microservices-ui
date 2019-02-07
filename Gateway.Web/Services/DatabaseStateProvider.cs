@@ -2,6 +2,7 @@
 using System.Data;
 using System.Data.SqlClient;
 using Bagl.Cib.MIT.IoC;
+using Bagl.Cib.MIT.Logging;
 using Gateway.Web.Controllers;
 using Gateway.Web.Models.Home;
 
@@ -10,10 +11,12 @@ namespace Gateway.Web.Services
     public class DatabaseStateProvider : IDatabaseStateProvider
     {
         private readonly ISystemInformation _systemInformation;
+        private ILogger _logger;
 
-        public DatabaseStateProvider(ISystemInformation systemInformation)
+        public DatabaseStateProvider(ISystemInformation systemInformation, ILoggingService loggingService)
         {
             _systemInformation = systemInformation;
+            _logger = loggingService.GetLogger(this);
         }
 
         public DatabaseState GetDatabaseState(string DatabaseConfigId)
@@ -48,7 +51,7 @@ namespace Gateway.Web.Services
             catch (Exception ex)
             {
                 state = StateItemState.Error;
-                message = "Connection";
+                _logger.Error(ex,"Error Getting database sizes.");
             }
 
 
@@ -70,6 +73,7 @@ namespace Gateway.Web.Services
             {
                 state = StateItemState.Warn;
                 message = "No Db Size";
+                _logger.Error(ex, "Error computing database sizes.");
             }
 
             return new DatabaseState(database, DateTime.Now, state, message);

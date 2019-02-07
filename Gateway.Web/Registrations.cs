@@ -19,7 +19,13 @@ using Gateway.Web.Services.Monitoring.ServerDiagnostics;
 using Gateway.Web.Services.Schedule;
 using Gateway.Web.Services.Schedule.Interfaces;
 using System.Web.Mvc;
+using Absa.Cib.JwtAuthentication.Extensions;
+using Absa.Cib.JwtAuthentication.Models;
+using Bagl.Cib.MIT.Redis.Caching;
+using Bagl.Cib.MIT.Redis.Serialization;
+using Bagl.Cib.MIT.Redis.Serialization.Json;
 using Gateway.Web.Controllers;
+using Unity.Injection;
 
 namespace Gateway.Web
 {
@@ -58,36 +64,71 @@ namespace Gateway.Web
             information.RegisterType<ILoggingService, DefaultLoggingService>(Scope.Singleton);
             information.RegisterType<ILogsService, LogsService>(Scope.Singleton);
 
-
             //Register Redis 
-            information.RegisterType<IRedisConnectionProvider, RedisConnectionProvider>(Scope.Singleton);
+            information.RegisterType<ConfigurationOptions>(Scope.Singleton, new InjectionFactory(
+                e =>
+                {
 
-            var redisOptions = new ConfigurationOptions()
-            {
-                ClientName = AppDomain.CurrentDomain.FriendlyName,
-                EndPoints = { information.GetSetting("redisconnection", "localhost") },
-                ConnectTimeout = 20000,
-                SyncTimeout = 10000,
-                AllowAdmin = false,
-                DefaultDatabase = 0
-            };
+                    var redisConnectionStr = information.GetSetting("RedisConnection");
+                    redisConnectionStr = string.IsNullOrEmpty(redisConnectionStr) ? "localhost" : redisConnectionStr;
 
-            var options = new RedisConfiguration()
-            {
-                RedisOptions = redisOptions,
-                DefaultExpiration = TimeSpan.FromMinutes(1)
-            };
+                    var redisOptions = new ConfigurationOptions
+                    {
+                        EndPoints = { redisConnectionStr },
+                        ConnectTimeout = 20000,
+                        SyncTimeout = 10000,
+                        ClientName = AppDomain.CurrentDomain.FriendlyName,
+                        AbortOnConnectFail = false,
+                        ReconnectRetryPolicy = new ExponentialRetry(100),
+                        HighPrioritySocketThreads = true,
+                        ConnectRetry = 1000
+                    };
 
-            information.RegisterInstance(options, Scope.Singleton);
+                    var redispassword = information.GetSetting("RedisPassword");
+                    var enableEncryption = bool.Parse(information.GetSetting("RedisEncryption", "False"));
+
+                    if (enableEncryption)
+                    {
+                        var certificate = (ICertificate)e.Resolve(typeof(ICertificate), null, null);
+                        var decryptedpassword = certificate.Decrypt(redispassword);
+                        redispassword = decryptedpassword;
+                    }
+
+                    redisOptions.Password = redispassword;
+                    return redisOptions;
+                }));
+
+            information.RegisterType<IRedisConnectionProvider>(Scope.Singleton, new InjectionFactory(
+                e =>
+                {
+                    var config = (RedisConfiguration)e.Resolve(typeof(RedisConfiguration), null, null);
+                    return new RedisConnectionProvider(config);
+                }));
+
+            information.RegisterType<RedisConfiguration>(Scope.Singleton, new InjectionFactory(
+                e =>
+                {
+                    var redisconfig = (ConfigurationOptions)e.Resolve(typeof(ConfigurationOptions), null, null);
+
+                    return new RedisConfiguration()
+                    {
+                        RedisOptions = redisconfig,
+                        DefaultExpiration = TimeSpan.FromHours(12)
+                    };
+                }));
+
+            information.RegisterType<ISerializer, JsonSerializer>(Scope.Singleton);
+
+            information.RegisterType<IRedisCache, RedisCache>(Scope.Singleton);
 
 
-            information.RegisterType<IGatewayDatabaseService, GatewayDatabaseService>(Scope.Singleton);            
+            information.RegisterType<IGatewayDatabaseService, GatewayDatabaseService>(Scope.Singleton);
             information.RegisterType<IDateTimeProvider, DateTimeProvider>(Scope.Singleton);
             information.RegisterType<IFileService, FileService>(Scope.Singleton);
             information.RegisterType<IDifferentialArchiveService, DifferentialArchiveService>(Scope.Singleton);
             information.RegisterType<IDifferentialDownloadService, DifferentialDownloadService>(Scope.Singleton);
-            information.RegisterType<IDateTimeProvider, DateTimeProvider>(Scope.Singleton);         
-            
+            information.RegisterType<IDateTimeProvider, DateTimeProvider>(Scope.Singleton);
+
             information.RegisterType<IActiveDirectoryService, ActiveDirectoryService>(Scope.Singleton);
             information.RegisterType<IBatchConfigService, BatchConfigService>(Scope.Singleton);
             information.RegisterType<IScheduleDataService, ScheduleDataService>(Scope.Singleton);
@@ -115,7 +156,6 @@ namespace Gateway.Web
             information.RegisterType<IGatewayRestService, GatewayRestService>(Scope.ContainerSingleton);
             information.RegisterType<IServerDiagnosticsService, ServerDiagnosticsService>(Scope.ContainerSingleton);
 
-
             information.RegisterType<IBatchHelper, BatchHelper>(Scope.ContainerSingleton);
             information.RegisterType<IDatabaseStateProvider, DatabaseStateProvider>(Scope.ContainerSingleton);
 
@@ -123,6 +163,7 @@ namespace Gateway.Web
             Absa.Cib.Authorization.Extensions.Registration.RegisterCertificates(information);
             Absa.Cib.JwtAuthentication.Registrations.Register(information);
             Absa.Cib.JwtAuthentication.Registrations.RegisterCertificates(information);
+
         }
 
 

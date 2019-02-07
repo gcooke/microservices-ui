@@ -13,6 +13,7 @@ using Bagl.Cib.MIT.IoC.Service;
 using Bagl.Cib.MIT.Logging;
 using CommonServiceLocator;
 using Gateway.Web.Authorization;
+using Gateway.Web.Database;
 using Gateway.Web.ModelBindersConverters;
 using Gateway.Web.Models.Schedule.Input;
 using Gateway.Web.Services.Schedule.Utils;
@@ -39,7 +40,6 @@ namespace Gateway.Web
             FavIcon = "~/content/img/favicon." + Environment + ".png";
             ControllerIcon = "~/content/img/controller." + Environment + ".png";
             SiteLogo = "~/Content/img/Redstone." + Environment + ".png";
-
 
 
             AreaRegistration.RegisterAllAreas();
@@ -71,12 +71,10 @@ namespace Gateway.Web
 
             information.AddSetting("LocalGateway", dns);
 
-
             Registrations.Register(information);
             var loggingservice = _container.Resolve<ILoggingService>();
             loggingservice.Initialize(information.LoggingInformation);
             var logger = loggingservice.GetLogger(this);
-
 
             var systemInformation = _container.Resolve<ISystemInformation>();
             var database = systemInformation.GetSetting("GatewayDatabase");
