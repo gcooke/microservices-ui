@@ -17,10 +17,11 @@ namespace Gateway.Web.Authorization
         {
             if (!context.HttpContext.User.Identity.IsAuthenticated)
             {
-                var authtoken = context.HttpContext.Request.Cookies[AuthCockieName]; 
-                if (authtoken == null)
+                if (context.HttpContext.Request.Cookies[AuthCockieName] == null)
+                {
                     context.Result = new HttpUnauthorizedResult();
-                return;
+                    return;
+                }
             }
 
             var container = (IUnityContainer)context.HttpContext.Items[MvcApplication.ContainerKey];

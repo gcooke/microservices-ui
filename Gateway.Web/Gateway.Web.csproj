@@ -49,8 +49,8 @@
     <Reference Include="Absa.Cib.Authorization.Extensions, Version=1.0.55.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Absa.Cib.Authorization.Extensions.1.0.55\lib\net452\Absa.Cib.Authorization.Extensions.dll</HintPath>
     </Reference>
-    <Reference Include="Absa.Cib.JwtAuthentication, Version=1.1.444.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Absa.Cib.JwtAuthentication.1.1.444\lib\net461\Absa.Cib.JwtAuthentication.dll</HintPath>
+    <Reference Include="Absa.Cib.JwtAuthentication, Version=1.1.448.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Absa.Cib.JwtAuthentication.1.1.448\lib\net461\Absa.Cib.JwtAuthentication.dll</HintPath>
     </Reference>
     <Reference Include="Absa.Cib.MIT.Redis.IoC, Version=1.0.37.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Bagl.Cib.MIT.Redis.IoC.1.0.37\lib\net461\Absa.Cib.MIT.Redis.IoC.dll</HintPath>
