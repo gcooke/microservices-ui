@@ -60,8 +60,7 @@ namespace Gateway.Web
             information.LoggingInformation.FileLogLevel.SetLogLevel(information.GetSetting("ConsoleLogLevel"));
             information.LoggingInformation.FileLogLevel.SetLogLevel(information.GetSetting("FileLogLevel"));
             information.LoggingInformation.ImportantLogLevel.SetLogLevel(information.GetSetting("ImportantLogLevel"));
-            information.RegisterType<ILogFileService, LogFileService>(Scope.Singleton);
-            information.RegisterType<ILoggingService, DefaultLoggingService>(Scope.Singleton);
+
             information.RegisterType<ILogsService, LogsService>(Scope.Singleton);
 
             //Register Redis 
@@ -123,11 +122,9 @@ namespace Gateway.Web
 
 
             information.RegisterType<IGatewayDatabaseService, GatewayDatabaseService>(Scope.Singleton);
-            information.RegisterType<IDateTimeProvider, DateTimeProvider>(Scope.Singleton);
-            information.RegisterType<IFileService, FileService>(Scope.Singleton);
+
             information.RegisterType<IDifferentialArchiveService, DifferentialArchiveService>(Scope.Singleton);
             information.RegisterType<IDifferentialDownloadService, DifferentialDownloadService>(Scope.Singleton);
-            information.RegisterType<IDateTimeProvider, DateTimeProvider>(Scope.Singleton);
 
             information.RegisterType<IActiveDirectoryService, ActiveDirectoryService>(Scope.Singleton);
             information.RegisterType<IBatchConfigService, BatchConfigService>(Scope.Singleton);
@@ -143,19 +140,10 @@ namespace Gateway.Web
             information.RegisterType<IHttpClientProvider, HttpClientProvider>(Scope.Singleton);
 
             //Reset Services Registrations
-            information.RegisterType<IRestService, RestService>(Scope.ContainerSingleton);
-            information.RegisterType<IRoleService, RoleService>(Scope.ContainerSingleton);
             information.RegisterType<IRiskReportMonitoringService, RiskReportMonitoringService>(Scope.ContainerSingleton);
-            information.RegisterType<IGateway, Bagl.Cib.MSF.ClientAPI.Gateway.Gateway>(Scope.ContainerSingleton);
-            information.RegisterType<ISimpleRestService, SimpleRestService>(Scope.ContainerSingleton);
-            information.RegisterType<IParentRequestDetailProvider, ParentRequestDetailProvider>(Scope.ContainerSingleton);
-            information.RegisterType<IAuthenticationProvider, AuthenticationProvider>(Scope.ContainerSingleton);
-            information.RegisterType<IImpersonationProvider, ImpersonationProvider>(Scope.ContainerSingleton);
             information.RegisterType<IGatewayService, GatewayService>(Scope.ContainerSingleton);
             information.RegisterType<IBasicRestService, BasicRestService>(Scope.ContainerSingleton);
-            information.RegisterType<IGatewayRestService, GatewayRestService>(Scope.ContainerSingleton);
             information.RegisterType<IServerDiagnosticsService, ServerDiagnosticsService>(Scope.ContainerSingleton);
-
             information.RegisterType<IBatchHelper, BatchHelper>(Scope.ContainerSingleton);
             information.RegisterType<IDatabaseStateProvider, DatabaseStateProvider>(Scope.ContainerSingleton);
 
@@ -163,7 +151,7 @@ namespace Gateway.Web
             Absa.Cib.Authorization.Extensions.Registration.RegisterCertificates(information);
             Absa.Cib.JwtAuthentication.Registrations.Register(information);
             Absa.Cib.JwtAuthentication.Registrations.RegisterCertificates(information);
-
+            Bagl.Cib.MSF.ClientAPI.Registrations.Register(information);
         }
 
 
