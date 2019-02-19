@@ -98,6 +98,14 @@ namespace Gateway.Web
             DependencyResolver.SetResolver(new UnityDependencyResolver(_container));
         }
 
+        protected void Application_Error()
+        {
+            var ex = Server.GetLastError();
+            var loggingService = ServiceLocator.Current.GetInstance<ILoggingService>();
+            loggingService.GetLogger(this).Error(ex,"Application Exception");
+            loggingService.GetLogger(this).Error(ex.InnerException, "Application InnerException");
+        }
+
         protected void Application_BeginRequest(object sender, EventArgs e)
         {
             var childContainer = _container.CreateChildContainer();
