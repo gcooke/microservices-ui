@@ -62,11 +62,11 @@ namespace Gateway.Web.Database
                 return cachedmodel;
 
             var model = new RiskBatchModel();
-            model.BusinessDate = reportDate;
+            model.ReportDate = reportDate;
             model.Generated = DateTime.Now;
 
             // Get data
-            var statsTask = _database.GetBatchSummaryStatsAsync(reportDate, reportDate.AddDays(1));
+            var statsTask = _database.GetBatchSummaryStatsAsync(reportDate.AddDays(-1), reportDate);
 
             // Get error date
             var errorTask = GetBatchSummariesAsync(reportDate);

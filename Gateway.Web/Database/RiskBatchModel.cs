@@ -11,7 +11,7 @@ namespace Gateway.Web.Database
         }
 
         public DateTime Generated { get; set; }
-        public DateTime BusinessDate { get; set; }
+        public DateTime ReportDate { get; set; }
         public List<RiskBatchGroup> Items { get; private set; }
     }
 }

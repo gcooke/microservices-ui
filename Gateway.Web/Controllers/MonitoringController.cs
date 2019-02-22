@@ -68,7 +68,7 @@ namespace Gateway.Web.Controllers
         public async Task<ActionResult> RiskBatches(DateTime? businessDate = null)
         {
             var helper = new BatchHelper(_dataService, _gateway, _cache);
-            var reportDate = businessDate ?? DateTime.Today.AddDays(-1);
+            var reportDate = businessDate ?? DateTime.Today;
             var batches = await helper.GetRiskBatchReportModelAsync(reportDate);
             return View("RiskBatches", batches);
         }
