@@ -46,7 +46,7 @@ namespace Gateway.Web.Controllers
             var metrics = _riskReportMonitoringService.GetMetricsForRiskReports(businessDate).ToList();
 
             var groupMetrics = metrics
-                .GroupBy(x => new {x.System, x.ReportCategory, x.ReportSubCategory, x.ReportName})
+                .GroupBy(x => new { x.System, x.ReportCategory, x.ReportSubCategory, x.ReportName })
                 .Select(x => new GroupedRiskReportMetrics
                 {
                     System = x.Key.System,
@@ -65,10 +65,10 @@ namespace Gateway.Web.Controllers
             return View("RiskReports", model);
         }
 
-        public async Task<ActionResult> RiskBatches()
+        public async Task<ActionResult> RiskBatches(DateTime? businessDate = null)
         {
             var helper = new BatchHelper(_dataService, _gateway, _cache);
-            var reportDate = helper.GetPreviousWorkday();
+            var reportDate = businessDate ?? DateTime.Today.AddDays(-1);
             var batches = await helper.GetRiskBatchReportModelAsync(reportDate);
             return View("RiskBatches", batches);
         }
@@ -77,7 +77,7 @@ namespace Gateway.Web.Controllers
         [Route("Batch/{site}/{name}/{correlationId}")]
         public ActionResult RiskBatchDetail(string site, string name, Guid correlationId)
         {
-            var helper = new BatchHelper(_dataService, _gateway , _cache);
+            var helper = new BatchHelper(_dataService, _gateway, _cache);
             var reportDate = helper.GetPreviousWorkday();
             var detail = helper.GetBatchDetails($"{site.ToUpper()}-{name}", reportDate, correlationId);
             return View("RiskBatchDetail", detail);
