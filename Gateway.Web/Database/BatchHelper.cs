@@ -54,12 +54,16 @@ namespace Gateway.Web.Database
 
         public async Task<RiskBatchModel> GetRiskBatchReportModelAsync(DateTime reportDate)
         {
-            const string key = @"{BatchReporting}:RiskBatchReport";
+            string key = @"{BatchReporting}:RiskBatchReport." + reportDate.ToString("ddMMMyyyy");
+
+            // Only cache report for 30 minutes otherwise regenerate
             var cachedmodel = _cache.Get<RiskBatchModel>(key);
-            if (cachedmodel != null)
+            if (cachedmodel?.Generated != null && cachedmodel.Generated > DateTime.Now.AddMinutes(-30))
                 return cachedmodel;
 
             var model = new RiskBatchModel();
+            model.BusinessDate = reportDate;
+            model.Generated = DateTime.Now;
 
             // Get data
             var statsTask = _database.GetBatchSummaryStatsAsync(reportDate, reportDate.AddDays(1));
@@ -67,7 +71,7 @@ namespace Gateway.Web.Database
             // Get error date
             var errorTask = GetBatchSummariesAsync(reportDate);
 
-            Task[] tasks = {statsTask, errorTask};
+            Task[] tasks = { statsTask, errorTask };
             Task.WaitAll(tasks);
 
             // Get list of sites (order descending in length so that matches are done correctly)
@@ -119,9 +123,8 @@ namespace Gateway.Web.Database
                     item.Items.Add(nonOverwrittenResult);
                 }
             }
-
+            
             _cache.Add(key, model);
-
             return model;
         }
 

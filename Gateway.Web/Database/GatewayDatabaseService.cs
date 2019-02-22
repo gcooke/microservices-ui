@@ -576,9 +576,6 @@ namespace Gateway.Web.Database
                     var scheduleId = long.Parse(resource.Split('/')[2]);
                     var schedule = database.Schedules.SingleOrDefault(x => x.ScheduleId == scheduleId);
 
-                    if (schedule == null)
-                        continue;
-
                     // Get all children
                     var children = GetChildRequests(database, item.request.CorrelationId);
                     ChildRequest[] pricingRequests, marketDataRequests, riskDataRequests, tradeStoreRequests;
@@ -594,11 +591,12 @@ namespace Gateway.Web.Database
                         tradeStoreRequests = new ChildRequest[0];
 
                     var pricingResults = new Dictionary<string, Tuple<int, int>>();
+                    string calculationName = string.Empty;
                     foreach (var pricingRequest in pricingRequests)
                     {
 
                         var calculationNameUnmapped = GetCalculationName(pricingRequest.Resource);
-                        var calculationName = TransformCalculationName(calculationNameUnmapped);
+                        calculationName = TransformCalculationName(calculationNameUnmapped);
 
                         if (pricingResults.ContainsKey(calculationName))
                             continue;
@@ -611,10 +609,17 @@ namespace Gateway.Web.Database
 
                     var summary = item.batch.ToModel(item.request, item.response);
                     summary.CalculationPricingRequestResults = pricingResults;
-                    if (schedule.RiskBatchSchedule?.TradeSourceType == "Portfolio")
-                        summary.Name = schedule.Name;
+                    if (schedule != null)
+                    {
+                        if (schedule.RiskBatchSchedule?.TradeSourceType == "Portfolio")
+                            summary.Name = schedule.Name;
+                        else
+                            summary.Name = schedule.RiskBatchSchedule?.RiskBatchConfiguration.Type;
+                    }
                     else
-                        summary.Name = schedule.RiskBatchSchedule?.RiskBatchConfiguration.Type;
+                    {
+                        summary.Name = "Unknown " + calculationName;
+                    }
 
                     summary.Trades = tradeStoreRequests.Sum(r => r.Size);
                     summary.PricingRequests = pricingRequests.Length;
