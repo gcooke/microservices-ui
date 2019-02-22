@@ -14,13 +14,15 @@
 
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <h3 class="text-lowercase">Risk Batches</h3>
+                <h3 class="text-lowercase">
+                    Risk Batches <small id="reportDate" data-date="@Model.ReportDate.ToString("yyyy-MM-dd")">@Model.ReportDate.ToString("yyyy-MM-dd")</small>
+                </h3>
             </div>
         </div>
 
         <div class="row">
             <div class="col-sm-12">
-                <div id="paginator" data-current-date="@Model.BusinessDate.ToString("yyyy-MM-dd")"></div>
+                <div id="paginator" data-current-date="@Model.ReportDate.ToString("yyyy-MM-dd")"></div>
             </div>
         </div>
 

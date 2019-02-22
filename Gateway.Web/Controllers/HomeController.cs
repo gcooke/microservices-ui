@@ -57,7 +57,7 @@ namespace Gateway.Web.Controllers
             ViewBag.Controller = "Home";
             ViewBag.Action = "Index";
 
-            var reportDate = _batchHelper.GetPreviousWorkday();
+            var reportDate = DateTime.Today;
             var batchestask = _batchHelper.GetRiskBatchReportModelAsync(reportDate);
 
 
