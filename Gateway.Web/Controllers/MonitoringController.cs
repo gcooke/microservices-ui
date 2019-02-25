@@ -69,6 +69,8 @@ namespace Gateway.Web.Controllers
         {
             var helper = new BatchHelper(_dataService, _gateway, _cache);
             var reportDate = businessDate ?? DateTime.Today;
+            if (businessDate == null && reportDate.DayOfWeek == DayOfWeek.Monday)
+                reportDate = reportDate.AddDays(-2);
             var batches = await helper.GetRiskBatchReportModelAsync(reportDate);
             return View("RiskBatches", batches);
         }
