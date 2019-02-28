@@ -19,6 +19,7 @@ namespace Gateway.Web.Models.Controller
         public DateTime? EndUtc { get; set; }
         public int? QueueTimeMs { get; set; }
         public int? TimeTakeMs { get; set; }
+        public int? ActualTimeTakenMs => TimeTakeMs - QueueTimeMs;
         public int? ResultCode { get; set; }
         public string ResultMessage { get; set; }
         public DateTime? RequestChangeUtc { get; set; }
@@ -38,8 +39,7 @@ namespace Gateway.Web.Models.Controller
                 if (TimeTakeMs.HasValue)
                 {
                     // Show the actual time taken excluding the queue time.
-                    var actualTime = TimeTakeMs - QueueTimeMs;
-                    return (actualTime ?? 0).FormatTimeTaken();
+                    return (ActualTimeTakenMs ?? 0).FormatTimeTaken();
                 }
                 return string.Empty;
             }
