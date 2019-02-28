@@ -149,7 +149,7 @@ namespace Gateway.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [RoleBasedAuthorize(Roles = "Security.Modify")]
+        [RoleBasedAuthorize(Roles = "Security.Versions")]
         public ActionResult UpdateVersionStatuses(FormCollection collection)
         {
             var controllerName = collection["_id"];

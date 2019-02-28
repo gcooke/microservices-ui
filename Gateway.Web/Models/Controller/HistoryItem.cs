@@ -37,7 +37,9 @@ namespace Gateway.Web.Models.Controller
             {
                 if (TimeTakeMs.HasValue)
                 {
-                    return TimeTakeMs.Value.FormatTimeTaken();
+                    // Show the actual time taken excluding the queue time.
+                    var actualTime = TimeTakeMs - QueueTimeMs;
+                    return (actualTime ?? 0).FormatTimeTaken();
                 }
                 return string.Empty;
             }

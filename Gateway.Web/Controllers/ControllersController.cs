@@ -160,19 +160,6 @@ namespace Gateway.Web.Controllers
                 : null;
         }
 
-        [HttpPost]
-        [RoleBasedAuthorize(Roles = "Security.Modify")]
-        public ActionResult Versions(VersionsModel model)
-        {
-            var response = _gatewayRestService.Delete("Catalogue", "versions/cleanup", string.Empty,CancellationToken.None);
-
-            model.Success = response.Successfull;
-            model.Log = response.Content.Message.Split('\n').ToList();
-            model.Loading = false;
-            model.Loaded = true;
-            return View(model);
-        }
-
         public void SomeTaskAsync(int id)
         {
             AsyncManager.OutstandingOperations.Increment();
