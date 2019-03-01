@@ -684,6 +684,7 @@
     <Compile Include="Utils\CronTabExpression.cs" />
     <Compile Include="Utils\DashboardEx.cs" />
     <Compile Include="Utils\DataContractSerializationEx.cs" />
+    <Compile Include="Utils\ExceptionEx.cs" />
     <Compile Include="Utils\LegacyCompession.cs" />
     <Compile Include="Utils\MonitoringHtmlEx.cs" />
     <Compile Include="Utils\ReportsModelEx.cs" />
