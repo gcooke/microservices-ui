@@ -338,6 +338,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Authorization\AuthorizedRoleProvider.cs" />
     <Compile Include="Authorization\GatewayAuthenticationFilter.cs" />
+    <Compile Include="Authorization\HttpContainerProvider.cs" />
     <Compile Include="Authorization\RoleBasedAuthorizeAttribute.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ExecutableScheduleController.cs" />
@@ -390,6 +391,7 @@
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
     <Compile Include="ModelBindersConverters\ScheduleBatchModelBinder.cs" />
+    <Compile Include="Models\AuthorizationModel.cs" />
     <Compile Include="Models\Schedule\Input\BaseScheduleModel.cs" />
     <Compile Include="Models\Schedule\Output\ScheduleGroup.cs" />
     <Compile Include="Models\Schedule\Output\ScheduleStatus.cs" />
