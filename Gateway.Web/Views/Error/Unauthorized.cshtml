@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Gateway.Web.Models.AuthorizationModel
+@{
     ViewBag.Title = "Unauthorized";
 }
 
@@ -6,8 +7,23 @@
 
     <h3>Unauthorized</h3>
 
-    <p>
-        Please access Redstone Dashboard via the <a href="@Html.Raw(MvcApplication.SigmaHomePage)">home page</a>.
-    </p>
+    @if (Model != null)
+    {
+        <p>
+            <b>Username:</b> @Model.Username<br />
+            <b>Token:</b> @Model.Token
+        </p>
+
+        <div>
+            <p>
+                <b>Roles:</b>
+            </p>
+            <div style="overflow: scroll;">
+                <pre style="white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;">
+@string.Join("\r\n", Model.Roles)
+                </pre>
+            </div>
+        </div>
+    }
 
 </div>

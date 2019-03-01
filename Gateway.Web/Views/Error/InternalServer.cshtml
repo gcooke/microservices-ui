@@ -6,22 +6,30 @@
 
 <div class="hero-unit">
 
-    <h3>@Model.Exception.GetType().Name.AddWordspaces()</h3>
-
+    <h3>Something went wrong</h3>
     @if (Model != null)
     {
-        <div>
-            <p>
-                <b>Exception:</b> @Model.Exception.Message<br />
-                <b>Controller:</b> @Model.ControllerName<br />
-                <b>Action:</b> @Model.ActionName
-            </p>
-            <div style="overflow: scroll;">
-                <pre style="white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;">
-                    @Model.Exception.StackTrace
+        <p>
+            <b>Controller:</b> @Model.ControllerName<br />
+            <b>Action:</b> @Model.ActionName
+        </p>
+
+        foreach (var exception in Model.Exception.EnumerateExceptions())
+        {
+            <p>&nbsp;</p>
+            <h4>@exception.GetType().Name.AddWordspaces()</h4>
+
+            <div>
+                <p>
+                    <b>Exception:</b> @exception.Message<br />
+                </p>
+                <div style="overflow: scroll;">
+                    <pre style="white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;">
+                    @exception.StackTrace
                 </pre>
+                </div>
             </div>
-        </div>
+        }
     }
 
 </div>
