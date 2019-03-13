@@ -36,23 +36,27 @@
                             </div>
                         }
                     </td>
-                    <td style="text-align: left; color: #C0C0C0; padding-left: 5px">@item.Time (@item.Duration)</td>
+                    <td style="text-align: left; color: #C0C0C0; padding-left: 5px">@item.StartedFormated (@item.Duration)</td>
                     <td style="text-align: center; width: 30%">
-                        @switch ((StateItemState)item.State)
+                        @switch (item.StateValue)
                         {
                             case StateItemState.Unknown:
-                                <div class="state_unknown">@item.Text</div>
+                                <div class="state_unknown">@item.StateMessage</div>
                                 break;
                             case StateItemState.Okay:
-                                <div class="state_okay">@item.Text</div>
+                                <div class="state_okay">@item.StateMessage</div>
+                                break;
+                            case StateItemState.Running:
+                                <div class="state_okay">@item.StateMessage</div>
                                 break;
                             case StateItemState.Warn:
-                                <div class="state_warn">@item.Text</div>
+                                <div class="state_warn">@item.StateMessage</div>
                                 break;
                             case StateItemState.Error:
-                                <div class="state_fail">@item.Text</div>
+                                <div class="state_fail">@item.StateMessage</div>
                                 break;
                         }
+
                     </td>
                 </tr>
             }
