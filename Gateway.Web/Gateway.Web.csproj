@@ -345,9 +345,7 @@
     <Compile Include="Controllers\BatchScheduleController.cs" />
     <Compile Include="Controllers\RequestScheduleController.cs" />
     <Compile Include="Database\BatchCommentDto.cs" />
-    <Compile Include="Database\BatchDetail.cs" />
-    <Compile Include="Database\BatchExecution.cs" />
-    <Compile Include="Database\BatchIssues.cs" />
+    <Compile Include="Database\BatchHelper.cs" />
     <Compile Include="Database\BatchSummary.cs" />
     <Compile Include="Database\ExecutableConfiguration.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
@@ -417,7 +415,6 @@
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\UtilsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Database\BatchHelper.cs" />
     <Compile Include="Database\BatchStat.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
@@ -909,7 +906,6 @@
     <Content Include="Views\Schedule\Update.cshtml" />
     <Content Include="Views\Schedule\Partials\_Schedule.cshtml" />
     <Content Include="Views\RequestSchedule\Create.cshtml" />
-    <Content Include="Views\Monitoring\RiskBatchDetail.cshtml" />
     <Content Include="Views\ExecutableSchedule\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>

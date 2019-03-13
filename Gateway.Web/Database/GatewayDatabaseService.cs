@@ -547,37 +547,23 @@ namespace Gateway.Web.Database
             return model.GetSummaryForSelectedControllers(controllers);
         }
 
-        public async Task<List<ExtendedBatchSummary>> GetBatchSummaryStatsAsync(DateTime @from, DateTime to)
+        public async Task<List<ExtendedBatchSummary>> GetBatchSummaryStatsAsync(DateTime valuationDate)
         {
             var results = new List<ExtendedBatchSummary>();
 
             using (var database = new GatewayEntities(ConnectionString))
             {
-                var batchStats = database.BatchStats;
-                var requests = database.Requests;
-                var responses = database.Responses;
-                var dbSummary = await batchStats
-                    .Where(x => DbFunctions.TruncateTime(x.ValuationDate) >= from &&
-                                DbFunctions.TruncateTime(x.ValuationDate) < to
-                                //&& x.Controller == "riskbatch"
-                                )
-                    .Join(requests, b => b.CorrelationId, r => r.CorrelationId, (b, r) => new { b, r })
-                    .Join(responses, b => b.b.CorrelationId, r => r.CorrelationId,
-                        (b, r) => new { batch = b.b, request = b.r, response = r })
-                    .ToArrayAsync().ConfigureAwait(false);
+                var requests = GetRiskBatchRequests(database, valuationDate).ToArray();
 
-                foreach (var item in dbSummary)
+                foreach (var item in requests)
                 {
-                    var resource = item.request.Resource;
-
-                    if (item.request.Controller.ToLower() != "riskbatch") // Remove
-                        continue;
+                    var resource = item.Resource;
 
                     var scheduleId = long.Parse(resource.Split('/')[2]);
                     var schedule = database.Schedules.SingleOrDefault(x => x.ScheduleId == scheduleId);
 
                     // Get all children
-                    var children = GetChildRequests(database, item.request.CorrelationId);
+                    var children = GetChildRequests(database, item.CorrelationId);
                     ChildRequest[] pricingRequests, marketDataRequests, riskDataRequests, tradeStoreRequests;
                     if (!children.TryGetValue("pricing", out pricingRequests))
                         pricingRequests = new ChildRequest[0];
@@ -594,7 +580,6 @@ namespace Gateway.Web.Database
                     string calculationName = string.Empty;
                     foreach (var pricingRequest in pricingRequests)
                     {
-
                         var calculationNameUnmapped = GetCalculationName(pricingRequest.Resource);
                         calculationName = TransformCalculationName(calculationNameUnmapped);
 
@@ -607,7 +592,10 @@ namespace Gateway.Web.Database
                         pricingResults.Add(calculationName, new Tuple<int, int>(successfulRequests, totalRequests));
                     }
 
-                    var summary = item.batch.ToModel(item.request, item.response);
+                    var request = database.Requests.FirstOrDefault(r => r.CorrelationId == item.CorrelationId);
+                    var response = database.Responses.FirstOrDefault(r => r.CorrelationId == item.CorrelationId);
+
+                    var summary = ModelEx.ToExtendedBatchSummary("Unknown",request, response);
                     summary.CalculationPricingRequestResults = pricingResults;
                     if (schedule != null)
                     {
@@ -629,6 +617,29 @@ namespace Gateway.Web.Database
                     results.Add(summary);
                 }
                 return results;
+            }
+        }
+
+        private IEnumerable<RiskBatchRequest> GetRiskBatchRequests(GatewayEntities database, DateTime valuationDate)
+        {
+            // Get all batch requests that are within a window and then use the resource
+            // string to narrow down the valuation date
+            var start = valuationDate.AddDays(-1);
+            var end = valuationDate.AddDays(2);
+            var items = database.Requests
+                .Where(r => r.Controller == "riskbatch" && r.StartUtc > start && r.StartUtc < end &&
+                            r.Resource.StartsWith("Batch/Run/"));
+
+            var valDateStr = valuationDate.ToString("yyyy-MM-dd");
+            foreach (var item in items)
+            {
+                if (item.Resource.Contains(valDateStr))
+                    yield return new RiskBatchRequest()
+                    {
+                        CorrelationId = item.CorrelationId,
+                        Resource = item.Resource,
+                        StartUtc = item.StartUtc
+                    };
             }
         }
 
@@ -836,6 +847,13 @@ namespace Gateway.Web.Database
             ResultCode = resultCode;
             Size = size;
         }
+    }
+
+    internal class RiskBatchRequest
+    {
+        public Guid CorrelationId { get; set; }
+        public string Resource { get; set; }
+        public DateTime StartUtc { get; set; }
     }
 
     internal class ControllerVersionSummaryQueueSize

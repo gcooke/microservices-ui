@@ -1,157 +1,88 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using Bagl.Cib.MIT.Cube;
 using Gateway.Web.Models.Home;
-using Gateway.Web.Utils;
 
 namespace Gateway.Web.Database
 {
-    public class RiskBatchResult : StateItem
+    public class RiskBatchResult
     {
-        public RiskBatchResult(string site, DateTime date)
+        public RiskBatchResult(string site, DateTime reportDate)
         {
-            Resource = site;
-            Date = date;
-            TargetCompletion = date.AddHours(31);
-            if (TargetCompletion < DateTime.Now)
-            {
-                Text = "SLA Breached";
-                State = StateItemState.Warn;
-            }
-            else
-            {
-                Text = "No results";
-                State = StateItemState.Warn;
-            }
-        }
-
-        public void Update(ExtendedBatchSummary row, string site)
-        {
-            CorrelationId = row.CorrelationId;
-            Started = row.StartUtc.ToLocalTime();
-            TimeTakenMs = (int)(row.EndUtc - row.StartUtc).TotalMilliseconds;
-            Completed = Started.AddMilliseconds(TimeTakenMs);
-            Resource = row.Resource;
-            Version = row.ControllerVersion;
             Site = site;
-            State = StateItemState.Okay;
-            Link = "~/Request/Summary?correlationId=" + CorrelationId;
-
-            if (row.Successfull)
-            {
-                Text = "Complete";
-            }
-            else
-            {
-                var totalRequests = row.CalculationPricingRequestResults.Values.Sum(v => v.Item2);
-                var totalSuccess = row.CalculationPricingRequestResults.Values.Sum(v => v.Item1);
-                Text = string.Format("{0} pass / {1}", totalSuccess, totalRequests);
-                State = StateItemState.Error;
-            }
-
-            Name = row.Name.MaxLength(30);
-
-            Trades = row.Trades;
-            PricingRequests = row.PricingRequests;
-            MarketDataRequests = row.MarketDataRequests;
-            RiskDataRequests = row.RiskDataRequests;
-
-            //Time = string.Format("{0:ddd HH:mm}-{1:ddd HH:mm}", Started, Completed);
-            Time = string.Format("{0:ddd HH:mm}", Completed);
-            Duration = string.Format("{0}", FormatTimeTaken());
-
-
-            if (State != StateItemState.Okay) return;
-            
-            // Some additional rules that affect batch results
-            if (Trades <= 0)
-            {
-                Text = "No Trades";
-                State = StateItemState.Warn;
-                return;
-            }
-
-            if (PricingRequests <= 0)
-            {
-                Text = "No Pricing Requests";
-                State = StateItemState.Warn;
-                return;
-            }
-
-            if (RiskDataRequests < PricingRequests)
-            {
-                Text = "Not enough risk data calls";
-                State = StateItemState.Warn;
-                return;
-            }
+            BusinessDate = reportDate;
         }
-        
+        public string Site { get; set; }
+        public string Name { get; set; }
+        public DateTime? Started { get; set; }
 
-        public void UpdateErrors(ExtendedBatchSummary row, List<BatchSummary> errorData)
+        public string StartedFormated
         {
-            var batchName = $"{Site.ToUpper()} - {Name.ToUpper()}";
-            var errors = errorData.Where(x => x.LegalEntity.ToUpper() == batchName).ToList();
-
-            if (!errors.Any())
-            {
-                ErrorCount = 0;
-                return;
-            }
-
-            if (errors.Count == 1)
-            {
-                ErrorCount = errors.First()?.TotalErrorCount;
-                return;
-            }
-
-            var error = errors.FirstOrDefault(x => x.LegalEntity.ToUpper() == batchName);
-            ErrorCount = error?.TotalErrorCount;
+            get { return Started?.ToString("ddd HH:mm"); }
         }
 
-        public Guid CorrelationId { get; private set; }
-
-        public DateTime Date { get; private set; }
-
-        public string Resource { get; private set; }
-
-        public string BatchName => $"{Site}-{Name}";
-
-        public string Version { get; private set; }
-
-        public string Site { get; private set; }
-
-        public DateTime TargetCompletion { get; private set; }
-
-        public DateTime Started { get; private set; }
-
-        public string StartedFormatted
-        {
-            get { return Started == DateTime.MinValue ? string.Empty : Started.ToString("ddd HH:mm"); }
-        }
-
-        public DateTime Completed { get; private set; }
-
-        public string CompletedFormatted
-        {
-            get { return Completed == DateTime.MinValue ? string.Empty : Completed.ToString("ddd HH:mm"); }
-        }
-
-        public long TimeTakenMs { get; private set; }
-
-        public bool IsRerun { get; set; }
-
+        public DateTime? Completed { get; set; }
+        public long? TimeTakenMs { get; set; }
         public string Duration { get; set; }
+        public string State { get; set; }
 
+        public StateItemState StateValue
+        {
+            get
+            {
+                StateItemState result;
+                if (Enum.TryParse(State, true, out result))
+                    return result;
+                return StateItemState.Unknown;
+            }
+        }
+
+        public bool IsLate
+        {
+            get { return Completed > SLA; }
+        }
+
+        public string StateMessage { get; set; }
+        public string CorrelationId { get; set; }
+        public DateTime? BusinessDate { get; set; }
+        public DateTime? SLA { get; set; }
+
+        public string SLAFormatted
+        {
+            get
+            {
+                return SLA?.ToString("ddd HH:mm ") ?? string.Empty;
+            }
+        }
+
+        public bool? IsRerun { get; set; }
+        public int? TotalRuns { get; set; }
         public long? Trades { get; set; }
         public long? PricingRequests { get; set; }
         public long? MarketDataRequests { get; set; }
         public long? RiskDataRequests { get; set; }
+        public string Link { get; set; }
 
-        private string FormatTimeTaken()
+        public void Update(IRow row)
         {
-            return TimeTakenMs.FormatTimeTaken();
-        }
+            Site = row.GetStringValue("Site");
+            Name = row.GetStringValue("Name");
+            Started = row.GetValue<DateTime>("Started");
+            Completed = row.GetValue<DateTime>("Completed");
+            TimeTakenMs = row.GetValue<long>("TimeTakenMs");
+            Duration = row.GetStringValue("Duration");
+            State = row.GetStringValue("State");
+            StateMessage = row.GetStringValue("StateMessage");
+            CorrelationId = row.GetStringValue("CorrelationId");
+            BusinessDate = row.GetValue<DateTime>("BusinessDate");
+            SLA = row.GetValue<DateTime>("SLA");
+            IsRerun = row.GetValue<bool>("IsRerun");
+            TotalRuns = row.GetValue<int>("Runs");
+            Trades = row.GetValue<long>("Trades");
+            PricingRequests = row.GetValue<long>("PricingRequests");
+            MarketDataRequests = row.GetValue<long>("MarketDataRequests");
+            RiskDataRequests = row.GetValue<long>("RiskDataRequests");
 
-        public int? ErrorCount { get; set; }
+            Link = "~/Request/Summary?correlationId=" + CorrelationId;
+        }
     }
 }

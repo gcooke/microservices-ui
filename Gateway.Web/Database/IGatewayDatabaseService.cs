@@ -74,7 +74,7 @@ namespace Gateway.Web.Database
 
         bool HasStatusChanged(string controller, string version, string status, string alias);
 
-        Task<List<ExtendedBatchSummary>> GetBatchSummaryStatsAsync(DateTime @from, DateTime to);
+        Task<List<ExtendedBatchSummary>> GetBatchSummaryStatsAsync(DateTime valuationDate);
         ResourceConfigModel GetConfiguredServers();
         ResourceConfigModel GetControllerResources();
 

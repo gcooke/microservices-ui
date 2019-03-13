@@ -13,6 +13,7 @@
     public enum StateItemState
     {
         Unknown,
+        Running,
         Okay,
         Warn,
         Error

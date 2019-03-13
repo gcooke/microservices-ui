@@ -1,84 +1,46 @@
 using Bagl.Cib.MSF.ClientAPI.Gateway;
-using Gateway.Web.Models.Home;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
+using Bagl.Cib.MIT.Cube;
+using Bagl.Cib.MIT.Logging;
 using Bagl.Cib.MIT.Redis.Caching;
+using Bagl.Cib.MSF.ClientAPI.Model;
 
 namespace Gateway.Web.Database
 {
     public class BatchHelper : IBatchHelper
     {
-        private string[] AllCountries = {
-            "Mauritius_Onshore",
-            "Mauritius_IBD",
-            "South_Africa",
-            "Tanzania_NBC",
-            "Seychelles",
-            "Mozambique",
-            "Botswana",
-            "Tanzania",
-            "Uganda",
-            "Zambia",
-            "Ghana",
-            "Kenya"
-        };
+        private const string AllCountries = "Botswana,Ghana,Kenya,Mauritius_IBD,Mauritius_Onshore,Mozambique,South_Africa,Seychelles,Tanzania,Tanzania_NBC,Uganda,Zambia";
 
-        private readonly IGatewayDatabaseService _database;
-        private readonly IGatewayRestService _gateway;
+        private readonly IGateway _gateway;
         private readonly IRedisCache _cache;
+        private readonly ILogger _logger;
 
-        public BatchHelper(IGatewayDatabaseService database, IGatewayRestService gateway, IRedisCache cache)
+        public BatchHelper(ILoggingService loggingService, IGateway gateway, IRedisCache cache)
         {
-            _database = database;
+            _logger = loggingService.GetLogger(this);
             _gateway = gateway;
             _cache = cache;
         }
 
-        public BatchDetail GetBatchDetails(string name, DateTime reportDate, Guid correlationId)
+        public async Task<RiskBatchModel> GetRiskBatchReportModel(DateTime reportDate, string targetSite)
         {
-            var response = _gateway.Get("managementinterface",
-                $"batch/{name}/{correlationId}/detail/{reportDate:yyyy-MM-dd}", CancellationToken.None);
-
-            if (!response.Successfull || response.Content?.Payload == null)
-                throw new Exception("Unable to retrieve batch error details.");
-
-            var payload = response.Content.GetPayloadAsString();
-            var data = JsonConvert.DeserializeObject<BatchDetail>(payload);
-
-            return data;
-        }
-
-        public async Task<RiskBatchModel> GetRiskBatchReportModelAsync(DateTime reportDate)
-        {
-            string key = @"{BatchReporting}:RiskBatchReport." + reportDate.ToString("ddMMMyyyy");
-
-            // Only cache report for 30 minutes otherwise regenerate
-            var cachedmodel = _cache.Get<RiskBatchModel>(key);
-            if (cachedmodel?.Generated != null && cachedmodel.Generated > DateTime.Now.AddMinutes(-30))
-                return cachedmodel;
-
             var model = new RiskBatchModel();
+            model.Site = targetSite;
             model.ReportDate = reportDate;
-            model.Generated = DateTime.Now;
+            model.ShowOverwrittenResults = false;
 
-            // Get data
-            var statsTask = _database.GetBatchSummaryStatsAsync(reportDate.AddDays(-1), reportDate);
-
-            // Get error date
-            var errorTask = GetBatchSummariesAsync(reportDate);
-
-            Task[] tasks = { statsTask, errorTask };
-            Task.WaitAll(tasks);
+            // Get data            
+            var cube = await GetRiskBatchReport(reportDate);
 
             // Get list of sites (order descending in length so that matches are done correctly)
-            var sites = AllCountries;
+            var sites = AllCountries.Split(',').OrderByDescending(s => s.Length).ToArray();
+            model.AvailableSites.AddRange(sites.OrderBy(s => s));
 
             // Convert to Dictionary
-            var runs = GetResults(statsTask.Result, sites, reportDate, errorTask.Result);
+            var runs = GetResults(cube, sites, reportDate);
 
             // Run through each site
             foreach (var site in sites.OrderBy(s => s))
@@ -93,7 +55,6 @@ namespace Gateway.Web.Database
                     siteRuns = new List<RiskBatchResult>();
                     siteRuns.Add(new RiskBatchResult(site, reportDate));
                 }
-
                 runs.Remove(site);
 
                 // Add site runs to site group
@@ -113,74 +74,50 @@ namespace Gateway.Web.Database
                 }
             }
 
-            // Remove discarded runs
-            foreach (var item in model.Items)
+            // Trim to desired site
+            if (targetSite != "All")
             {
-                var nonOverwrittenResults = item.Items.Where(x => x.State != StateItemState.Unknown).ToList();
-                item.Items.Clear();
-                foreach (var nonOverwrittenResult in nonOverwrittenResults)
-                {
-                    item.Items.Add(nonOverwrittenResult);
-                }
+                model.Items.RemoveAll(r => r.Name != targetSite);
             }
-            
-            _cache.Add(key, model);
+
             return model;
         }
 
-        private Dictionary<string, List<RiskBatchResult>> GetResults(List<ExtendedBatchSummary> results, string[] sites,
-            DateTime reportDate, List<BatchSummary> errorData)
+        public async Task<ICube> GetRiskBatchReport(DateTime date)
         {
-            var result = new Dictionary<string, List<RiskBatchResult>>();
-            if (results != null)
+            _logger.InfoFormat("GetRiskBatchReport({0}, {1})", date);
+
+            var report = string.Format("batch/{0:yyyyMMdd}/report", date);
+            var request = new Get("ManagementInterface") { Query = report };
+            var response = await _gateway.Invoke<ICube>(request);
+
+            if (response.Successfull)
             {
-                foreach (var row in results)
+                return response.Body;
+            }
+            throw new InvalidOperationException(response.Message);
+        }
+
+        private Dictionary<string, List<RiskBatchResult>> GetResults(ICube cube, string[] sites, DateTime reportDate)
+        {
+            var result = new Dictionary<string, List<RiskBatchResult>>(StringComparer.CurrentCultureIgnoreCase);
+            if (cube != null)
+            {
+                foreach (var row in cube.GetRows())
                 {
                     // Determine site
-                    var resource = row.Resource;
-                    var site = sites.FirstOrDefault(s =>
-                        resource.IndexOf(s, StringComparison.CurrentCultureIgnoreCase) >= 0);
-                    if (site == null) site = resource;
+                    var site = row["Site"].ToString();
 
                     var target = GetOrAdd(result, site, reportDate);
-                    target.Update(row, site);
-                    target.UpdateErrors(row, errorData);
-                }
-            }
-
-            // Update status of all batches that were rerun.
-            foreach (var list in result.Values)
-            {
-                if (list.Count <= 1) continue;
-                list.Sort(new RiskBatchSort());
-                for (var index = 0; index < list.Count - 1; index++)
-                {
-                    // Only mark results as discard if there is a later run of the same name
-                    if (list[index].BatchName != list[index + 1].BatchName) continue;
-                    list[index].Text = "Results discarded";
-                    list[index].State = StateItemState.Unknown;
-                    list[index + 1].IsRerun = true;
+                    target.Update(row);
                 }
             }
 
             return result;
         }
 
-        private class RiskBatchSort : IComparer<RiskBatchResult>
-        {
-            public int Compare(RiskBatchResult x, RiskBatchResult y)
-            {
-                if (x.BatchName != y.BatchName)
-                {
-                    return x.BatchName.CompareTo(y.BatchName);
-                }
 
-                return x.Started.CompareTo(y.Started);
-            }
-        }
-
-        private RiskBatchResult GetOrAdd(Dictionary<string, List<RiskBatchResult>> lookup, string site,
-            DateTime reportDate)
+        private RiskBatchResult GetOrAdd(Dictionary<string, List<RiskBatchResult>> lookup, string site, DateTime reportDate)
         {
             List<RiskBatchResult> list;
             if (!lookup.TryGetValue(site, out list))
@@ -196,33 +133,7 @@ namespace Gateway.Web.Database
                 target = new RiskBatchResult(site, reportDate);
                 list.Add(target);
             }
-
             return target;
-        }
-
-        public DateTime GetPreviousWorkday()
-        {
-            var result = DateTime.Today.AddDays(-1);
-            while (result.DayOfWeek == DayOfWeek.Saturday || result.DayOfWeek == DayOfWeek.Sunday)
-                result = result.AddDays(-1);
-            return result;
-        }
-
-        private async Task<List<BatchSummary>> GetBatchSummariesAsync(DateTime valuationDate)
-        {
-            return await Task.Factory.StartNew(() =>
-            {
-                var response = _gateway.Get("managementinterface", $"batch/{valuationDate:yyyy-MM-dd}/summary",
-                    CancellationToken.None);
-
-                if (!response.Successfull || response.Content?.Payload == null)
-                    return new List<BatchSummary>();
-
-                var payload = response.Content.GetPayloadAsString();
-                var data = JsonConvert.DeserializeObject<List<BatchSummary>>(payload);
-
-                return data;
-            }).ConfigureAwait(false);
         }
     }
 }

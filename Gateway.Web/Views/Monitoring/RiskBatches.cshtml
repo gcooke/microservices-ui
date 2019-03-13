@@ -38,7 +38,6 @@
                             <td class="table-header" style="width: 50px;">Market Data</td>
                             <td class="table-header" style="width: 50px;">Pricing</td>
                             <td class="table-header" style="width: 50px;">Risk Data</td>
-                            <td class="table-header" style="width: 140px;">Errors</td>
                             <td class="table-header" style="width: 140px;">Status</td>
                         </tr>
                     </thead>
@@ -47,9 +46,13 @@
                         {
                             <tr class="report-table-summary-row">
                                 <td><a class="monitoring-report-trigger" data-group-trigger="@group.Name.Replace(" ","-")">[+]</a></td>
-                                <td colspan="7">@group.Name</td>
+                                <td colspan="6">@group.Name</td>
                                 <td>
-                                    @if (group.CompleteRuns == 0 && group.TotalRuns > 0)
+                                    @if (group.CompleteRuns == 0 && group.TotalRuns == 0)
+                                    {
+                                        <span class="state_okay">@group.CompleteRuns<span>/</span>@group.TotalRuns <span>Complete</span></span>
+                                    }
+                                    else if (group.CompleteRuns == 0 && group.TotalRuns > 0)
                                     {
                                         <span class="state_fail">@group.CompleteRuns<span>/</span>@group.TotalRuns <span>Complete</span></span>
                                     }
@@ -71,50 +74,43 @@
                                     <td>
                                         @if (!string.IsNullOrEmpty(item.Link))
                                         {
-                                            <a href="@Url.Content((string) item.Link)" data-toggle="tooltip" title="@item.FullName">
+                                            <a href="@Url.Content((string) item.Link)" data-toggle="tooltip" title="@item.Name">
                                                 @item.Name
                                             </a>
                                         }
                                         else
                                         {
-                                            <div data-toggle="tooltip" title="@item.FullName">
+                                            <div data-toggle="tooltip" title="@item.Name">
                                                 @item.Name
                                             </div>
                                         }
-                                        @if (item.IsRerun)
+                                        @if (item.IsRerun == true)
                                         {
-                                            <img src="~/Content/img/rerun.png" alt="rerun" />
+                                            <small style="color:#FF241C"><b>(@item.TotalRuns <img src="~/Content/img/rerun.png" alt="rerun" />)</b></small>
                                         }
                                     </td>
-                                    <td style="text-align: left; color: #C0C0C0; padding-left: 5px">@item.Time (@item.Duration)</td>
+                                    <td style="text-align: left; color: #C0C0C0; padding-left: 5px">@item.StartedFormated (@item.Duration)</td>
                                     <td style="text-align: center; padding-left: 5px">@item.Trades</td>
                                     <td style="text-align: center; padding-left: 5px">@item.MarketDataRequests</td>
                                     <td style="text-align: center; padding-left: 5px">@item.PricingRequests</td>
-                                    <td style="text-align: center; padding-left: 5px">@item.RiskDataRequests</td>
+                                    <td style="text-align: center; padding-left: 5px">@item.RiskDataRequests</td>                                    
                                     <td>
-                                        @if (item.ErrorCount.HasValue && item.ErrorCount > 0)
-                                        {
-                                            <a href="~/Batch/@group.Name/@item.Name/@item.CorrelationId">@item.ErrorCount.Value Error(s)</a>
-                                        }
-                                        else
-                                        {
-                                            <span>No Errors</span>
-                                        }
-                                    </td>
-                                    <td>
-                                        @switch ((StateItemState)item.State)
+                                        @switch (item.StateValue)
                                         {
                                             case StateItemState.Unknown:
-                                                <div class="state_unknown">@item.Text</div>
+                                                <div class="state_unknown">@item.StateMessage</div>
                                                 break;
                                             case StateItemState.Okay:
-                                                <div class="state_okay">@item.Text</div>
+                                                <div class="state_okay">@item.StateMessage</div>
+                                                break;
+                                            case StateItemState.Running:
+                                                <div class="state_okay">@item.StateMessage</div>
                                                 break;
                                             case StateItemState.Warn:
-                                                <div class="state_warn">@item.Text</div>
+                                                <div class="state_warn">@item.StateMessage</div>
                                                 break;
                                             case StateItemState.Error:
-                                                <div class="state_fail">@item.Text</div>
+                                                <div class="state_fail">@item.StateMessage</div>
                                                 break;
                                         }
                                     </td>

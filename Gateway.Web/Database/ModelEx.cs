@@ -253,7 +253,7 @@ namespace Gateway.Web.Database
             return result;
         }
 
-        public static ExtendedBatchSummary ToModel(this BatchStat summary, Request request, Response response)
+        public static ExtendedBatchSummary ToExtendedBatchSummary(string site, Request request, Response response)
         {
             if (request == null)
                 request = new Request();
@@ -261,20 +261,13 @@ namespace Gateway.Web.Database
             if (response == null)
                 response = new Response { ResultMessage = "In progress" };
 
-            var str = summary.Data.GetUncompressedString();
-            XElement data = new XElement("Data", "No results");
-
-            if (!string.IsNullOrEmpty(str))
-                data = XElement.Parse(str);
-
             return new ExtendedBatchSummary
             {
-                CorrelationId = summary.CorrelationId,
-                StartUtc = summary.StartTime,
-                EndUtc = summary.EndTime,
-                Data = data,
+                CorrelationId = request.CorrelationId,
+                StartUtc = request.StartUtc,
+                EndUtc = response.EndUtc,
                 ControllerVersion = request.Version,
-                Resource = summary.Site?? request.Resource,
+                Resource = site ?? request.Resource,
                 Successfull = response.ResultCode == 1,
                 Message = response.ResultMessage
             };

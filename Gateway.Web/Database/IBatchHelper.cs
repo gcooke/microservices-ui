@@ -5,8 +5,6 @@ namespace Gateway.Web.Database
 {
     public interface IBatchHelper
     {
-        Task<RiskBatchModel> GetRiskBatchReportModelAsync(DateTime reportDate);
-
-        DateTime GetPreviousWorkday();
+        Task<RiskBatchModel> GetRiskBatchReportModel(DateTime reportDate, string targetSite);
     }
 }

@@ -58,7 +58,7 @@ namespace Gateway.Web.Controllers
             ViewBag.Action = "Index";
 
             var reportDate = DateTime.Today;
-            var batchestask = _batchHelper.GetRiskBatchReportModelAsync(reportDate);
+            var batchestask = _batchHelper.GetRiskBatchReportModel(reportDate, "All");
 
 
             var servicetask = GetServiceStateAsync();
@@ -93,47 +93,7 @@ namespace Gateway.Web.Controllers
             return await Task.Factory.StartNew(() =>
             {
                 var servicestates = new List<ServiceState>();
-
-                try
-                {
-
-                    var serverslist = new List<string>();
-                    var servers = _systemInformation.GetSetting("Servers", "");
-                    serverslist.AddRange(servers.Split(';'));
-                    var serviceslist = new List<string>();
-                    var services = _systemInformation.GetSetting("Services", "Absa.Cib.AuthorizationService;TaskScheduler;ScalingService;Gateway");
-                    serviceslist.AddRange(services.Split(';'));
-                    
-                    foreach (var service in serviceslist)
-                    {
-                        foreach (var server in serverslist)
-                        {
-                            var servername = server.Substring(0, server.IndexOf('.'));
-                            var name = $"{service} ({servername.Substring(servername.Length - 4, 4)})";
-                            try
-                            {
-                                var sc = new ServiceController(service, server);
-                                servicestates.Add(new ServiceState(
-                                    name,
-                                    DateTime.Now,
-                                    sc.Status == ServiceControllerStatus.Running
-                                        ? StateItemState.Okay
-                                        : StateItemState.Error,
-                                    sc.Status.ToString()
-                                ));
-                            }
-                            catch
-                            {
-                                // Unused
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    _logger.Error(ex,"Unable to get Services on framework.");
-                }
-
+                servicestates.Add(new ServiceState("Deprecated", DateTime.Now, StateItemState.Okay, "Please refer to sigma-monitoring"));
                 return servicestates;
             }).ConfigureAwait(false);
         }
@@ -158,8 +118,8 @@ namespace Gateway.Web.Controllers
                 }
                 catch (Exception e)
                 {
-                    _logger.Error(e,"Unable to get database statuses");
-                }          
+                    _logger.Error(e, "Unable to get database statuses");
+                }
 
                 return databaseStates;
             }).ConfigureAwait(false);

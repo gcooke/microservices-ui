@@ -17,18 +17,18 @@ namespace Gateway.Web.Controllers
     public class MonitoringController : BaseController
     {
         private readonly IRiskReportMonitoringService _riskReportMonitoringService;
-        private readonly IGatewayDatabaseService _dataService;
-        private readonly IGatewayRestService _gateway;
+        private readonly IBatchHelper _helper;
+        private readonly IGateway _gateway;
         private IRedisCache _cache;
 
         public MonitoringController(ILoggingService loggingService,
             IRiskReportMonitoringService riskReportMonitoringService,
-            IGatewayDatabaseService dataService,
-            IGatewayRestService gateway,
+            IBatchHelper helper,
+            IGateway gateway,
             IRedisCache cache) : base(loggingService)
         {
             _riskReportMonitoringService = riskReportMonitoringService;
-            _dataService = dataService;
+            _helper = helper;
             _gateway = gateway;
             _cache = cache;
         }
@@ -67,22 +67,14 @@ namespace Gateway.Web.Controllers
 
         public async Task<ActionResult> RiskBatches(DateTime? businessDate = null)
         {
-            var helper = new BatchHelper(_dataService, _gateway, _cache);
             var reportDate = businessDate ?? DateTime.Today;
             if (businessDate == null && reportDate.DayOfWeek == DayOfWeek.Monday)
                 reportDate = reportDate.AddDays(-2);
-            var batches = await helper.GetRiskBatchReportModelAsync(reportDate);
-            return View("RiskBatches", batches);
-        }
 
-        [HttpGet]
-        [Route("Batch/{site}/{name}/{correlationId}")]
-        public ActionResult RiskBatchDetail(string site, string name, Guid correlationId)
-        {
-            var helper = new BatchHelper(_dataService, _gateway, _cache);
-            var reportDate = helper.GetPreviousWorkday();
-            var detail = helper.GetBatchDetails($"{site.ToUpper()}-{name}", reportDate, correlationId);
-            return View("RiskBatchDetail", detail);
+            var model = await _helper.GetRiskBatchReportModel(reportDate, "All");
+            return View("RiskBatches", model);
         }
+        
+        
     }
 }

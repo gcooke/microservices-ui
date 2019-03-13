@@ -13,22 +13,20 @@ namespace Gateway.Web.Database
             Items = new List<RiskBatchResult>();
         }
 
-        public string Name { get; set; }
+        public string Name { get; private set; }
+        public List<RiskBatchResult> Items { get; private set; }
 
-        public int TotalRuns => Items.Count;
-
-        [JsonIgnore]
-        public int CompleteRuns
+        public long CompleteRuns
         {
-            get { return Items.Count(x => x.State == StateItemState.Okay); }
+            get
+            {
+                return Items.Count(i => i.State == nameof(StateItemState.Okay));
+            }
         }
 
-        public List<RiskBatchResult> Items { get; set; }
-
-        [JsonIgnore]
-        public List<RiskBatchResult> IncompleteItems
+        public long TotalRuns
         {
-            get { return Items.Where(x => x.State != StateItemState.Okay).ToList(); }
+            get { return Items.Count(i => !string.IsNullOrEmpty(i.Name)); }
         }
     }
 }

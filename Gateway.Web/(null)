@@ -1,0 +1,282 @@
+2019-03-13 11:48:05,442 INFO  [12] DefaultLoggingService - Logging service initialized
+2019-03-13 11:48:05,442 INFO  [12] DefaultLoggingService - Start-up information: 
+	RunMode: WindowsApplication
+	LogPath: .
+	LogName: 
+	Log Level: INFO
+	Console Log Level: INFO
+	Important Log Level: WARN
+	Log File Size Mb: 10
+	Log Roll Backups: 10
+	Delete Logs Older Than: 7.00:00:00
+
+2019-03-13 11:48:05,442 INFO  [7] DefaultLoggingService - Cleaning log location: deleting any logs older than 03/06/2019 11:48:05
+2019-03-13 11:48:05,444 INFO  [7] DefaultLoggingService - Failed to delete 'appcmd.exe': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,444 INFO  [7] DefaultLoggingService - Failed to delete 'appcmd.xml': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,445 INFO  [7] DefaultLoggingService - Failed to delete 'appobj.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,445 INFO  [7] DefaultLoggingService - Failed to delete 'asp.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,445 INFO  [7] DefaultLoggingService - Failed to delete 'aspnetcore.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,446 INFO  [7] DefaultLoggingService - Failed to delete 'asptlb.tlb': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,446 INFO  [7] DefaultLoggingService - Failed to delete 'authanon.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,447 INFO  [7] DefaultLoggingService - Failed to delete 'authbas.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,447 INFO  [7] DefaultLoggingService - Failed to delete 'authcert.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,447 INFO  [7] DefaultLoggingService - Failed to delete 'authmap.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,448 INFO  [7] DefaultLoggingService - Failed to delete 'authsspi.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,448 INFO  [7] DefaultLoggingService - Failed to delete 'browscap.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,448 INFO  [7] DefaultLoggingService - Failed to delete 'browscap.ini': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,449 INFO  [7] DefaultLoggingService - Failed to delete 'cachtokn.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,449 INFO  [7] DefaultLoggingService - Failed to delete 'cachuri.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,450 INFO  [7] DefaultLoggingService - Failed to delete 'cgi.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,450 INFO  [7] DefaultLoggingService - Failed to delete 'compdyn.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,450 INFO  [7] DefaultLoggingService - Failed to delete 'compstat.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,450 INFO  [7] DefaultLoggingService - Failed to delete 'custerr.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,450 INFO  [7] DefaultLoggingService - Failed to delete 'defdoc.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,450 INFO  [7] DefaultLoggingService - Failed to delete 'diprestr.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,451 INFO  [7] DefaultLoggingService - Failed to delete 'dirlist.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,451 INFO  [7] DefaultLoggingService - Failed to delete 'filter.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,451 INFO  [7] DefaultLoggingService - Failed to delete 'gzip.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,452 INFO  [7] DefaultLoggingService - Failed to delete 'hwebcore.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,452 INFO  [7] DefaultLoggingService - Failed to delete 'iiscore.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,453 INFO  [7] DefaultLoggingService - Failed to delete 'iisexpress.exe': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,453 INFO  [7] DefaultLoggingService - Failed to delete 'iisexpress.exe.manifest': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,453 INFO  [7] DefaultLoggingService - Failed to delete 'IisExpressAdminCmd.exe': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,454 INFO  [7] DefaultLoggingService - Failed to delete 'IisExpressAdminCmd.exe.config': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,454 INFO  [7] DefaultLoggingService - Failed to delete 'IisExpressadminCmd.resources.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,454 INFO  [7] DefaultLoggingService - Failed to delete 'iisexpresshelper.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,455 INFO  [7] DefaultLoggingService - Failed to delete 'iisexpressshim.sdb': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,455 INFO  [7] DefaultLoggingService - Failed to delete 'iisexpresstray.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,455 INFO  [7] DefaultLoggingService - Failed to delete 'iisexpresstray.exe': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,456 INFO  [7] DefaultLoggingService - Failed to delete 'iisexpresstray.exe.config': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,456 INFO  [7] DefaultLoggingService - Failed to delete 'iisexpresstray.exe.manifest': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,457 INFO  [7] DefaultLoggingService - Failed to delete 'iisfcgi.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,457 INFO  [7] DefaultLoggingService - Failed to delete 'iisfreb.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,457 INFO  [7] DefaultLoggingService - Failed to delete 'iisreqs.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,458 INFO  [7] DefaultLoggingService - Failed to delete 'iisres.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,473 INFO  [7] DefaultLoggingService - Failed to delete 'iisRtl.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,474 INFO  [7] DefaultLoggingService - Failed to delete 'iisutil2.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,489 INFO  [7] DefaultLoggingService - Failed to delete 'iisvermg.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,490 INFO  [7] DefaultLoggingService - Failed to delete 'iiswsock.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,505 INFO  [7] DefaultLoggingService - Failed to delete 'iis_ssi.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,506 INFO  [7] DefaultLoggingService - Failed to delete 'iprestr.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,520 INFO  [7] DefaultLoggingService - Failed to delete 'isapi.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,521 INFO  [7] DefaultLoggingService - Failed to delete 'license.rtf': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,535 INFO  [7] DefaultLoggingService - Failed to delete 'logcust.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,536 INFO  [7] DefaultLoggingService - Failed to delete 'loghttp.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,544 INFO  [7] DefaultLoggingService - Failed to delete 'Microsoft.Diagnostics.Tracing.EventSource.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,551 INFO  [7] DefaultLoggingService - Failed to delete 'Microsoft.VisualStudio.RemoteControl.Net35.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,552 INFO  [7] DefaultLoggingService - Failed to delete 'Microsoft.VisualStudio.Telemetry.Net35.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,552 INFO  [7] DefaultLoggingService - Failed to delete 'Microsoft.VisualStudio.Utilities.Internal.Net35.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,553 INFO  [7] DefaultLoggingService - Failed to delete 'Microsoft.Web.Tasks.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,553 INFO  [7] DefaultLoggingService - Failed to delete 'modrqflt.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,554 INFO  [7] DefaultLoggingService - Failed to delete 'nativrd2.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,554 INFO  [7] DefaultLoggingService - Failed to delete 'Newtonsoft.Json.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,555 INFO  [7] DefaultLoggingService - Failed to delete 'protsup.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,555 INFO  [7] DefaultLoggingService - Failed to delete 'redirect.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,556 INFO  [7] DefaultLoggingService - Failed to delete 'REDIST.TXT': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,556 INFO  [7] DefaultLoggingService - Failed to delete 'Release_Notes.url': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,556 INFO  [7] DefaultLoggingService - Failed to delete 'rewrite.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,557 INFO  [7] DefaultLoggingService - Failed to delete 'rsca2.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,557 INFO  [7] DefaultLoggingService - Failed to delete 'rscaext.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,558 INFO  [7] DefaultLoggingService - Failed to delete 'rtinfo.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,558 INFO  [7] DefaultLoggingService - Failed to delete 'static.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,558 INFO  [7] DefaultLoggingService - Failed to delete 'System.Threading.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,559 INFO  [7] DefaultLoggingService - Failed to delete 'ThirdPartyNotices.txt': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,559 INFO  [7] DefaultLoggingService - Failed to delete 'UpgradeApplicationHost.js': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,559 INFO  [7] DefaultLoggingService - Failed to delete 'urlauthz.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,560 INFO  [7] DefaultLoggingService - Failed to delete 'validcfg.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,560 INFO  [7] DefaultLoggingService - Failed to delete 'w3dt.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,561 INFO  [7] DefaultLoggingService - Failed to delete 'w3tp.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,561 INFO  [7] DefaultLoggingService - Failed to delete 'w3wphost.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,562 INFO  [7] DefaultLoggingService - Failed to delete 'warmup.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,562 INFO  [7] DefaultLoggingService - Failed to delete 'wbhst_pm.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,563 INFO  [7] DefaultLoggingService - Failed to delete 'WCF35Setup.js': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,563 INFO  [7] DefaultLoggingService - Failed to delete 'webdav.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,564 INFO  [7] DefaultLoggingService - Failed to delete 'webdav_simple_lock.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,564 INFO  [7] DefaultLoggingService - Failed to delete 'webdav_simple_prop.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,565 INFO  [7] DefaultLoggingService - Failed to delete 'webmatrixsup.dll': Value cannot be null.
+Parameter name: value
+2019-03-13 11:48:05,565 INFO  [7] DefaultLoggingService - Cleaning log location finished
+2019-03-13 11:48:05,574 INFO  [12] AuthenticationProvider - Token Service set to :https://sigma-dev.absa.co.za/authorization/oauth/token
+2019-03-13 11:48:05,574 INFO  [12] AuthenticationProvider - Created instance of AuthenticationProvider: 2b340d57-ba54-42f7-b71a-2beabee6e537
+2019-03-13 11:48:05,683 INFO  [16] AuthenticationProvider - Token Service set to :https://sigma-dev.absa.co.za/authorization/oauth/token
+2019-03-13 11:48:05,684 INFO  [16] AuthenticationProvider - Created instance of AuthenticationProvider: a9a74f83-f1bb-40e3-a585-6b76f84f4648
+2019-03-13 11:48:10,639 INFO  [12] AuthenticationProvider - Token Service set to :https://sigma-dev.absa.co.za/authorization/oauth/token
+2019-03-13 11:48:10,639 INFO  [12] AuthenticationProvider - Created instance of AuthenticationProvider: be52ab1c-34ad-4b1d-ba03-5ec8832d576c
+2019-03-13 11:48:10,735 INFO  [13] AuthenticationProvider - Token Service set to :https://sigma-dev.absa.co.za/authorization/oauth/token
+2019-03-13 11:48:10,735 INFO  [13] AuthenticationProvider - Created instance of AuthenticationProvider: 0c5ad07d-5990-4642-93e0-665af1d61f47
+2019-03-13 11:48:16,313 INFO  [12] AuthenticationProvider - Token Service set to :https://sigma-dev.absa.co.za/authorization/oauth/token
+2019-03-13 11:48:16,313 INFO  [12] AuthenticationProvider - Created instance of AuthenticationProvider: fafa2aba-00a7-4ba1-aacc-d6bf2c4fe1b0
+2019-03-13 11:48:16,405 INFO  [13] AuthenticationProvider - Token Service set to :https://sigma-dev.absa.co.za/authorization/oauth/token
+2019-03-13 11:48:16,405 INFO  [13] AuthenticationProvider - Created instance of AuthenticationProvider: ffc9c3bf-e113-4321-b53d-8b11e6ca7468
+2019-03-13 11:48:21,876 INFO  [7] AuthenticationProvider - Token Service set to :https://sigma-dev.absa.co.za/authorization/oauth/token
+2019-03-13 11:48:21,876 INFO  [7] AuthenticationProvider - Created instance of AuthenticationProvider: f6ed381d-cb04-41c0-997b-d9b65701b256
+2019-03-13 11:48:21,964 INFO  [13] AuthenticationProvider - Token Service set to :https://sigma-dev.absa.co.za/authorization/oauth/token
+2019-03-13 11:48:21,964 INFO  [13] AuthenticationProvider - Created instance of AuthenticationProvider: f40bc732-7317-4fab-b0a1-8d32d8eef851
+2019-03-13 11:48:27,443 INFO  [12] AuthenticationProvider - Token Service set to :https://sigma-dev.absa.co.za/authorization/oauth/token
+2019-03-13 11:48:27,444 INFO  [12] AuthenticationProvider - Created instance of AuthenticationProvider: bb67ff7f-96ef-478f-8077-e3031fa6e694
+2019-03-13 11:48:27,534 INFO  [13] AuthenticationProvider - Token Service set to :https://sigma-dev.absa.co.za/authorization/oauth/token
+2019-03-13 11:48:27,534 INFO  [13] AuthenticationProvider - Created instance of AuthenticationProvider: 10f5ddf8-01cb-4fb6-9ab5-3a3870c76c99
+2019-03-13 11:48:31,727 INFO  [12] AuthenticationProvider - Token Service set to :https://sigma-dev.absa.co.za/authorization/oauth/token
+2019-03-13 11:48:31,727 INFO  [12] AuthenticationProvider - Created instance of AuthenticationProvider: 269f9878-efff-4e42-828b-c2aad14cb955
+2019-03-13 11:48:31,824 INFO  [13] AuthenticationProvider - Token Service set to :https://sigma-dev.absa.co.za/authorization/oauth/token
+2019-03-13 11:48:31,824 INFO  [13] AuthenticationProvider - Created instance of AuthenticationProvider: 9936502b-5513-41b0-b9e8-32b0e219f955
+2019-03-13 11:48:32,102 INFO  [14] AuthenticationProvider - Token Service set to :https://sigma-dev.absa.co.za/authorization/oauth/token
+2019-03-13 11:48:32,102 INFO  [14] AuthenticationProvider - Created instance of AuthenticationProvider: 84d0c3c7-df40-4863-bc5f-321ccce534c6
+2019-03-13 11:48:32,198 INFO  [12] AuthenticationProvider - Token Service set to :https://sigma-dev.absa.co.za/authorization/oauth/token
+2019-03-13 11:48:32,198 INFO  [12] AuthenticationProvider - Created instance of AuthenticationProvider: 97de9165-621f-4a39-bcf5-10b9c405069b
+2019-03-13 11:48:32,999 INFO  [16] AuthenticationProvider - Token Service set to :https://sigma-dev.absa.co.za/authorization/oauth/token
+2019-03-13 11:48:32,999 INFO  [16] AuthenticationProvider - Created instance of AuthenticationProvider: 00050bbf-eedc-46d5-b0e5-95400cae149e
+2019-03-13 11:48:33,096 INFO  [15] AuthenticationProvider - Token Service set to :https://sigma-dev.absa.co.za/authorization/oauth/token
+2019-03-13 11:48:33,096 INFO  [15] AuthenticationProvider - Created instance of AuthenticationProvider: 2e561d35-73c4-4f3f-bc03-ec8fa6883dcd
+2019-03-13 11:48:33,497 INFO  [14] AuthenticationProvider - Token Service set to :https://sigma-dev.absa.co.za/authorization/oauth/token
+2019-03-13 11:48:33,497 INFO  [14] AuthenticationProvider - Created instance of AuthenticationProvider: 6a257f6e-e08c-4b10-acd1-477c3acbdadf
+2019-03-13 11:48:33,596 INFO  [17] AuthenticationProvider - Token Service set to :https://sigma-dev.absa.co.za/authorization/oauth/token
+2019-03-13 11:48:33,596 INFO  [17] AuthenticationProvider - Created instance of AuthenticationProvider: d7feacc1-30bb-4498-896d-63c34e6261e8
+2019-03-13 11:48:33,758 INFO  [12] AuthenticationProvider - Token Service set to :https://sigma-dev.absa.co.za/authorization/oauth/token
+2019-03-13 11:48:33,759 INFO  [12] AuthenticationProvider - Created instance of AuthenticationProvider: b38bf875-514f-4d0c-b516-9b75a98900b6
+2019-03-13 11:48:33,854 INFO  [13] AuthenticationProvider - Token Service set to :https://sigma-dev.absa.co.za/authorization/oauth/token
+2019-03-13 11:48:33,854 INFO  [13] AuthenticationProvider - Created instance of AuthenticationProvider: d812c04e-baff-4417-85cc-654dc9cfd600
+2019-03-13 11:48:35,690 INFO  [12] AuthenticationProvider - Token Service set to :https://sigma-dev.absa.co.za/authorization/oauth/token
+2019-03-13 11:48:35,691 INFO  [12] AuthenticationProvider - Created instance of AuthenticationProvider: 514bbea1-f5dc-4af6-8d32-acab2c535b13
+2019-03-13 11:48:35,691 INFO  [12] ParentRequestDetailProvider - Created instance of ParentRequestDetailProvider:f754918c-9a0b-4fa5-84cf-1c0bcde55e42
+2019-03-13 11:48:35,691 INFO  [12] GatewayRestService - Gateway leader:sigma-dev.absa.co.za
+2019-03-13 11:48:35,691 INFO  [12] GatewayRestService - Initialized with known gateways: sigma-dev.absa.co.za
+2019-03-13 11:48:35,782 INFO  [13] AuthenticationProvider - Token Service set to :https://sigma-dev.absa.co.za/authorization/oauth/token
+2019-03-13 11:48:35,783 INFO  [13] AuthenticationProvider - Created instance of AuthenticationProvider: bdb249cd-fa9d-4700-8f01-de57354c9748
+2019-03-13 11:48:35,783 INFO  [13] ParentRequestDetailProvider - Created instance of ParentRequestDetailProvider:0dda1993-392c-4717-b32f-8fd50a6611aa
+2019-03-13 11:48:35,783 INFO  [13] GatewayRestService - Gateway leader:sigma-dev.absa.co.za
+2019-03-13 11:48:35,783 INFO  [13] GatewayRestService - Initialized with known gateways: sigma-dev.absa.co.za
+2019-03-13 11:48:36,515 INFO  [15] RestService - GET on https://sigma-dev.absa.co.za:7010/Api/managementinterface/latest/batch%2f2019-03-13%2fsummary (async=False)
+2019-03-13 11:48:36,516 INFO  [15] RestService - Client Token:
+2019-03-13 11:48:36,516 INFO  [15] RestService - Request Token:eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IlZWRXhZTUVYdThZNFVXQmJkbGdQSXVkVTY4QSJ9.eyJ1bmlxdWVfbmFtZSI6IkRfQUJTQVxcQUJHQzE5MiIsImdyb3Vwc2lkIjoiUy0xLTUtMjEtMjA5MjgwMzE4LTIwMDg0MTc1MDUtNDcwMDg5OTcxLTE5NDQwMDAiLCJCdXNpbmVzc0Z1bmN0aW9uIjoiQlRCIiwiR3JvdXBUeXBlIjoiU3VwcG9ydCIsIlBvcnRmb2xpbyI6WyJGWCBJUlMgSGVkZ2VzIiwiTWFya2V0cyJdLCJSb2xlIjpbIkFjY2VzcyIsIkF0dHJpYnV0aW9uOiBYVkEgUmVwb3J0IiwiQm9vayIsIkNhdGFsb2d1ZS5ERUxFVEUiLCJDYXRhbG9ndWUuUFVUIiwiQ291bnRlcnBhcnR5IiwiQ291bnRlcnBhcnR5OiBDb3VudGVycGFydHkgTWV0cmljcyIsIkNvdW50ZXJwYXJ0eTogQ291bnRlcnBhcnR5IFByb2ZpbGUiLCJDb3VudGVycGFydHk6IEV4cG9zdXJlIFByb2ZpbGVzIiwiQ291bnRlcnBhcnR5OiBGWCBXcm9uZyBXYXkgUmlzayIsIkNvdW50ZXJwYXJ0eTogSVIgV3JvbmcgV2F5IFJpc2siLCJDb3VudGVycGFydHk6IE1hcmdpbmFsIFRyYWRlcyBSZXBvcnQiLCJDb3VudGVycGFydHk6IFBGRSBSZXBvcnQiLCJDb3VudGVycGFydHk6IFBWIFN0cmVzc2VzKEZYKSIsIkNvdW50ZXJwYXJ0eTogUFYgU3RyZXNzZXMoSVIpIiwiQ291bnRlcnBhcnR5OiBTZXR0bGVtZW50IFJlcG9ydCIsIkNvdW50ZXJwYXJ0eTogVHJhZGUgUmVwb3J0IiwiQ291bnRlcnBhcnR5OiBYVkEgQ3JlZGl0IFJpc2siLCJDb3VudGVycGFydHk6IFhWQSBGWCBWZWdhIiwiRGV2ZWxvcG1lbnQiLCJGaWx0ZXJzOiBSaXNrIEZpbHRlciIsIkZJT3B0aW9uczogQmVuY2htYXJrUmlzayBSZXBvcnQiLCJGSU9wdGlvbnM6IENhc2hmbG93IFJlcG9ydCIsIkZJT3B0aW9uczogVHJhZGUgUmVwb3J0IiwiRlRQX1NBIiwiRlRTRV9Wb2wiLCJGWE9wdGlvbnM6IENhc2hmbG93IFJlcG9ydCIsIkZYT3B0aW9uczogVHJhZGUgUmVwb3J0IiwiR0hTLk9TLkJhc2lzLkRlbGl2ZXJhYmxlX1JPQSIsIktFUy5PUy5CYXNpcy5EZWxpdmVyYWJsZV9ST0EiLCJNYXJnaW5hbCBUcmFkZXMgUmVwb3J0IiwiT3ZlcnJpZGVzOiBBcHByb3ZlT3ZlcnJpZGUiLCJPdmVycmlkZXM6IFN1Ym1pdE92ZXJyaWRlIiwiUGFyYW1ldGVycyIsIlBGRSBSZXBvcnQiLCJQb3J0Zm9saW86IFRyYWRlIFJlcG9ydCIsIlJlY29uIFJlcG9ydCIsIlJpc2sgQmF0Y2ggUmVwb3J0IiwiUmlza0JhdGNoLlBVVCIsIlNlY3VyaXR5LkRFTEVURSIsIlNlY3VyaXR5Lk1vZGlmeSIsIlNlY3VyaXR5LlBPU1QiLCJTZWN1cml0eS5QVVQiLCJTZWN1cml0eS5WZXJzaW9ucyIsIlNlY3VyaXR5LlZpZXciLCJTdXBwb3J0IiwiVHJlYXN1cnkgTENZIEZUUCBDdXJ2ZXMiLCJUWlMuTkJDLkJhc2lzLkRlbGl2ZXJhYmxlX1JPQSIsIlVwbG9hZHMiLCJVU0QuQ1JFRElULk1VUk9uc2hvcmVfUk9BIiwiVVNELkNSRURJVC5UWlNPbnNob3JlX1JPQSIsIlV0aWxpdGllczogRW52aXJvbm1lbnQgUFYgUmVwb3J0IiwiVXRpbGl0aWVzOiBUcmFkZSBQcmljZXIiLCJaQVIuQm9uZC5SZXBvLkdDIiwiWk1XLk9TLkJhc2lzLkRlbGl2ZXJhYmxlX1JPQSJdLCJTaXRlIjpbIkJPVFNXQU5BIiwiR0hBTkEiLCJLRU5ZQSIsIk1BVVJJVElVU19JQkQiLCJNQVVSSVRJVVNfT05TSE9SRSIsIk1PWkFNQklRVUUiLCJTRVlDSEVMTEVTIiwiU09VVEhfQUZSSUNBIiwiVEFOWkFOSUEiLCJUQU5aQU5JQV9OQkMiLCJVR0FOREEiLCJaQU1CSUEiXSwiaXNzIjoiaHR0cHM6Ly9zaWdtYS1kZXYuYWJzYS5jby56YS8iLCJhdWQiOiIqIiwiZXhwIjoxNTUyNTEyMDc2LCJuYmYiOjE1NTI0Njg4NzZ9.glGu5LTxnUKs43bQ5qCk-wq1-b6H7sqXgJTVZ5-U56Jvt1e_lq1ChJBhpDLmL6Fxa6aBQf8piP3wFqI8AwxvIRusbC94_YbSOGwb4M7LUMr8sTlRh0fccozBQmh3FUDcY5uNjJepKugukFhXP6oq6U4814FOoGWi2xSznPmW_TjSiwGG35DtTbUDUkrSgYN-3tHwdj4hBlX0XJTvKPCMtisITJIQv7MBhe2REF3iEeLhbBuOLtcVtzq484HLNtSwrSAiyutvd_z_RsLjL7SGg3DbiTnEp2KToCAO3Ho668zipVaodZoky9zg8B_9eICPSjGJrMwMwb2_Ftf6DtIa94vmFVM_yPG3AHs8M89ry2gDnj81WGfabfqtQCB1T14I3uAr0aw_5Ppt87bjWUQ-Fa0idFIRw6qUjDvH9YDOz7Xyc3EtfbFxlWZ2Yv4DV2IYuLpIZM_EUrqv9-T8zvMHs-uiFu4zHkZw-DwyiXaUIjD_amisyxJGIEaSBJTz3sArQxLH2WhRu7bmnl5h_FUIpz2HQ6MRPI8P-hP_0nX2p_mkemWoCmfICxoJawyLtYFaB8xhTssSB8kFmdL3h3LoQjCc4LmtWKW0n0wz4jYi40DIaXXyMx7gEroepvBoQGWryTp_5ZtpS6uD5Il1UhyaZ5DwBhXHKrq-gQL0gtNP97g
+2019-03-13 11:48:36,571 INFO  [15] RestService - Request success: 
+2019-03-13 11:48:38,568 INFO  [7] AuthenticationProvider - Token Service set to :https://sigma-dev.absa.co.za/authorization/oauth/token
+2019-03-13 11:48:38,569 INFO  [7] AuthenticationProvider - Created instance of AuthenticationProvider: 37b7b6d9-720a-4571-8e97-310f635bf951
+2019-03-13 11:48:38,664 INFO  [13] AuthenticationProvider - Token Service set to :https://sigma-dev.absa.co.za/authorization/oauth/token
+2019-03-13 11:48:38,664 INFO  [13] AuthenticationProvider - Created instance of AuthenticationProvider: ad0bc499-271f-4402-b087-d6e24c38a6ad
+2019-03-13 11:48:39,333 INFO  [14] AuthenticationProvider - Token Service set to :https://sigma-dev.absa.co.za/authorization/oauth/token
+2019-03-13 11:48:39,333 INFO  [14] AuthenticationProvider - Created instance of AuthenticationProvider: e38ad61b-08fb-4c06-a106-d2cc6e3e30fd
+2019-03-13 11:48:39,427 INFO  [12] AuthenticationProvider - Token Service set to :https://sigma-dev.absa.co.za/authorization/oauth/token
+2019-03-13 11:48:39,427 INFO  [12] AuthenticationProvider - Created instance of AuthenticationProvider: 4bf0cba6-6843-4443-887f-e489ab944e8d
+2019-03-13 11:48:40,779 INFO  [7] AuthenticationProvider - Token Service set to :https://sigma-dev.absa.co.za/authorization/oauth/token
+2019-03-13 11:48:40,780 INFO  [7] AuthenticationProvider - Created instance of AuthenticationProvider: 49a5e755-3336-4f00-a039-db7d76fd4ea5
+2019-03-13 11:48:40,780 INFO  [7] ParentRequestDetailProvider - Created instance of ParentRequestDetailProvider:b7a6c34b-bae0-4c0c-b1d5-09107eeed751
+2019-03-13 11:48:40,780 INFO  [7] GatewayRestService - Gateway leader:sigma-dev.absa.co.za
+2019-03-13 11:48:40,780 INFO  [7] GatewayRestService - Initialized with known gateways: sigma-dev.absa.co.za
+2019-03-13 11:48:40,876 INFO  [13] AuthenticationProvider - Token Service set to :https://sigma-dev.absa.co.za/authorization/oauth/token
+2019-03-13 11:48:40,876 INFO  [13] AuthenticationProvider - Created instance of AuthenticationProvider: e6b14826-87e4-4d21-8b4a-989075094ebf
+2019-03-13 11:48:40,876 INFO  [13] ParentRequestDetailProvider - Created instance of ParentRequestDetailProvider:6d4880bc-0bc5-4600-a2be-e02909b1fbe7
+2019-03-13 11:48:40,877 INFO  [13] GatewayRestService - Gateway leader:sigma-dev.absa.co.za
+2019-03-13 11:48:40,877 INFO  [13] GatewayRestService - Initialized with known gateways: sigma-dev.absa.co.za
+2019-03-13 11:48:41,580 INFO  [12] RestService - GET on https://sigma-dev.absa.co.za:7010/Api/managementinterface/latest/batch%2f2019-03-13%2fsummary (async=False)
+2019-03-13 11:48:41,581 INFO  [12] RestService - Client Token:
+2019-03-13 11:48:41,581 INFO  [12] RestService - Request Token:eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IlZWRXhZTUVYdThZNFVXQmJkbGdQSXVkVTY4QSJ9.eyJ1bmlxdWVfbmFtZSI6IkRfQUJTQVxcQUJHQzE5MiIsImdyb3Vwc2lkIjoiUy0xLTUtMjEtMjA5MjgwMzE4LTIwMDg0MTc1MDUtNDcwMDg5OTcxLTE5NDQwMDAiLCJCdXNpbmVzc0Z1bmN0aW9uIjoiQlRCIiwiR3JvdXBUeXBlIjoiU3VwcG9ydCIsIlBvcnRmb2xpbyI6WyJGWCBJUlMgSGVkZ2VzIiwiTWFya2V0cyJdLCJSb2xlIjpbIkFjY2VzcyIsIkF0dHJpYnV0aW9uOiBYVkEgUmVwb3J0IiwiQm9vayIsIkNhdGFsb2d1ZS5ERUxFVEUiLCJDYXRhbG9ndWUuUFVUIiwiQ291bnRlcnBhcnR5IiwiQ291bnRlcnBhcnR5OiBDb3VudGVycGFydHkgTWV0cmljcyIsIkNvdW50ZXJwYXJ0eTogQ291bnRlcnBhcnR5IFByb2ZpbGUiLCJDb3VudGVycGFydHk6IEV4cG9zdXJlIFByb2ZpbGVzIiwiQ291bnRlcnBhcnR5OiBGWCBXcm9uZyBXYXkgUmlzayIsIkNvdW50ZXJwYXJ0eTogSVIgV3JvbmcgV2F5IFJpc2siLCJDb3VudGVycGFydHk6IE1hcmdpbmFsIFRyYWRlcyBSZXBvcnQiLCJDb3VudGVycGFydHk6IFBGRSBSZXBvcnQiLCJDb3VudGVycGFydHk6IFBWIFN0cmVzc2VzKEZYKSIsIkNvdW50ZXJwYXJ0eTogUFYgU3RyZXNzZXMoSVIpIiwiQ291bnRlcnBhcnR5OiBTZXR0bGVtZW50IFJlcG9ydCIsIkNvdW50ZXJwYXJ0eTogVHJhZGUgUmVwb3J0IiwiQ291bnRlcnBhcnR5OiBYVkEgQ3JlZGl0IFJpc2siLCJDb3VudGVycGFydHk6IFhWQSBGWCBWZWdhIiwiRGV2ZWxvcG1lbnQiLCJGaWx0ZXJzOiBSaXNrIEZpbHRlciIsIkZJT3B0aW9uczogQmVuY2htYXJrUmlzayBSZXBvcnQiLCJGSU9wdGlvbnM6IENhc2hmbG93IFJlcG9ydCIsIkZJT3B0aW9uczogVHJhZGUgUmVwb3J0IiwiRlRQX1NBIiwiRlRTRV9Wb2wiLCJGWE9wdGlvbnM6IENhc2hmbG93IFJlcG9ydCIsIkZYT3B0aW9uczogVHJhZGUgUmVwb3J0IiwiR0hTLk9TLkJhc2lzLkRlbGl2ZXJhYmxlX1JPQSIsIktFUy5PUy5CYXNpcy5EZWxpdmVyYWJsZV9ST0EiLCJNYXJnaW5hbCBUcmFkZXMgUmVwb3J0IiwiT3ZlcnJpZGVzOiBBcHByb3ZlT3ZlcnJpZGUiLCJPdmVycmlkZXM6IFN1Ym1pdE92ZXJyaWRlIiwiUGFyYW1ldGVycyIsIlBGRSBSZXBvcnQiLCJQb3J0Zm9saW86IFRyYWRlIFJlcG9ydCIsIlJlY29uIFJlcG9ydCIsIlJpc2sgQmF0Y2ggUmVwb3J0IiwiUmlza0JhdGNoLlBVVCIsIlNlY3VyaXR5LkRFTEVURSIsIlNlY3VyaXR5Lk1vZGlmeSIsIlNlY3VyaXR5LlBPU1QiLCJTZWN1cml0eS5QVVQiLCJTZWN1cml0eS5WZXJzaW9ucyIsIlNlY3VyaXR5LlZpZXciLCJTdXBwb3J0IiwiVHJlYXN1cnkgTENZIEZUUCBDdXJ2ZXMiLCJUWlMuTkJDLkJhc2lzLkRlbGl2ZXJhYmxlX1JPQSIsIlVwbG9hZHMiLCJVU0QuQ1JFRElULk1VUk9uc2hvcmVfUk9BIiwiVVNELkNSRURJVC5UWlNPbnNob3JlX1JPQSIsIlV0aWxpdGllczogRW52aXJvbm1lbnQgUFYgUmVwb3J0IiwiVXRpbGl0aWVzOiBUcmFkZSBQcmljZXIiLCJaQVIuQm9uZC5SZXBvLkdDIiwiWk1XLk9TLkJhc2lzLkRlbGl2ZXJhYmxlX1JPQSJdLCJTaXRlIjpbIkJPVFNXQU5BIiwiR0hBTkEiLCJLRU5ZQSIsIk1BVVJJVElVU19JQkQiLCJNQVVSSVRJVVNfT05TSE9SRSIsIk1PWkFNQklRVUUiLCJTRVlDSEVMTEVTIiwiU09VVEhfQUZSSUNBIiwiVEFOWkFOSUEiLCJUQU5aQU5JQV9OQkMiLCJVR0FOREEiLCJaQU1CSUEiXSwiaXNzIjoiaHR0cHM6Ly9zaWdtYS1kZXYuYWJzYS5jby56YS8iLCJhdWQiOiIqIiwiZXhwIjoxNTUyNTEyMDc2LCJuYmYiOjE1NTI0Njg4NzZ9.glGu5LTxnUKs43bQ5qCk-wq1-b6H7sqXgJTVZ5-U56Jvt1e_lq1ChJBhpDLmL6Fxa6aBQf8piP3wFqI8AwxvIRusbC94_YbSOGwb4M7LUMr8sTlRh0fccozBQmh3FUDcY5uNjJepKugukFhXP6oq6U4814FOoGWi2xSznPmW_TjSiwGG35DtTbUDUkrSgYN-3tHwdj4hBlX0XJTvKPCMtisITJIQv7MBhe2REF3iEeLhbBuOLtcVtzq484HLNtSwrSAiyutvd_z_RsLjL7SGg3DbiTnEp2KToCAO3Ho668zipVaodZoky9zg8B_9eICPSjGJrMwMwb2_Ftf6DtIa94vmFVM_yPG3AHs8M89ry2gDnj81WGfabfqtQCB1T14I3uAr0aw_5Ppt87bjWUQ-Fa0idFIRw6qUjDvH9YDOz7Xyc3EtfbFxlWZ2Yv4DV2IYuLpIZM_EUrqv9-T8zvMHs-uiFu4zHkZw-DwyiXaUIjD_amisyxJGIEaSBJTz3sArQxLH2WhRu7bmnl5h_FUIpz2HQ6MRPI8P-hP_0nX2p_mkemWoCmfICxoJawyLtYFaB8xhTssSB8kFmdL3h3LoQjCc4LmtWKW0n0wz4jYi40DIaXXyMx7gEroepvBoQGWryTp_5ZtpS6uD5Il1UhyaZ5DwBhXHKrq-gQL0gtNP97g
+2019-03-13 11:48:41,636 INFO  [12] RestService - Request success: 
+2019-03-13 11:48:44,135 INFO  [14] AuthenticationProvider - Token Service set to :https://sigma-dev.absa.co.za/authorization/oauth/token
+2019-03-13 11:48:44,136 INFO  [14] AuthenticationProvider - Created instance of AuthenticationProvider: e6cee38b-ca42-4352-b3e6-2db35ed340a3
+2019-03-13 11:48:44,230 INFO  [12] AuthenticationProvider - Token Service set to :https://sigma-dev.absa.co.za/authorization/oauth/token
+2019-03-13 11:48:44,230 INFO  [12] AuthenticationProvider - Created instance of AuthenticationProvider: 853f82be-1648-45d6-aaec-deaebba81bca
+2019-03-13 11:48:45,026 INFO  [13] AuthenticationProvider - Token Service set to :https://sigma-dev.absa.co.za/authorization/oauth/token
+2019-03-13 11:48:45,027 INFO  [13] AuthenticationProvider - Created instance of AuthenticationProvider: 22c1404d-b1a3-4fc1-aba5-52e51e3360fc
+2019-03-13 11:48:45,124 INFO  [14] AuthenticationProvider - Token Service set to :https://sigma-dev.absa.co.za/authorization/oauth/token
+2019-03-13 11:48:45,125 INFO  [14] AuthenticationProvider - Created instance of AuthenticationProvider: b9b032eb-7baa-4a18-b1ba-99db380be95b
+2019-03-13 11:48:49,708 INFO  [12] AuthenticationProvider - Token Service set to :https://sigma-dev.absa.co.za/authorization/oauth/token
+2019-03-13 11:48:49,709 INFO  [12] AuthenticationProvider - Created instance of AuthenticationProvider: c1cfe8ac-c4f4-4b62-b64f-7cc17c1b8538
+2019-03-13 11:48:49,803 INFO  [13] AuthenticationProvider - Token Service set to :https://sigma-dev.absa.co.za/authorization/oauth/token
+2019-03-13 11:48:49,803 INFO  [13] AuthenticationProvider - Created instance of AuthenticationProvider: f5e11872-bd6e-4f84-bd55-c33cce9977b0
+2019-03-13 11:48:50,625 INFO  [14] AuthenticationProvider - Token Service set to :https://sigma-dev.absa.co.za/authorization/oauth/token
+2019-03-13 11:48:50,625 INFO  [14] AuthenticationProvider - Created instance of AuthenticationProvider: c689809d-7c70-439b-9169-6ed8a8d333ec
+2019-03-13 11:48:50,715 INFO  [12] AuthenticationProvider - Token Service set to :https://sigma-dev.absa.co.za/authorization/oauth/token
+2019-03-13 11:48:50,716 INFO  [12] AuthenticationProvider - Created instance of AuthenticationProvider: d689fb98-f00a-4ddf-9ffd-f7292f976004
+2019-03-13 11:48:58,579 INFO  [7] AuthenticationProvider - Token Service set to :https://sigma-dev.absa.co.za/authorization/oauth/token
+2019-03-13 11:48:58,579 INFO  [7] AuthenticationProvider - Created instance of AuthenticationProvider: c2918655-5412-4146-a552-119092abc43b
+2019-03-13 11:48:58,579 INFO  [7] ParentRequestDetailProvider - Created instance of ParentRequestDetailProvider:f82fe935-8dfc-4d72-88f0-dbf0273d80aa
+2019-03-13 11:48:58,580 INFO  [7] GatewayRestService - Gateway leader:sigma-dev.absa.co.za
+2019-03-13 11:48:58,580 INFO  [7] GatewayRestService - Initialized with known gateways: sigma-dev.absa.co.za
+2019-03-13 11:48:58,671 INFO  [13] AuthenticationProvider - Token Service set to :https://sigma-dev.absa.co.za/authorization/oauth/token
+2019-03-13 11:48:58,671 INFO  [13] AuthenticationProvider - Created instance of AuthenticationProvider: b00c0b20-e71e-4544-bf41-a7090903897e
+2019-03-13 11:48:58,672 INFO  [13] ParentRequestDetailProvider - Created instance of ParentRequestDetailProvider:0b5c8536-edab-4955-ad96-c20bf0ccfd68
+2019-03-13 11:48:58,672 INFO  [13] GatewayRestService - Gateway leader:sigma-dev.absa.co.za
+2019-03-13 11:48:58,672 INFO  [13] GatewayRestService - Initialized with known gateways: sigma-dev.absa.co.za
