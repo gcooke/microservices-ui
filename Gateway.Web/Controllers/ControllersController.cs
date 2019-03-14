@@ -53,7 +53,7 @@ namespace Gateway.Web.Controllers
 
         public ActionResult Dashboard()
         {
-            var start = DateTime.Today.AddDays(-7);
+            var start = DateTime.Today.AddDays(-1);
             var controllers = _dataService.GetControllerStatistics(start);
             var model = new DashboardModel();
             model.Controllers.AddRange(controllers.OrderBy(c => c.Name));
@@ -219,7 +219,7 @@ namespace Gateway.Web.Controllers
         [HttpGet]
         public JsonResult CurrentQueueData(string[] controllers)
         {
-            var start = DateTime.Now.AddMinutes(-1);
+            var start = DateTime.UtcNow.AddMinutes(-60);
             var data = controllers != null && controllers.Any()
                 ? _dataService.GetQueueChartModel(start, controllers.ToList())
                 : _dataService.GetQueueChartModel(start);
@@ -230,7 +230,7 @@ namespace Gateway.Web.Controllers
         [HttpGet]
         public JsonResult HistoricalQueueData(string[] controllers)
         {
-            var start = DateTime.Now.AddDays(-1);
+            var start = DateTime.UtcNow.AddDays(-1);
             var data = controllers != null && controllers.Any()
                 ? _dataService.GetQueueChartModel(start, controllers.ToList())
                 : _dataService.GetQueueChartModel(start);

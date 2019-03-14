@@ -50,9 +50,9 @@ namespace Gateway.Web.Database
 
         ReportsModel GetUsage();
 
-        QueueChartModel GetQueueChartModel(DateTime startDate);
+        QueueChartModel GetQueueChartModel(DateTime startDateUtc);
 
-        QueueChartModel GetQueueChartModel(DateTime startDate, IList<string> controllers);
+        QueueChartModel GetQueueChartModel(DateTime startDateUtc, IList<string> controllers);
 
         //QueueChartModel GetQueueChartModel(DateTime endDateTime, string controller);
 

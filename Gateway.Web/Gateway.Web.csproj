@@ -871,7 +871,6 @@
     <Content Include="Views\Controller\Documentation.cshtml" />
     <Content Include="Views\Shared\_BatchStates.cshtml" />
     <Content Include="Views\Shared\_StateItems.cshtml" />
-    <Content Include="Views\Shared\_ControllerStateItems.cshtml" />
     <Content Include="Views\Shared\_ServiceItems.cshtml" />
     <Content Include="Views\Shared\_AllServiceItems.cshtml" />
     <Content Include="Views\Request\Cube.cshtml" />
@@ -907,6 +906,7 @@
     <Content Include="Views\Schedule\Partials\_Schedule.cshtml" />
     <Content Include="Views\RequestSchedule\Create.cshtml" />
     <Content Include="Views\ExecutableSchedule\Create.cshtml" />
+    <Content Include="Views\Home\_IndexNav.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />

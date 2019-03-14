@@ -15,6 +15,7 @@ using System.Web.Mvc;
 using System.Web.Services.Description;
 using Bagl.Cib.MIT.IoC;
 using Bagl.Cib.MIT.Redis.Caching;
+using Gateway.Web.Models.Controllers;
 
 namespace Gateway.Web.Controllers
 {
@@ -46,110 +47,10 @@ namespace Gateway.Web.Controllers
         [OutputCache(Duration = 60, VaryByParam = "none")]
         public async Task<ActionResult> Index(string sortOrder)
         {
-            if (string.IsNullOrEmpty(sortOrder))
-            {
-                Session.RegisterLastHistoryLocation(Request.Url);
-                sortOrder = "time_desc";
-            }
-
-            ViewBag.SortColumn = sortOrder;
-            ViewBag.SortDirection = sortOrder.EndsWith("_desc") ? "" : "_desc";
-            ViewBag.Controller = "Home";
-            ViewBag.Action = "Index";
-
-            var reportDate = DateTime.Today;
-            var batchestask = _batchHelper.GetRiskBatchReportModel(reportDate, "All");
-
-
-            var servicetask = GetServiceStateAsync();
-            var databasetask = GetDatabaseStateAsync();
-            var serverDiagnosticstask = _serverDiagnosticsService.GetAsync();
-
-            Task[] tasks = { servicetask, databasetask, serverDiagnosticstask, batchestask };
-            Task.WaitAll(tasks);
-
-            var serverDiagnostics = serverDiagnosticstask.Result;
-
-            var controllers = _dataService.GetControllerStates(serverDiagnostics);
-
-            if (serverDiagnostics != null)
-                serverDiagnostics = FormatServerDiagnostics(serverDiagnostics);
-
+            var controllers = _dataService.GetControllerNames();
             var model = new IndexModel();
-            model.Controllers.AddRange(controllers);
-            model.Services.AddRange(servicetask.Result);
-            model.Databases.AddRange(databasetask.Result);
-            model.Batches.AddRange(batchestask.Result.Items);
-
-            if (serverDiagnostics != null)
-                model.Servers.AddRange(serverDiagnostics.Values);
-
-            Response.AddHeader("Refresh", "60");
+            model.Controllers.AddRange(controllers.OrderBy(c => c));
             return View("Index", model);
-        }
-
-        public async Task<List<ServiceState>> GetServiceStateAsync()
-        {
-            return await Task.Factory.StartNew(() =>
-            {
-                var servicestates = new List<ServiceState>();
-                servicestates.Add(new ServiceState("Deprecated", DateTime.Now, StateItemState.Okay, "Please refer to sigma-monitoring"));
-                return servicestates;
-            }).ConfigureAwait(false);
-        }
-
-        public async Task<List<DatabaseState>> GetDatabaseStateAsync()
-        {
-
-            var databases = _systemInformation
-                .GetSetting("Databases", "GatewayDatabase;PnRFODatabase;SndTradeDbDatabase;SigmaDatabase").Split(';')
-                .ToList();
-
-            return await Task.Factory.StartNew(() =>
-            {
-                var databaseStates = new List<DatabaseState>();
-
-                try
-                {
-                    foreach (var database in databases)
-                    {
-                        databaseStates.Add(_databaseStateProvider.GetDatabaseState(database));
-                    }
-                }
-                catch (Exception e)
-                {
-                    _logger.Error(e, "Unable to get database statuses");
-                }
-
-                return databaseStates;
-            }).ConfigureAwait(false);
-        }
-
-        public IDictionary<string, ServerDiagnostics> FormatServerDiagnostics(IDictionary<string, ServerDiagnostics> serverDiagnostics)
-        {
-            var result = new Dictionary<string, ServerDiagnostics>();
-            foreach (var serverDiagnostic in serverDiagnostics)
-            {
-                if (serverDiagnostic.Value == null)
-                {
-                    var diagnostics = new ServerDiagnostics()
-                    {
-                        ServerName = serverDiagnostic.Key,
-                        Workers = new List<WorkerStats>(),
-                        Requests = new List<RequestStats>(),
-                        CpuUtilization = 0,
-                        Available = false,
-                        MemoryUtilization = 0,
-                        Timestamp = DateTime.Now
-                    };
-                    result.Add(serverDiagnostic.Key, diagnostics);
-                    continue;
-                }
-
-                result.Add(serverDiagnostic.Key, serverDiagnostic.Value);
-            }
-
-            return result;
         }
 
         public ActionResult About()

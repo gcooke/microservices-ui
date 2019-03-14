@@ -1,65 +1,48 @@
 ﻿@using Gateway.Web.Models.Controller
+@using Gateway.Web.Models.Controllers
 @{
     ViewBag.Title = "Dashboard";
+    ViewBag.Current = "Quick Links";
 }
 @model Gateway.Web.Models.Home.IndexModel
-@section scripts
-{
-    <script>
-        //define your time in second
-        var c = 600;
-        var t;
-        timedCount();
+@{ Html.RenderPartial("_IndexNav"); }
 
-        function timedCount() {
+<div id="page-content-wrapper">
+    <div class="hero-unit">
 
-            var value = c % 600;
-            
-            $('.progressBar').val(value);
-            
-            if (c <= 0) {
-                // stop
-            } else {
-                c = c - 1;
-                t = setTimeout(function () {
-                    timedCount();
-                },
-                    100);
-            }
-        }
-    </script>
-}
-<div class="row">
+        <h3 class="text-lowercase">Controllers</h3>
 
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-4">
-                <h3 class="text-lowercase">Servers</h3>
-                @{ Html.RenderPartial("_FrameworkStateItems", @Model.Servers); }
-                <br />
-                <h3 class="text-lowercase">Services</h3>
-                @{ Html.RenderPartial("_StateItems", @Model.Services); }
-                <br />
-                <h3 class="text-lowercase">Databases</h3>
-                @{ Html.RenderPartial("_StateItems", @Model.Databases); }
-                <br />
-                <h3 class="text-lowercase">Refresh</h3>
-                <progress class="progressBar" max="600" value="600"></progress>
-            </div>
-            <div class="col-sm-4">
-                <h3 class="text-lowercase">
-                    <a href="@Url.Action("History", "Controllers")" class="hoverlink" style="color: #990505">
-                        Controllers
-                    </a>
-                </h3>
-                @{ Html.RenderPartial("_ControllerStateItems", @Model.Controllers); }
-            </div>
-            <div class="col-sm-4">
-                <h3 class="text-lowercase"><a href="/Monitoring/RiskBatches">Batches</a></h3>
-                @{ Html.RenderPartial("_BatchStatesSummary", @Model.Batches); }
-            </div>
-        </div>
-       
-
+        <br style="clear:both" />
+        <table style="width: 100%; white-space: nowrap" class="datatable table" id="searchable-table">
+            <thead>
+                <tr>
+                    <td><b>Controllers</b></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="form-group">
+                            <input class="form-control col-sm-11"
+                                   placeholder="search the requests below..."
+                                   data-input="quick-search"
+                                   data-search-target="#searchable-table tbody > tr"
+                                   name="quick-search"
+                                   type="text">
+                            <span class="col-sm-1 form-control-feedback form-action-clear glyphicon glyphicon-remove form-control input-group-addon"
+                                  aria-hidden="true"></span>
+                        </div>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var controller in Model.Controllers)
+                {
+                    //~/ Controller / Dashboard / @controller.Name
+                    <tr data-href="@(Url.Action("History", "Controller", new {id = controller}))">
+                        <td>@controller</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <br />
     </div>
 </div>

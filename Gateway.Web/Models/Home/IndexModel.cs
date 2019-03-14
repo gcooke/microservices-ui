@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using Gateway.Web.Controllers;
-using Gateway.Web.Database;
-using Gateway.Web.Models.Batches;
-using Gateway.Web.Models.Monitoring;
+using System.Linq;
+using Gateway.Web.Models.Controllers;
 
 namespace Gateway.Web.Models.Home
 {
@@ -10,21 +8,22 @@ namespace Gateway.Web.Models.Home
     {
         public IndexModel()
         {
-            Batches = new List<RiskBatchGroup>();
-            Services = new List<ServiceState>();
-            Databases = new List<DatabaseState>();
-            Controllers = new List<ControllerState>();
-            Servers = new List<ServerDiagnostics>();
+            Controllers = new List<string>();
         }
 
-        public List<RiskBatchGroup> Batches { get; private set; }
+        public IEnumerable<DashboardModel.NavigationCharacter> Characters
+        {
+            get
+            {
+                var list = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+                var contains = Controllers.Select(c => c[0]).Distinct().OrderBy(n => n);
+                foreach (var character in list)
+                {
+                    yield return new DashboardModel.NavigationCharacter(character, contains.Contains(character));
+                }
+            }
+        }
 
-        public List<ServiceState> Services { get; private set; }
-
-        public List<DatabaseState> Databases { get; private set; }
-
-        public List<ControllerState> Controllers { get; private set; }
-
-        public List<ServerDiagnostics> Servers { get; private set; }
+        public List<string> Controllers { get; private set; }
     }
 }

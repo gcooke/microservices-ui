@@ -1,0 +1,54 @@
+﻿<!-- Sidebar -->
+<div id="sidebar-wrapper">
+    <br />
+    <div style="margin-left: 10px; height: 50px">
+        <div style="float: left">
+            <img class="sidebar-img" src="@Url.Content(MvcApplication.ControllerIcon)" style="height: 48px">
+        </div>
+        <div style="float: left; margin-top: 5px">
+            <span class="sidebar-title">@ViewBag.Title</span><br />
+            <span class="sidebar-subtitle">@ViewBag.Current</span>
+        </div>
+    </div>
+
+    <div class="sidebar-navheader">
+        <strong>LINKS</strong>
+    </div>
+
+    <ul class="sidebar-nav">
+        <li>
+            <a href="~/Controllers/Dashboard/" class="active">
+                <span class="glyphicon glyphicon-th"></span>&nbsp;&nbsp;Controllers
+            </a>
+        </li>
+        <li>
+            <a href="~/Controllers/History/">
+                <span class="glyphicon glyphicon-search"></span>&nbsp;&nbsp;Recent Requests
+            </a>
+        </li>
+        <li>
+            <a href="~/Controllers/Queues/">
+                <span class="glyphicon glyphicon-stats"></span>&nbsp;&nbsp;Stats
+            </a>
+        </li>
+        <li>
+            <a href="~/Monitoring/RiskBatches/">
+                <span class="glyphicon glyphicon-tasks"></span>&nbsp;&nbsp;Risk Batches
+            </a>
+        </li>
+        <li>
+            <a href="~/Security/Groups/">
+                <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;&nbsp;Security
+            </a>
+        </li>
+        <li>
+            <a href="~/Support/Schedule/">
+                <span class="glyphicon glyphicon-gift"></span>&nbsp;&nbsp;Jobs
+            </a>
+        </li>
+        <li>
+            &nbsp;
+        </li>
+    </ul>
+</div>
+<!-- /#sidebar-wrapper -->
