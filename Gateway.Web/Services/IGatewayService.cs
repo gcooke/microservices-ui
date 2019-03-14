@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using Bagl.Cib.MSF.ClientAPI.Gateway;
-using Bagl.Cib.MSF.ClientAPI.Model;
+﻿using Bagl.Cib.MSF.ClientAPI.Model;
 using Gateway.Web.Models.AddIn;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Controllers;
 using Gateway.Web.Models.Group;
 using Gateway.Web.Models.MarketData;
-using Gateway.Web.Models.Monitoring;
 using Gateway.Web.Models.Request;
 using Gateway.Web.Models.Security;
 using Gateway.Web.Models.Shared;
 using Gateway.Web.Models.User;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Xml.Linq;
 using VersionsModel = Gateway.Web.Models.Controller.VersionsModel;
 
 namespace Gateway.Web.Services
@@ -101,11 +99,13 @@ namespace Gateway.Web.Services
         Models.Group.PortfoliosModel GetGroupPortfolios(long groupId);
 
         Models.Group.SitesModel GetGroupSites(long groupId);
+
         Models.Group.UsersModel GetGroupUsers(long groupId);
 
         string[] DeleteGroupSite(long id, long groupId);
 
         string[] InsertGroupSite(long groupId, long siteId);
+
         Task RetryWorkItemAsync(string correlationId);
 
         Models.Group.AddInsModel GetGroupAddIns(long groupId);
@@ -125,36 +125,45 @@ namespace Gateway.Web.Services
         string[] UpdateGroupBusinessFunction(string groupId, string businessFunctionId);
 
         #region User Security Configuration
+
         string[] RemoveUser(long id);
 
         string[] Create(UserModel model);
-        #endregion
+
+        #endregion User Security Configuration
 
         #region User Group Security Configuration
+
         Models.User.UserModel GetUserGroups(long id);
 
         string[] InsertUserGroup(long userId, long groupId);
 
         string[] RemoveUserGroup(long userId, long groupId);
-        #endregion
+
+        #endregion User Group Security Configuration
 
         #region User Portfolio Security Configuration
+
         Models.User.PortfoliosModel GetUserPortfolios(long userId);
 
         string[] InsertUserPortfolio(long userId, long portfolioId);
 
         string[] RemoveUserPortfolio(long userId, long portfolioId);
-        #endregion
+
+        #endregion User Portfolio Security Configuration
 
         #region User Sites Security Configuration
+
         Models.User.SitesModel GetUserSites(long userId);
 
         string[] InsertUserSite(long userId, long siteId);
 
         string[] RemoveUserSite(long userId, long siteId);
-        #endregion
+
+        #endregion User Sites Security Configuration
 
         #region User Add In Version Security Configuration
+
         Models.User.AddInsModel GetUserAddInVersions(long userId);
 
         string[] DeleteUserAddInVersions(long userId, long addInVersionId);
@@ -165,26 +174,42 @@ namespace Gateway.Web.Services
 
         string[] InsertUserApplicationVersions(long groupId, ApplicationVersionModel version);
 
-        #endregion
+        #endregion User Add In Version Security Configuration
 
         #region Business Functions
+
         IEnumerable<BusinessFunction> GetBusinessFunctions();
+
         string[] Create(BusinessFunction model);
+
         string[] DeleteBusinessFunction(int id);
-        #endregion
+
+        #endregion Business Functions
 
         #region GroupTypes
+
         IEnumerable<GroupType> GetGroupTypes();
+
         string[] Create(GroupType model);
+
         string[] DeleteGroupType(int id);
-        #endregion
+
+        #endregion GroupTypes
 
         bool GenerateDocumentation(string id, string version);
+
         Task CancelWorkItemAsync(string correlationId);
+
         List<MonikerCheckResult> GetMonikers(string server, string query);
+
         Task<string> GetAsync(string gateway, string query);
+
         Task DeleteWorkersAsync();
+
         Task DeleteWorkersAsync(string controller);
+
         Task DeleteWorkerAsync(string controller, string version, string pid);
+
+        Task RequestWorkersAsync(string controller, string version, int instances);
     }
 }

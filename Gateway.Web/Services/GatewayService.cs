@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Web.Mvc;
-using System.Xml.Linq;
-using Bagl.Cib.MIT.IoC;
+﻿using Bagl.Cib.MIT.IoC;
 using Bagl.Cib.MIT.Logging;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
 using Bagl.Cib.MSF.ClientAPI.Model;
@@ -23,8 +14,14 @@ using Gateway.Web.Models.Shared;
 using Gateway.Web.Models.User;
 using Gateway.Web.Utils;
 using Newtonsoft.Json;
-using RestSharp.Deserializers;
-using StackExchange.Redis;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Web.Mvc;
+using System.Xml.Linq;
 using WebGrease.Css.Extensions;
 using ApplicationsModel = Gateway.Web.Models.Security.ApplicationsModel;
 using GroupsModel = Gateway.Web.Models.Security.GroupsModel;
@@ -1091,7 +1088,7 @@ namespace Gateway.Web.Services
             var query = string.Format("controllers/{0}/versions/{1}/documentation", id, version);
             var response = _gateway.Put<string, string>("Catalogue", query, string.Empty).Result;
 
-            if(!response.Successfull)
+            if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
 
             return true;
@@ -1238,7 +1235,23 @@ namespace Gateway.Web.Services
                 var response = await client.DeleteAsync(url);
                 response.EnsureSuccessStatusCode();
             }
+        }
 
+        public async Task RequestWorkersAsync(string controller, string version, int instances)
+        {
+            var gateway = _gateways.FirstOrDefault();
+            var query = $"worker/requestworker/{controller}/{version}/{instances}";
+            var url = string.Format("https://{0}:{1}/{2}", gateway, _port, query);
+
+            using (var client = new HttpClient(new HttpClientHandler
+            {
+                UseDefaultCredentials = true,
+                AllowAutoRedirect = true
+            }))
+            {
+                client.Timeout = _defaultRequestTimeout;
+                var response = await client.PostAsync(url, null);
+            }
         }
 
         private void PopulateAvailableSystems(PermissionsModel target)
@@ -1424,7 +1437,7 @@ namespace Gateway.Web.Services
             return result;
         }
 
-        //Needs to be reworked. 
+        //Needs to be reworked.
         public async Task CancelWorkItemAsync(string correlationId)
         {
             await Delete($"worker/cancel/{correlationId}");
@@ -1475,7 +1488,6 @@ namespace Gateway.Web.Services
             return new[] { response.Body ?? response.Message };
         }
     }
-    
 
     public class RemoteGatewayException : Exception
     {

@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Web.Mvc;
 
 namespace Gateway.Web.Models.Controller
 {
@@ -10,5 +10,7 @@ namespace Gateway.Web.Models.Controller
         }
 
         public List<ServiceInfoModel> Services { get; set; }
+
+        public IList<SelectListItem> Versions { get; set; }
     }
 }
