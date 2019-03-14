@@ -1,19 +1,19 @@
-﻿using System;
-using System.Globalization;
-using System.Web.Mvc;
+﻿using Bagl.Cib.MIT.IoC;
+using Bagl.Cib.MIT.Logging;
+using Bagl.Cib.MSF.ClientAPI.Gateway;
+using Gateway.Web.Authorization;
 using Gateway.Web.Database;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Services;
 using Gateway.Web.Utils;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
-using Bagl.Cib.MIT.IoC;
-using Bagl.Cib.MIT.Logging;
-using Bagl.Cib.MSF.ClientAPI.Gateway;
-using Gateway.Web.Authorization;
+using System.Web.Mvc;
 
 namespace Gateway.Web.Controllers
 {
@@ -120,7 +120,6 @@ namespace Gateway.Web.Controllers
             return Redirect("~/Controller/Documentation/" + id);
         }
 
-
         public FileResult Download(string id, string version, string type = "api")
         {
             if (type.ToLower() != "api" && type.ToLower() != "excel")
@@ -202,6 +201,7 @@ namespace Gateway.Web.Controllers
         {
             var model = new ServiceModel(id);
             model.Services = await _gateway.GetWorkersAsync(id);
+            model.Versions = _dataService.GetActiveVersions(id).Select(x => new SelectListItem { Text = x, Value = x }).OrderBy(ord => ord.Text).ToList();
             return View(model);
         }
 
@@ -292,6 +292,20 @@ namespace Gateway.Web.Controllers
             var data = _dataService.GetQueueChartModel(start, new List<string>(new[] { controllerName }));
 
             return Json(data.Data, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> RequestWorkers(FormCollection collection)
+        {
+            ModelState.Clear();
+
+            var controllerName = collection["_controllerName"];
+            var version = collection["_version"];
+            var instances = Convert.ToInt32(collection["_instances"]);
+
+            await _gateway.RequestWorkersAsync(controllerName, version, instances);
+            return Redirect($"~/Controller/Workers/{controllerName}");
         }
     }
 }
