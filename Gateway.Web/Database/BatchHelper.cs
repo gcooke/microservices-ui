@@ -33,7 +33,7 @@ namespace Gateway.Web.Database
             model.ShowOverwrittenResults = false;
 
             // Get data            
-            var cube = await GetRiskBatchReport(reportDate);
+            var cube = await GetRiskBatchReport(reportDate).ConfigureAwait(false);
 
             // Get list of sites (order descending in length so that matches are done correctly)
             var sites = AllCountries.Split(',').OrderByDescending(s => s.Length).ToArray();
@@ -89,7 +89,7 @@ namespace Gateway.Web.Database
 
             var report = string.Format("batch/{0:yyyyMMdd}/report", date);
             var request = new Get("ManagementInterface") { Query = report };
-            var response = await _gateway.Invoke<ICube>(request);
+            var response = await _gateway.Invoke<ICube>(request).ConfigureAwait(false);
 
             if (response.Successfull)
             {
