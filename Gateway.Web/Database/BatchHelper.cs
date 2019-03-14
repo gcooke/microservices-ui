@@ -58,7 +58,7 @@ namespace Gateway.Web.Database
                 runs.Remove(site);
 
                 // Add site runs to site group
-                foreach (var item in siteRuns)
+                foreach (var item in siteRuns.OrderBy(s => s.Started).ThenBy(s => s.Name))
                     group.Items.Add(item);
             }
 
@@ -116,23 +116,17 @@ namespace Gateway.Web.Database
             return result;
         }
 
-
         private RiskBatchResult GetOrAdd(Dictionary<string, List<RiskBatchResult>> lookup, string site, DateTime reportDate)
         {
             List<RiskBatchResult> list;
             if (!lookup.TryGetValue(site, out list))
             {
                 list = new List<RiskBatchResult>();
-                list.Add(new RiskBatchResult(site, reportDate));
                 lookup.Add(site, list);
             }
 
-            var target = list.LastOrDefault();
-            if (target == null || target.Completed > DateTime.MinValue)
-            {
-                target = new RiskBatchResult(site, reportDate);
-                list.Add(target);
-            }
+            var target = new RiskBatchResult(site, reportDate);
+            list.Add(target);
             return target;
         }
     }
