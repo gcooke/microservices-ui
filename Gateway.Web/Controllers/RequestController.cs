@@ -101,7 +101,9 @@ namespace Gateway.Web.Controllers
         public ActionResult Download(string correlationId, long payloadId)
         {
             var data = _dataService.GetPayload(payloadId);
-            return File(data.GetBytes(), "text/xml", string.Format("Payload_{0}.txt", payloadId));
+            var bytes = data.GetBytes();
+            var extension = data.GetExtension();
+            return File(bytes, "text/xml", string.Format("Payload_{0}.{1}", payloadId, extension));
         }
 
         public ActionResult DownloadCube(string correlationId, long payloadId)
