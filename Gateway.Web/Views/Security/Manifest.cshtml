@@ -1,0 +1,86 @@
+﻿@model Gateway.Web.Models.Security.ReportsModel
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "Security";
+    ViewBag.Current = Model.Name;
+    ViewBag.Report = Model.Name;
+}
+@{ Html.RenderPartial("_SecurityReportsNav", @Model); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+
+        <h3 class="text-lowercase">@Model.Title</h3>
+
+        <br />
+
+        <!-- Parameter Input -->
+        @if (Model.SupportsParameter)
+        {
+            using (Html.BeginForm("ShowReport", "Security", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                <div class="info-block">
+                    <div>
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+                        <!-- Hidden Id Field -->
+                        @Html.TextBox("_name", Model.Name, new { @class = "form-control", @style = "display:none" })
+
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label class="control-label">User</label>
+                                </div>
+                                <div class="col-md-4">
+                                    @Html.TextBox("_parameter", Model.Parameter, new { @class = "form-control" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-offset-2 col-md-4">
+                                <button class="btn btn-default btn-sm" type="submit" i="submit">
+                                    Show
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            <br />
+        }
+
+        <div class="containerx bulk">
+
+            @foreach (var table in Model.Tables)
+            {
+                <h4>@table.Title</h4>
+
+                <table style="width: 100%; white-space: nowrap" class="datatable">
+                    <thead>
+                        <tr>
+                            @foreach (string col in @table.Columns)
+                            {
+                                <td>@col</td>
+                            }
+                        </tr>
+                    </thead>
+                    @foreach (var row in table.Rows)
+                    {
+                        <tr>
+                            @foreach (string val in @row.Values)
+                            {
+                                <td>@val</td>
+                            }
+                        </tr>
+                    }
+                </table>
+                <br/>
+                <br />
+            }
+
+        </div>
+
+        <br />
+
+    </div>
+</div>

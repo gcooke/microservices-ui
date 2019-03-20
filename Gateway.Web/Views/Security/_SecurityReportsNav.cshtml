@@ -23,6 +23,12 @@
             </a>
         </li>
         <li>
+            <a href="~/Security/Manifest"
+               class="@(ViewBag.Report == "Manifest" ? "active" : "")">
+                <span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;Audit
+            </a>
+        </li>
+        <li>
             <a href="~/Security/Reports/EffectivePermissions/null"
                class="@(ViewBag.Report == "EffectivePermissions" ? "active" : "")">
                 <span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;Effective Permissions

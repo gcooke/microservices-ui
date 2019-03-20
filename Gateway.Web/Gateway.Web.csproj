@@ -569,6 +569,7 @@
     <Compile Include="Models\Security\GroupTypesModel.cs" />
     <Compile Include="Models\Security\LinkModel.cs" />
     <Compile Include="Models\Security\LinksModel.cs" />
+    <Compile Include="Models\Security\Manifest.cs" />
     <Compile Include="Models\ServerResource\ResourceConfigModel.cs" />
     <Compile Include="Models\ServerResource\ResourceConfigType.cs" />
     <Compile Include="Models\Shared\AddInModel.cs" />
@@ -632,6 +633,8 @@
     <Compile Include="Models\Batches\BatchConfigModel.cs" />
     <Compile Include="Services\Batches\BatchConfigDataService.cs" />
     <Compile Include="Services\DatabaseStateProvider.cs" />
+    <Compile Include="Services\IManifestService.cs" />
+    <Compile Include="Services\ManifestService.cs" />
     <Compile Include="Services\Schedule\BaseScheduleService.cs" />
     <Compile Include="Services\Schedule\Interfaces\IRequestConfigurationService.cs" />
     <Compile Include="Services\Schedule\Models\BaseScheduleParameters.cs" />
@@ -907,6 +910,7 @@
     <Content Include="Views\RequestSchedule\Create.cshtml" />
     <Content Include="Views\ExecutableSchedule\Create.cshtml" />
     <Content Include="Views\Home\_IndexNav.cshtml" />
+    <Content Include="Views\Security\Manifest.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />

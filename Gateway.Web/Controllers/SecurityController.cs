@@ -21,12 +21,14 @@ namespace Gateway.Web.Controllers
     {
         private readonly IGatewayService _gateway;
         private readonly IGatewayDatabaseService _database;
+        private readonly IManifestService _manifestService;
 
-        public SecurityController(IGatewayService gateway, ILoggingService loggingService, IGatewayDatabaseService database)
+        public SecurityController(IGatewayService gateway, ILoggingService loggingService, IGatewayDatabaseService database, IManifestService manifestService)
             : base(loggingService)
         {
             _gateway = gateway;
             _database = database;
+            _manifestService = manifestService;
         }
 
         public ActionResult Index()
@@ -82,6 +84,12 @@ namespace Gateway.Web.Controllers
             var model = _database.GetLinks();
             model.PopulateSelectionLists();
             return View("Links", model);
+        }
+
+        public ActionResult Manifest()
+        {
+            var model = _manifestService.GetReport();
+            return View("Manifest", model);
         }
 
         [Route("Security/Reports/{report}")]
