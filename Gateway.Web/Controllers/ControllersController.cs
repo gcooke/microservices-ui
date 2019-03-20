@@ -202,18 +202,33 @@ namespace Gateway.Web.Controllers
             return RedirectToAction("Workers");
         }
 
+
+        [RoleBasedAuthorize(Roles = "Security.Delete")]
+        public async Task<ActionResult> ShutdownWorkers(string controllername)
+        {
+            await _gateway.ShutdownWorkersAsync(controllername);
+            return Redirect($"~/Controller/Workers/{controllername}");
+        }
+
+        public async Task<ActionResult> ShutdownWorker(string controllername, string version, string pid)
+        {
+            await _gateway.ShutdownWorkerAsync(controllername, version, pid);
+            return Redirect($"~/Controller/Workers/{controllername}");
+        }
+
+
         [RoleBasedAuthorize(Roles = "Security.Delete")]
         public async Task<ActionResult> KillWorkers(string controllername)
         {
             await _gateway.DeleteWorkersAsync(controllername);
-            return RedirectToAction("Workers");
+            return Redirect($"~/Controller/Workers/{controllername}");
         }
 
         [RoleBasedAuthorize(Roles = "Security.Delete")]
         public async Task<ActionResult> KillWorker(string controllername, string version, string pid)
         {
             await _gateway.DeleteWorkerAsync(controllername, version,pid);
-            return RedirectToAction("Workers");
+             return Redirect($"~/Controller/Workers/{controllername}");
         }
 
         [HttpGet]
@@ -237,5 +252,7 @@ namespace Gateway.Web.Controllers
 
             return Json(data, JsonRequestBehavior.AllowGet);
         }
+
+
     }
 }

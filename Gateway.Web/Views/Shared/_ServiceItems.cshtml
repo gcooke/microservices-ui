@@ -14,18 +14,23 @@
             <div class="col-sm-2 text-center">Last Updated</div> 
             <div class="col-sm-2 text-center">In Progress</div>
             <div class="col-sm-offset-11">
-               
-                    <div class="col-sm-offset-3 col-sm-3">
-                        <a class="btn btn-default btn-xs glyphicon glyphicon-plus"
-                           data-target=".add-modal"
-                           data-toggle="modal"></a>
-                    </div>
-                    <div class="col-sm-3">
-                        <a href="~/Controllers/KillWorkers/?controllername=@Model.Name" title="Kill all workers" class="@(Model.Services != null ? "block" : "hidden")">
-                            <span class="btn btn-danger btn-xs glyphicon glyphicon-remove"></span>
-                        </a>
-                    </div>
-                
+
+                <div class="col-sm-3">
+                    <a class="btn btn-success btn-xs glyphicon glyphicon-plus" title="Request new workers"
+                       data-target=".add-modal"
+                       data-toggle="modal"></a>
+                </div>
+                <div class="col-sm-3">
+                    <a href="~/Controllers/ShutDownWorkers/?controllername=@Model.Name" title="Shutdown all workers" class="@(Model.Services != null ? "block" : "hidden")">
+                        <span class="btn btn-warning btn-xs glyphicon glyphicon-remove"></span>
+                    </a>
+                </div>
+                <div class="col-sm-3">
+                    <a href="~/Controllers/KillWorkers/?controllername=@Model.Name" title="Kill all workers" class="@(Model.Services != null ? "block" : "hidden")">
+                        <span class="btn btn-danger btn-xs glyphicon glyphicon-remove"></span>
+                    </a>
+                </div>
+
             </div>           
         </div>
 
@@ -40,10 +45,17 @@
                 <div class="col-sm-1 text-center">@item.Status</div>
                 <div class="col-sm-2 text-center">@item.LastUpdate</div>
                 <div class="col-sm-2 text-center">@item.InProgressId</div>
-                <div class="col-sm-offset-1">
-                    <a href="~/Controllers/KillWorker/?controllername=@item.Controller&version=@item.Version&pid=@item.PID">
-                        <small class="btn btn-danger btn-xs glyphicon glyphicon-remove pull-right"></small>
-                    </a>
+                <div class="col-sm-offset-11">
+                    <div class="col-sm-3 col-sm-offset-5">
+                        <a href="~/Controllers/ShutdownWorker/?controllername=@item.Controller&version=@item.Version&pid=@item.PID" title="Shutdown">
+                            <small class="btn btn-warning btn-xs glyphicon glyphicon-remove pull-right"></small>
+                        </a>
+                    </div>
+                    <div class="col-sm-3">
+                        <a href="~/Controllers/KillWorker/?controllername=@item.Controller&version=@item.Version&pid=@item.PID" title="Kill">
+                            <small class="btn btn-danger btn-xs glyphicon glyphicon-remove pull-right"></small>
+                        </a>
+                    </div>
                 </div>
             </div>
         }
