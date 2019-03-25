@@ -36,7 +36,7 @@ namespace Gateway.Web.Models.Schedule.Output
 
         public bool HasChildren => ChildrenCount > 0;
 
-        public int TimeTakenMs => (int) ((FinishedAt ?? DateTime.MinValue) - (StartedAt ?? DateTime.MinValue)).TotalMilliseconds;
+        public int TimeTakenMs => (int)((FinishedAt ?? DateTime.MinValue) - (StartedAt ?? DateTime.MinValue)).TotalMilliseconds;
 
         public string TimeTakenFormatted => TimeTakenMs.FormatTimeTaken();
 
@@ -47,6 +47,47 @@ namespace Gateway.Web.Models.Schedule.Output
         public string Name { get; set; }
 
         public string Key { get; set; }
+
+        public string RequestUrl { get; set; }
+
+        public string RequestSearchController
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(RequestUrl)) return string.Empty;
+
+                var start = RequestUrl.IndexOf("/api/", StringComparison.CurrentCultureIgnoreCase);
+                if (start <= 0) return string.Empty;
+
+                var url = RequestUrl.Substring(start + 5);
+                var end = url.IndexOf("/");
+                url = url.Substring(0, end);
+                return url;
+
+            }
+        }
+        public string RequestSearchString
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(RequestUrl)) return string.Empty;
+
+                var start = RequestUrl.IndexOf("/api/", StringComparison.CurrentCultureIgnoreCase);
+                if (start <= 0) return string.Empty;
+
+                var url = RequestUrl.Substring(start + 5);
+                start = url.IndexOf("/");
+                url = url.Substring(start + 1);
+                start = url.IndexOf("/");
+                url = url.Substring(start + 1);
+                if (url.Contains("%"))
+                {
+                    start = url.IndexOf("%");
+                    url = url.Substring(0, start);
+                }
+                return url;
+            }
+        }
 
         public bool IsEnabled { get; set; }
 

@@ -18,11 +18,12 @@ namespace Gateway.Web.Services.Schedule.Utils
                 GroupName = schedule.ScheduleGroup?.Schedule,
                 Name = schedule.Name,
                 Key = schedule.Key,
+                RequestUrl = schedule.RequestConfiguration?.Url ?? string.Empty,
                 IsEnabled = schedule.IsEnabled ?? true,
                 IsBatch = schedule.RiskBatchScheduleId != null,
                 IsExe = schedule.ExecutableConfigurationId != null
             };
-
+            
             return task;
         }
     }

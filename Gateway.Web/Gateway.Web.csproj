@@ -391,6 +391,7 @@
     <Compile Include="ModelBindersConverters\ScheduleBatchModelBinder.cs" />
     <Compile Include="Models\AuthorizationModel.cs" />
     <Compile Include="Models\Schedule\Input\BaseScheduleModel.cs" />
+    <Compile Include="Models\Schedule\Output\CustomRunTask.cs" />
     <Compile Include="Models\Schedule\Output\ScheduleGroup.cs" />
     <Compile Include="Models\Schedule\Output\ScheduleStatus.cs" />
     <Compile Include="Models\Schedule\Output\ScheduleTask.cs" />
@@ -911,6 +912,7 @@
     <Content Include="Views\ExecutableSchedule\Create.cshtml" />
     <Content Include="Views\Home\_IndexNav.cshtml" />
     <Content Include="Views\Security\Manifest.cshtml" />
+    <Content Include="Views\Schedule\RunCustom.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />
