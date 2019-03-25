@@ -1,0 +1,47 @@
+﻿@model Gateway.Web.Models.Schedule.Output.CustomRunTask
+
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "Configuration";
+    ViewBag.Current = "Schedule";
+}
+@{ Html.RenderPartial("_BatchConfigNav"); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+
+        <div class="row">
+            <div class="col-sm-6">
+                <h3 class="text-lowercase">
+                    @Model.Name
+                </h3>
+            </div>
+        </div>
+        
+        <br/>
+        <div class="row">
+            <div class="col-sm-12">
+                @using (@Html.BeginForm("RunCustomBatch", "Schedule", FormMethod.Post))
+                {
+                    <div class="form-group">
+                        @Html.Label("Custom Parameters")
+                        <small>Type the comma seperated list of counterparty SDS identifiers or portfolio names.</small>
+
+                        <!-- Hidden Field -->
+                        @Html.TextBox("_id", Model.ScheduleId, new { @class = "form-control", @style = "display:none" })
+                        @Html.TextBox("_businessDate", Model.BusinessDate, new { @class = "form-control", @style = "display:none" })
+
+                        <div class="input-group">                            
+                            @Html.TextBox("custom", "", new {@name = "custom", @class = "form-control", @style = "margin-top: 0 !important"})
+                        </div>
+                        <br />
+                        <button class="btn btn-default" type="submit" style="margin: 0 !important">
+                            Run Now <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+
+    </div>
+</div>

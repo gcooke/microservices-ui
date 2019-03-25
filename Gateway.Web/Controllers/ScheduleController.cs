@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.Routing;
 using Bagl.Cib.MIT.Logging;
+using Bagl.Cib.MSF.ClientAPI.Gateway;
+using Bagl.Cib.MSF.ClientAPI.Model;
+using Gateway.Web.Authorization;
 using Gateway.Web.Models.Schedule;
 using Gateway.Web.Models.Schedule.Input;
 using Gateway.Web.Models.Schedule.Output;
@@ -21,19 +25,23 @@ namespace Gateway.Web.Controllers
         private readonly IScheduleService<ScheduleBatchModel> _scheduleBatchService;
         private readonly IScheduleService<ScheduleWebRequestModel> _scheduleWebRequestService;
         private readonly IScheduleGroupService _scheduleGroupService;
+        private readonly IGateway _gateway;
 
         public ScheduleController(IScheduleDataService scheduleDataService,
             IBatchConfigDataService batchConfigDataService,
             IScheduleService<ScheduleBatchModel> scheduleBatchService,
             IScheduleService<ScheduleWebRequestModel> scheduleWebRequestService,
-            IScheduleGroupService scheduleGroupService, ILoggingService loggingService)
-            :base(loggingService)
+            IScheduleGroupService scheduleGroupService,
+            IGateway gateway,
+            ILoggingService loggingService)
+            : base(loggingService)
         {
             _scheduleDataService = scheduleDataService;
             _batchConfigDataService = batchConfigDataService;
             _scheduleBatchService = scheduleBatchService;
             _scheduleWebRequestService = scheduleWebRequestService;
             _scheduleGroupService = scheduleGroupService;
+            _gateway = gateway;
         }
 
         [HttpGet]
@@ -71,7 +79,7 @@ namespace Gateway.Web.Controllers
             var endDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
 
             var groups = _scheduleGroupService.GetGroups(startDate, endDate, searchTerm);
-            var model = new ScheduleGroupModel {Groups = groups, SearchTerm = searchTerm};
+            var model = new ScheduleGroupModel { Groups = groups, SearchTerm = searchTerm };
 
             foreach (var group in model.Groups)
             {
@@ -148,6 +156,37 @@ namespace Gateway.Web.Controllers
         public void RerunTask(long id, DateTime businessDate)
         {
             _scheduleDataService.RerunTask(id, businessDate);
+        }
+
+        [HttpGet]
+        [Route("RunCustom/{id}/{businessDate}")]
+        public ActionResult RunCustom(long id, DateTime businessDate)
+        {
+            var schedule = _scheduleDataService.GetScheduleTask(id);
+            var model = new CustomRunTask(schedule, businessDate);
+            return View("RunCustom", model);
+        }
+
+        [HttpPost]
+        [RoleBasedAuthorize(Roles = "Security.Modify")]
+        public ActionResult RunCustomBatch(FormCollection collection)
+        {
+            var id = long.Parse(collection["_id"]);
+            var valuationDate = DateTime.Parse(collection["_businessDate"]).ToString("yyyy-MM-dd");
+            var custom = collection["custom"];
+
+            if (string.IsNullOrEmpty(custom))
+                throw new InvalidOperationException("Custom run must have custom parameters");
+
+            // Invoke batch run with payload
+            var put = new Put("RiskBatch");
+            put.Query = $"Batch/Run/{id}/{valuationDate}";
+            put.SetBody(custom);
+            _gateway.Invoke<string>(put);
+
+            var route = new RouteValueDictionary();
+            route.Add("id", "riskbatch");
+            return RedirectToAction("History", "Controller", route);
         }
 
         [HttpGet]
