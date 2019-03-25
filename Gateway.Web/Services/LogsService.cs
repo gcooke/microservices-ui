@@ -196,7 +196,8 @@ namespace Gateway.Web.Services
             var startLine = "Processing Request " + correlationId;
             var endLine = "Completed request: " + correlationId;
 
-            var builder = new StringBuilder();
+            var lines = new List<string>();
+            var wasCut = false;
             using (var stream = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 var isRelevant = false;
@@ -207,8 +208,7 @@ namespace Gateway.Web.Services
                         var line = reader.ReadLine();
                         if (isRelevant)
                         {
-                            builder.Append(line);
-                            builder.AppendLine("<br/>");
+                            lines.Add(line);
 
                             // Check for end
                             if (line != null && line.IndexOf(endLine, StringComparison.CurrentCultureIgnoreCase) >= 0)
@@ -222,14 +222,25 @@ namespace Gateway.Web.Services
                             if (line != null && line.IndexOf(startLine, StringComparison.CurrentCultureIgnoreCase) >= 0)
                             {
                                 isRelevant = true;
-                                builder.Append(line);
-                                builder.AppendLine("<br/>");
+                                lines.Add(line);
                             }
+                        }
+
+                        if (lines.Count > 200)
+                        {
+                            wasCut = true;
+                            lines.RemoveAt(0);
                         }
                     }
                 }
             }
-            return builder.ToString();
+
+            if (wasCut)
+            {
+                lines.Insert(0, "Only last 200 lines shown...");
+                lines.Insert(1, "");
+            }
+            return string.Join("<br/>", lines);
         }
 
         private string GetGatewayLogRelevantContent(string file, string correlationId)
