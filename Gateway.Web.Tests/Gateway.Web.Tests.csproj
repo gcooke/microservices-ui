@@ -49,6 +49,7 @@
     <Reference Include="Bagl.Cib.MIT.Logging, Version=1.0.29.0, Culture=neutral, PublicKeyToken=6d1ad0679d79c706, processorArchitecture=MSIL">
       <HintPath>..\packages\Bagl.Cib.MIT.Logging.1.0.29\lib\net452\Bagl.Cib.MIT.Logging.dll</HintPath>
     </Reference>
+    <Reference Include="Bagl.Cib.MIT.RedisCore, Version=1.0.37.0, Culture=neutral, PublicKeyToken=null" />
     <Reference Include="Bagl.Cib.MIT.Scheduling, Version=1.0.8.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Bagl.Cib.MIT.Scheduling.1.0.8\lib\net452\Bagl.Cib.MIT.Scheduling.dll</HintPath>
     </Reference>
@@ -118,8 +119,8 @@
     <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\RestSharp.105.2.3\lib\net46\RestSharp.dll</HintPath>
     </Reference>
-    <Reference Include="StackExchange.Redis, Version=1.2.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\StackExchange.Redis.1.2.6\lib\net46\StackExchange.Redis.dll</HintPath>
+    <Reference Include="StackExchange.Redis, Version=2.0.0.0, Culture=neutral, PublicKeyToken=c219ff1ca8c2ce46, processorArchitecture=MSIL">
+      <HintPath>..\packages\StackExchange.Redis.2.0.519\lib\net461\StackExchange.Redis.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -221,6 +222,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Models\Security\UserSecurityTest.cs" />
+    <Compile Include="Services\LogsServiceTests.cs" />
     <Compile Include="Utils\ReportsModelExTests.cs" />
   </ItemGroup>
   <ItemGroup>
