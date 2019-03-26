@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Bagl.Cib.MIT.IO;
 using Bagl.Cib.MIT.Logging;
 using Bagl.Cib.MIT.Redis;
 using Bagl.Cib.MIT.Redis.Caching;
@@ -18,13 +19,18 @@ namespace Gateway.Web.Services
     {
         private readonly IGatewayDatabaseService _database;
         private readonly IRedisConnectionProvider _provider;
+        private readonly IFileService _fileService;
         private readonly RedisList _gatewaysList;
         private Summary _summary;
 
-        public LogsService(ILoggingService loggingService, IGatewayDatabaseService database, IRedisConnectionProvider provider)
+        public LogsService(ILoggingService loggingService,
+                           IGatewayDatabaseService database,
+                           IRedisConnectionProvider provider,
+                           IFileService fileService)
         {
             _database = database;
             _provider = provider;
+            _fileService = fileService;
             _gatewaysList = CreateRedisList(loggingService);
         }
 
@@ -154,36 +160,50 @@ namespace Gateway.Web.Services
             }
         }
 
-        private IEnumerable<Log> GetLogExtract(string correlationId, LogLocation location)
+        public IEnumerable<string> GetRelevantControllerLogFileNames(LogLocation location)
         {
             var fileLocation = string.Format(@"\\{0}\data\LogFiles\{1}\", location.Server, location.Controller);
-            var fileSearch = string.Format(@"*_{0}.log", location.Pid);
-            var rolledFileSearch = string.Format(@"*_{0}.*.log", location.Pid);
+            var fileSearch = string.Format(@"*_{0}.log.*", location.Pid);
+            var rolledDailyFileSearch = string.Format(@"*_{0}.log*.log", location.Pid);
 
+            var result = new List<string>();
+
+            foreach (var file in _fileService.GetFiles(fileLocation, fileSearch))
+            {
+                result.Add(file);
+            }
+
+            foreach (var file in _fileService.GetFiles(fileLocation, rolledDailyFileSearch))
+            {
+                result.Add(file);
+            }
+
+            return result.OrderByDescending(f => f);
+        }
+
+        private IEnumerable<Log> GetLogExtract(string correlationId, LogLocation location)
+        {
             var result = new List<Log>();
             try
             {
-                foreach (var file in Directory.GetFiles(fileLocation, fileSearch))
+                var isRelevant = false;
+                foreach (var file in GetRelevantControllerLogFileNames(location))
                 {
                     var item = new Log($"{location.Controller} logs");
                     item.Location = file;
-                    item.Content = GetControllerLogRelevantContent(file, correlationId);
+                    item.Content = GetControllerLogRelevantContent(file, correlationId, ref isRelevant);
                     if (!string.IsNullOrEmpty(item.Content))
                         result.Add(item);
                 }
-                foreach (var file in Directory.GetFiles(fileLocation, rolledFileSearch))
-                {
-                    var item = new Log($"{location.Controller} logs");
-                    item.Location = file;
-                    item.Content = GetControllerLogRelevantContent(file, correlationId);
-                    if (!string.IsNullOrEmpty(item.Content))
-                        result.Add(item);
-                }
+
+                // only take last result
+                while (result.Count > 1)
+                    result.RemoveAt(0);
             }
             catch (Exception ex)
             {
                 var item = new Log("Exception whilst retrieving logs");
-                item.Location = Path.Combine(fileLocation, fileSearch);
+                item.Location = string.Empty;
                 item.Content = ex.Message;
                 result.Add(item);
             }
@@ -191,16 +211,16 @@ namespace Gateway.Web.Services
             return result;
         }
 
-        private string GetControllerLogRelevantContent(string file, string correlationId)
+        private string GetControllerLogRelevantContent(string file, string correlationId, ref bool isRelevant)
         {
             var startLine = "Processing Request " + correlationId;
             var endLine = "Completed request: " + correlationId;
 
             var lines = new List<string>();
             var wasCut = false;
+
             using (var stream = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                var isRelevant = false;
                 using (var reader = new StreamReader(stream))
                 {
                     while (!reader.EndOfStream)
@@ -234,6 +254,9 @@ namespace Gateway.Web.Services
                     }
                 }
             }
+
+            for (int index = 0; index < lines.Count; index++)
+                lines[index] = lines[index].Replace("<", "&lt;").Replace(">", "&gt;");
 
             if (wasCut)
             {
@@ -284,7 +307,7 @@ namespace Gateway.Web.Services
             }
         }
 
-        private class LogLocation
+        public class LogLocation
         {
             public LogLocation(string server, string controller, string pid)
             {

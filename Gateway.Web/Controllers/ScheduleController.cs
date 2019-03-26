@@ -163,7 +163,14 @@ namespace Gateway.Web.Controllers
         public ActionResult RunCustom(long id, DateTime businessDate)
         {
             var schedule = _scheduleDataService.GetScheduleTask(id);
-            var model = new CustomRunTask(schedule, businessDate);
+            var previousBusinessDay = businessDate.AddDays(-1);
+            while (previousBusinessDay.DayOfWeek == DayOfWeek.Saturday ||
+                   previousBusinessDay.DayOfWeek == DayOfWeek.Sunday)
+            {
+                previousBusinessDay = previousBusinessDay.AddDays(-1);
+            }
+
+            var model = new CustomRunTask(schedule, previousBusinessDay);
             return View("RunCustom", model);
         }
 
