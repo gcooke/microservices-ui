@@ -22,8 +22,8 @@ namespace Gateway.Web.Tests.Utils
             var output = input.ConvertToReportTable();
 
             Assert.AreEqual(2, output.Columns);
-            Assert.AreEqual("Add-In", output.ColumnDefinitions[0]);
-            Assert.AreEqual("Version", output.ColumnDefinitions[1]);
+            Assert.AreEqual("Add-In", output.ColumnDefinitions[0].Name);
+            Assert.AreEqual("Version", output.ColumnDefinitions[1].Name);
             Assert.AreEqual(2, output.Rows);
             Assert.AreEqual("PnRLib", output[0, 0]);
             Assert.AreEqual("1.1.1", output[0, 1]);
