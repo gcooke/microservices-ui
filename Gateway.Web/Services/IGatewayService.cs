@@ -50,7 +50,7 @@ namespace Gateway.Web.Services
 
         Models.Security.ReportsModel GetSecurityReport(string name);
 
-        Models.Security.ReportsModel GetSecurityReport(string name, string parameter);
+        Models.Security.ReportsModel GetSecurityReport(string name, string parameterName, string parameter);
 
         Models.Group.GroupModel GetGroup(long id);
 

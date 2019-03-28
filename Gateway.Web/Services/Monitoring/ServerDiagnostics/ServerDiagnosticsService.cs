@@ -9,24 +9,24 @@ namespace Gateway.Web.Services.Monitoring.ServerDiagnostics
 {
     public class ServerDiagnosticsService : IServerDiagnosticsService
     {
-        private readonly IGatewayRestService _gatewayRestService;
+        private readonly IGateway _gatewayRestService;
 
-        public ServerDiagnosticsService(IGatewayRestService gatewayRestService)
+        public ServerDiagnosticsService(IGateway gatewayRestService)
         {
             _gatewayRestService = gatewayRestService;
         }
 
         public IDictionary<string, Models.Monitoring.ServerDiagnostics> Get()
         {
-            var response = _gatewayRestService.Get("diagnostics", "servers/monitoring/metrics");
+            var response = _gatewayRestService.Get<string>("diagnostics", "servers/monitoring/metrics").Result;
 
             if (!response.Successfull)
                 return new Dictionary<string, Models.Monitoring.ServerDiagnostics>();
 
-            if (response.Content == null)
+            if (response.Body == null)
                 return new Dictionary<string, Models.Monitoring.ServerDiagnostics>();
 
-            var payload = response.Content.GetPayloadAsString();
+            var payload = response.Body;
             return JsonConvert.DeserializeObject<Dictionary<string, Models.Monitoring.ServerDiagnostics>>(payload);
         }
 

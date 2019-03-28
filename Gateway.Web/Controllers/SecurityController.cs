@@ -19,6 +19,8 @@ namespace Gateway.Web.Controllers
     [RoleBasedAuthorize(Roles = "Security.View")]
     public class SecurityController : BaseController
     {
+        public static List<DynamicSecurityReport> DyanmicReports { get; } = new List<DynamicSecurityReport>();
+
         private readonly IGatewayService _gateway;
         private readonly IGatewayDatabaseService _database;
         private readonly IManifestService _manifestService;
@@ -92,6 +94,12 @@ namespace Gateway.Web.Controllers
             return View("Manifest", model);
         }
 
+        [Route("Security/Reports")]
+        public ActionResult Reports()
+        {
+            return View("Index");
+        }
+
         [Route("Security/Reports/{report}")]
         public ActionResult Reports(string report)
         {
@@ -99,11 +107,11 @@ namespace Gateway.Web.Controllers
             return View(model);
         }
 
-        [Route("Security/Reports/{report}/{*parameter}")]
-        public ActionResult Reports(string report, string parameter)
+        [Route("Security/Reports/{report}/{name}/{*parameter}")]
+        public ActionResult Reports(string report, string name, string parameter)
         {
             if (parameter == "null") parameter = null;
-            var model = _gateway.GetSecurityReport(report, parameter);
+            var model = _gateway.GetSecurityReport(report, name, parameter);
             return View(model);
         }
 
@@ -113,8 +121,9 @@ namespace Gateway.Web.Controllers
         {
             var name = collection["_name"];
             var parameter = collection["_parameter"];
+            var parameterName = collection["_parameterName"];
 
-            var route = string.Format("~/Security/Reports/{0}/{1}", name, parameter);
+            var route = string.Format("~/Security/Reports/{0}/{1}/{2}", name, parameterName, parameter);
             return Redirect(route);
         }
 

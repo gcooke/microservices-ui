@@ -104,3 +104,26 @@ h1, h2, h3, h4, h5, h6 {
     color: #990510;
 }
 
+/* Rotate Column Headers */
+
+th.rotate {
+    /* Something you can count on */
+    height: 140px;
+    white-space: nowrap;
+    background-color: #990505;
+    color: #FFF;
+    font-weight: bold;
+}
+
+th.rotate > div {
+    transform: 
+    /* Magic Numbers */
+             translate(25px, 51px)
+    /* 45 is really 360 - 45 */
+             rotate(315deg);
+    width: 30px;
+}
+th.rotate > div > span {
+    border-bottom: 0px solid #ccc;
+    padding: 5px 10px;
+}

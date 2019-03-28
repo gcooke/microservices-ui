@@ -4,12 +4,12 @@
     ViewBag.Title = "Market Data";
     ViewBag.Current = "Missing Monikers";
 }
-@{ Html.RenderPartial("_MarketDataNav"); }
+@{ Html.RenderPartial("~/Views/Security/_SecurityReportsNav.cshtml"); }
 
 @using (Html.BeginForm("MissingMonikersAction", "MarketData", FormMethod.Get))
 {
     <div style="margin-left: 250px; margin-top:15px">
-        <input style="width: 200px;" type="date" name="rundate" value="@Model.RunDate"/>
+        <input style="width: 200px;" type="date" name="rundate" value="@Model.RunDate" />
         <button class="btn btn-default" style="margin-top:-5px" type="submit" name="Go">Go</button>
     </div>
 }
@@ -26,12 +26,12 @@
                 @if (@Model.MissingMonikers.Where(x => !x.Success).Any())
                 {
                     foreach (var monikeritem in @Model.MissingMonikers.Where(x => !x.Success))
-                     {
-                         <tr>
-                             <td>@monikeritem.Moniker</td>
-                             <!--<td>@monikeritem.Success</td>-->
-                         </tr>
-                     }
+                    {
+                        <tr>
+                            <td>@monikeritem.Moniker</td>
+                            <!--<td>@monikeritem.Success</td>-->
+                        </tr>
+                    }
                 }
                 else
                 {
@@ -48,12 +48,12 @@
                 @if (@Model.MissingMonikers.Where(x => x.Success).Any())
                 {
                     foreach (var monikeritem in @Model.MissingMonikers.Where(x => x.Success))
-                     {
-                         <tr>
-                             <td>@monikeritem.Moniker</td>
-                             <!--<td>@monikeritem.Success</td>-->
-                         </tr>
-                     }
+                    {
+                        <tr>
+                            <td>@monikeritem.Moniker</td>
+                            <!--<td>@monikeritem.Success</td>-->
+                        </tr>
+                    }
                 }
                 else
                 {

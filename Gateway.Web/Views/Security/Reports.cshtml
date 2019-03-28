@@ -30,7 +30,7 @@
                         <div class="container-fluid">
                             <div class="row">
                                 <div class="col-md-2">
-                                    <label class="control-label">User</label>
+                                    <label class="control-label">@Model.ParameterName</label>
                                 </div>
                                 <div class="col-md-4">
                                     @Html.TextBox("_parameter", Model.Parameter, new { @class = "form-control" })
@@ -60,7 +60,14 @@
                         <tr>
                             @foreach (string col in @table.Columns)
                             {
-                                <td>@col</td>
+                                if (table.PivotColumnHeaders)
+                                {
+                                    <th class="rotate"><div><span>@col</span></div></th>
+                                }
+                                else
+                                {
+                                    <td>@col</td>
+                                }
                             }
                         </tr>
                     </thead>
@@ -74,7 +81,7 @@
                         </tr>
                     }
                 </table>
-                <br/>
+                <br />
                 <br />
             }
 

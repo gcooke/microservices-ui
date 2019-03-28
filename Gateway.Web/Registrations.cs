@@ -4,9 +4,7 @@ using Bagl.Cib.MIT.IoC;
 using Bagl.Cib.MIT.IO;
 using Bagl.Cib.MIT.IO.Impl;
 using Bagl.Cib.MIT.Logging;
-using Bagl.Cib.MIT.Logging.Impl;
 using Bagl.Cib.MIT.Redis;
-using Bagl.Cib.MSF.ClientAPI.Gateway;
 using Bagl.Cib.MSF.ClientAPI.Provider;
 using Gateway.Web.Database;
 using Gateway.Web.Models.Schedule.Input;
@@ -14,11 +12,9 @@ using Gateway.Web.Services;
 using Gateway.Web.Services.Batches;
 using Gateway.Web.Services.Batches.Interfaces;
 using StackExchange.Redis;
-using Gateway.Web.Services.Monitoring.RiskReports;
 using Gateway.Web.Services.Monitoring.ServerDiagnostics;
 using Gateway.Web.Services.Schedule;
 using Gateway.Web.Services.Schedule.Interfaces;
-using System.Web.Mvc;
 using Absa.Cib.JwtAuthentication.Extensions;
 using Absa.Cib.JwtAuthentication.Models;
 using Bagl.Cib.MIT.Redis.Caching;
@@ -140,7 +136,6 @@ namespace Gateway.Web
             information.RegisterType<IHttpClientProvider, HttpClientProvider>(Scope.Singleton);
 
             //Reset Services Registrations
-            information.RegisterType<IRiskReportMonitoringService, RiskReportMonitoringService>(Scope.ContainerSingleton);
             information.RegisterType<IGatewayService, GatewayService>(Scope.ContainerSingleton);
             information.RegisterType<IBasicRestService, BasicRestService>(Scope.ContainerSingleton);
             information.RegisterType<IServerDiagnosticsService, ServerDiagnosticsService>(Scope.ContainerSingleton);

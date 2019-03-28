@@ -14,9 +14,11 @@ using Bagl.Cib.MIT.Logging;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
 using CommonServiceLocator;
 using Gateway.Web.Authorization;
+using Gateway.Web.Controllers;
 using Gateway.Web.Database;
 using Gateway.Web.ModelBindersConverters;
 using Gateway.Web.Models.Schedule.Input;
+using Gateway.Web.Models.Security;
 using Gateway.Web.Services;
 using Gateway.Web.Services.Schedule.Utils;
 using Unity;
@@ -68,7 +70,7 @@ namespace Gateway.Web
             var authurl = $"https://{dns}";
 
             BatchRequestBuilderEx.AuthUrl = authurl;
-            BatchRequestBuilderEx.BaseUrl = information.GetSetting("redstonebaseurl", "https://abcap-foutils.intra.absa.co.za:7010/")+"Api/";
+            BatchRequestBuilderEx.BaseUrl = information.GetSetting("redstonebaseurl", "https://abcap-foutils.intra.absa.co.za:7010/") + "Api/";
             BatchRequestBuilderEx.AuthQuery = information.GetSetting("AuthQuery", "authorization/oauth/token");
 
             information.AddSetting("LocalGateway", dns);
@@ -96,13 +98,31 @@ namespace Gateway.Web
             var locator = new UnityServiceLocator(_container);
             ServiceLocator.SetLocatorProvider(() => locator);
             DependencyResolver.SetResolver(new UnityDependencyResolver(_container));
+
+            PopulateDynamicReports(information);
+        }
+
+        private void PopulateDynamicReports(ISystemInformation information)
+        {
+            var index = 1;
+            do
+            {
+                string value;
+                if (!information.TryGetSetting($"SecurityReport{index}", out value))
+                    break;
+
+                var report = new DynamicSecurityReport(value);
+                SecurityController.DyanmicReports.Add(report);
+                index++;
+
+            } while (true);
         }
 
         protected void Application_Error()
         {
             var ex = Server.GetLastError();
             var loggingService = ServiceLocator.Current.GetInstance<ILoggingService>();
-            loggingService.GetLogger(this).Error(ex,"Application Exception");
+            loggingService.GetLogger(this).Error(ex, "Application Exception");
             loggingService.GetLogger(this).Error(ex.InnerException, "Application InnerException");
         }
 

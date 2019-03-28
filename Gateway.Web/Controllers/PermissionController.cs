@@ -12,10 +12,10 @@ namespace Gateway.Web.Controllers
     public class PermissionController : BaseController
     {
         private readonly IGatewayService _gateway;
-        private readonly IGatewayRestService _gatewayRestService;
+        private readonly IGateway _gatewayRestService;
 
         public PermissionController(IGatewayService gateway,
-            IGatewayRestService gatewayRestService,
+            IGateway gatewayRestService,
             ILoggingService loggingService)
             : base(loggingService)
         {
@@ -42,10 +42,10 @@ namespace Gateway.Web.Controllers
             if (ModelState.IsValid)
             {
                 var query = string.Format("permissions/{0}", id);
-                var response = _gatewayRestService.Delete("Security", "latest", query, string.Empty);
+                var response = _gatewayRestService.Delete<string>("Security", query).Result;
                 if (!response.Successfull)
                 {
-                    ModelState.AddModelError("Remote", response.Content.Message);
+                    ModelState.AddModelError("Remote", response.Message);
                 }
             }
 

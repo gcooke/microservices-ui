@@ -566,6 +566,7 @@
     <Compile Include="Models\Request\RequestCount.cs" />
     <Compile Include="Models\Security\BusinessFunction.cs" />
     <Compile Include="Models\Security\BusinessFunctionsModel.cs" />
+    <Compile Include="Models\Security\DynamicSecurityReport.cs" />
     <Compile Include="Models\Security\GroupType.cs" />
     <Compile Include="Models\Security\GroupTypesModel.cs" />
     <Compile Include="Models\Security\LinkModel.cs" />
@@ -662,8 +663,6 @@
     <Compile Include="Services\IGatewayService.cs" />
     <Compile Include="Services\ILogsService.cs" />
     <Compile Include="Services\LogsService.cs" />
-    <Compile Include="Services\Monitoring\RiskReports\IRiskReportMonitoringService.cs" />
-    <Compile Include="Services\Monitoring\RiskReports\RiskReportMonitoringService.cs" />
     <Compile Include="Services\Monitoring\ServerDiagnostics\IServerDiagnosticsService.cs" />
     <Compile Include="Services\Monitoring\ServerDiagnostics\ServerDiagnosticsService.cs" />
     <Compile Include="Services\ProcessInformation.cs" />
@@ -898,9 +897,7 @@
     <Content Include="Views\Batch\Index.cshtml" />
     <Content Include="Views\Shared\_BatchConfigNav.cshtml" />
     <Content Include="Views\Batch\Delete.cshtml" />
-    <Content Include="Views\MarketData\Index.cshtml" />
     <Content Include="Views\MarketData\MissingMonikers.cshtml" />
-    <Content Include="Views\MarketData\_MarketDataNav.cshtml" />
     <Content Include="Views\ServerResource\Index.cshtml" />
     <Content Include="Views\ServerResource\_ServerResourcesNav.cshtml" />
     <Content Include="Views\BatchSchedule\Create.cshtml" />
@@ -913,6 +910,7 @@
     <Content Include="Views\Home\_IndexNav.cshtml" />
     <Content Include="Views\Security\Manifest.cshtml" />
     <Content Include="Views\Schedule\RunCustom.cshtml" />
+    <Content Include="Views\Security\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />
