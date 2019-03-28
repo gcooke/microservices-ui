@@ -22,20 +22,17 @@ namespace Gateway.Web.Controllers
     {
         private readonly IGatewayDatabaseService _dataService;
         private readonly IGatewayService _gateway;
-        private readonly IGatewayRestService _gatewayRestService;
         private readonly ISystemInformation _information;
 
         public ControllerController(
             IGatewayDatabaseService dataService,
             IGatewayService gateway,
-            IGatewayRestService gatewayRestService,
             ILoggingService loggingService,
             ISystemInformation information)
             : base(loggingService)
         {
             _dataService = dataService;
             _gateway = gateway;
-            _gatewayRestService = gatewayRestService;
             _information = information;
         }
 

@@ -31,7 +31,6 @@ namespace Gateway.Web.Controllers
         public HomeController(IGatewayDatabaseService dataService,
             IServerDiagnosticsService serverDiagnosticsService,
             ILoggingService loggingService,
-            IGatewayRestService gateway,
             IBatchHelper batchHelper,
             ISystemInformation systemInformation,
             IDatabaseStateProvider databaseStateProvider)

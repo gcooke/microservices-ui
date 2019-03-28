@@ -1,4 +1,5 @@
-﻿<!-- Sidebar -->
+﻿@using Gateway.Web.Controllers
+<!-- Sidebar -->
 <div id="sidebar-wrapper">
     <br />
     <div style="margin-left: 10px; height: 50px">
@@ -11,65 +12,71 @@
         </div>
     </div>
 
+    <!-- Built in Reports -->
     <div class="sidebar-navheader">
-        <strong>DETAILS</strong>
+        <strong>SYSTEM</strong>
     </div>
-
     <ul class="sidebar-nav">
-        <li>
-            <a href="~/Security/Reports/Audit"
-               class="@(ViewBag.Report == "Audit" ? "active" : "")">
-                <span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;Audit
-            </a>
-        </li>
         <li>
             <a href="~/Security/Manifest"
                class="@(ViewBag.Report == "Manifest" ? "active" : "")">
-                <span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;Manifest
+                <span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;Servers/Versions
             </a>
         </li>
         <li>
-            <a href="~/Security/Reports/EffectivePermissions/null"
-               class="@(ViewBag.Report == "EffectivePermissions" ? "active" : "")">
-                <span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;Effective Permissions
+            <a href="~/MarketData/MissingMonikersAction"
+               class="@(ViewBag.Report == "Missing Monikers" ? "active" : "")">
+                <span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;Market Data Report
             </a>
         </li>
-        <li>
-            <a href="~/Security/Reports/EffectivePortfolios/null"
-               class="@(ViewBag.Report == "EffectivePortfolios" ? "active" : "")">
-                <span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;Effective Portfolios
-            </a>
-        </li>
-        <li>
-            <a href="~/Security/Reports/EffectiveSites/null"
-               class="@(ViewBag.Report == "EffectiveSites" ? "active" : "")">
-                <span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;Effective Sites
-            </a>
-        </li>
-        <li>
-            <a href="~/Security/Reports/EffectiveVersions/null"
-               class="@(ViewBag.Report == "EffectiveVersions" ? "active" : "")">
-                <span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;Effective Versions
-            </a>
-        </li>
-        <li>
-            <a href="~/Security/Reports/AddInVersions"
-               class="@(ViewBag.Report == "AddInVersions" ? "active" : "")">
-                <span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;Version Report
-            </a>
-        </li>
-        <li>
-            <a href="~/Security/Reports/GroupReport"
-               class="@(ViewBag.Report == "GroupReport" ? "active" : "")">
-                <span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;Group Report
-            </a>
-        </li>
-        <li>
-            <a href="~/Security/Reports/SiteReport"
-               class="@(ViewBag.Report == "SiteReport" ? "active" : "")">
-                <span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;Site Report
-            </a>
-        </li>
+        @foreach (var report in SecurityController.DyanmicReports.Where(r => r.IsSystemReport))
+        {
+            <li>
+                @if (report.HasParameters)
+                {
+                    <a href="~/Security/Reports/@report.Report/@report.ParameterName/null"
+                       class="@(ViewBag.Report == @report.Report ? "active" : "")">
+                        <span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;@report.Name
+                    </a>
+                }
+                else
+                {
+                    <a href="~/Security/Reports/@report.Report"
+                       class="@(ViewBag.Report == @report.Report ? "active" : "")">
+                        <span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;@report.Name
+                    </a>
+                }
+            </li>
+        }
     </ul>
+
+    <!-- Dynamic Reports Loaded from Central Config -->
+    @foreach (var group in SecurityController.DyanmicReports.Where(r => !r.IsSystemReport).GroupBy(g => g.GroupName))
+    {
+        <div class="sidebar-navheader">
+            <strong>@group.Key</strong>
+        </div>
+        <ul class="sidebar-nav">
+            @foreach (var report in group)
+            {
+                <li>
+                    @if (report.HasParameters)
+                    {
+                        <a href="~/Security/Reports/@report.Report/@report.ParameterName/null"
+                           class="@(ViewBag.Report == @report.Report ? "active" : "")">
+                            <span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;@report.Name
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="~/Security/Reports/@report.Report"
+                           class="@(ViewBag.Report == @report.Report ? "active" : "")">
+                            <span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;@report.Name
+                        </a>
+                    }
+                </li>
+            }
+        </ul>
+    }
 </div>
 <!-- /#sidebar-wrapper -->

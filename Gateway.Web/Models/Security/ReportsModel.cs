@@ -24,6 +24,7 @@ namespace Gateway.Web.Models.Security
             get { return Name.AddWordspaces(); }
         }
 
+        public string ParameterName { get; set; }
         public string Parameter { get; set; }
         public bool SupportsParameter { get; set; }
         public List<ReportTable> Tables { get; private set; }
@@ -38,6 +39,7 @@ namespace Gateway.Web.Models.Security
             Columns = new List<string>();
         }
         public string Title { get; set; }
+        public bool PivotColumnHeaders { get; set; }
         public List<string> Columns { get; private set; }
         public List<ReportRows> Rows { get; private set; }
     }

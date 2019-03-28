@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Xml.Linq;
 using Bagl.Cib.MIT.IoC;
 using Bagl.Cib.MIT.Logging;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
@@ -25,7 +26,7 @@ namespace Gateway.Web.Controllers
     {
         private readonly IGatewayDatabaseService _dataService;
         private readonly IGatewayService _gateway;
-        private readonly IGatewayRestService _gatewayRestService;
+        private readonly IGateway _gatewayRestService;
         private readonly IBasicRestService _basicRestService;
         private readonly int _refreshPeriodInSeconds;
 
@@ -33,7 +34,7 @@ namespace Gateway.Web.Controllers
             ISystemInformation information,
             IGatewayDatabaseService dataService,
             IGatewayService gateway,
-            IGatewayRestService gatewayRestService,
+            IGateway gatewayRestService,
             ILoggingService loggingService,
             IBasicRestService basicRestService
             )
@@ -153,10 +154,10 @@ namespace Gateway.Web.Controllers
 
         private IEnumerable<AddInVersionModel> GetAddInVersions()
         {
-            var response = _gatewayRestService.Get("Security", "addins/versions", CancellationToken.None);
+            var response = _gatewayRestService.Get<XElement>("Security", "addins/versions").Result;
 
             return response.Successfull
-                ? response.Content.GetPayloadAsXElement().Deserialize<IEnumerable<AddInVersionModel>>()
+                ? response.Body.Deserialize<IEnumerable<AddInVersionModel>>()
                 : null;
         }
 

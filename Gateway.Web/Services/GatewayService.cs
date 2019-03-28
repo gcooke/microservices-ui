@@ -255,7 +255,7 @@ namespace Gateway.Web.Services
             return result;
         }
 
-        public ReportsModel GetSecurityReport(string name, string parameter)
+        public ReportsModel GetSecurityReport(string name, string parameterName, string parameter)
         {
             if (!string.IsNullOrEmpty(parameter))
             {
@@ -271,6 +271,7 @@ namespace Gateway.Web.Services
                     var model = element.Deserialize<ReportsModel>();
                     model.Name = name;
                     model.SupportsParameter = true;
+                    model.ParameterName = parameterName;
                     model.Parameter = parameter;
                     model.Tables.RemoveAll(t => t == null);
                     return model;
@@ -284,6 +285,7 @@ namespace Gateway.Web.Services
             var result = new ReportsModel();
             result.Name = name;
             result.SupportsParameter = true;
+            result.ParameterName = parameterName;
             result.Parameter = parameter;
             return result;
         }
