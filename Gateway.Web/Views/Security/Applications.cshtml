@@ -66,10 +66,10 @@
                             </a></td>
                     </tr>
                 </thead>
-                @foreach (var row in Model.ActiveItems.Rows)
+                @foreach (var row in Model.ActiveItems.GetRows())
                 {
                     <tr>
-                        @foreach (string val in row.Values)
+                        @foreach (string val in row.GetValues())
                         {
                             <td>@val</td>
                         }
