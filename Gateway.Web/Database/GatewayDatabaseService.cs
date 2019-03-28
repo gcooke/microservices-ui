@@ -7,6 +7,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Bagl.Cib.MIT.Cube;
 using Bagl.Cib.MIT.IoC;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Controllers;
@@ -343,14 +344,16 @@ namespace Gateway.Web.Database
             {
                 var rows = database.spGetUserReport(DateTime.Today.AddDays(-7));
                 var target = new UserRecentRequests();
-                var table = new ReportTable();
-                table.Title = "Recent Requests";
-                table.Columns.Add("User");
-                table.Columns.Add("Last Request");
-                table.Columns.Add("Last 60 Minutes");
-                table.Columns.Add("Last 24 Hours");
-                table.Columns.Add("Last 7 Days");
-                table.Columns.Add("Groups");
+
+                var table = new CubeBuilder()
+                    .AddColumn("User")
+                    .AddColumn("Last Request")
+                    .AddColumn("Last 60 Minutes")
+                    .AddColumn("Last 24 Hours")
+                    .AddColumn("Last 7 Days")
+                    .AddColumn("Groups")
+                    .Build();
+                table.SetAttribute("Title", "Recent Requests");
 
                 foreach (var row in rows)
                 {
@@ -359,23 +362,24 @@ namespace Gateway.Web.Database
 
                 foreach (var line in target.GetAll())
                 {
-                    var reportRow = new ReportRows();
                     var fulluser = line.User;
                     var user = fulluser;
                     if (fulluser.Contains("\\"))
                         user = user.Substring(fulluser.IndexOf("\\") + 1);
                     var link = string.Format("<a href='../../User/History?id=0&login={0}'>{1}</a>", fulluser, user);
 
-                    reportRow.Values.Add(link);
-                    reportRow.Values.Add(line.Latest.ToString("dd MMM HH:mm:ss"));
-                    reportRow.Values.Add(line.Total60Minutes.ToString());
-                    reportRow.Values.Add(line.Total24Hours.ToString());
-                    reportRow.Values.Add(line.Total7Days.ToString());
-                    reportRow.Values.Add(line.Groups);
-                    table.Rows.Add(reportRow);
+                    table.AddRow(new object[]
+                    {
+                        link,
+                        line.Latest.ToString("dd MMM HH:mm:ss"),
+                        line.Total60Minutes.ToString(),
+                        line.Total24Hours.ToString(),
+                        line.Total7Days.ToString(),
+                        line.Groups
+                    });
 
                 }
-                result.Tables.Add(table);
+                result.Add(table);
             }
             return result;
         }
@@ -595,7 +599,7 @@ namespace Gateway.Web.Database
                     var request = database.Requests.FirstOrDefault(r => r.CorrelationId == item.CorrelationId);
                     var response = database.Responses.FirstOrDefault(r => r.CorrelationId == item.CorrelationId);
 
-                    var summary = ModelEx.ToExtendedBatchSummary("Unknown",request, response);
+                    var summary = ModelEx.ToExtendedBatchSummary("Unknown", request, response);
                     summary.CalculationPricingRequestResults = pricingResults;
                     if (schedule != null)
                     {

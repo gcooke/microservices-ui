@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using Bagl.Cib.MIT.Cube;
 using Bagl.Cib.MIT.IoC;
 using Bagl.Cib.MIT.Logging;
 using Gateway.Web.Models.Security;
@@ -33,15 +34,15 @@ namespace Gateway.Web.Services
             var manifest = listing.Deserialize<Manifest>();
 
             // Extract server information
-            result.Tables.Add(ExtractServerTable(manifest));
+            result.Add(ExtractServerTable(manifest));
 
             // Extract controller versions
-            result.Tables.Add(ExtractControllerTable(manifest));
+            result.Add(ExtractControllerTable(manifest));
 
             return result;
         }
 
-        private ReportTable ExtractServerTable(Manifest manifest)
+        private ICube ExtractServerTable(Manifest manifest)
         {
             // Determine list of applicable servers
             var applicable = new List<Server>();
@@ -49,13 +50,14 @@ namespace Gateway.Web.Services
                 if (string.Equals(item.Environment, _information.EnvironmentName, StringComparison.CurrentCultureIgnoreCase))
                     applicable.Add(item);
 
-            var result = new ReportTable();
-            result.Title = "Assigned Services";
-            result.Columns.Add("Server");
-            result.Columns.Add("Type");
-            result.Columns.Add("Item");
-            result.Columns.Add("Version");
-
+            var result = new CubeBuilder()
+                .AddColumn("Server")
+                .AddColumn("Type")
+                .AddColumn("Item")
+                .AddColumn("Version")
+                .Build();
+            result.SetAttribute("Title", "Assigned Services");
+            
             foreach (var server in applicable.OrderBy(a => a.Name))
             {
                 var name = server.Name;
@@ -64,12 +66,13 @@ namespace Gateway.Web.Services
                     var version = manifest.Software.Websites.FirstOrDefault(w => string.Equals(w.Name, website.Name, StringComparison.CurrentCultureIgnoreCase)) ??
                                   manifest.Software.SinglePageApplication.FirstOrDefault(w => string.Equals(w.Name, website.Name, StringComparison.CurrentCultureIgnoreCase));
 
-                    var row = new ReportRows();
-                    row.Values.Add(name);
-                    row.Values.Add("Website");
-                    row.Values.Add(website.Name);
-                    row.Values.Add(version?.Version);
-                    result.Rows.Add(row);
+                    result.AddRow(new object[]
+                    {
+                        name,
+                        "Website",
+                        website.Name,
+                        version?.Version
+                    });
 
                     name = string.Empty;
                 }
@@ -78,13 +81,13 @@ namespace Gateway.Web.Services
                 {
                     var version = manifest.Software.WindowsServices.FirstOrDefault(w => string.Equals(w.Name, service.Name, StringComparison.CurrentCultureIgnoreCase));
 
-                    var row = new ReportRows();
-                    row.Values.Add(name);
-                    row.Values.Add("Service");
-                    row.Values.Add(service.Name);
-                    row.Values.Add(version?.Version);
-                    result.Rows.Add(row);
-
+                    result.AddRow(new object[]
+                    {
+                        name,
+                        "Service",
+                        service.Name,
+                        version?.Version
+                    });
                     name = string.Empty;
                 }
             }
@@ -92,30 +95,32 @@ namespace Gateway.Web.Services
             return result;
         }
 
-        private ReportTable ExtractControllerTable(Manifest manifest)
+        private ICube ExtractControllerTable(Manifest manifest)
         {
-            var result = new ReportTable();
-            result.Title = "Controller Versions";
-            result.Columns.Add("Controller");
-            result.Columns.Add("Alias");
-            result.Columns.Add("Version");
-
+            var table = new CubeBuilder()
+                .AddColumn("Controller")
+                .AddColumn("Alias")
+                .AddColumn("Version")
+                .Build();
+            table.SetAttribute("Title", "Controller versions");
+            
             foreach (var controller in manifest.Controllers.OrderBy(a => a.Name))
             {
                 var name = controller.Name;
                 foreach (var version in controller.versions)
                 {
-                    var row = new ReportRows();
-                    row.Values.Add(name);
-                    row.Values.Add(version.Alias);
-                    row.Values.Add(version.Name);
-                    result.Rows.Add(row);
+                    table.AddRow(new object[]
+                    {
+                        name,
+                        version.Alias,
+                        version.Name
+                    });
 
                     name = string.Empty;
                 }
             }
 
-            return result;
+            return table;
         }
 
         private string GetContent(string url)

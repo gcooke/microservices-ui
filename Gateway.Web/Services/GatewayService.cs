@@ -57,6 +57,8 @@ namespace Gateway.Web.Services
             var gateways = information.GetSetting("KnownGateways", GetDefaultKnownGateways(information.EnvironmentName));
             _gateways = gateways.Split(';');
 
+            //_gateway.SetGatewayUrlForService("Security", "http://localhost:7000/");
+
             _defaultClient = new Lazy<HttpClient>(() =>
             {
                 var handler = new HttpClientHandler
@@ -242,7 +244,6 @@ namespace Gateway.Web.Services
                 var element = response.Body;
                 var model = element.Deserialize<ReportsModel>();
                 model.Name = name;
-                model.Tables.RemoveAll(t => t == null);
                 return model;
             }
             catch (Exception ex)
@@ -273,7 +274,6 @@ namespace Gateway.Web.Services
                     model.SupportsParameter = true;
                     model.ParameterName = parameterName;
                     model.Parameter = parameter;
-                    model.Tables.RemoveAll(t => t == null);
                     return model;
                 }
                 catch (Exception ex)

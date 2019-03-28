@@ -1,25 +1,24 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
+using Bagl.Cib.MIT.Cube;
 using Gateway.Web.Models.Security;
 
 namespace Gateway.Web.Utils
 {
     public static class ReportsModelEx
     {
-        public static ReportTable ConvertToReportTable(this List<SelectListItem> input)
+        public static ICube ConvertToReportTable(this List<SelectListItem> input)
         {
-            var result = new ReportTable();
-
-            result.Columns.Add("Add-In");
-            result.Columns.Add("Version");
+            var result = new CubeBuilder()
+                .AddColumn("Add-In")
+                .AddColumn("Version")
+                .Build();
+            result.SetAttribute("Title", "");
 
             foreach (var item in input)
             {
-                var row = new ReportRows();
                 var values = item.Value.Split('|');
-                row.Values.Add(values[0]);
-                row.Values.Add(values[1]);
-                result.Rows.Add(row);
+                result.AddRow(values);
             }
             return result;
         }

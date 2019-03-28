@@ -21,21 +21,21 @@ namespace Gateway.Web.Tests.Utils
 
             var output = input.ConvertToReportTable();
 
-            Assert.AreEqual(2, output.Columns.Count);
-            Assert.AreEqual("Add-In", output.Columns[0]);
-            Assert.AreEqual("Version", output.Columns[1]);
-            Assert.AreEqual(2, output.Rows.Count);
-            Assert.AreEqual("PnRLib", output.Rows[0].Values[0]);
-            Assert.AreEqual("1.1.1", output.Rows[0].Values[1]);
-            Assert.AreEqual("PnRLib", output.Rows[1].Values[0]);
-            Assert.AreEqual("1.2.2", output.Rows[1].Values[1]);
+            Assert.AreEqual(2, output.Columns);
+            Assert.AreEqual("Add-In", output.ColumnDefinitions[0]);
+            Assert.AreEqual("Version", output.ColumnDefinitions[1]);
+            Assert.AreEqual(2, output.Rows);
+            Assert.AreEqual("PnRLib", output[0, 0]);
+            Assert.AreEqual("1.1.1", output[0, 1]);
+            Assert.AreEqual("PnRLib", output[1, 0]);
+            Assert.AreEqual("1.2.2", output[1, 1]);
         }
 
         private List<SelectListItem> GetAddInVersionReportModel()
         {
             var result = new List<SelectListItem>();
-            result.Add(new SelectListItem() { Value = "PnRLib|1.1.1"});
-            result.Add(new SelectListItem() { Value = "PnRLib|1.2.2"});
+            result.Add(new SelectListItem() { Value = "PnRLib|1.1.1" });
+            result.Add(new SelectListItem() { Value = "PnRLib|1.2.2" });
             return result;
         }
     }

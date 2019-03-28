@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Xml.Serialization;
+using Bagl.Cib.MIT.Cube;
 using Gateway.Web.Utils;
 
 namespace Gateway.Web.Models.Security
@@ -9,15 +11,31 @@ namespace Gateway.Web.Models.Security
     {
         public ReportsModel()
         {
-            Tables = new List<ReportTable>();
+            TablesList = new List<string>();
         }
 
-        public ReportsModel(string report) : this()
+        public ReportsModel(string title)
+            :this()
         {
-            Name = report;
+            Name = title;
         }
 
         public string Name { get; set; }
+
+        [XmlIgnore]
+        public IEnumerable<ICube> Tables
+        {
+            get
+            {
+                foreach (var item in TablesList)
+                {
+                    var bytes = Convert.FromBase64String(item);
+                    yield return CubeBuilder.FromBytes(bytes);
+                }
+            }
+        }
+
+        public List<string> TablesList { get; set; }
 
         public string Title
         {
@@ -27,30 +45,11 @@ namespace Gateway.Web.Models.Security
         public string ParameterName { get; set; }
         public string Parameter { get; set; }
         public bool SupportsParameter { get; set; }
-        public List<ReportTable> Tables { get; private set; }
-    }
 
-    [XmlType("Table")]
-    public class ReportTable
-    {
-        public ReportTable()
+        public void Add(ICube cube)
         {
-            Rows = new List<ReportRows>();
-            Columns = new List<string>();
+            var bytes = cube.ToBytes();
+            TablesList.Add(Convert.ToBase64String(bytes));
         }
-        public string Title { get; set; }
-        public bool PivotColumnHeaders { get; set; }
-        public List<string> Columns { get; private set; }
-        public List<ReportRows> Rows { get; private set; }
-    }
-
-    [XmlType("Row")]
-    public class ReportRows
-    {
-        public ReportRows()
-        {
-            Values = new List<string>();
-        }
-        public List<string> Values { get; private set; }
-    }
+    }    
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
+using Bagl.Cib.MIT.Cube;
 using Gateway.Web.Models.Shared;
 
 namespace Gateway.Web.Models.Security
@@ -18,7 +19,7 @@ namespace Gateway.Web.Models.Security
         }
 
         public List<ManifestModel> Items { get; private set; }
-        public ReportTable ActiveItems { get; set; }
+        public ICube ActiveItems { get; set; }
         public List<SelectListItem> Types { get; private set; }
         public List<SelectListItem> From { get; set; }
         public List<SelectListItem> To { get; set; }

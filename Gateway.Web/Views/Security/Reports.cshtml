@@ -53,28 +53,34 @@
 
             @foreach (var table in Model.Tables)
             {
-                <h4>@table.Title</h4>
+                <h4>@table.GetAttribute("Title")</h4>
 
                 <table style="width: 100%; white-space: nowrap" class="datatable">
                     <thead>
                         <tr>
-                            @foreach (string col in @table.Columns)
+                            @{ var pivot = bool.Parse((table.GetAttribute("PivotColumnHeaders") ?? "false").ToString()); }
+
+                            @foreach (var col in @table.ColumnDefinitions)
                             {
-                                if (table.PivotColumnHeaders)
+                                if (pivot)
                                 {
-                                    <th class="rotate"><div><span>@col</span></div></th>
+                                    <th class="rotate">
+                                        <div>
+                                            <span>@col.Name</span>
+                                        </div>
+                                    </th>
                                 }
                                 else
                                 {
-                                    <td>@col</td>
+                                    <td>@col.Name</td>
                                 }
                             }
                         </tr>
                     </thead>
-                    @foreach (var row in table.Rows)
+                    @foreach (var row in table.GetRows())
                     {
                         <tr>
-                            @foreach (string val in @row.Values)
+                            @foreach (string val in @row.GetValues())
                             {
                                 <td>@val</td>
                             }
