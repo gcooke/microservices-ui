@@ -17,21 +17,21 @@
 
             @foreach (var table in Model.Tables)
             {
-                <h4>@table.Title</h4>
+                <h4>@table.GetAttribute("Title")</h4>
 
                 <table style="width: 100%; white-space: nowrap" class="datatable">
                     <thead>
                         <tr>
-                            @foreach (string col in @table.Columns)
+                            @foreach (var col in @table.ColumnDefinitions)
                             {
-                                <td>@col</td>
+                                <td>@col.Name</td>
                             }
                         </tr>
                     </thead>
-                    @foreach (var row in table.Rows)
+                    @foreach (var row in table.GetRows())
                     {
                         <tr>
-                            @foreach (string val in @row.Values)
+                            @foreach (string val in @row.GetValues())
                             {
                                 <td>@Html.Raw(@val)</td>
                             }
