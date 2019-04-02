@@ -17,11 +17,6 @@ namespace Gateway.Web.Database
     
     public partial class GatewayEntities : DbContext
     {
-        public GatewayEntities(string connectionString)
-            : base(connectionString)
-        {
-        }
-    
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             throw new UnintentionalCodeFirstException();

@@ -257,9 +257,10 @@ namespace Gateway.Web.Database
                 PopulateFields(result, response);
                 result.CorrelationId = id;
 
-                if (result.EndUtc > DateTime.MinValue)
-                    result.WallClockTime = (result.EndUtc - result.StartUtc).ToString("h'h 'm'm 's's'");
-                foreach (var item in database.spGetRequestChildSummary(id))
+                var end = result.EndUtc > DateTime.MinValue ? result.EndUtc : DateTime.UtcNow;
+                result.WallClockTime = (end - result.StartUtc).ToString("h'h 'm'm 's's'");
+
+                foreach (var item in database.spGetRequestChildSummary(id).OrderBy(r => r.MinStartUtc))
                     result.Items.Add(item.ToModel());
             }
             return result;
