@@ -350,6 +350,7 @@
     <Compile Include="Database\ExecutableConfiguration.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
+    <Compile Include="Database\GatewayEntities.partial.cs" />
     <Compile Include="Database\IBatchHelper.cs" />
     <Compile Include="Database\RequestConfiguration.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
