@@ -19,39 +19,6 @@ namespace Gateway.Web.Utils
             _dayOfWeek = dayOfWeek;
         }
 
-        public string ToUtcCronExpression()
-        {
-            var hour = _hours;
-            int currentHours;
-
-            if (int.TryParse(_hours, out currentHours))
-            {
-                var utcHours = currentHours - 2;
-                if (utcHours < 0)
-                    utcHours = 24 + utcHours;
-                hour = $"{utcHours}";
-            }
-
-            return $"{_minute} {hour} {_dayOfMonth} {_month} {_dayOfWeek}";
-        }
-
-        public string FromUtcCronExpression()
-        {
-            var hour = _hours;
-            int currentHours;
-
-            if (int.TryParse(_hours, out currentHours))
-            {
-                var utcHours = currentHours + 2;
-                if (utcHours > 23)
-                    utcHours = 0 + (utcHours - 24);
-                hour = $"{utcHours}";
-            }
-
-            return $"{_minute} {hour} {_dayOfMonth} {_month} {_dayOfWeek}";
-        }
-
-
         public override string ToString()
         {
             return $"{_minute} {_hours} {_dayOfMonth} {_month} {_dayOfWeek}";
