@@ -11,7 +11,7 @@ namespace Gateway.Web.Services.Schedule.Utils
             return new ScheduleGroup
             {
                 GroupId = entity.GroupId,
-                Schedule = CronTabExpression.Parse(entity.Schedule).FromUtcCronExpression(),
+                Schedule = CronTabExpression.Parse(entity.Schedule).FromCronExpression(),
             };
         }
     }

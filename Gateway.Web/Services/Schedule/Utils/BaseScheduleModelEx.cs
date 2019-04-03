@@ -15,7 +15,7 @@ namespace Gateway.Web.Services.Schedule.Utils
                 .Select(x => new SelectListItem
                 {
                     Value = x.GroupId.ToString(),
-                    Text = CronExpressionDescriptor.ExpressionDescriptor.GetDescription(CronTabExpression.Parse(x.Schedule).FromUtcCronExpression())
+                    Text = CronExpressionDescriptor.ExpressionDescriptor.GetDescription(CronTabExpression.Parse(x.Schedule).FromCronExpression())
                 })
                 .ToList();
 
