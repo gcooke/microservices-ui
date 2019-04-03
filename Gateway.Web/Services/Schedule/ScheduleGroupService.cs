@@ -111,8 +111,7 @@ namespace Gateway.Web.Services.Schedule
                         .Where(GetSearchCriteria(searchTerm))
                         .Where(x => !x.Parent.HasValue);
 
-                    var localTimeCron = CronTabExpression.Parse(group.Schedule).FromCronExpression();
-                    var crontabSchedule = CrontabSchedule.Parse(localTimeCron);
+                    var crontabSchedule = CrontabSchedule.Parse(group.Schedule);
                     var occurrences = crontabSchedule
                         .GetNextOccurrences(startDate, endDate)
                         .ToList();
@@ -228,7 +227,7 @@ namespace Gateway.Web.Services.Schedule
                 if(name == null)
                     name = CronExpressionDescriptor.ExpressionDescriptor.GetDescription(cron);
 
-                cron = CronTabExpression.Parse(cron).ToCronExpression();
+                cron = CronTabExpression.Parse(cron).ToString();
 
                 if (entity != null)
                 {
