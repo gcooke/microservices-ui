@@ -1348,7 +1348,7 @@ namespace Gateway.Web.Services
                 yield return new SelectListItem
                 {
                     Text = string.Format("{0} - {1}", model.Application, model.Version),
-                    Value = string.Format("{0}|{1}|Application", model.Application, model.Version)
+                    Value = string.Format("{0}|{1}", model.Application, model.Version)
                 };
             }
         }
@@ -1384,7 +1384,7 @@ namespace Gateway.Web.Services
                 yield return new SelectListItem
                 {
                     Text = string.Format("{0} - {1}", model.AddIn, model.Version),
-                    Value = string.Format("{0}|{1}|Add-In", model.AddIn, model.Version)
+                    Value = string.Format("{0}|{1}", model.AddIn, model.Version)
                 };
             }
         }
