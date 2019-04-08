@@ -26,6 +26,7 @@
 
                         <!-- Hidden Id Field -->
                         @Html.TextBox("_name", Model.Name, new { @class = "form-control", @style = "display:none" })
+                        @Html.TextBox("_parameterName", Model.ParameterName, new { @class = "form-control", @style = "display:none" })
 
                         <div class="container-fluid">
                             <div class="row">
@@ -80,7 +81,7 @@
                     @foreach (var row in table.GetRows())
                     {
                         <tr>
-                            @foreach (string val in @row.GetValues())
+                            @foreach (object val in @row.GetValues())
                             {
                                 <td>@val</td>
                             }
