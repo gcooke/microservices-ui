@@ -11,6 +11,7 @@ using Bagl.Cib.MIT.IoC.Models;
 using Gateway.Web.Database;
 using Gateway.Web.Database;
 using Gateway.Web.Models.Interrogation;
+using Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues;
 using Gateway.Web.Services.Batches.Interrogation.Models;
 using Gateway.Web.Services.Batches.Interrogation.Services.BatchService;
 using Gateway.Web.Services.Batches.Interrogation.Services.IssueService;
@@ -73,10 +74,12 @@ namespace Gateway.Web.Services
                     {
                         var cube = CreateReportCube(batch, run);
                         var issueTrackersForBatch = _issueTrackerService.GetIssueTrackersForBatch(batch.BatchType);
+                        var context = new BatchInterrogationContext(run.CorrelationId, gatewayDb, pnrFoDb);
 
                         foreach (var issueTracker in issueTrackersForBatch)
                         {
-                            var issues = issueTracker.Identify(gatewayDb, pnrFoDb, batch);
+                            issueTracker.SetContext(context);
+                            var issues = issueTracker.Identify(gatewayDb, pnrFoDb, batch, run);
                             foreach (var issue in issues.IssueList)
                             {
                                 var description = issue.Description;

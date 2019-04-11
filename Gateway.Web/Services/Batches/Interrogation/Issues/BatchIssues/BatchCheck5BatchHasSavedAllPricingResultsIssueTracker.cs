@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Gateway.Web.Database;
 using Gateway.Web.Services.Batches.Interrogation.Attributes;
 using Gateway.Web.Services.Batches.Interrogation.Models;
@@ -10,107 +11,109 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
     [AppliesToBatch(Models.Enums.Batches.All)]
     public class BatchCheck5BatchHasSavedAllPricingResultsIssueTracker : BaseBatchIssueTracker
     {
-        public override Models.Issues Identify(GatewayEntities gatewayDb, Entities pnrFoDb, Batch item)
+        public override Models.Issues Identify(GatewayEntities gatewayDb, Entities pnrFoDb, Batch item, BatchRun run)
         {
             var issues = new Models.Issues();
 
-            var latestRun = item.ActualOccurrences.OrderByDescending(x => x.StartedAt).FirstOrDefault();
-            if (latestRun == null) return issues;
+            var requests = Context.RiskDataRequests.Value;
+            var responses = Context.RiskDataResponses.Value;
+            var expectedRequests = Context.PricingResponses.Value;
 
-            var correlationId = latestRun.CorrelationId;
+            CheckIfBatchSavedAnyData(issues, requests, responses, expectedRequests);
+            if (issues.IssueList.Any()) return issues;
+            CheckIfAllSuccessfulPricingRequestsHaveRiskDataRequest(issues, requests, responses, expectedRequests);
+            CheckIfAllRiskDataRequestsHaveCompleted(issues, requests, responses, expectedRequests);
 
-            var riskDataRequests = gatewayDb
-                .Requests
-                .Where(x => x.ParentCorrelationId == correlationId)
-                .Where(x => x.Controller.ToLower() == "riskdata")
-                .ToList();
+            return issues;
+        }
 
-            if (!riskDataRequests.Any())
+        private void CheckIfBatchSavedAnyData(Models.Issues issues, IList<Request> requests, IList<RequestResponse> responses, IList<RequestResponse> expectedRequests)
+        {
+            if (!requests.Any())
             {
+                var remediation = string.Empty;
+
+                if (expectedRequests.Any())
+                {
+                    var correlationIdList = expectedRequests.Select(x => x.Response.CorrelationId);
+                    var pricingRequests = string.Join(",", correlationIdList);
+                    remediation = $"The following pricing requests need to be saved:<br/>{pricingRequests}";
+                }
+                else
+                {
+                    remediation = "One of the following has potentially occurred:<br/>" +
+                                 "<ul>" +
+                                 "<li>The batch did not make any pricing requests.</li>" +
+                                 "<li>The batch made pricing requests but none of them completed.</li>" +
+                                 "</ul>" +
+                                 "<br/>" +
+                                 "If the first case is true, then the ENTIRE batch needs to be rerun. If the second " +
+                                 "case has occurred, then check why they haven't completed. If they are still running " +
+                                 "then wait for them to complete and check if the data saves (the logs are a good indication " +
+                                 "of whether the calculation is still running or not). If you have determined that the calculations " +
+                                 "are not doing anything (very unlikely), then you need to rerun the ENTIRE batch (consider environment reset).";
+                }
+
                 new IssueBuilder()
-                    .SetDescription("The latest run does not have any Pricing requests.")
+                    .SetDescription("The latest run does not have any Risk Data requests.")
                     .SetMonitoringLevel(MonitoringLevel.Error)
-                    .SetRemediation("Rerun the ENTIRE batch.")
+                    .SetRemediation(remediation)
                     .SetShouldContinueCheckingIssues(false)
                     .BuildAndAdd(issues);
-                return issues;
             }
+        }
 
-            var expectedRiskDataRequests = DetermineExpectedRiskDataRequestCount(gatewayDb, item);
-
-            if (riskDataRequests.Count < expectedRiskDataRequests)
+        private void CheckIfAllSuccessfulPricingRequestsHaveRiskDataRequest(Models.Issues issues, IList<Request> requests, IList<RequestResponse> responses, IList<RequestResponse> expectedRequests)
+        {
+            if (requests.Count < expectedRequests.Count)
             {
+                var remediation = "Rerun the batch only for those pricing requests that didn't make risk data requests.";
                 new IssueBuilder()
-                    .SetDescription($"The latest run has made {riskDataRequests.Count} risk data requests, but it should have made {expectedRiskDataRequests} risk data requests.")
+                    .SetDescription($"The latest run has made {requests.Count} risk data requests, but it should have made {expectedRequests.Count} risk data requests.")
                     .SetMonitoringLevel(MonitoringLevel.Error)
-                    .SetRemediation("Rerun the batch only for those pricing requests that didn't make risk data requests.")
+                    .SetRemediation(remediation)
                     .BuildAndAdd(issues);
             }
-            else if (riskDataRequests.Count > expectedRiskDataRequests)
+            else if (requests.Count > expectedRequests.Count)
             {
                 new IssueBuilder()
-                    .SetDescription($"The latest run has made {riskDataRequests.Count} risk data requests, which is more than the expected risk data request count ({expectedRiskDataRequests}).")
+                    .SetDescription($"The latest run has made {requests.Count} risk data requests, which is more than the expected risk data request count ({expectedRequests.Count}).")
                     .SetMonitoringLevel(MonitoringLevel.Warning)
+                    .SetRemediation("This isn't necessarily an issue, but this usually occurs when the database writes are slow. So you may want " +
+                                    "monitor the database performance.")
                     .BuildAndAdd(issues);
             }
             else
             {
                 new IssueBuilder()
-                    .SetDescription($"The latest run has made {riskDataRequests.Count} risk data requests, which matches the expected risk data request count ({expectedRiskDataRequests}).")
+                    .SetDescription($"The latest run has made {requests.Count} risk data requests, which matches the expected risk data request count ({expectedRequests.Count}).")
                     .SetMonitoringLevel(MonitoringLevel.Ok)
                     .BuildAndAdd(issues);
             }
+        }
 
-            var requestCorrelationIds = riskDataRequests.Select(y => y.CorrelationId).ToList();
-            var riskDataResponses = gatewayDb
-                .Responses
-                .Where(x => requestCorrelationIds.Contains(x.CorrelationId))
-                .ToList();
-
-            if (riskDataResponses.Count < riskDataRequests.Count)
+        private void CheckIfAllRiskDataRequestsHaveCompleted(Models.Issues issues, IList<Request> requests, IList<RequestResponse> responses, IList<RequestResponse> expectedRequests)
+        {
+            if (responses.Count < requests.Count)
             {
+                var requestsWithoutResponse = requests.Select(x => x.CorrelationId)
+                    .Where(x => !responses.Select(y => y.Response.CorrelationId).Contains(x))
+                    .ToList();
+                var list = string.Join(",", requestsWithoutResponse);
+
                 new IssueBuilder()
-                    .SetDescription($"The latest run only received {riskDataResponses.Count} risk data responses. This is less than the risk data requests that was made. Please investigate.")
+                    .SetDescription($"The latest run only received {responses.Count} risk data responses. This is less than the risk data requests that was made. The requests that didn't receive responses are {list}.")
                     .SetMonitoringLevel(MonitoringLevel.Error)
                     .SetRemediation("Rerun the batch only for those risk data requests that get responses.")
                     .BuildAndAdd(issues);
             }
-            else if (riskDataResponses.Count > riskDataRequests.Count)
+            else if(responses.Count == requests.Count)
             {
                 new IssueBuilder()
-                    .SetDescription($"The latest run has received {riskDataResponses.Count} risk data responses which is more than the number of risk data requests that was made ({riskDataRequests.Count}).")
-                    .SetMonitoringLevel(MonitoringLevel.Warning)
-                    .BuildAndAdd(issues);
-            }
-            else 
-            {
-                new IssueBuilder()
-                    .SetDescription($"The latest run has received {riskDataResponses.Count} risk data responses which equal to the number of risk data requests that was made ({riskDataRequests.Count}).")
+                    .SetDescription($"The latest run has received {responses.Count} risk data responses which equal to the number of risk data requests that was made ({requests.Count}).")
                     .SetMonitoringLevel(MonitoringLevel.Ok)
                     .BuildAndAdd(issues);
             }
-
-            return issues;
-        }
-
-        private int DetermineExpectedRiskDataRequestCount(GatewayEntities gatewayDb, Batch item)
-        {
-            var latestRun = item.ActualOccurrences.OrderByDescending(x => x.StartedAt).First();
-            var correlationId = latestRun.CorrelationId;
-
-            var pricingRequests = gatewayDb
-                .Requests
-                .Where(x => x.ParentCorrelationId == correlationId)
-                .Where(x => x.Controller.ToLower() == "pricing")
-                .ToList();
-
-            var requestCorrelationIds = pricingRequests.Select(y => y.CorrelationId).ToList();
-            var pricingResponses = gatewayDb
-                .Responses
-                .Where(x => requestCorrelationIds.Contains(x.CorrelationId))
-                .ToList();
-
-            return pricingResponses.Count;
         }
 
         public override int GetSequence()

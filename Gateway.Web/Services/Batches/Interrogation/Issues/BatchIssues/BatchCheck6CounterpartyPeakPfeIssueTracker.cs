@@ -5,10 +5,9 @@ using Gateway.Web.Services.Batches.Interrogation.Models;
 
 namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
 {
-    [AppliesToBatch(Models.Enums.Batches.CounterpartyPfe)]
     public class BatchCheck6CounterpartyPeakPfeIssueTracker : BaseBatchIssueTracker
     {
-        public override Models.Issues Identify(GatewayEntities gatewayDb, Entities pnrFoDb, Batch item)
+        public override Models.Issues Identify(GatewayEntities gatewayDb, Entities pnrFoDb, Batch item, BatchRun run)
         {
             var issues = new Models.Issues();
             return issues;

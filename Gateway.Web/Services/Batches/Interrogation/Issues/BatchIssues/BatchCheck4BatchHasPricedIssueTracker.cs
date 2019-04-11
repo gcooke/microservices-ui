@@ -10,20 +10,21 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
     [AppliesToBatch(Models.Enums.Batches.All)]
     public class BatchCheck4BatchHasPricedIssueTracker : BaseBatchIssueTracker
     {
-        public override Models.Issues Identify(GatewayEntities gatewayDb, Entities pnrFoDb, Batch item)
+        public override Models.Issues Identify(GatewayEntities gatewayDb, Entities pnrFoDb, Batch item, BatchRun run)
         {
             var issues = new Models.Issues();
 
-            var latestRun = item.ActualOccurrences.OrderByDescending(x => x.StartedAt).FirstOrDefault();
-            if (latestRun == null) return issues;
+            HasPricing(issues);
+            if (issues.IssueList.Any()) return issues;
+            HasExpectedPricingRequests(issues);
+            HasExpectedPricingResponses(issues);
 
-            var correlationId = latestRun.CorrelationId;
+            return issues;
+        }
 
-            var pricingRequests = gatewayDb
-                .Requests
-                .Where(x => x.ParentCorrelationId == correlationId)
-                .Where(x => x.Controller.ToLower() == "pricing")
-                .ToList();
+        private void HasPricing(Models.Issues issues)
+        {
+            var pricingRequests = Context.PricingRequests.Value;
 
             if (!pricingRequests.Any())
             {
@@ -33,12 +34,15 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
                     .SetRemediation("Check the logs for the risk batch request to determine why the pricing request was not made. In most cases you will need to rerun the ENTIRE batch.")
                     .SetShouldContinueCheckingIssues(false)
                     .BuildAndAdd(issues);
-                return issues;
             }
+        }
 
-            var expectedPricingRequests = DetermineExpectedPricingRequestCount(gatewayDb, item);
+        private void HasExpectedPricingRequests(Models.Issues issues)
+        {
+            var pricingRequests = Context.PricingRequests.Value;
+            var expectedPricingRequests = Context.PricingRequests.Value;
 
-            if (pricingRequests.Count != expectedPricingRequests)
+            if (pricingRequests.Count != expectedPricingRequests.Count)
             {
                 new IssueBuilder()
                     .SetDescription($"The latest run has made {pricingRequests.Count} pricing requests, but it should have made {expectedPricingRequests} pricing requests.")
@@ -49,16 +53,16 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
             else
             {
                 new IssueBuilder()
-                    .SetDescription($"The latest run has made {pricingRequests.Count} pricing requests, which matches the expected pricing request count ({expectedPricingRequests}).")
+                    .SetDescription($"The latest run has made {pricingRequests.Count} pricing requests, which matches the expected pricing request count ({expectedPricingRequests.Count}).")
                     .SetMonitoringLevel(MonitoringLevel.Ok)
                     .BuildAndAdd(issues);
             }
+        }
 
-            var requestCorrelationIds = pricingRequests.Select(y => y.CorrelationId).ToList();
-            var pricingResponses = gatewayDb
-                .Responses
-                .Where(x => requestCorrelationIds.Contains(x.CorrelationId))
-                .ToList();
+        private void HasExpectedPricingResponses(Models.Issues issues)
+        {
+            var pricingRequests = Context.PricingRequests.Value;
+            var pricingResponses = Context.PricingResponses.Value;
 
             if (pricingResponses.Count < pricingRequests.Count)
             {
@@ -75,25 +79,11 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
                     .SetMonitoringLevel(MonitoringLevel.Ok)
                     .BuildAndAdd(issues);
             }
-
-            return issues;
         }
 
         public override int GetSequence()
         {
             return 4;
-        }
-
-        private int DetermineExpectedPricingRequestCount(GatewayEntities gatewayDb, Batch item)
-        {
-            var latestRun = item.ActualOccurrences.OrderByDescending(x => x.StartedAt).First();
-            var correlationId = latestRun.CorrelationId;
-            var pricingRequests = gatewayDb
-                .Requests
-                .Where(x => x.ParentCorrelationId == correlationId)
-                .Where(x => x.Controller.ToLower() == "pricing")
-                .ToList();
-            return pricingRequests.Count;
         }
     }
 }

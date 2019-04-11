@@ -10,19 +10,29 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
     [AppliesToBatch(Models.Enums.Batches.All)]
     public class BatchCheck3BatchHasTradesIssueTracker : BaseBatchIssueTracker
     {
-        public override Models.Issues Identify(GatewayEntities gatewayDb, Entities pnrFoDb, Batch item)
+        public override Models.Issues Identify(GatewayEntities gatewayDb, Entities pnrFoDb, Batch item, BatchRun run)
         {
             var issues = new Models.Issues();
 
-            var latestRun = item.ActualOccurrences.OrderByDescending(x => x.StartedAt).FirstOrDefault();
-            if (latestRun == null) return issues;
+            HasTradeStoreRequest(issues);
+            if (issues.IssueList.Any()) return issues;
+            HasTradeStoreResponse(issues);
+            if (issues.IssueList.Any()) return issues;
+            HasTrades(issues);
+            if (issues.IssueList.Any()) return issues;
 
-            var correlationId = latestRun.CorrelationId;
+            var tradeStoreResponse = Context.TradeStoreResponse.Value;
+            new IssueBuilder()
+                .SetDescription($"The latest run has made a TradeStore request, received a response with {tradeStoreResponse.Response.Size} trade(s).")
+                .SetMonitoringLevel(MonitoringLevel.Ok)
+                .BuildAndAdd(issues);
 
-            var tradeStoreRequest = gatewayDb
-                .Requests
-                .Where(x => x.ParentCorrelationId == correlationId)
-                .FirstOrDefault(x => x.Controller.ToLower() == "tradestore");
+            return issues;
+        }
+
+        public void HasTradeStoreRequest(Models.Issues issues)
+        {
+            var tradeStoreRequest = Context.TradeStoreRequest.Value;
 
             if (tradeStoreRequest == null)
             {
@@ -32,13 +42,12 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
                     .SetRemediation("Rerun the ENTIRE batch.")
                     .SetShouldContinueCheckingIssues(false)
                     .BuildAndAdd(issues);
-                return issues;
             }
+        }
 
-            var tradeStoreResponse = gatewayDb
-                .Responses
-                .FirstOrDefault(x => x.CorrelationId == tradeStoreRequest.CorrelationId);
-
+        public void HasTradeStoreResponse(Models.Issues issues)
+        {
+            var tradeStoreResponse = Context.TradeStoreResponse.Value;
             if (tradeStoreResponse == null)
             {
                 new IssueBuilder()
@@ -47,10 +56,13 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
                     .SetRemediation("Rerun the ENTIRE batch.")
                     .SetShouldContinueCheckingIssues(false)
                     .BuildAndAdd(issues);
-                return issues;
             }
+        }
 
-            if (tradeStoreResponse.Size == 0)
+        public void HasTrades(Models.Issues issues)
+        {
+            var tradeStoreResponse = Context.TradeStoreResponse.Value;
+            if (tradeStoreResponse.Response.Size == 0)
             {
                 new IssueBuilder()
                     .SetDescription("The latest run has made a TradeStore request, received a response but the response has no trades.")
@@ -58,16 +70,9 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
                     .SetRemediation("Rerun the ENTIRE batch.")
                     .SetShouldContinueCheckingIssues(false)
                     .BuildAndAdd(issues);
-                return issues;
             }
-
-            new IssueBuilder()
-                .SetDescription($"The latest run has made a TradeStore request, received a response with {tradeStoreResponse.Size} trade(s).")
-                .SetMonitoringLevel(MonitoringLevel.Ok)
-                .BuildAndAdd(issues);
-
-            return issues;
         }
+
         public override int GetSequence()
         {
             return 3;
