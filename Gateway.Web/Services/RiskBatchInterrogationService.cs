@@ -34,7 +34,7 @@ namespace Gateway.Web.Services
 
         public void PopulateLookups(InterrogationModel model)
         {
-            using (var db = new GatewayEntities(ConnectionString))
+            using (var db = new GatewayEntities(_connectionString))
             {
                 var tradeSources = db
                     .RiskBatchSchedules

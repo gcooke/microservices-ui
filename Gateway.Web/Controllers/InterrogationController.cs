@@ -26,6 +26,7 @@ namespace Gateway.Web.Controllers
             model.TradeSource = tradeSource ?? model.TradeSource;
             model.BatchType = batchType ?? model.BatchType;
             model.ReportDateString = reportDateString ?? model.ReportDateString;
+            _service.Analyze(model);
             return View("RiskBatch", model);
         }
 
@@ -37,7 +38,7 @@ namespace Gateway.Web.Controllers
             model.ReportDate = DateTime.ParseExact(reportDateString, "yyyy-MM-dd", CultureInfo.CurrentUICulture);
 
             _service.PopulateLookups(model);
-            //_service.Analyze(model);
+            _service.Analyze(model);
 
             return View("RiskBatch", model);
         }
