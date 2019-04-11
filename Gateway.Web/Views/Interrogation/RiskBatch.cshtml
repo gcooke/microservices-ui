@@ -41,7 +41,31 @@
 
             @foreach (var table in Model.Report.Tables)
             {
-                <h4>@table.GetAttribute("Title")</h4>
+            <h4>
+                <a href="/Request/Summary?correlationId=@table.GetAttribute("CorrelationId")">@table.GetAttribute("BatchType") - @table.GetAttribute("TradeSource")</a>
+
+                @if (@table.GetAttribute("CurrentStatus") != null)
+                {
+                    if ((string)@table.GetAttribute("CurrentStatus") == "Succeeded")
+                    {
+                        <small style="color: green">@table.GetAttribute("CurrentStatus")</small>
+                    }
+                    else if ((string)@table.GetAttribute("CurrentStatus") == "Executing task...")
+                    {
+                        <small style="color: orange">@table.GetAttribute("CurrentStatus")</small>
+                    }
+                    else
+                    {
+                        <small style="color: red">@table.GetAttribute("CurrentStatus")</small>
+                    }
+                }
+
+                <br />
+                <small><b>Valuation Date:</b> @table.GetAttribute("ValuationDate")</small>
+                <small><b>Started At:</b> @table.GetAttribute("StartedAt")</small>
+                <small><b>Finished At:</b> @table.GetAttribute("FinishedAt")</small>
+            </h4>
+
 
                 <table style="width: 100%; white-space: normal" class="datatable">
                     <thead>
@@ -67,13 +91,13 @@
                     </thead>
                     @foreach (var row in table.GetRows())
                     {
-                        <tr>
-                            @foreach (object val in @row.GetValues())
+                    <tr>
+                        @foreach (object val in @row.GetValues())
+                        {
+                            if (val is int)
                             {
-                            <td>
-                                @if (val is int)
-                                {
-                                    switch ((MonitoringLevel)(int)val)
+                                <td style="min-width: 50px;">
+                                    @switch ((MonitoringLevel)(int)val)
                                     {
                                         case MonitoringLevel.Ok:
                                             <img src="~/Content/img/okay.png" width="24" alt="warning" />
@@ -87,14 +111,16 @@
                                             <img src="~/Content/img/error.png" width="24" alt="error" />
                                             break;
                                     }
-                                }
-                                else
-                                {
-                                    @Html.Raw(@val)
-                                }
-                            </td>
+                                </td>
                             }
-                        </tr>
+                            else
+                            {
+                                <td>
+                                    @Html.Raw(@val)
+                                </td>
+                            }
+                        }
+                    </tr>
                     }
                 </table>
                 <br />

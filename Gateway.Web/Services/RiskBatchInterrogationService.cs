@@ -11,6 +11,7 @@ using Bagl.Cib.MIT.IoC.Models;
 using Gateway.Web.Database;
 using Gateway.Web.Database;
 using Gateway.Web.Models.Interrogation;
+using Gateway.Web.Services.Batches.Interrogation.Models;
 using Gateway.Web.Services.Batches.Interrogation.Models.Enums;
 using Gateway.Web.Services.Batches.Interrogation.Services.BatchService;
 using Gateway.Web.Services.Batches.Interrogation.Services.IssueService;
@@ -71,54 +72,63 @@ namespace Gateway.Web.Services
             {
                 foreach (var batch in batches)
                 {
-                    var latestRun = batch.ActualOccurrences.OrderByDescending(x => x.StartedAt).FirstOrDefault();
-                    var batchLabel = $"{batch}";
-                    if (latestRun != null)
-                        batchLabel += $" [LATEST RUN = {latestRun.CorrelationId}]";
-
-                    var cube = CreateReportCube(batchLabel);
-                    var issueTrackersForBatch = _issueTrackerService.GetIssueTrackersForBatch(batch.BatchType);
-
-                    var count = 0;
-                    foreach (var issueTracker in issueTrackersForBatch)
+                    foreach (var run in batch.ActualOccurrences.OrderByDescending(x => x.StartedAt))
                     {
-                        foreach (var test in issueTracker.GetDescriptions())
-                            model.Tests.Add(test);
-                        var issues = issueTracker.Identify(model, gatewayDb, pnrFoDb, batch);
-                        foreach (var issue in issues.IssueList)
-                        {
-                            var description = issue.Description;
-                            if (issue.HasRemediation)
-                                description += "<br/><br/>REMEDIATION: " + issue.Remediation;
+                        var cube = CreateReportCube(batch, run);
+                        var issueTrackersForBatch = _issueTrackerService.GetIssueTrackersForBatch(batch.BatchType);
 
-                            if (issue.MonitoringLevel >= model.MinimumLevel)
+                        foreach (var issueTracker in issueTrackersForBatch)
+                        {
+                            var issues = issueTracker.Identify(gatewayDb, pnrFoDb, batch);
+                            foreach (var issue in issues.IssueList)
+                            {
+                                var description = issue.Description;
+                                if (issue.HasRemediation)
+                                    description += $"<br/><b>REMEDIATION: {issue.Remediation} </b>";
                                 cube.AddRow(new object[] { issue.MonitoringLevel, description });
+                            }
 
-                            count++;
+                            if (issues.IssueList.Any(x => !x.ShouldContinueCheckingIssues))
+                            {
+                                break;
+                            }
                         }
 
-                        if (issues.IssueList.Any(x => !x.ShouldContinueCheckingIssues))
-                        {
-                            break;
-                        }
+                        model.Report.Add(cube);
                     }
-
-                    if (cube.Rows == 0)
-                        cube.AddRow(new object[] { MonitoringLevel.Ok, $"Batch looks okay - {count} validation tests passed" });
-
-                    model.Report.Add(cube);
                 }
             }
         }
 
-        private ICube CreateReportCube(string title)
+        private ICube CreateReportCube(Batch batch, BatchRun run)
         {
             var cube = new CubeBuilder()
                 .AddColumn(" ", ColumnType.Int)
                 .AddColumn("Description")
                 .Build();
 
-            cube.SetAttribute("Title", title);
+            cube.SetAttribute("BatchType", batch.BatchType);
+            cube.SetAttribute("TradeSource", batch.TradeSource);
+            cube.SetAttribute("Site", batch.Site);
+            cube.SetAttribute("TradeSourceType", batch.TradeSourceType);
+
+            if (run.CorrelationId.HasValue)
+                cube.SetAttribute("CorrelationId", run.CorrelationId.Value.ToString());
+
+            if (run.ValuationDate.HasValue)
+                cube.SetAttribute("ValuationDate", run.ValuationDate.Value.ToString("yyyy-MM-dd"));
+
+            if (run.StartedAt.HasValue)
+                cube.SetAttribute("StartedAt", run.StartedAt.Value.ToString("yyyy-MM-dd hh:mm tt"));
+
+            if (run.FinishedAt.HasValue)
+                cube.SetAttribute("FinishedAt", run.FinishedAt.Value.ToString("yyyy-MM-dd hh:mm tt"));
+
+            if (!string.IsNullOrWhiteSpace(run.CurrentStatus))
+                cube.SetAttribute("CurrentStatus", run.CurrentStatus);
+            else
+                cube.SetAttribute("CurrentStatus", "Not Started");
+
             return cube;
         }
     }
