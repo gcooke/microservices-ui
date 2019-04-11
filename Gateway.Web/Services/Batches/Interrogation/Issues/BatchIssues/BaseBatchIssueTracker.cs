@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Gateway.Web.Database;
+﻿using System.Collections.Generic;
+using Gateway.Web.Database;
+using Gateway.Web.Models.Interrogation;
 using Gateway.Web.Services.Batches.Interrogation.Models;
 
 namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
@@ -12,6 +15,7 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
 
         public abstract Models.Issues Identify(GatewayEntities gatewayDb, Entities pnrFoDb, Batch item, BatchRun run);
 
+        public abstract IEnumerable<string> GetDescriptions();
         public abstract int GetSequence();
 
         public virtual void SetContext(BatchInterrogationContext context)

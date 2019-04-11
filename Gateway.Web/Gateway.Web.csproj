@@ -358,6 +358,9 @@
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\IPnRFODatabaseService.cs" />
+    <Compile Include="Database\LegalEntity.cs">
+      <DependentUpon>PnRFO.tt</DependentUpon>
+    </Compile>
     <Compile Include="Database\PnRFO.partial.cs" />
     <Compile Include="Database\PnRfoDatabaseService.cs" />
     <Compile Include="Database\PnRFO_Gateway.partial.cs" />
@@ -387,6 +390,9 @@
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\RiskCompressed.cs">
+      <DependentUpon>PnRFO.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\RiskType.cs">
       <DependentUpon>PnRFO.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\Schedule.cs">
@@ -781,6 +787,7 @@
     <Content Include="Content\img\header.dev.jpg" />
     <Content Include="Content\img\header.prod.jpg" />
     <Content Include="Content\img\header.uat.jpg" />
+    <Content Include="Content\img\okay.png" />
     <Content Include="Content\img\Redstone.DEV.png" />
     <Content Include="Content\img\Redstone.PROD.png" />
     <Content Include="Content\img\Redstone.UAT.png" />

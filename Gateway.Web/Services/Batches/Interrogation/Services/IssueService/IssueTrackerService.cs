@@ -19,15 +19,17 @@ namespace Gateway.Web.Services.Batches.Interrogation.Services.IssueService
                 .ToList();
 
             var issues = new List<BaseBatchIssueTracker>();
+            var name = batchName.Replace(".", "");
 
             foreach (var item in types)
             {
                 var attribute = item.GetCustomAttribute<AppliesToBatchAttribute>();
-                if (attribute.Batch.ToString().ToLower() != batchName.ToLower() &&
-                    attribute.Batch.ToString().ToLower() != Models.Enums.Batches.All.ToString().ToLower())
+
+                if (string.Equals(attribute.Batch.ToString(), name, StringComparison.CurrentCultureIgnoreCase) &&
+                    string.Equals(attribute.Batch.ToString(), "All", StringComparison.CurrentCultureIgnoreCase))
                     continue;
 
-                var issue = (BaseBatchIssueTracker) Activator.CreateInstance(item);
+                var issue = (BaseBatchIssueTracker)Activator.CreateInstance(item);
                 issues.Add(issue);
             }
 

@@ -2,7 +2,7 @@
 using Bagl.Cib.MIT.Cube;
 using Bagl.Cib.MIT.Cube.Impl;
 using Bagl.Cib.MIT.Cube.Utils;
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -13,6 +13,7 @@ using Gateway.Web.Database;
 using Gateway.Web.Models.Interrogation;
 using Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues;
 using Gateway.Web.Services.Batches.Interrogation.Models;
+using Gateway.Web.Services.Batches.Interrogation.Models.Enums;
 using Gateway.Web.Services.Batches.Interrogation.Services.BatchService;
 using Gateway.Web.Services.Batches.Interrogation.Services.IssueService;
 
@@ -50,7 +51,7 @@ namespace Gateway.Web.Services
                     .Select(x => x.RiskBatchConfiguration.Type)
                     .Distinct()
                     .ToList()
-                    .Select(x => new SelectListItem() { Value = x, Text = x});
+                    .Select(x => new SelectListItem() { Value = x, Text = x });
 
                 model.TradeSources.AddRange(tradeSources);
                 model.BatchTypes.AddRange(batchTypes);
@@ -60,6 +61,8 @@ namespace Gateway.Web.Services
         public void Analyze(InterrogationModel model)
         {
             model.Report.TablesList.Clear();
+            model.Tests.Clear();
+
             var batches = _batchService
                 .GetBatchesForDate(model)
                 .OrderBy(x => x.BatchType)
@@ -78,14 +81,18 @@ namespace Gateway.Web.Services
 
                         foreach (var issueTracker in issueTrackersForBatch)
                         {
+                            foreach (var test in issueTracker.GetDescriptions())
+                                model.Tests.Add(test);
                             issueTracker.SetContext(context);
                             var issues = issueTracker.Identify(gatewayDb, pnrFoDb, batch, run);
                             foreach (var issue in issues.IssueList)
                             {
                                 var description = issue.Description;
                                 if (issue.HasRemediation)
-                                    description += $"<br/><b>REMEDIATION: {issue.Remediation} </b>";
-                                cube.AddRow(new object[] { issue.MonitoringLevel, description });
+                                    description += "<br/><br/>REMEDIATION: " + issue.Remediation;
+
+                                if (issue.MonitoringLevel >= model.MinimumLevel)
+                                    cube.AddRow(new object[] { issue.MonitoringLevel, description });
                             }
 
                             if (issues.IssueList.Any(x => !x.ShouldContinueCheckingIssues))
@@ -93,6 +100,9 @@ namespace Gateway.Web.Services
                                 break;
                             }
                         }
+
+                        if (cube.Rows == 0)
+                            cube.AddRow(new object[] { MonitoringLevel.Ok, $"Batch looks okay - validation tests passed" });
 
                         model.Report.Add(cube);
                     }
