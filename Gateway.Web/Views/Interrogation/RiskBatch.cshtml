@@ -1,4 +1,5 @@
-﻿@model Gateway.Web.Models.Interrogation.InterrogationModel
+﻿@using Gateway.Web.Services.Batches.Interrogation.Models.Enums
+@model Gateway.Web.Models.Interrogation.InterrogationModel
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
     ViewBag.Title = "Interrogation";
@@ -34,6 +35,72 @@
                     }
                 </div>
             </div>
+        }
+        <br />
+
+        <div class="containerx bulk">
+
+            @foreach (var table in Model.Report.Tables)
+            {
+                <h4>@table.GetAttribute("Title")</h4>
+
+                <table style="width: 100%; white-space: normal" class="datatable">
+                    <thead>
+                        <tr>
+                            @{ var pivot = bool.Parse((table.GetAttribute("PivotColumnHeaders") ?? "false").ToString()); }
+
+                            @foreach (var col in @table.ColumnDefinitions)
+                            {
+                                if (pivot)
+                                {
+                                    <th class="rotate">
+                                        <div>
+                                            <span>@col.Name</span>
+                                        </div>
+                                    </th>
+                                }
+                                else
+                                {
+                                    <td>@col.Name</td>
+                                }
+                            }
+                        </tr>
+                    </thead>
+                    @foreach (var row in table.GetRows())
+                    {
+                        <tr>
+                            @foreach (object val in @row.GetValues())
+                            {
+                            <td>
+                                @if (val is int)
+                                {
+                                    switch ((MonitoringLevel)(int)val)
+                                    {
+                                        case MonitoringLevel.Ok:
+                                            break;
+                                        case MonitoringLevel.Info:
+                                            break;
+                                        case MonitoringLevel.Warning:
+                                            <img src="~/Content/img/warning.png" width="24" alt="warning" />
+                                            break;
+                                        case MonitoringLevel.Error:
+                                            <img src="~/Content/img/error.png" width="24" alt="error" />
+                                            break;
+                                    }
+                                }
+                                else
+                                {
+                                    @Html.Raw(@val)
+                                }
+                                </td>
+                            }
+                        </tr>
+                    }
+                </table>
+                <br />
+                <br />
+            }
+
         </div>
 
 

@@ -5,7 +5,7 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
 {
     public abstract class BaseBatchIssueTracker : IIssueTracker<Batch>
     {
-        public abstract Models.Issues Identify(GatewayEntities gatewayDb, Batch item);
+        public abstract Models.Issues Identify(GatewayEntities gatewayDb, Entities pnrFoDb, Batch item);
 
         public abstract int GetSequence();
     }

@@ -11,7 +11,7 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
     [AppliesToBatch(Models.Enums.Batches.All)]
     public class BatchCheck1BatchRanIssueTracker : BaseBatchIssueTracker
     {
-        public override Models.Issues Identify(GatewayEntities gatewayDb, Batch item)
+        public override Models.Issues Identify(GatewayEntities gatewayDb, Entities pnrFoDb, Batch item)
         {
             var issues = new Models.Issues();
 
