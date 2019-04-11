@@ -5,6 +5,7 @@ using Bagl.Cib.MIT.Logging;
 using Gateway.Web.Authorization;
 using Gateway.Web.Models.Interrogation;
 using Gateway.Web.Services;
+using Gateway.Web.Services.Batches.Interrogation.Models.Enums;
 
 namespace Gateway.Web.Controllers
 {
@@ -19,24 +20,25 @@ namespace Gateway.Web.Controllers
             _service = service;
         }
 
-        public ActionResult Index(string tradeSource, string batchType, string reportDateString)
+        public ActionResult Index(string tradeSource, string batchType, string reportDateString, string minimumLevelInput)
         {
             var model = new InterrogationModel();
             _service.PopulateLookups(model);
             model.TradeSource = tradeSource ?? model.TradeSource;
             model.BatchType = batchType ?? model.BatchType;
             model.ReportDateString = reportDateString ?? model.ReportDateString;
+            model.MinimumLevelInput = minimumLevelInput ?? model.MinimumLevelInput;
             _service.Analyze(model);
             return View("RiskBatch", model);
         }
 
-        public ActionResult Details(string tradeSource, string batchType, string reportDateString)
+        public ActionResult Details(string tradeSource, string batchType, string reportDateString, string minimumLevelInput)
         {
             var model = new InterrogationModel();
             model.TradeSource = tradeSource;
             model.BatchType = batchType;
             model.ReportDate = DateTime.ParseExact(reportDateString, "yyyy-MM-dd", CultureInfo.CurrentUICulture);
-
+            model.MinimumLevel = (MonitoringLevel) Enum.Parse(typeof(MonitoringLevel), minimumLevelInput);
             _service.PopulateLookups(model);
             _service.Analyze(model);
 
