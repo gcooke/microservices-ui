@@ -131,6 +131,8 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
                 .Requests
                 .Where(x => x.ParentCorrelationId == _correlationId)
                 .Where(x => x.Controller.ToLower() == "riskdata")
+                .Where(x => x.RequestType.ToLower() == "put")
+                .Where(x => x.Resource.ToLower() != "BatchSummary/Save")
                 .ToList();
         }
 

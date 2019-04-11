@@ -45,7 +45,7 @@
             @foreach (var table in Model.Report.Tables)
             {
             <h4>
-                <a href="/Request/Summary?correlationId=@table.GetAttribute("CorrelationId")">@table.GetAttribute("BatchType") - @table.GetAttribute("TradeSource")</a>
+                <a href="Request/Summary?correlationId=@table.GetAttribute("CorrelationId")">@table.GetAttribute("BatchType") - @table.GetAttribute("TradeSource")</a>
 
                 @if (@table.GetAttribute("CurrentStatus") != null)
                 {
