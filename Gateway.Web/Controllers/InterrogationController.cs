@@ -19,22 +19,25 @@ namespace Gateway.Web.Controllers
             _service = service;
         }
 
-        public ActionResult Index()
+        public ActionResult Index(string tradeSource, string batchType, string reportDateString)
         {
             var model = new InterrogationModel();
             _service.PopulateLookups(model);
+            model.TradeSource = tradeSource ?? model.TradeSource;
+            model.BatchType = batchType ?? model.BatchType;
+            model.ReportDateString = reportDateString ?? model.ReportDateString;
             return View("RiskBatch", model);
         }
 
-        public ActionResult Details(string tradeSource, string batch, string date)
+        public ActionResult Details(string tradeSource, string batchType, string reportDateString)
         {
             var model = new InterrogationModel();
             model.TradeSource = tradeSource;
-            model.BatchType = batch;
-            model.ReportDate = DateTime.ParseExact(date, "yyyy-MM-dd", CultureInfo.CurrentUICulture);
+            model.BatchType = batchType;
+            model.ReportDate = DateTime.ParseExact(reportDateString, "yyyy-MM-dd", CultureInfo.CurrentUICulture);
 
             _service.PopulateLookups(model);
-            _service.Analyze(model);
+            //_service.Analyze(model);
 
             return View("RiskBatch", model);
         }
