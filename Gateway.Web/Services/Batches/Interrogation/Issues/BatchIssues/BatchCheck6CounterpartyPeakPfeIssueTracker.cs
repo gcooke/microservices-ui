@@ -66,7 +66,7 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
                 if (pv[key] != 0 && !t1.ContainsKey(key))
                 {
                     if (builder.Length > 0)
-                        builder.Append(",");
+                        builder.Append(", ");
                     builder.Append($"{key}");
                     count++;
                 }
