@@ -23,7 +23,7 @@
             {
                 <a href="~/Interrogation?tradeSource=@tradeSource.Text&batchType=@Model.BatchType&reportDateString=@Model.ReportDateString"
                    title="@tradeSource.Text"
-                   class="@(ViewBag.Current == "Batch" ? "active" : "")">
+                   class="@(Model.TradeSource == @tradeSource.Text ? "active" : "")">
                     <span class="glyphicon glyphicon-th-list"></span>&nbsp;&nbsp; @tradeSource.Text.Truncate(20)
                 </a>
             }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using Gateway.Web.Database;
 using Gateway.Web.Services.Batches.Interrogation.Models;
@@ -13,7 +14,7 @@ namespace Gateway.Web.Services.Batches.Interrogation.Services.BatchService
             var runs = db
                 .ScheduledJobs
                 .Where(x => x.ScheduleId == schedule.ScheduleId)
-                .Where(x => x.StartedAt >= start && x.FinishedAt <= end)
+                .Where(x => x.StartedAt >= start && (x.FinishedAt == null || x.FinishedAt <= end))
                 .OrderByDescending(x => x.StartedAt);
 
             var batch = new Batch();
@@ -26,8 +27,9 @@ namespace Gateway.Web.Services.Batches.Interrogation.Services.BatchService
 
             foreach (var run in runs)
             {
+                var request = db.Requests.SingleOrDefault(x => x.CorrelationId == run.RequestId);
                 var batchRun = new BatchRun();
-                batchRun.ValuationDate = run?.BusinessDate;
+                batchRun.ValuationDate = GetBusinessDate(request?.Resource) ?? run?.BusinessDate.AddDays(-1);
                 batchRun.CorrelationId = run?.RequestId;
                 batchRun.StartedAt = run?.StartedAt;
                 batchRun.FinishedAt = run?.FinishedAt;
@@ -36,6 +38,22 @@ namespace Gateway.Web.Services.Batches.Interrogation.Services.BatchService
             }
 
             return batch;
+        }
+
+        private static DateTime? GetBusinessDate(string resource)
+        {
+            if (string.IsNullOrWhiteSpace(resource))
+                return null;
+
+            var resourceParts = resource.Split('/');
+            if (resourceParts.Length != 4)
+                return null;
+
+            DateTime businessDate;
+            if (DateTime.TryParseExact(resourceParts[3], "yyyy-MM-dd", CultureInfo.CurrentUICulture, DateTimeStyles.None, out businessDate ))
+                return businessDate;
+
+            return null;
         }
     }
 }
