@@ -781,6 +781,7 @@
     <Content Include="Content\img\header.dev.jpg" />
     <Content Include="Content\img\header.prod.jpg" />
     <Content Include="Content\img\header.uat.jpg" />
+    <Content Include="Content\img\okay.png" />
     <Content Include="Content\img\Redstone.DEV.png" />
     <Content Include="Content\img\Redstone.PROD.png" />
     <Content Include="Content\img\Redstone.UAT.png" />

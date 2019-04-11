@@ -89,6 +89,7 @@
                                     switch ((MonitoringLevel)(int)val)
                                     {
                                         case MonitoringLevel.Ok:
+                                            <img src="~/Content/img/okay.png" width="24" alt="warning" />
                                             break;
                                         case MonitoringLevel.Info:
                                             break;
@@ -104,7 +105,7 @@
                                 {
                                     @Html.Raw(@val)
                                 }
-                                </td>
+                            </td>
                             }
                         </tr>
                     }

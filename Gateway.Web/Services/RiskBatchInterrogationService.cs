@@ -6,6 +6,7 @@ using Bagl.Cib.MIT.IoC;
 using Bagl.Cib.MIT.IoC.Models;
 using Gateway.Web.Database;
 using Gateway.Web.Models.Interrogation;
+using Gateway.Web.Services.Batches.Interrogation.Models.Enums;
 using Gateway.Web.Services.Batches.Interrogation.Services.BatchService;
 using Gateway.Web.Services.Batches.Interrogation.Services.IssueService;
 
@@ -53,15 +54,20 @@ namespace Gateway.Web.Services
                     var cube = CreateReportCube(batchLabel);
                     var issueTrackersForBatch = _issueTrackerService.GetIssueTrackersForBatch(batch.BatchType);
 
+                    var count = 0;
                     foreach (var issueTracker in issueTrackersForBatch)
                     {
-                        var issues = issueTracker.Identify(gatewayDb, pnrFoDb, batch);
+                        var issues = issueTracker.Identify(model, gatewayDb, pnrFoDb, batch);
                         foreach (var issue in issues.IssueList)
                         {
                             var description = issue.Description;
                             if (issue.HasRemediation)
                                 description += "<br/><br/>REMEDIATION: " + issue.Remediation;
-                            cube.AddRow(new object[] { issue.MonitoringLevel, description });
+
+                            if (issue.MonitoringLevel >= model.MinimumLevel)
+                                cube.AddRow(new object[] { issue.MonitoringLevel, description });
+
+                            count++;
                         }
 
                         if (issues.IssueList.Any(x => !x.ShouldContinueCheckingIssues))
@@ -69,6 +75,9 @@ namespace Gateway.Web.Services
                             break;
                         }
                     }
+
+                    if (cube.Rows == 0)
+                        cube.AddRow(new object[] { MonitoringLevel.Ok, $"Batch looks okay - {count} validation tests passed" });
 
                     model.Report.Add(cube);
                 }
