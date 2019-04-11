@@ -24,7 +24,8 @@ namespace Gateway.Web.Services
             var result = new RiskBatchModel(batch, date);
             var actualDate = GetPreviousWorkDay(date);
 
-            if (!_interrogations.TryGetValue(batch, out var interrogation))
+            IInterrogation interrogation;
+            if (!_interrogations.TryGetValue(batch, out interrogation))
             {
                 interrogation = _fallback;
             }
