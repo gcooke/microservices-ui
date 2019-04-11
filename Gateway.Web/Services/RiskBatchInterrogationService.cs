@@ -79,13 +79,18 @@ namespace Gateway.Web.Services
 
                         foreach (var issueTracker in issueTrackersForBatch)
                         {
-                            var issues = issueTracker.Identify(gatewayDb, pnrFoDb, batch);
+                            foreach (var test in issueTracker.GetDescriptions())
+                                model.Tests.Add(test);
+
+                            var issues = issueTracker.Identify(model, gatewayDb, pnrFoDb, batch);
                             foreach (var issue in issues.IssueList)
                             {
                                 var description = issue.Description;
                                 if (issue.HasRemediation)
-                                    description += $"<br/><b>REMEDIATION: {issue.Remediation} </b>";
-                                cube.AddRow(new object[] { issue.MonitoringLevel, description });
+                                    description += "<br/><br/>REMEDIATION: " + issue.Remediation;
+
+                                if (issue.MonitoringLevel >= model.MinimumLevel)
+                                    cube.AddRow(new object[] { issue.MonitoringLevel, description });
                             }
 
                             if (issues.IssueList.Any(x => !x.ShouldContinueCheckingIssues))
@@ -93,6 +98,9 @@ namespace Gateway.Web.Services
                                 break;
                             }
                         }
+
+                        if (cube.Rows == 0)
+                            cube.AddRow(new object[] { MonitoringLevel.Ok, $"Batch looks okay - validation tests passed" });
 
                         model.Report.Add(cube);
                     }
