@@ -84,7 +84,7 @@ namespace Gateway.Web.Services
                             foreach (var test in issueTracker.GetDescriptions())
                                 model.Tests.Add(test);
                             issueTracker.SetContext(context);
-                            var issues = issueTracker.Identify(gatewayDb, pnrFoDb, batch, run);
+                            var issues = issueTracker.Identify(model, gatewayDb, pnrFoDb, batch, run);
                             foreach (var issue in issues.IssueList)
                             {
                                 var description = issue.Description;

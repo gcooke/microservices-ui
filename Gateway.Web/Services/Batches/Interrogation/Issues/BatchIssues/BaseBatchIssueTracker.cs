@@ -13,7 +13,7 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
     {
         private BatchInterrogationContext _context;
 
-        public abstract Models.Issues Identify(GatewayEntities gatewayDb, Entities pnrFoDb, Batch item, BatchRun run);
+        public abstract Models.Issues Identify(InterrogationModel model, GatewayEntities gatewayDb, Entities pnrFoDb, Batch item, BatchRun run);
 
         public abstract IEnumerable<string> GetDescriptions();
         public abstract int GetSequence();

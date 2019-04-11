@@ -9,7 +9,7 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues
 {
     public interface IIssueTracker<in T>
     {
-        Models.Issues Identify(GatewayEntities gatewayDb, Entities pnrFoDb, T item, BatchRun run);
+        Models.Issues Identify(InterrogationModel model, GatewayEntities gatewayDb, Entities pnrFoDb, T item, BatchRun run);
         IEnumerable<string> GetDescriptions();
         int GetSequence();
         void SetContext(BatchInterrogationContext context);

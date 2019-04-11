@@ -18,7 +18,7 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
             yield return "Check how many times the batch has run";
         }
 
-        public override Models.Issues Identify(InterrogationModel model, GatewayEntities gatewayDb, Entities pnrFoDb, Batch item)
+        public override Models.Issues Identify(InterrogationModel model, GatewayEntities gatewayDb, Entities pnrFoDb, Batch item, BatchRun run)
         {
             var issues = new Models.Issues();
 
