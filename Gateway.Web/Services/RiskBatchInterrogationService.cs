@@ -2,8 +2,13 @@
 using Bagl.Cib.MIT.Cube;
 using Bagl.Cib.MIT.Cube.Impl;
 using Bagl.Cib.MIT.Cube.Utils;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web.Mvc;
 using Bagl.Cib.MIT.IoC;
 using Bagl.Cib.MIT.IoC.Models;
+using Gateway.Web.Database;
 using Gateway.Web.Database;
 using Gateway.Web.Models.Interrogation;
 using Gateway.Web.Services.Batches.Interrogation.Models.Enums;
@@ -30,7 +35,25 @@ namespace Gateway.Web.Services
 
         public void PopulateLookups(InterrogationModel model)
         {
+            using (var db = new GatewayEntities(_connectionString))
+            {
+                var tradeSources = db
+                    .RiskBatchSchedules
+                    .Where(x => x.TradeSourceType == "Site")
+                    .Select(x => x.TradeSource)
+                    .Distinct()
+                    .ToList()
+                    .Select(x => new SelectListItem() { Value = x, Text = x });
 
+                var batchTypes = db.RiskBatchSchedules
+                    .Select(x => x.RiskBatchConfiguration.Type)
+                    .Distinct()
+                    .ToList()
+                    .Select(x => new SelectListItem() { Value = x, Text = x});
+
+                model.TradeSources.AddRange(tradeSources);
+                model.BatchTypes.AddRange(batchTypes);
+            }
         }
 
         public void Analyze(InterrogationModel model)

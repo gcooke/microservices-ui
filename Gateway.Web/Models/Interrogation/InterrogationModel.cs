@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Web.Mvc;
 using Gateway.Web.Models.Security;
 using Gateway.Web.Services.Batches.Interrogation.Models.Enums;
 
@@ -9,22 +10,25 @@ namespace Gateway.Web.Models.Interrogation
     {
         public InterrogationModel()
         {
-            BatchTypes = new List<string>();
-            TradeSources = new List<string>();
+            BatchTypes = new List<SelectListItem>();
+            TradeSources = new List<SelectListItem>();
             TradeSource = "SOUTH_AFRICA";
             ReportDate = DateTime.Today;
+            ReportDateString = ReportDate.ToString("yyyy-MM-dd");
+            BatchType = "Counterparty.PFE";
             MinimumLevel = MonitoringLevel.Warning;
             Report = new ReportsModel("Batch Interrogation");
         }
 
         // Navigation Lookups
-        public List<string> BatchTypes { get; }
-        public List<string> TradeSources { get; }
+        public List<SelectListItem> BatchTypes { get; }
+        public List<SelectListItem> TradeSources { get; }
 
         // Selection
         public string BatchType { get; set; }
         public string TradeSource { get; set; }
         public DateTime ReportDate { get; set; }
+        public string ReportDateString { get; set; }
         public MonitoringLevel MinimumLevel { get; set; }
 
         // Report

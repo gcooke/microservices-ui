@@ -1,4 +1,6 @@
-﻿@using Gateway.Web.Controllers
+﻿@using Gateway.Web.Services.Batches.Interrogation.Models
+@using Gateway.Web.Utils
+@model Gateway.Web.Models.Interrogation.InterrogationModel
 <!-- Sidebar -->
 <div id="sidebar-wrapper">
     <br />
@@ -11,6 +13,22 @@
             <span class="sidebar-subtitle">@ViewBag.Current</span>
         </div>
     </div>
+    <div class="sidebar-navheader">
+        <strong>BATCHES</strong>
+    </div>
+
+    <ul class="sidebar-nav">
+        <li>
+            @foreach (var tradeSource in @Model.TradeSources)
+            {
+                <a href="~/Interrogation?tradeSource=@tradeSource.Text&batchType=@Model.BatchType&reportDateString=@Model.ReportDateString"
+                   title="@tradeSource.Text"
+                   class="@(ViewBag.Current == "Batch" ? "active" : "")">
+                    <span class="glyphicon glyphicon-th-list"></span>&nbsp;&nbsp; @tradeSource.Text.Truncate(20)
+                </a>
+            }
+        </li>
+    </ul>
 
 </div>
 <!-- /#sidebar-wrapper -->
