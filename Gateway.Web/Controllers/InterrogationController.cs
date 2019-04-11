@@ -21,9 +21,11 @@ namespace Gateway.Web.Controllers
 
         public ActionResult Index()
         {
-            var model = new InterrogationModel();
-            _service.PopulateLookups(model);
-            return View("RiskBatch", model);
+            //var model = new InterrogationModel();
+            //_service.PopulateLookups(model);
+            //return View("RiskBatch", model);
+
+            return Details("SOUTH_AFRICA", "Counterparty.PFE", DateTime.Today.ToString("yyyy-MM-dd"));
         }
 
         public ActionResult Details(string tradeSource, string batch, string date)

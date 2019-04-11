@@ -1,36 +1,89 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Linq;
+using Bagl.Cib.MIT.Cube;
+using Bagl.Cib.MIT.Cube.Impl;
+using Bagl.Cib.MIT.Cube.Utils;
 using Bagl.Cib.MIT.IoC;
+using Bagl.Cib.MIT.IoC.Models;
+using Gateway.Web.Database;
 using Gateway.Web.Models.Interrogation;
-using Gateway.Web.Services.Batches.Interrogation;
+using Gateway.Web.Services.Batches.Interrogation.Services.BatchService;
+using Gateway.Web.Services.Batches.Interrogation.Services.IssueService;
 
 namespace Gateway.Web.Services
 {
     public class RiskBatchInterrogationService : IRiskBatchInterrogationService
     {
-        public RiskBatchInterrogationService(ISystemInformation information)
+        private readonly IBatchService _batchService;
+        private readonly IIssueTrackerService _issueTrackerService;
+        private readonly string _connectionString;
+        private readonly string _pnrFoConnectionString;
+
+        public RiskBatchInterrogationService(ISystemInformation information,
+            IBatchService batchService, IIssueTrackerService issueTrackerService)
         {
-            
+            _batchService = batchService;
+            _issueTrackerService = issueTrackerService;
+            _connectionString = information.GetConnectionString("GatewayDatabase", "Database.PnRFO_Gateway");
+            _pnrFoConnectionString = information.GetConnectionString("PnRFODatabase", "Database.PnRFO");
         }
-        
+
         public void PopulateLookups(InterrogationModel model)
         {
-            
+
         }
 
         public void Analyze(InterrogationModel model)
         {
-            var actualDate = GetPreviousWorkDay(model.ReportDate);
+            model.Report.TablesList.Clear();
+            var batches = _batchService
+                .GetBatchesForDate(model)
+                .OrderBy(x => x.BatchType)
+                .ToList();
 
-            throw new NotImplementedException();
+            using (var pnrFoDb = new Entities(_pnrFoConnectionString))
+            using (var gatewayDb = new GatewayEntities(_connectionString))
+            {
+                foreach (var batch in batches)
+                {
+                    var latestRun = batch.ActualOccurrences.OrderByDescending(x => x.StartedAt).FirstOrDefault();
+                    var batchLabel = $"{batch}";
+                    if (latestRun != null)
+                        batchLabel += $" [LATEST RUN = {latestRun.CorrelationId}]";
+
+                    var cube = CreateReportCube(batchLabel);
+                    var issueTrackersForBatch = _issueTrackerService.GetIssueTrackersForBatch(batch.BatchType);
+
+                    foreach (var issueTracker in issueTrackersForBatch)
+                    {
+                        var issues = issueTracker.Identify(gatewayDb, pnrFoDb, batch);
+                        foreach (var issue in issues.IssueList)
+                        {
+                            var description = issue.Description;
+                            if (issue.HasRemediation)
+                                description += "<br/><br/>REMEDIATION: " + issue.Remediation;
+                            cube.AddRow(new object[] { issue.MonitoringLevel, description });
+                        }
+
+                        if (issues.IssueList.Any(x => !x.ShouldContinueCheckingIssues))
+                        {
+                            break;
+                        }
+                    }
+
+                    model.Report.Add(cube);
+                }
+            }
         }
 
-        private DateTime GetPreviousWorkDay(DateTime date)
+        private ICube CreateReportCube(string title)
         {
-            date = date.AddDays(-1);
-            while (date.DayOfWeek == DayOfWeek.Sunday || date.DayOfWeek == DayOfWeek.Saturday)
-                date = date.AddDays(-1);
-            return date;
+            var cube = new CubeBuilder()
+                .AddColumn(" ", ColumnType.Int)
+                .AddColumn("Description")
+                .Build();
+
+            cube.SetAttribute("Title", title);
+            return cube;
         }
     }
 }

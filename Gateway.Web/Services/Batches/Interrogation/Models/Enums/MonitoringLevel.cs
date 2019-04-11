@@ -2,12 +2,9 @@
 {
     public enum MonitoringLevel
     {
+        Ok,
         Info,
         Warning,
-        Error,
-        Critical,
-        Ok,
-        Heading,
-        Text
+        Error
     }
 }

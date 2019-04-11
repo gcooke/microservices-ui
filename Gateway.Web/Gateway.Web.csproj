@@ -685,8 +685,6 @@
     <Compile Include="Services\Batches\Interrogation\Services\BatchService\IBatchService.cs" />
     <Compile Include="Services\Batches\Interrogation\Services\IssueService\IIssueTrackerService.cs" />
     <Compile Include="Services\Batches\Interrogation\Services\IssueService\IssueTrackerService.cs" />
-    <Compile Include="Services\Batches\Interrogation\Services\MonitoringWriterService\ConsoleMonitoringWriterService.cs" />
-    <Compile Include="Services\Batches\Interrogation\Services\MonitoringWriterService\IMonitoringWriterService.cs" />
     <Compile Include="Services\Batches\Interrogation\Utils\ScheduleEx.cs" />
     <Compile Include="Services\DatabaseStateProvider.cs" />
     <Compile Include="Services\IManifestService.cs" />
@@ -777,6 +775,7 @@
     <Content Include="Content\img\controller.dev.png" />
     <Content Include="Content\img\controller.prod.png" />
     <Content Include="Content\img\controller.uat.png" />
+    <Content Include="Content\img\error.png" />
     <Content Include="Content\img\favicon.dev.png" />
     <Content Include="Content\img\favicon.uat.png" />
     <Content Include="Content\img\header.dev.jpg" />
@@ -786,6 +785,7 @@
     <Content Include="Content\img\Redstone.PROD.png" />
     <Content Include="Content\img\Redstone.UAT.png" />
     <Content Include="Content\img\rerun.png" />
+    <Content Include="Content\img\warning.png" />
     <Content Include="Content\js\bootstrap-datepaginator.min.js" />
     <Content Include="Content\js\bootstrap-datepicker.js" />
     <Content Include="Content\js\bootstrap-quick-search.js" />

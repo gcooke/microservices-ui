@@ -26,5 +26,16 @@ namespace Gateway.Web.Models.Interrogation
 
         // Report
         public ReportsModel Report { get; }
+
+        public DateTime ValuationDate
+        {
+            get
+            {
+                var date = ReportDate.AddDays(-1);
+                while (date.DayOfWeek == DayOfWeek.Sunday || date.DayOfWeek == DayOfWeek.Saturday)
+                    date = date.AddDays(-1);
+                return date;
+            }
+        }
     }
 }
