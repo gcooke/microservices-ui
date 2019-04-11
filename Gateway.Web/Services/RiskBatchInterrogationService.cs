@@ -8,30 +8,21 @@ namespace Gateway.Web.Services
 {
     public class RiskBatchInterrogationService : IRiskBatchInterrogationService
     {
-        //private readonly Dictionary<string, IInterrogation> _interrogations;
-        //private readonly IInterrogation _fallback;
-
         public RiskBatchInterrogationService(ISystemInformation information)
         {
-            //_interrogations = new Dictionary<string, IInterrogation>(StringComparer.CurrentCultureIgnoreCase);
-            //_interrogations.Add("Counterparty.PFE", information.Resolve<PfeInterrogation>());
-
-            //_fallback = information.Resolve<BaseInterrogation>();
+            
+        }
+        
+        public void PopulateLookups(InterrogationModel model)
+        {
+            
         }
 
-        public RiskBatchModel Analyze(string batch, DateTime date)
+        public void Analyze(InterrogationModel model)
         {
-            var result = new RiskBatchModel(batch, date);
-            var actualDate = GetPreviousWorkDay(date);
+            var actualDate = GetPreviousWorkDay(model.ReportDate);
 
-            //IInterrogation interrogation;
-            //if (!_interrogations.TryGetValue(batch, out interrogation))
-            //{
-            //    interrogation = _fallback;
-            //}
-
-            //result.Report = interrogation.Run(actualDate);
-            return result;
+            throw new NotImplementedException();
         }
 
         private DateTime GetPreviousWorkDay(DateTime date)

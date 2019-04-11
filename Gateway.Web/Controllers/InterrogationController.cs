@@ -21,13 +21,21 @@ namespace Gateway.Web.Controllers
 
         public ActionResult Index()
         {
-            return Details("Counterparty.PFE", DateTime.Today.ToString("yyyy-MM-dd"));
+            var model = new InterrogationModel();
+            _service.PopulateLookups(model);
+            return View("RiskBatch", model);
         }
 
-        public ActionResult Details(string batch, string date)
+        public ActionResult Details(string tradeSource, string batch, string date)
         {
-            var actualdate = DateTime.ParseExact(date, "yyyy-MM-dd", CultureInfo.CurrentUICulture);
-            var model = _service.Analyze(batch, actualdate);            
+            var model = new InterrogationModel();
+            model.TradeSource = tradeSource;
+            model.BatchType = batch;
+            model.ReportDate = DateTime.ParseExact(date, "yyyy-MM-dd", CultureInfo.CurrentUICulture);
+
+            _service.PopulateLookups(model);
+            _service.Analyze(model);
+
             return View("RiskBatch", model);
         }
     }

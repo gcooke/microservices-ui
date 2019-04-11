@@ -419,7 +419,7 @@
     </Compile>
     <Compile Include="ModelBindersConverters\ScheduleBatchModelBinder.cs" />
     <Compile Include="Models\AuthorizationModel.cs" />
-    <Compile Include="Models\Interrogation\RiskBatchModel.cs" />
+    <Compile Include="Models\Interrogation\InterrogationModel.cs" />
     <Compile Include="Models\Schedule\Input\BaseScheduleModel.cs" />
     <Compile Include="Models\Schedule\Output\CustomRunTask.cs" />
     <Compile Include="Models\Schedule\Output\ScheduleGroup.cs" />
