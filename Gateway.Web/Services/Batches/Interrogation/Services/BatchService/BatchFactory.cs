@@ -11,11 +11,18 @@ namespace Gateway.Web.Services.Batches.Interrogation.Services.BatchService
     {
         public static Batch Create(GatewayEntities db, Database.Schedule schedule, DateTime start, DateTime end)
         {
-            var runs = db
-                .ScheduledJobs
-                .Where(x => x.ScheduleId == schedule.ScheduleId)
-                .Where(x => x.StartedAt >= start && (x.FinishedAt == null || x.FinishedAt <= end))
-                .OrderByDescending(x => x.StartedAt);
+            var startUtc = start.ToUniversalTime();
+            var endUtc = end.ToUniversalTime();
+            var requests = db.Requests
+                .Where(x => x.Resource.Contains(schedule.ScheduleId.ToString()))
+                .Where(x => x.StartUtc >= startUtc && x.StartUtc <= endUtc)
+                .Where(x => x.Controller.ToLower() == "riskbatch")
+                .ToList();
+
+            var requestIdList = requests.Select(y => y.CorrelationId).ToList();
+            var responses = db.Responses
+                .Where(x => requestIdList.Contains(x.CorrelationId))
+                .ToList();
 
             var batch = new Batch();
 
@@ -25,19 +32,26 @@ namespace Gateway.Web.Services.Batches.Interrogation.Services.BatchService
             batch.TradeSourceType = schedule.RiskBatchSchedule.TradeSourceType;
             batch.ExpectedOccurrences = schedule.ScheduleGroup.Schedule.GetCronOccurrencesBetween(start, end);
 
-            foreach (var run in runs)
+            foreach (var request in requests)
             {
-                var request = db.Requests.SingleOrDefault(x => x.CorrelationId == run.RequestId);
+                var response = responses.SingleOrDefault(x => x.CorrelationId == request.CorrelationId);
                 var batchRun = new BatchRun();
-                batchRun.ValuationDate = GetBusinessDate(request?.Resource) ?? run?.BusinessDate.AddDays(-1);
-                batchRun.CorrelationId = run?.RequestId;
-                batchRun.StartedAt = run?.StartedAt;
-                batchRun.FinishedAt = run?.FinishedAt;
-                batchRun.CurrentStatus = run?.Status;
+                batchRun.ValuationDate = GetBusinessDate(request?.Resource);
+                batchRun.CorrelationId = request?.CorrelationId;
+                batchRun.StartedAt = request?.StartUtc.ToLocalTime();
+                batchRun.FinishedAt = response?.EndUtc.ToLocalTime();
+                batchRun.CurrentStatus = GetBatchStatus(response);
                 batch.ActualOccurrences.Add(batchRun);
             }
 
             return batch;
+        }
+
+        private static string GetBatchStatus(Response response)
+        {
+            if (response == null) return "Executing task...";
+            if (response.ResultCode == 1) return "Succeeded";
+            else return "Failed";
         }
 
         private static DateTime? GetBusinessDate(string resource)

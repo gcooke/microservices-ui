@@ -1,14 +1,8 @@
 ﻿using System.Linq;
 using Bagl.Cib.MIT.Cube;
 using Bagl.Cib.MIT.Cube.Impl;
-using Bagl.Cib.MIT.Cube.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web.Mvc;
 using Bagl.Cib.MIT.IoC;
-using Bagl.Cib.MIT.IoC.Models;
-using Gateway.Web.Database;
 using Gateway.Web.Database;
 using Gateway.Web.Models.Interrogation;
 using Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues;
