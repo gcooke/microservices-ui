@@ -8,15 +8,15 @@ namespace Gateway.Web.Services
 {
     public class RiskBatchInterrogationService : IRiskBatchInterrogationService
     {
-        private readonly Dictionary<string, IInterrogation> _interrogations;
-        private readonly IInterrogation _fallback;
+        //private readonly Dictionary<string, IInterrogation> _interrogations;
+        //private readonly IInterrogation _fallback;
 
         public RiskBatchInterrogationService(ISystemInformation information)
         {
-            _interrogations = new Dictionary<string, IInterrogation>(StringComparer.CurrentCultureIgnoreCase);
-            _interrogations.Add("Counterparty.PFE", information.Resolve<PfeInterrogation>());
+            //_interrogations = new Dictionary<string, IInterrogation>(StringComparer.CurrentCultureIgnoreCase);
+            //_interrogations.Add("Counterparty.PFE", information.Resolve<PfeInterrogation>());
 
-            _fallback = information.Resolve<BaseInterrogation>();
+            //_fallback = information.Resolve<BaseInterrogation>();
         }
 
         public RiskBatchModel Analyze(string batch, DateTime date)
@@ -24,13 +24,13 @@ namespace Gateway.Web.Services
             var result = new RiskBatchModel(batch, date);
             var actualDate = GetPreviousWorkDay(date);
 
-            IInterrogation interrogation;
-            if (!_interrogations.TryGetValue(batch, out interrogation))
-            {
-                interrogation = _fallback;
-            }
+            //IInterrogation interrogation;
+            //if (!_interrogations.TryGetValue(batch, out interrogation))
+            //{
+            //    interrogation = _fallback;
+            //}
 
-            result.Report = interrogation.Run(actualDate);
+            //result.Report = interrogation.Run(actualDate);
             return result;
         }
 
