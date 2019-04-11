@@ -358,6 +358,9 @@
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\IPnRFODatabaseService.cs" />
+    <Compile Include="Database\LegalEntity.cs">
+      <DependentUpon>PnRFO.tt</DependentUpon>
+    </Compile>
     <Compile Include="Database\PnRFO.partial.cs" />
     <Compile Include="Database\PnRfoDatabaseService.cs" />
     <Compile Include="Database\PnRFO_Gateway.partial.cs" />
@@ -387,6 +390,9 @@
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\RiskCompressed.cs">
+      <DependentUpon>PnRFO.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\RiskType.cs">
       <DependentUpon>PnRFO.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\Schedule.cs">

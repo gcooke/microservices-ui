@@ -28,5 +28,7 @@ namespace Gateway.Web.Database
         public virtual DbSet<Counterparty> Counterparties { get; set; }
         public virtual DbSet<Dataset> Datasets { get; set; }
         public virtual DbSet<RiskCompressed> RiskCompresseds { get; set; }
+        public virtual DbSet<LegalEntity> LegalEntities { get; set; }
+        public virtual DbSet<RiskType> RiskTypes { get; set; }
     }
 }

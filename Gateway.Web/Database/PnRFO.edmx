@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="PnRFOModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="PnRFOModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Counterparty">
           <Key>
             <PropertyRef Name="Id" />
@@ -55,13 +55,35 @@
           <Property Name="PortfolioId" Type="bigint" />
           <Property Name="HasErrors" Type="bit" Nullable="false" />
         </EntityType>
+        <EntityType Name="RiskType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="Bump" Type="float" Nullable="false" />
+          <Property Name="BumpType" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="Active" Type="bit" />
+          <Property Name="IsMetric" Type="bit" />
+          <Property Name="IsRisk" Type="bit" />
+          <Property Name="DisplayName" Type="nvarchar" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="LegalEntity">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Currency" Type="nvarchar" MaxLength="3" Nullable="false" />
+        </EntityType>
         <EntityContainer Name="PnRFOModelStoreContainer">
           <EntitySet Name="Counterparty" EntityType="Self.Counterparty" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Dataset" EntityType="Self.Dataset" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RiskCompressed" EntityType="Self.RiskCompressed" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RiskType" EntityType="Self.RiskType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LegalEntity" EntityType="Self.LegalEntity" Schema="ds" store:Type="Tables" />
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="PnRFOModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -119,7 +141,30 @@
           <EntitySet Name="Counterparties" EntityType="Self.Counterparty" />
           <EntitySet Name="Datasets" EntityType="Self.Dataset" />
           <EntitySet Name="RiskCompresseds" EntityType="Self.RiskCompressed" />
+          <EntitySet Name="LegalEntities" EntityType="PnRFOModel.LegalEntity" />
+          <EntitySet Name="RiskTypes" EntityType="PnRFOModel.RiskType" />
         </EntityContainer>
+        <EntityType Name="LegalEntity">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Currency" Type="String" Nullable="false" MaxLength="3" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="RiskType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Bump" Type="Double" Nullable="false" />
+          <Property Name="BumpType" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Active" Type="Boolean" />
+          <Property Name="IsMetric" Type="Boolean" />
+          <Property Name="IsRisk" Type="Boolean" />
+          <Property Name="DisplayName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -176,6 +221,29 @@
                 <ScalarProperty Name="LegalEntityId" ColumnName="LegalEntityId" />
                 <ScalarProperty Name="PortfolioId" ColumnName="PortfolioId" />
                 <ScalarProperty Name="HasErrors" ColumnName="HasErrors" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LegalEntities">
+            <EntityTypeMapping TypeName="PnRFOModel.LegalEntity">
+              <MappingFragment StoreEntitySet="LegalEntity">
+                <ScalarProperty Name="Currency" ColumnName="Currency" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RiskTypes">
+            <EntityTypeMapping TypeName="PnRFOModel.RiskType">
+              <MappingFragment StoreEntitySet="RiskType">
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="IsRisk" ColumnName="IsRisk" />
+                <ScalarProperty Name="IsMetric" ColumnName="IsMetric" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="BumpType" ColumnName="BumpType" />
+                <ScalarProperty Name="Bump" ColumnName="Bump" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

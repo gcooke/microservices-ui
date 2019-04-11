@@ -2,7 +2,7 @@
 using Bagl.Cib.MIT.Cube;
 using Bagl.Cib.MIT.Cube.Impl;
 using Bagl.Cib.MIT.Cube.Utils;
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -49,7 +49,7 @@ namespace Gateway.Web.Services
                     .Select(x => x.RiskBatchConfiguration.Type)
                     .Distinct()
                     .ToList()
-                    .Select(x => new SelectListItem() { Value = x, Text = x});
+                    .Select(x => new SelectListItem() { Value = x, Text = x });
 
                 model.TradeSources.AddRange(tradeSources);
                 model.BatchTypes.AddRange(batchTypes);
@@ -59,6 +59,8 @@ namespace Gateway.Web.Services
         public void Analyze(InterrogationModel model)
         {
             model.Report.TablesList.Clear();
+            model.Tests.Clear();
+
             var batches = _batchService
                 .GetBatchesForDate(model)
                 .OrderBy(x => x.BatchType)
@@ -80,6 +82,8 @@ namespace Gateway.Web.Services
                     var count = 0;
                     foreach (var issueTracker in issueTrackersForBatch)
                     {
+                        foreach (var test in issueTracker.GetDescriptions())
+                            model.Tests.Add(test);
                         var issues = issueTracker.Identify(model, gatewayDb, pnrFoDb, batch);
                         foreach (var issue in issues.IssueList)
                         {

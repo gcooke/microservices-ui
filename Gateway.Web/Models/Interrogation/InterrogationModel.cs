@@ -18,6 +18,7 @@ namespace Gateway.Web.Models.Interrogation
             BatchType = "Counterparty.PFE";
             MinimumLevel = MonitoringLevel.Warning;
             Report = new ReportsModel("Batch Interrogation");
+            Tests = new HashSet<string>();
         }
 
         // Navigation Lookups
@@ -34,15 +35,25 @@ namespace Gateway.Web.Models.Interrogation
         // Report
         public ReportsModel Report { get; }
 
-        public DateTime ValuationDate
+        public HashSet<string> Tests { get; }
+
+        public DateTime GetValuationDate()
         {
-            get
-            {
-                var date = ReportDate.AddDays(-1);
-                while (date.DayOfWeek == DayOfWeek.Sunday || date.DayOfWeek == DayOfWeek.Saturday)
-                    date = date.AddDays(-1);
-                return date;
-            }
+            return GetPreviousWorkday(ReportDate);
+        }
+
+        public DateTime GetPreviousValuationDate()
+        {
+            var date = GetValuationDate();
+            return GetPreviousWorkday(date);
+        }
+
+        private DateTime GetPreviousWorkday(DateTime date)
+        {
+            date = date.AddDays(-1);
+            while (date.DayOfWeek == DayOfWeek.Sunday || date.DayOfWeek == DayOfWeek.Saturday)
+                date = date.AddDays(-1);
+            return date;
         }
     }
 }

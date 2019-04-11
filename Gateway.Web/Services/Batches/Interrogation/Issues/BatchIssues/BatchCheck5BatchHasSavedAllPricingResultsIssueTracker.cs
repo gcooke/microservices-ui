@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Gateway.Web.Database;
 using Gateway.Web.Models.Interrogation;
 using Gateway.Web.Services.Batches.Interrogation.Attributes;
@@ -11,6 +12,12 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
     [AppliesToBatch(Models.Enums.Batches.All)]
     public class BatchCheck5BatchHasSavedAllPricingResultsIssueTracker : BaseBatchIssueTracker
     {
+        public override IEnumerable<string> GetDescriptions()
+        {
+            yield return "Check that pricing and risk data calls match";
+            yield return "Check that pricing and risk data calls are complete";
+        }
+
         public override Models.Issues Identify(InterrogationModel model, GatewayEntities gatewayDb, Entities pnrFoDb, Batch item)
         {
             var issues = new Models.Issues();
