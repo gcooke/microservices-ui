@@ -132,7 +132,9 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
                 .Where(x => x.ParentCorrelationId == _correlationId)
                 .Where(x => x.Controller.ToLower() == "riskdata")
                 .Where(x => x.RequestType.ToLower() == "put")
-                .Where(x => x.Resource.ToLower() != "BatchSummary/Save")
+                .Where(x => x.Resource.ToLower() != "batchsummary/save")
+                .ToList()
+                .Where(x => !x.Resource.ToLower().StartsWith("pv/frontarena"))
                 .ToList();
         }
 
