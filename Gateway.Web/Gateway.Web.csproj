@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.Net.Compilers.3.0.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.3.0.0\build\Microsoft.Net.Compilers.props')" />
   <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
-  <Import Project="..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -340,6 +340,7 @@
     <Compile Include="Authorization\GatewayAuthenticationFilter.cs" />
     <Compile Include="Authorization\HttpContainerProvider.cs" />
     <Compile Include="Authorization\RoleBasedAuthorizeAttribute.cs" />
+    <Compile Include="Controllers\InterrogationController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ExecutableScheduleController.cs" />
     <Compile Include="Controllers\BatchScheduleController.cs" />
@@ -347,11 +348,38 @@
     <Compile Include="Database\BatchCommentDto.cs" />
     <Compile Include="Database\BatchHelper.cs" />
     <Compile Include="Database\BatchSummary.cs" />
+    <Compile Include="Database\Counterparty.cs">
+      <DependentUpon>PnRFO.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\Dataset.cs">
+      <DependentUpon>PnRFO.tt</DependentUpon>
+    </Compile>
     <Compile Include="Database\ExecutableConfiguration.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
-    <Compile Include="Database\GatewayEntities.partial.cs" />
+    <Compile Include="Database\IPnRFODatabaseService.cs" />
+    <Compile Include="Database\LegalEntity.cs">
+      <DependentUpon>PnRFO.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\PnRFO.partial.cs" />
+    <Compile Include="Database\PnRfoDatabaseService.cs" />
+    <Compile Include="Database\PnRFO_Gateway.partial.cs" />
     <Compile Include="Database\IBatchHelper.cs" />
+    <Compile Include="Database\PnRFO.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PnRFO.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\PnRFO.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PnRFO.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\PnRFO.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PnRFO.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Database\RequestConfiguration.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
@@ -360,6 +388,12 @@
     <Compile Include="Database\RiskBatchResult.cs" />
     <Compile Include="Database\RiskBatchSchedule.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\RiskCompressed.cs">
+      <DependentUpon>PnRFO.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\RiskType.cs">
+      <DependentUpon>PnRFO.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\Schedule.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
@@ -391,6 +425,7 @@
     </Compile>
     <Compile Include="ModelBindersConverters\ScheduleBatchModelBinder.cs" />
     <Compile Include="Models\AuthorizationModel.cs" />
+    <Compile Include="Models\Interrogation\InterrogationModel.cs" />
     <Compile Include="Models\Schedule\Input\BaseScheduleModel.cs" />
     <Compile Include="Models\Schedule\Output\CustomRunTask.cs" />
     <Compile Include="Models\Schedule\Output\ScheduleGroup.cs" />
@@ -635,9 +670,33 @@
     <Compile Include="Services\BasicRestService.cs" />
     <Compile Include="Models\Batches\BatchConfigModel.cs" />
     <Compile Include="Services\Batches\BatchConfigDataService.cs" />
+    <Compile Include="Services\Batches\Interrogation\Attributes\AppliesToBatchAttribute.cs" />
+    <Compile Include="Services\Batches\Interrogation\Issues\BatchIssues\BaseBatchIssueTracker.cs" />
+    <Compile Include="Services\Batches\Interrogation\Issues\BatchIssues\BatchCheck1BatchRanIssueTracker.cs" />
+    <Compile Include="Services\Batches\Interrogation\Issues\BatchIssues\BatchCheck2BatchStatusIssueTracker.cs" />
+    <Compile Include="Services\Batches\Interrogation\Issues\BatchIssues\BatchCheck3BatchHasTradesIssueTracker.cs" />
+    <Compile Include="Services\Batches\Interrogation\Issues\BatchIssues\BatchCheck4BatchHasPricedIssueTracker.cs" />
+    <Compile Include="Services\Batches\Interrogation\Issues\BatchIssues\BatchCheck5BatchHasSavedAllPricingResultsIssueTracker.cs" />
+    <Compile Include="Services\Batches\Interrogation\Issues\BatchIssues\BatchCheck6CounterpartyPeakPfeIssueTracker.cs" />
+    <Compile Include="Services\Batches\Interrogation\Issues\IIssueTracker.cs" />
+    <Compile Include="Services\Batches\Interrogation\Models\Batch.cs" />
+    <Compile Include="Services\Batches\Interrogation\Models\BatchRun.cs" />
+    <Compile Include="Services\Batches\Interrogation\Models\Builders\IssueBuilder.cs" />
+    <Compile Include="Services\Batches\Interrogation\Models\Enums\Batches.cs" />
+    <Compile Include="Services\Batches\Interrogation\Models\Enums\MonitoringLevel.cs" />
+    <Compile Include="Services\Batches\Interrogation\Models\Issue.cs" />
+    <Compile Include="Services\Batches\Interrogation\Models\Issues.cs" />
+    <Compile Include="Services\Batches\Interrogation\Services\BatchService\BatchFactory.cs" />
+    <Compile Include="Services\Batches\Interrogation\Services\BatchService\BatchService.cs" />
+    <Compile Include="Services\Batches\Interrogation\Services\BatchService\IBatchService.cs" />
+    <Compile Include="Services\Batches\Interrogation\Services\IssueService\IIssueTrackerService.cs" />
+    <Compile Include="Services\Batches\Interrogation\Services\IssueService\IssueTrackerService.cs" />
+    <Compile Include="Services\Batches\Interrogation\Utils\ScheduleEx.cs" />
     <Compile Include="Services\DatabaseStateProvider.cs" />
     <Compile Include="Services\IManifestService.cs" />
+    <Compile Include="Services\IRiskBatchInterrogationService.cs" />
     <Compile Include="Services\ManifestService.cs" />
+    <Compile Include="Services\RiskBatchInterrogationService.cs" />
     <Compile Include="Services\Schedule\BaseScheduleService.cs" />
     <Compile Include="Services\Schedule\Interfaces\IRequestConfigurationService.cs" />
     <Compile Include="Services\Schedule\Models\BaseScheduleParameters.cs" />
@@ -722,15 +781,18 @@
     <Content Include="Content\img\controller.dev.png" />
     <Content Include="Content\img\controller.prod.png" />
     <Content Include="Content\img\controller.uat.png" />
+    <Content Include="Content\img\error.png" />
     <Content Include="Content\img\favicon.dev.png" />
     <Content Include="Content\img\favicon.uat.png" />
     <Content Include="Content\img\header.dev.jpg" />
     <Content Include="Content\img\header.prod.jpg" />
     <Content Include="Content\img\header.uat.jpg" />
+    <Content Include="Content\img\okay.png" />
     <Content Include="Content\img\Redstone.DEV.png" />
     <Content Include="Content\img\Redstone.PROD.png" />
     <Content Include="Content\img\Redstone.UAT.png" />
     <Content Include="Content\img\rerun.png" />
+    <Content Include="Content\img\warning.png" />
     <Content Include="Content\js\bootstrap-datepaginator.min.js" />
     <Content Include="Content\js\bootstrap-datepicker.js" />
     <Content Include="Content\js\bootstrap-quick-search.js" />
@@ -753,6 +815,16 @@
     <Content Include="Content\js\treetable\MIT-LICENSE.txt" />
     <Content Include="Content\js\treetable\test.html" />
     <Content Include="Content\js\treetable\test\jquery.treetable.test.js" />
+    <Content Include="Database\PnRFO.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>PnRFO.edmx</DependentUpon>
+      <LastGenOutput>PnRFO.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Database\PnRFO.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>PnRFO.edmx</DependentUpon>
+      <LastGenOutput>PnRFO.cs</LastGenOutput>
+    </Content>
     <Content Include="Database\PnRFO_Gateway.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>PnRFO_Gateway.edmx</DependentUpon>
@@ -828,6 +900,13 @@
     <Content Include="Content\js\treetable\CHANGELOG.md" />
     <Content Include="Content\js\treetable\README.md" />
     <Content Include="Content\js\treetable\treetable.jquery.json" />
+    <EntityDeploy Include="Database\PnRFO.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>PnRFO.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Database\PnRFO.edmx.diagram">
+      <DependentUpon>PnRFO.edmx</DependentUpon>
+    </Content>
     <None Include="Properties\PublishProfiles\local.pubxml" />
     <None Include="Properties\PublishProfiles\remote.pubxml" />
     <Content Include="Views\Controller\_ControllerNav.cshtml" />
@@ -912,6 +991,8 @@
     <Content Include="Views\Security\Manifest.cshtml" />
     <Content Include="Views\Schedule\RunCustom.cshtml" />
     <Content Include="Views\Security\Index.cshtml" />
+    <Content Include="Views\Interrogation\RiskBatch.cshtml" />
+    <Content Include="Views\Interrogation\_InterrogationNav.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />
@@ -976,8 +1057,8 @@
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props'))" />
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.3.0.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.3.0.0\build\Microsoft.Net.Compilers.props'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

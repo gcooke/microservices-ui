@@ -21,6 +21,8 @@ using Bagl.Cib.MIT.Redis.Caching;
 using Bagl.Cib.MIT.Redis.Serialization;
 using Bagl.Cib.MIT.Redis.Serialization.Json;
 using Gateway.Web.Controllers;
+using Gateway.Web.Services.Batches.Interrogation.Services.BatchService;
+using Gateway.Web.Services.Batches.Interrogation.Services.IssueService;
 using Unity.Injection;
 
 namespace Gateway.Web
@@ -117,6 +119,7 @@ namespace Gateway.Web
             information.RegisterType<IRedisCache, RedisCache>(Scope.Singleton);
 
 
+            information.RegisterType<IPnRFoDatabaseService, PnRfoDatabaseService>(Scope.Singleton);
             information.RegisterType<IGatewayDatabaseService, GatewayDatabaseService>(Scope.Singleton);
 
             information.RegisterType<IDifferentialArchiveService, DifferentialArchiveService>(Scope.Singleton);
@@ -128,12 +131,15 @@ namespace Gateway.Web
             information.RegisterType<IRedstoneWebRequestScheduler, RedstoneWebRequestScheduler>(Scope.Singleton);
             information.RegisterType<IExecutableScheduler, ExecutableScheduler>(Scope.Singleton);
             information.RegisterType<IBatchConfigDataService, BatchConfigDataService>(Scope.Singleton);
+            information.RegisterType<IRiskBatchInterrogationService, RiskBatchInterrogationService>(Scope.Singleton);
             information.RegisterType<IScheduleService<ScheduleBatchModel>, RedstoneBatchScheduleService>(Scope.Singleton);
             information.RegisterType<IScheduleService<ScheduleWebRequestModel>, RedstoneRequestScheduleService>(Scope.Singleton);
             information.RegisterType<IScheduleService<ScheduleExecutableModel>, ExecutableScheduleService>(Scope.Singleton);
             information.RegisterType<IScheduleGroupService, ScheduleGroupService>(Scope.Singleton);
             information.RegisterType<IRequestConfigurationService, RequestConfigurationService>(Scope.Singleton);
             information.RegisterType<IHttpClientProvider, HttpClientProvider>(Scope.Singleton);
+            information.RegisterType<IBatchService, BatchService>(Scope.Singleton);
+            information.RegisterType<IIssueTrackerService, IssueTrackerService>(Scope.Singleton);
 
             //Reset Services Registrations
             information.RegisterType<IGatewayService, GatewayService>(Scope.ContainerSingleton);

@@ -1,0 +1,273 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="PnRFOModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Counterparty">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FAName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="FAId" Type="bigint" Nullable="false" />
+          <Property Name="SDSName" Type="nvarchar" MaxLength="300" />
+          <Property Name="SDSId" Type="bigint" />
+          <Property Name="SourceSystemId" Type="bigint" />
+          <Property Name="IsInternal" Type="bit" Nullable="false" />
+          <Property Name="IsOnboarded" Type="bit" Nullable="false" />
+          <Property Name="IsRetail" Type="bit" Nullable="false" />
+          <Property Name="NotTrading" Type="bit" Nullable="false" />
+          <Property Name="CLS" Type="bit" Nullable="false" />
+          <Property Name="DVP" Type="bit" Nullable="false" />
+          <Property Name="LegalEntitySDSId" Type="bigint" />
+        </EntityType>
+        <EntityType Name="Dataset">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NamePrefix" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="LastRunTime" Type="datetime" Nullable="false" />
+          <Property Name="NamePostfix" Type="nvarchar" MaxLength="200" />
+          <Property Name="ArchiveStatus" Type="nvarchar" MaxLength="20" />
+          <Property Name="BusinessDate" Type="date" Nullable="false" />
+          <Property Name="SnappingSetName" Type="nvarchar(max)" />
+          <Property Name="BatchId" Type="bigint" Nullable="false" />
+          <Property Name="LegalEntityId" Type="bigint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RiskCompressed">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TradeId" Type="bigint" />
+          <Property Name="RiskTypeId" Type="bigint" Nullable="false" />
+          <Property Name="RiskValue" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="DatasetId" Type="bigint" Nullable="false" />
+          <Property Name="Currency" Type="nvarchar" MaxLength="50" />
+          <Property Name="UpdateTime" Type="datetime" Nullable="false" />
+          <Property Name="CompressionType" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="UnderlyingRiskTypeId" Type="bigint" />
+          <Property Name="CounterpartyId" Type="bigint" />
+          <Property Name="LegalEntityId" Type="bigint" />
+          <Property Name="PortfolioId" Type="bigint" />
+          <Property Name="HasErrors" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RiskType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="Bump" Type="float" Nullable="false" />
+          <Property Name="BumpType" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="Active" Type="bit" />
+          <Property Name="IsMetric" Type="bit" />
+          <Property Name="IsRisk" Type="bit" />
+          <Property Name="DisplayName" Type="nvarchar" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="LegalEntity">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Currency" Type="nvarchar" MaxLength="3" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="PnRFOModelStoreContainer">
+          <EntitySet Name="Counterparty" EntityType="Self.Counterparty" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Dataset" EntityType="Self.Dataset" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RiskCompressed" EntityType="Self.RiskCompressed" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RiskType" EntityType="Self.RiskType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LegalEntity" EntityType="Self.LegalEntity" Schema="ds" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="PnRFOModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Counterparty">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FAName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FAId" Type="Int64" Nullable="false" />
+          <Property Name="SDSName" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="SDSId" Type="Int64" />
+          <Property Name="SourceSystemId" Type="Int64" />
+          <Property Name="IsInternal" Type="Boolean" Nullable="false" />
+          <Property Name="IsOnboarded" Type="Boolean" Nullable="false" />
+          <Property Name="IsRetail" Type="Boolean" Nullable="false" />
+          <Property Name="NotTrading" Type="Boolean" Nullable="false" />
+          <Property Name="CLS" Type="Boolean" Nullable="false" />
+          <Property Name="DVP" Type="Boolean" Nullable="false" />
+          <Property Name="LegalEntitySDSId" Type="Int64" />
+        </EntityType>
+        <EntityType Name="Dataset">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NamePrefix" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LastRunTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="NamePostfix" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="ArchiveStatus" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="BusinessDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="SnappingSetName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="BatchId" Type="Int64" Nullable="false" />
+          <Property Name="LegalEntityId" Type="Int64" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RiskCompressed">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TradeId" Type="Int64" />
+          <Property Name="RiskTypeId" Type="Int64" Nullable="false" />
+          <Property Name="RiskValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DatasetId" Type="Int64" Nullable="false" />
+          <Property Name="Currency" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UpdateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CompressionType" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UnderlyingRiskTypeId" Type="Int64" />
+          <Property Name="CounterpartyId" Type="Int64" />
+          <Property Name="LegalEntityId" Type="Int64" />
+          <Property Name="PortfolioId" Type="Int64" />
+          <Property Name="HasErrors" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Counterparties" EntityType="Self.Counterparty" />
+          <EntitySet Name="Datasets" EntityType="Self.Dataset" />
+          <EntitySet Name="RiskCompresseds" EntityType="Self.RiskCompressed" />
+          <EntitySet Name="LegalEntities" EntityType="PnRFOModel.LegalEntity" />
+          <EntitySet Name="RiskTypes" EntityType="PnRFOModel.RiskType" />
+        </EntityContainer>
+        <EntityType Name="LegalEntity">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Currency" Type="String" Nullable="false" MaxLength="3" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="RiskType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Bump" Type="Double" Nullable="false" />
+          <Property Name="BumpType" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Active" Type="Boolean" />
+          <Property Name="IsMetric" Type="Boolean" />
+          <Property Name="IsRisk" Type="Boolean" />
+          <Property Name="DisplayName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="PnRFOModelStoreContainer" CdmEntityContainer="Entities">
+          <EntitySetMapping Name="Counterparties">
+            <EntityTypeMapping TypeName="PnRFOModel.Counterparty">
+              <MappingFragment StoreEntitySet="Counterparty">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="FAName" ColumnName="FAName" />
+                <ScalarProperty Name="FAId" ColumnName="FAId" />
+                <ScalarProperty Name="SDSName" ColumnName="SDSName" />
+                <ScalarProperty Name="SDSId" ColumnName="SDSId" />
+                <ScalarProperty Name="SourceSystemId" ColumnName="SourceSystemId" />
+                <ScalarProperty Name="IsInternal" ColumnName="IsInternal" />
+                <ScalarProperty Name="IsOnboarded" ColumnName="IsOnboarded" />
+                <ScalarProperty Name="IsRetail" ColumnName="IsRetail" />
+                <ScalarProperty Name="NotTrading" ColumnName="NotTrading" />
+                <ScalarProperty Name="CLS" ColumnName="CLS" />
+                <ScalarProperty Name="DVP" ColumnName="DVP" />
+                <ScalarProperty Name="LegalEntitySDSId" ColumnName="LegalEntitySDSId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Datasets">
+            <EntityTypeMapping TypeName="PnRFOModel.Dataset">
+              <MappingFragment StoreEntitySet="Dataset">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="NamePrefix" ColumnName="NamePrefix" />
+                <ScalarProperty Name="LastRunTime" ColumnName="LastRunTime" />
+                <ScalarProperty Name="NamePostfix" ColumnName="NamePostfix" />
+                <ScalarProperty Name="ArchiveStatus" ColumnName="ArchiveStatus" />
+                <ScalarProperty Name="BusinessDate" ColumnName="BusinessDate" />
+                <ScalarProperty Name="SnappingSetName" ColumnName="SnappingSetName" />
+                <ScalarProperty Name="BatchId" ColumnName="BatchId" />
+                <ScalarProperty Name="LegalEntityId" ColumnName="LegalEntityId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RiskCompresseds">
+            <EntityTypeMapping TypeName="PnRFOModel.RiskCompressed">
+              <MappingFragment StoreEntitySet="RiskCompressed">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="TradeId" ColumnName="TradeId" />
+                <ScalarProperty Name="RiskTypeId" ColumnName="RiskTypeId" />
+                <ScalarProperty Name="RiskValue" ColumnName="RiskValue" />
+                <ScalarProperty Name="DatasetId" ColumnName="DatasetId" />
+                <ScalarProperty Name="Currency" ColumnName="Currency" />
+                <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
+                <ScalarProperty Name="CompressionType" ColumnName="CompressionType" />
+                <ScalarProperty Name="UnderlyingRiskTypeId" ColumnName="UnderlyingRiskTypeId" />
+                <ScalarProperty Name="CounterpartyId" ColumnName="CounterpartyId" />
+                <ScalarProperty Name="LegalEntityId" ColumnName="LegalEntityId" />
+                <ScalarProperty Name="PortfolioId" ColumnName="PortfolioId" />
+                <ScalarProperty Name="HasErrors" ColumnName="HasErrors" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LegalEntities">
+            <EntityTypeMapping TypeName="PnRFOModel.LegalEntity">
+              <MappingFragment StoreEntitySet="LegalEntity">
+                <ScalarProperty Name="Currency" ColumnName="Currency" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RiskTypes">
+            <EntityTypeMapping TypeName="PnRFOModel.RiskType">
+              <MappingFragment StoreEntitySet="RiskType">
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="IsRisk" ColumnName="IsRisk" />
+                <ScalarProperty Name="IsMetric" ColumnName="IsMetric" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="BumpType" ColumnName="BumpType" />
+                <ScalarProperty Name="Bump" ColumnName="Bump" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
