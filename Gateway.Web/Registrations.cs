@@ -117,6 +117,7 @@ namespace Gateway.Web
             information.RegisterType<IRedisCache, RedisCache>(Scope.Singleton);
 
 
+            information.RegisterType<IPnRFoDatabaseService, PnRfoDatabaseService>(Scope.Singleton);
             information.RegisterType<IGatewayDatabaseService, GatewayDatabaseService>(Scope.Singleton);
 
             information.RegisterType<IDifferentialArchiveService, DifferentialArchiveService>(Scope.Singleton);
@@ -128,6 +129,7 @@ namespace Gateway.Web
             information.RegisterType<IRedstoneWebRequestScheduler, RedstoneWebRequestScheduler>(Scope.Singleton);
             information.RegisterType<IExecutableScheduler, ExecutableScheduler>(Scope.Singleton);
             information.RegisterType<IBatchConfigDataService, BatchConfigDataService>(Scope.Singleton);
+            information.RegisterType<IRiskBatchInterrogationService, RiskBatchInterrogationService>(Scope.Singleton);
             information.RegisterType<IScheduleService<ScheduleBatchModel>, RedstoneBatchScheduleService>(Scope.Singleton);
             information.RegisterType<IScheduleService<ScheduleWebRequestModel>, RedstoneRequestScheduleService>(Scope.Singleton);
             information.RegisterType<IScheduleService<ScheduleExecutableModel>, ExecutableScheduleService>(Scope.Singleton);

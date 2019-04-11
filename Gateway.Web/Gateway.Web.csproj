@@ -340,6 +340,7 @@
     <Compile Include="Authorization\GatewayAuthenticationFilter.cs" />
     <Compile Include="Authorization\HttpContainerProvider.cs" />
     <Compile Include="Authorization\RoleBasedAuthorizeAttribute.cs" />
+    <Compile Include="Controllers\InterrogationController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ExecutableScheduleController.cs" />
     <Compile Include="Controllers\BatchScheduleController.cs" />
@@ -347,11 +348,35 @@
     <Compile Include="Database\BatchCommentDto.cs" />
     <Compile Include="Database\BatchHelper.cs" />
     <Compile Include="Database\BatchSummary.cs" />
+    <Compile Include="Database\Counterparty.cs">
+      <DependentUpon>PnRFO.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\Dataset.cs">
+      <DependentUpon>PnRFO.tt</DependentUpon>
+    </Compile>
     <Compile Include="Database\ExecutableConfiguration.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
-    <Compile Include="Database\GatewayEntities.partial.cs" />
+    <Compile Include="Database\IPnRFODatabaseService.cs" />
+    <Compile Include="Database\PnRFO.partial.cs" />
+    <Compile Include="Database\PnRfoDatabaseService.cs" />
+    <Compile Include="Database\PnRFO_Gateway.partial.cs" />
     <Compile Include="Database\IBatchHelper.cs" />
+    <Compile Include="Database\PnRFO.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PnRFO.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\PnRFO.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PnRFO.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\PnRFO.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PnRFO.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Database\RequestConfiguration.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
@@ -360,6 +385,9 @@
     <Compile Include="Database\RiskBatchResult.cs" />
     <Compile Include="Database\RiskBatchSchedule.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\RiskCompressed.cs">
+      <DependentUpon>PnRFO.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\Schedule.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
@@ -391,6 +419,7 @@
     </Compile>
     <Compile Include="ModelBindersConverters\ScheduleBatchModelBinder.cs" />
     <Compile Include="Models\AuthorizationModel.cs" />
+    <Compile Include="Models\Interrogation\RiskBatchModel.cs" />
     <Compile Include="Models\Schedule\Input\BaseScheduleModel.cs" />
     <Compile Include="Models\Schedule\Output\CustomRunTask.cs" />
     <Compile Include="Models\Schedule\Output\ScheduleGroup.cs" />
@@ -635,9 +664,14 @@
     <Compile Include="Services\BasicRestService.cs" />
     <Compile Include="Models\Batches\BatchConfigModel.cs" />
     <Compile Include="Services\Batches\BatchConfigDataService.cs" />
+    <Compile Include="Services\Batches\Interrogation\BaseInterrogation.cs" />
+    <Compile Include="Services\Batches\Interrogation\IInterrogation.cs" />
+    <Compile Include="Services\Batches\Interrogation\PfeInterrogation.cs" />
     <Compile Include="Services\DatabaseStateProvider.cs" />
     <Compile Include="Services\IManifestService.cs" />
+    <Compile Include="Services\IRiskBatchInterrogationService.cs" />
     <Compile Include="Services\ManifestService.cs" />
+    <Compile Include="Services\RiskBatchInterrogationService.cs" />
     <Compile Include="Services\Schedule\BaseScheduleService.cs" />
     <Compile Include="Services\Schedule\Interfaces\IRequestConfigurationService.cs" />
     <Compile Include="Services\Schedule\Models\BaseScheduleParameters.cs" />
@@ -753,6 +787,16 @@
     <Content Include="Content\js\treetable\MIT-LICENSE.txt" />
     <Content Include="Content\js\treetable\test.html" />
     <Content Include="Content\js\treetable\test\jquery.treetable.test.js" />
+    <Content Include="Database\PnRFO.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>PnRFO.edmx</DependentUpon>
+      <LastGenOutput>PnRFO.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Database\PnRFO.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>PnRFO.edmx</DependentUpon>
+      <LastGenOutput>PnRFO.cs</LastGenOutput>
+    </Content>
     <Content Include="Database\PnRFO_Gateway.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>PnRFO_Gateway.edmx</DependentUpon>
@@ -828,6 +872,13 @@
     <Content Include="Content\js\treetable\CHANGELOG.md" />
     <Content Include="Content\js\treetable\README.md" />
     <Content Include="Content\js\treetable\treetable.jquery.json" />
+    <EntityDeploy Include="Database\PnRFO.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>PnRFO.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Database\PnRFO.edmx.diagram">
+      <DependentUpon>PnRFO.edmx</DependentUpon>
+    </Content>
     <None Include="Properties\PublishProfiles\local.pubxml" />
     <None Include="Properties\PublishProfiles\remote.pubxml" />
     <Content Include="Views\Controller\_ControllerNav.cshtml" />
@@ -912,6 +963,8 @@
     <Content Include="Views\Security\Manifest.cshtml" />
     <Content Include="Views\Schedule\RunCustom.cshtml" />
     <Content Include="Views\Security\Index.cshtml" />
+    <Content Include="Views\Interrogation\RiskBatch.cshtml" />
+    <Content Include="Views\Interrogation\_InterrogationNav.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />
