@@ -130,7 +130,7 @@
                 <br />
             }
             <br />
-            @if (!string.IsNullOrWhiteSpace(Model.TradeSource))
+            @if (!Model.Report.TableList.Any())
             {
                 <div>
                     <b style="color: #888888">The following validations were run:</b>
