@@ -180,7 +180,7 @@ namespace Gateway.Web.Controllers
         {
             var id = long.Parse(collection["_id"]);
             var valuationDate = DateTime.Parse(collection["_businessDate"]).ToString("yyyy-MM-dd");
-            var custom = collection["custom"];
+            var custom = collection["custom"].Replace(" ", "").Replace(Environment.NewLine, ",").Replace(",,",",");
 
             if (string.IsNullOrEmpty(custom))
                 throw new InvalidOperationException("Custom run must have custom parameters");

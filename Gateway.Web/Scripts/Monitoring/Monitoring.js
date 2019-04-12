@@ -12,4 +12,24 @@
                 }
             });
         });
+
+    $(".visibility-toggle").on("click",
+        function () {
+            var link = $(this).data("link");
+            console.log(link);
+
+            var $item = $(".visibility-" + link);
+            console.log($item.hasClass("hide-item"));
+
+            if ($item.hasClass("hide-item")) {
+                $item.removeClass("hide-item");
+                $item.addClass("show-item");
+                $(this).html("Hide Remediation");
+            } else {
+                $item.removeClass("show-item");
+                $item.addClass("hide-item");
+                $(this).html("View Remediation");
+            }
+        });
 });
+

@@ -678,6 +678,7 @@
     <Compile Include="Services\Batches\Interrogation\Issues\BatchIssues\BatchCheck4BatchHasPricedIssueTracker.cs" />
     <Compile Include="Services\Batches\Interrogation\Issues\BatchIssues\BatchCheck5BatchHasSavedAllPricingResultsIssueTracker.cs" />
     <Compile Include="Services\Batches\Interrogation\Issues\BatchIssues\BatchCheck6CounterpartyPeakPfeIssueTracker.cs" />
+    <Compile Include="Services\Batches\Interrogation\Issues\BatchIssues\GenericBatchRequestIssueTracker.cs" />
     <Compile Include="Services\Batches\Interrogation\Issues\IIssueTracker.cs" />
     <Compile Include="Services\Batches\Interrogation\Models\Batch.cs" />
     <Compile Include="Services\Batches\Interrogation\Models\BatchRun.cs" />
