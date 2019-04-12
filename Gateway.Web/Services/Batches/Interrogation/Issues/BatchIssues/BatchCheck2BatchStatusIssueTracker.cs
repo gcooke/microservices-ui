@@ -23,23 +23,36 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
 
             if (run.CurrentStatus == "Executing task...")
                 new IssueBuilder()
-                    .SetDescription("The latest run is still running.")
+                    .SetDescription("This run is still running.")
                     .SetMonitoringLevel(MonitoringLevel.Warning)
                     .BuildAndAdd(issues);
 
             if (run.CurrentStatus == "Succeeded")
                 new IssueBuilder()
-                    .SetDescription("The latest run has succeeded.")
+                    .SetDescription("This run has succeeded.")
                     .SetMonitoringLevel(MonitoringLevel.Ok)
                     .BuildAndAdd(issues);
 
             if (run.CurrentStatus == "Failed")
                 new IssueBuilder()
-                    .SetDescription("The latest run has failed.")
+                    .SetDescription("This run has failed.")
                     .SetMonitoringLevel(MonitoringLevel.Error)
                     .BuildAndAdd(issues);
 
+            CheckIfBatchEndedPrematurely(issues, run);
+
             return issues;
+        }
+
+        private void CheckIfBatchEndedPrematurely(Models.Issues issues, BatchRun run)
+        {
+            if (run.CurrentStatus != "Failed" && run.CurrentStatus != "Succeeded") return;
+            if(Context.TradeStoreResponse == null || Context.PricingRequests.Value.Count != Context.PricingResponses.Value.Count || Context.RiskDataRequests.Value.Count != Context.RiskDataResponses.Value.Count)
+                new IssueBuilder()
+                    .SetDescription("It seems like this run completed prematurely.")
+                    .SetMonitoringLevel(MonitoringLevel.Error)
+                    .SetRemediation("Please check if there are still requests in progress.")
+                    .BuildAndAdd(issues);
         }
 
         public override int GetSequence()

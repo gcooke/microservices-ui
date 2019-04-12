@@ -37,7 +37,7 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
             if (!pricingRequests.Any())
             {
                 new IssueBuilder()
-                    .SetDescription("The latest run does not have any Pricing requests.")
+                    .SetDescription("This run does not have any Pricing requests.")
                     .SetMonitoringLevel(MonitoringLevel.Error)
                     .SetRemediation("Check the logs for the risk batch request to determine why the pricing request was not made. In most cases you will need to rerun the ENTIRE batch.")
                     .SetShouldContinueCheckingIssues(false)
@@ -53,7 +53,7 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
             if (pricingRequests.Count != expectedPricingRequests.Count)
             {
                 new IssueBuilder()
-                    .SetDescription($"The latest run has made {pricingRequests.Count} pricing requests, but it should have made {expectedPricingRequests} pricing requests.")
+                    .SetDescription($"This run has made {pricingRequests.Count} pricing requests, but it should have made {expectedPricingRequests} pricing requests.")
                     .SetMonitoringLevel(MonitoringLevel.Error)
                     .SetRemediation("Check the logs for the risk batch request to determine why CERTAIN pricing request was not made. In most cases you will need to rerun only those requests that were not made.")
                     .BuildAndAdd(issues);
@@ -61,7 +61,7 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
             else
             {
                 new IssueBuilder()
-                    .SetDescription($"The latest run has made {pricingRequests.Count} pricing requests, which matches the expected pricing request count ({expectedPricingRequests.Count}).")
+                    .SetDescription($"This run has made {pricingRequests.Count} pricing requests, which matches the expected pricing request count ({expectedPricingRequests.Count}).")
                     .SetMonitoringLevel(MonitoringLevel.Ok)
                     .BuildAndAdd(issues);
             }
@@ -71,19 +71,28 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
         {
             var pricingRequests = Context.PricingRequests.Value;
             var pricingResponses = Context.PricingResponses.Value;
+            var successfulResponses = Context.PricingResponses.Value.Count(x => x.Response.ResultCode == 1);
 
             if (pricingResponses.Count < pricingRequests.Count)
             {
                 new IssueBuilder()
-                    .SetDescription($"The latest run only received {pricingResponses.Count} pricing responses. This is less than the pricing requests that was made. Please investigate.")
+                    .SetDescription($"This run only received {pricingResponses.Count} pricing responses. This is less than the pricing requests that was made {pricingRequests.Count}.")
                     .SetMonitoringLevel(MonitoringLevel.Error)
-                    .SetRemediation("Check the dashboard for the risk batch request to determine which pricing requests did not get a response. Rerun only those requests that did not get a response.")
+                    .SetRemediation("Check the dashboard for the risk batch request to determine which pricing requests did not get a response. These requests may still be running.")
+                    .BuildAndAdd(issues);
+            }
+            else if (successfulResponses < pricingResponses.Count)
+            {
+                new IssueBuilder()
+                    .SetDescription($"This run has {(pricingResponses.Count - successfulResponses)} FAILED pricing request.")
+                    .SetMonitoringLevel(MonitoringLevel.Error)
+                    .SetRemediation("Please rerun these pricing requests.")
                     .BuildAndAdd(issues);
             }
             else
             {
                 new IssueBuilder()
-                    .SetDescription($"The latest run has received {pricingResponses.Count} pricing responses which is equal to the number of pricing requests that was made ({pricingRequests.Count}).")
+                    .SetDescription($"This run has received {pricingResponses.Count} pricing responses which is equal to the number of pricing requests that was made ({pricingRequests.Count}).")
                     .SetMonitoringLevel(MonitoringLevel.Ok)
                     .BuildAndAdd(issues);
             }

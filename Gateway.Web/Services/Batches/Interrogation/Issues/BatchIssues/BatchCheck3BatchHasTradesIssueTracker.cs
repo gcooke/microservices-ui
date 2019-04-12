@@ -30,7 +30,7 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
 
             var tradeStoreResponse = Context.TradeStoreResponse.Value;
             new IssueBuilder()
-                .SetDescription($"The latest run has made a TradeStore request, received a response with {tradeStoreResponse.Response.Size} trade(s).")
+                .SetDescription($"This run has made a TradeStore request, received a response with {tradeStoreResponse.Response.Size} trade(s).")
                 .SetMonitoringLevel(MonitoringLevel.Ok)
                 .BuildAndAdd(issues);
 
@@ -44,7 +44,7 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
             if (tradeStoreRequest == null)
             {
                 new IssueBuilder()
-                    .SetDescription("The latest run does not have a TradeStore request.")
+                    .SetDescription("This run does not have a TradeStore request.")
                     .SetMonitoringLevel(MonitoringLevel.Error)
                     .SetRemediation("Rerun the ENTIRE batch.")
                     .SetShouldContinueCheckingIssues(false)
@@ -58,7 +58,7 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
             if (tradeStoreResponse == null)
             {
                 new IssueBuilder()
-                    .SetDescription("The latest run has made a TradeStore request but did not receive a response.")
+                    .SetDescription("This run has made a TradeStore request but did not receive a response.")
                     .SetMonitoringLevel(MonitoringLevel.Error)
                     .SetRemediation("Rerun the ENTIRE batch.")
                     .SetShouldContinueCheckingIssues(false)
@@ -72,7 +72,7 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
             if (tradeStoreResponse.Response.Size == 0)
             {
                 new IssueBuilder()
-                    .SetDescription("The latest run has made a TradeStore request, received a response but the response has no trades.")
+                    .SetDescription("This run has made a TradeStore request, received a response but the response has no trades.")
                     .SetMonitoringLevel(MonitoringLevel.Error)
                     .SetRemediation("Rerun the ENTIRE batch.")
                     .SetShouldContinueCheckingIssues(false)
