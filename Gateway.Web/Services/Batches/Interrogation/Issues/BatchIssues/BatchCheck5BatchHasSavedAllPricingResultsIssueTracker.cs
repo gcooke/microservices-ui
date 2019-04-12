@@ -62,7 +62,7 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
                 }
 
                 new IssueBuilder()
-                    .SetDescription("The latest run does not have any Risk Data requests.")
+                    .SetDescription("This run does not have any Risk Data requests.")
                     .SetMonitoringLevel(MonitoringLevel.Error)
                     .SetRemediation(remediation)
                     .SetShouldContinueCheckingIssues(false)
@@ -74,9 +74,9 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
         {
             if (requests.Count < expectedRequests.Count)
             {
-                var remediation = "Rerun the batch only for those pricing requests that didn't make risk data requests.";
+                var remediation = "Save the risks manually, OR rerun those counterparties that did not save any risks.";
                 new IssueBuilder()
-                    .SetDescription($"The latest run has made {requests.Count} risk data requests, but it should have made {expectedRequests.Count} risk data requests.")
+                    .SetDescription($"This run has made {requests.Count} risk data requests, but it should have made {expectedRequests.Count} risk data requests.")
                     .SetMonitoringLevel(MonitoringLevel.Error)
                     .SetRemediation(remediation)
                     .BuildAndAdd(issues);
@@ -84,7 +84,7 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
             else if (requests.Count > expectedRequests.Count)
             {
                 new IssueBuilder()
-                    .SetDescription($"The latest run has made {requests.Count} risk data requests, which is more than the expected risk data request count ({expectedRequests.Count}).")
+                    .SetDescription($"This run has made {requests.Count} risk data requests, which is more than the expected risk data request count ({expectedRequests.Count}).")
                     .SetMonitoringLevel(MonitoringLevel.Warning)
                     .SetRemediation("This isn't necessarily an issue, but this usually occurs when the database writes are slow. So you may want " +
                                     "monitor the database performance.")
@@ -93,7 +93,7 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
             else
             {
                 new IssueBuilder()
-                    .SetDescription($"The latest run has made {requests.Count} risk data requests, which matches the expected risk data request count ({expectedRequests.Count}).")
+                    .SetDescription($"This run has made {requests.Count} risk data requests, which matches the expected risk data request count ({expectedRequests.Count}).")
                     .SetMonitoringLevel(MonitoringLevel.Ok)
                     .BuildAndAdd(issues);
             }
@@ -109,7 +109,7 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
                 var list = string.Join(",", requestsWithoutResponse);
 
                 new IssueBuilder()
-                    .SetDescription($"The latest run only received {responses.Count} risk data responses. This is less than the risk data requests that was made. The requests that didn't receive responses are {list}.")
+                    .SetDescription($"This run only received {responses.Count} risk data responses. This is less than the risk data requests that was made. The requests that didn't receive responses are {list}.")
                     .SetMonitoringLevel(MonitoringLevel.Error)
                     .SetRemediation("Rerun the batch only for those risk data requests that get responses.")
                     .BuildAndAdd(issues);
@@ -117,7 +117,7 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
             else if(responses.Count == requests.Count)
             {
                 new IssueBuilder()
-                    .SetDescription($"The latest run has received {responses.Count} risk data responses which equal to the number of risk data requests that was made ({requests.Count}).")
+                    .SetDescription($"This run has received {responses.Count} risk data responses which equal to the number of risk data requests that was made ({requests.Count}).")
                     .SetMonitoringLevel(MonitoringLevel.Ok)
                     .BuildAndAdd(issues);
             }
