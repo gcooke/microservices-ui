@@ -45,7 +45,7 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
                 new IssueBuilder()
                     .SetDescription(description + checkPfe)
                     .SetMonitoringLevel(MonitoringLevel.Warning)
-                    .SetRemediation("Rerun batch for selected counterparties")
+                    .SetRemediation("Try to save the results manually if available, or if not available, rerun batch for selected counterparties")
                     .SetShouldContinueCheckingIssues(false)
                     .BuildAndAdd(issues);
 
