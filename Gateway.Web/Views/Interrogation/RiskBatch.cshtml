@@ -130,15 +130,18 @@
                 <br />
             }
             <br />
-            <div>
-                <b style="color: #888888">The following validations were run:</b>
-                <ul>
-                    @foreach (var test in Model.Tests)
-                    {
-                        <li style="color: #888888">@test</li>
-                    }
-                </ul>
-            </div>
+            @if (!string.IsNullOrWhiteSpace(Model.TradeSource))
+            {
+                <div>
+                    <b style="color: #888888">The following validations were run:</b>
+                    <ul>
+                        @foreach (var test in Model.Tests)
+                        {
+                            <li style="color: #888888">@test</li>
+                        }
+                    </ul>
+                </div>
+            }
         </div>
     </div>
 </div>

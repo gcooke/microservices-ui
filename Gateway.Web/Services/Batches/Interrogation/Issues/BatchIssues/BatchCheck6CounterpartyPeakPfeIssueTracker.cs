@@ -13,6 +13,7 @@ using Gateway.Web.Services.Batches.Interrogation.Models.Enums;
 
 namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
 {
+    [AppliesToBatch(Models.Enums.Batches.CounterpartyPfe)]
     public class BatchCheck6CounterpartyPeakPfeIssueTracker : BaseBatchIssueTracker
     {
         public override Models.Issues Identify(InterrogationModel model, GatewayEntities gatewayDb, Entities pnrFoDb, Batch item, BatchRun run)
@@ -44,7 +45,7 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
                 new IssueBuilder()
                     .SetDescription(description + checkPfe)
                     .SetMonitoringLevel(MonitoringLevel.Warning)
-                    .SetRemediation("Rerun batch for selected counterparties")
+                    .SetRemediation("Try to save the results manually if available, or if not available, rerun batch for selected counterparties")
                     .SetShouldContinueCheckingIssues(false)
                     .BuildAndAdd(issues);
 
