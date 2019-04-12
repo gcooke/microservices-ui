@@ -82,11 +82,12 @@ namespace Gateway.Web.Services
                             foreach (var issue in issues.IssueList)
                             {
                                 var description = issue.Description;
+                                var remediation = (string) null;
                                 if (issue.HasRemediation)
-                                    description += "<br/><b>REMEDIATION:</b> " + issue.Remediation;
+                                    remediation += "<b>REMEDIATION:</b><br/> " + issue.Remediation;
 
                                 if (issue.MonitoringLevel >= model.MinimumLevel)
-                                    cube.AddRow(new object[] { issue.MonitoringLevel, description });
+                                    cube.AddRow(new object[] { issue.MonitoringLevel, description, remediation });
                             }
 
                             if (issues.IssueList.Any(x => !x.ShouldContinueCheckingIssues))
@@ -109,6 +110,7 @@ namespace Gateway.Web.Services
             var cube = new CubeBuilder()
                 .AddColumn(" ", ColumnType.Int)
                 .AddColumn("Description")
+                .AddColumn("Remediation")
                 .Build();
 
             cube.SetAttribute("BatchType", batch.BatchType);

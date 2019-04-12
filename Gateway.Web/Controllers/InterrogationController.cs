@@ -28,6 +28,7 @@ namespace Gateway.Web.Controllers
             model.BatchType = batchType ?? model.BatchType;
             model.ReportDateString = reportDateString ?? model.ReportDateString;
             model.MinimumLevelInput = minimumLevelInput ?? model.MinimumLevelInput;
+            _service.Analyze(model);
             return View("RiskBatch", model);
         }
 

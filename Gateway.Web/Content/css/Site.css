@@ -464,3 +464,15 @@ progress::-webkit-progress-value {
 .server-resource-button {
     margin-top: 5px;
 }
+
+.hide-item {
+    display: none;
+}
+
+.show-item {
+    display: block;
+}
+
+.visibility-toggle {
+    cursor: pointer;
+}

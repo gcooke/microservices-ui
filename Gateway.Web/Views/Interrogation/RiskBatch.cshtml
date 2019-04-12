@@ -45,7 +45,7 @@
             @foreach (var table in Model.Report.Tables)
             {
             <h4>
-                <a href="Request/Summary?correlationId=@table.GetAttribute("CorrelationId")">@table.GetAttribute("BatchType") - @table.GetAttribute("TradeSource")</a>
+                <a href="~/Request/Summary?correlationId=@table.GetAttribute("CorrelationId")">@table.GetAttribute("BatchType") - @table.GetAttribute("TradeSource")</a>
 
                 @if (@table.GetAttribute("CurrentStatus") != null)
                 {
@@ -75,7 +75,7 @@
                         <tr>
                             @{ var pivot = bool.Parse((table.GetAttribute("PivotColumnHeaders") ?? "false").ToString()); }
 
-                            @foreach (var col in @table.ColumnDefinitions)
+                            @foreach (var col in @table.ColumnDefinitions.Where(x => x.Name.ToLower() != "remediation"))
                             {
                                 if (pivot)
                                 {
@@ -95,11 +95,11 @@
                     @foreach (var row in table.GetRows())
                     {
                     <tr>
-                        @foreach (object val in @row.GetValues())
+                        @foreach (object val in @row.GetValues().Take(2))
                         {
                             if (val is int)
                             {
-                                <td style="min-width: 50px;">
+                                <td style="width: 50px;">
                                     @switch ((MonitoringLevel)(int)val)
                                     {
                                         case MonitoringLevel.Ok:
@@ -118,8 +118,25 @@
                             }
                             else
                             {
-                                <td>
+                                <td style="max-width: 100px;">
                                     @Html.Raw(@val)
+
+                                    @if (row.Columns >= 3)
+                                    {
+                                        var remediation = row.GetStringValue("Remediation");
+                                        if (!string.IsNullOrWhiteSpace(remediation))
+                                        {
+                                            var code = @remediation.GetHashCode();
+                                            <br />
+                                            <a class="visibility-toggle" data-link="@code">View Remediation</a>
+                                            <div class="visibility-@code hide-item">
+                                                <br />
+                                                @Html.Raw(remediation)
+                                            </div>
+                                        }
+
+                                    }
+
                                 </td>
                             }
                         }
@@ -132,14 +149,18 @@
             <br />
             @if (Model.Report.TablesList.Any())
             {
-                <div>
-                    <b style="color: #888888">The following validations were run:</b>
-                    <ul>
-                        @foreach (var test in Model.Tests)
-                        {
-                            <li style="color: #888888">@test</li>
-                        }
-                    </ul>
+                <div class="row m-t-15">
+                    <div class="col-sm-12">
+                        <div class="well">
+                            <b style="color: #888888">The following validations were run:</b>
+                            <ul>
+                                @foreach (var test in Model.Tests)
+                                {
+                                    <li style="color: #888888">@test</li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             }
         </div>
