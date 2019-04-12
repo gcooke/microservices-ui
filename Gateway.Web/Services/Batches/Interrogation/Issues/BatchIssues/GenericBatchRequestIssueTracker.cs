@@ -67,6 +67,13 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
             var expectedRequests = GetExpectedRequests();
 
             if (requests.Count == expectedRequests.Count) return;
+            if (requests.Count > expectedRequests.Count)
+            {
+                var d = $"There should only have been {expectedRequests.Count} {GetControllerName()} requests, but there was {requests.Count} requests which is more than expected.";
+                var i = GetIssue(d, "This isn't necessarily an issue, but please investigate.", MonitoringLevel.Warning);
+                issues.Add(i);
+                return;
+            }
 
             var description = $"There should have been {expectedRequests.Count} {GetControllerName()} requests, but there was only {requests.Count} requests.";
             var remediation = GetIncorrectRequestsRemediation();
@@ -82,6 +89,13 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
             var responses = GetResponses();
 
             if (requests.Count == responses.Count) return;
+            if (responses.Count > requests.Count)
+            {
+                var d = $"There should only have been {requests.Count} {GetControllerName()} responses, but there was {responses.Count} requests which is more than expected.";
+                var i = GetIssue(d, "This isn't necessarily an issue, but please investigate.", MonitoringLevel.Warning);
+                issues.Add(i);
+                return;
+            };
 
             var description = $"There should have been {requests.Count} {GetControllerName()} responses, but there was only {responses.Count} requests.";
             var remediation = GetResponsesRemediation();

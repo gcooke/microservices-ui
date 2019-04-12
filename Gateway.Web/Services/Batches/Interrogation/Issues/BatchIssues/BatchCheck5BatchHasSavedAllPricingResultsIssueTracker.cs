@@ -52,18 +52,20 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
 
         protected override string GetIncorrectRequestsRemediation()
         {
-            var requests = Context.PricingRequests.Value;
-            var expectedRequests = Context.PricingRequests.Value;
+            var requests = Context.RiskDataRequests.Value;
+            var expectedRequests = Context.PricingResponses.Value;
+
+            var enumerable = requests.Select(x => GetRemediationString(x.Resource));
 
             var missing = expectedRequests
-                .Select(x => x.Resource)
-                .Where(x => requests.Select(y => y.Resource).Contains(x))
+                .Select(x => GetPricingString(x.Request.Resource))
+                .Where(x => !requests.Select(y => GetRemediationString(y.Resource)).Contains(x))
                 .ToList()
                 .Take(100)
                 .ToList();
 
             var remediation = "The following risk data requests are missing:<br/>" +
-                              $"{string.Join(",", missing)} <i>(showing the first 100 only)</i><br/><br/>" +
+                              $"{string.Join(",", missing.Select(x => $" {x}"))} <i>(showing the first 100 only)</i><br/><br/>" +
                               "Please check the following:<br/>" +
                               "<ul>" +
                               "<li>- If the batch is still running, then these requests probably have yet to be queued.<li>" +
@@ -82,18 +84,18 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
 
         protected override string GetResponsesRemediation()
         {
-            var requests = Context.PricingRequests.Value;
-            var responses = Context.PricingResponses.Value;
+            var requests = Context.RiskDataRequests.Value;
+            var responses = Context.RiskDataResponses.Value;
 
             var missing = requests
-                .Select(x => x.Resource)
-                .Where(x => responses.Select(y => y.Request.Resource).Contains(x))
+                .Select(x => GetRemediationString(x.Resource))
+                .Where(x => !responses.Select(y => GetRemediationString(y.Request.Resource)).Contains(x))
                 .ToList()
                 .Take(100)
                 .ToList();
 
             var remediation = "The following risk data responses are missing:<br/>" +
-                              $"{string.Join(",", missing)} <i>(showing the first 100 only)</i><br/><br/>" +
+                              $"{string.Join(",", missing.Select(x => $" {x}"))} <i>(showing the first 100 only)</i><br/><br/>" +
                               "Please check the following:<br/>" +
                               "<ul>" +
                               "<li>- If the batch is still running, then these requests are probably still in progress.<li>" +
@@ -113,18 +115,15 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
 
         protected override string GetUnsuccessfulResponsesRemediation()
         {
-            var responses = Context.PricingRequests.Value;
-            var unsuccessfulResponses = Context.PricingResponses.Value.Where(x => x.Response.ResultCode == 0);
-
-            var missing = responses
-                .Select(x => x.Resource)
-                .Where(x => unsuccessfulResponses.Select(y => y.Request.Resource).Contains(x))
-                .ToList()
-                .Take(100)
+            var unsuccessfulResponses = Context
+                .RiskDataResponses
+                .Value
+                .Where(x => x.Response.ResultCode == 0)
+                .Select(x => x.Request.Resource)
                 .ToList();
 
             var remediation = "The following risk data responses were unsuccessful:<br/>" +
-                              $"{string.Join(",", missing)} <i>(showing the first 100 only)</i><br/><br/>" +
+                              $"{string.Join(",", unsuccessfulResponses.Select(x => $" {x}"))}<br/><br/>" +
                               "Please do ONE of the following:<br/>" +
                               "<ul>" +
                               "<li>- Trigger these requests manually. If they still fail, then revert to the next point." +
@@ -134,7 +133,7 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
                               "</ul>" +
                               "<br/>" +
                               "Here is a list that you could potentially copy + paste:<br/>" +
-                              $"{GetRemediationString(missing)}";
+                              $"{GetRemediationString(unsuccessfulResponses)}";
 
             return remediation;
         }
@@ -143,13 +142,32 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
         {
             try
             {
-                var remediationList = items.Select(item => item.Split('-')).Select(label => $" {label[0].Trim()}").ToList();
+                var remediationList = items.Select(GetRemediationString).Select(label => $" {label}").ToList();
                 return string.Join(",", remediationList);
             }
             catch (Exception ex)
             {
                 return string.Join(", ", items);
             }
+        }
+
+        private string GetRemediationString(string item)
+        {
+            var parts = item.Split('?');
+            if (parts.Length != 2)
+                return item;
+            var description = parts[1].Split('=');
+            if (description.Length != 2) return parts[1];
+            var name = description[1].Split('-');
+            if (name.Length != 2) return description[1];
+            return name[0].Trim();
+        }
+
+        private string GetPricingString(string item)
+        {
+            var parts = item.Split('-');
+            if (parts.Length != 2) return item;
+            return parts[0].Trim();
         }
     }
 }

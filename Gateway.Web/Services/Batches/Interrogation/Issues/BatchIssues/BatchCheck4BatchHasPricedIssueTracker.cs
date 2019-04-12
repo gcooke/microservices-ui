@@ -61,7 +61,7 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
 
             var missing = expectedRequests
                 .Select(x => x.Resource)
-                .Where(x => requests.Select(y => y.Resource).Contains(x))
+                .Where(x => !requests.Select(y => y.Resource).Contains(x))
                 .ToList()
                 .Take(100)
                 .ToList();
@@ -90,7 +90,7 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
 
             var missing = requests
                 .Select(x => x.Resource)
-                .Where(x => responses.Select(y => y.Request.Resource).Contains(x))
+                .Where(x => !responses.Select(y => y.Request.Resource).Contains(x))
                 .ToList()
                 .Take(100)
                 .ToList();
@@ -116,18 +116,15 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
 
         protected override string GetUnsuccessfulResponsesRemediation()
         {
-            var responses = Context.PricingRequests.Value;
-            var unsuccessfulResponses = Context.PricingResponses.Value.Where(x => x.Response.ResultCode == 0);
-
-            var missing = responses
-                .Select(x => x.Resource)
-                .Where(x => unsuccessfulResponses.Select(y => y.Request.Resource).Contains(x))
-                .ToList()
-                .Take(100)
+            var unsuccessfulResponses = Context
+                .PricingResponses
+                .Value
+                .Where(x => x.Response.ResultCode == 0)
+                .Select(x => x.Request.Resource)
                 .ToList();
 
             var remediation = "The following pricing responses were unsuccessful:<br/>" +
-                              $"{string.Join(",", missing)} <i>(showing the first 100 only)</i><br/><br/>" +
+                              $"{string.Join(",", unsuccessfulResponses)}<br/><br/>" +
                               "Please do the following:<br/>" +
                               "<ul>" +
                               "<li>- Rerun the batch for these pricing requests only." +
@@ -135,7 +132,7 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
                               "</ul>" +
                               "<br/>" +
                               "Here is a list that you could potentially copy + paste:<br/>" +
-                              $"{GetRemediationString(missing)}";
+                              $"{GetRemediationString(unsuccessfulResponses)}";
 
             return remediation;
         }
