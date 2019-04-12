@@ -126,7 +126,7 @@
                                         var remediation = row.GetStringValue("Remediation");
                                         if (!string.IsNullOrWhiteSpace(remediation))
                                         {
-                                            var code = @remediation.GetHashCode();
+                                            var code = @remediation.GetHashCode() + DateTime.Now.Millisecond.ToString();
                                             <br />
                                             <a class="visibility-toggle" data-link="@code">View Remediation</a>
                                             <div class="visibility-@code hide-item">
