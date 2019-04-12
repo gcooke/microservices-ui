@@ -54,12 +54,11 @@ namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
         {
             var requests = Context.RiskDataRequests.Value;
             var expectedRequests = Context.PricingResponses.Value;
-
-            var enumerable = requests.Select(x => GetRemediationString(x.Resource));
+            var resources = requests.Select(x => GetRemediationString(x.Resource));
 
             var missing = expectedRequests
                 .Select(x => GetPricingString(x.Request.Resource))
-                .Where(x => !requests.Select(y => GetRemediationString(y.Resource)).Contains(x))
+                .Where(x => !resources.Contains(x))
                 .ToList()
                 .Take(100)
                 .ToList();
