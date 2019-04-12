@@ -13,6 +13,7 @@ using Gateway.Web.Services.Batches.Interrogation.Models.Enums;
 
 namespace Gateway.Web.Services.Batches.Interrogation.Issues.BatchIssues
 {
+    [AppliesToBatch(Models.Enums.Batches.CounterpartyPfe)]
     public class BatchCheck6CounterpartyPeakPfeIssueTracker : BaseBatchIssueTracker
     {
         public override Models.Issues Identify(InterrogationModel model, GatewayEntities gatewayDb, Entities pnrFoDb, Batch item, BatchRun run)

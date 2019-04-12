@@ -83,7 +83,7 @@ namespace Gateway.Web.Services
                             {
                                 var description = issue.Description;
                                 if (issue.HasRemediation)
-                                    description += "<br/><br/>REMEDIATION: " + issue.Remediation;
+                                    description += "<br/><b>REMEDIATION:</b> " + issue.Remediation;
 
                                 if (issue.MonitoringLevel >= model.MinimumLevel)
                                     cube.AddRow(new object[] { issue.MonitoringLevel, description });
