@@ -41,9 +41,11 @@
         </div>
 
         <div class="containerx bulk m-t-5">
-
+            
+            @{ var tableCount = 0;}
             @foreach (var table in Model.Report.Tables)
             {
+                tableCount++;
             <h4>
                 <a href="~/Request/Summary?correlationId=@table.GetAttribute("CorrelationId")">@table.GetAttribute("BatchType") - @table.GetAttribute("TradeSource")</a>
 
@@ -72,29 +74,31 @@
 
                 <table style="width: 100%; white-space: normal" class="datatable">
                     <thead>
-                        <tr>
-                            @{ var pivot = bool.Parse((table.GetAttribute("PivotColumnHeaders") ?? "false").ToString()); }
+                    <tr>
+                        @{ var pivot = bool.Parse((table.GetAttribute("PivotColumnHeaders") ?? "false").ToString()); }
 
-                            @foreach (var col in @table.ColumnDefinitions.Where(x => x.Name.ToLower() != "remediation"))
+                        @foreach (var col in @table.ColumnDefinitions.Where(x => x.Name.ToLower() != "remediation"))
+                        {
+                            if (pivot)
                             {
-                                if (pivot)
-                                {
-                                    <th class="rotate">
-                                        <div>
-                                            <span>@col.Name</span>
-                                        </div>
-                                    </th>
-                                }
-                                else
-                                {
-                                    <td>@col.Name</td>
-                                }
+                                <th class="rotate">
+                                    <div>
+                                        <span>@col.Name</span>
+                                    </div>
+                                </th>
                             }
-                        </tr>
+                            else
+                            {
+                                <td>@col.Name</td>
+                            }
+                        }
+                    </tr>
                     </thead>
+                    @{var rowCount = 0;}
                     @foreach (var row in table.GetRows())
                     {
-                    <tr>
+                        rowCount = rowCount + 1;
+                        <tr>
                         @foreach (object val in @row.GetValues().Take(2))
                         {
                             if (val is int)
@@ -126,7 +130,7 @@
                                         var remediation = row.GetStringValue("Remediation");
                                         if (!string.IsNullOrWhiteSpace(remediation))
                                         {
-                                            var code = @remediation.GetHashCode() + DateTime.Now.Millisecond.ToString();
+                                            var code = rowCount.ToString()+"-"+ tableCount.ToString();
                                             <br />
                                             <a class="visibility-toggle" data-link="@code">View Remediation</a>
                                             <div class="visibility-@code hide-item">
