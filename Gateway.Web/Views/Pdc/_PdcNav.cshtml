@@ -1,0 +1,39 @@
+﻿<!-- Sidebar -->
+<div id="sidebar-wrapper">
+    <br />
+    <div style="margin-left: 10px; height: 50px">
+        <div style="float: left">
+            <img class="sidebar-img" src="@Url.Content(MvcApplication.ControllerIcon)" style="height: 48px">
+        </div>
+        <div style="float: left; margin-top: 5px">
+            <span class="sidebar-title">@ViewBag.Title</span><br />
+            <span class="sidebar-subtitle">@ViewBag.Current</span>
+        </div>
+    </div>
+
+    <div class="sidebar-navheader">
+        <strong>DETAILS</strong>
+    </div>
+
+    <ul class="sidebar-nav">
+        <li>
+            <a href="~/Pdc/Index/"
+               class="@(ViewBag.Current == "Instances" ? "active" : "")">
+                <span class="glyphicon glyphicon-cog"></span>&nbsp;&nbsp;Instances
+            </a>
+        </li>
+        @*<li>
+            <a href="~/Pdc/Activity/"
+               class="@(ViewBag.Current == "Activity" ? "active" : "")">
+                <span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Activity
+            </a>
+        </li>*@
+        @*<li>
+            <a href="~/Pdc/Trades/"
+               class="@(ViewBag.Current == "Trades" ? "active" : "")">
+                <span class="glyphicon  glyphicon-retweet"></span>&nbsp;&nbsp;Trades
+            </a>
+        </li>*@
+    </ul>
+</div>
+<!-- /#sidebar-wrapper -->

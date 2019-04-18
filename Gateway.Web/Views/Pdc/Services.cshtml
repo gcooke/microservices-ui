@@ -1,0 +1,56 @@
+﻿@using Gateway.Web.Models.Pdc
+@model Gateway.Web.Models.Pdc.PdcServicesModel
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "Pdc";
+    ViewBag.Current = "Instances";
+}
+@{ Html.RenderPartial("_PdcNav", (PdcServicesModel)@Model); }
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+        <br />
+        <div id="containerx bulk">
+            <h3>instances</h3>
+
+            @using (Html.BeginForm("Ping", "Pdc", FormMethod.Post))
+            {
+                <table style="white-space: nowrap" class="datatable table" id="searchable-table">
+                    <thead>
+                        <tr>
+                            <td class="text-center" style="width:30%">Host Name</td>
+                            <td class="text-center">Host Port</td>
+                            <td class="text-center">
+                                <div>
+                                    <!-- Fix spinner .. someday...-->
+                                    <button class="btn btn-danger btn-sm" type="submit" name="submit">
+                                        <i id="loading" class="fa fa-spin fa-refresh"></i> Ping
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var instance in @Model.Items)
+                        {
+                            <tr>
+                                <td>@instance.HostName</td>
+                                <td>@instance.HostPort</td>
+                                <td class="text-center">
+                                    @if (instance.PingResult == PingResult.Success)
+                                    {
+                                        <span class="alert-success glyphicon glyphicon-thumbs-up text-center"></span>
+                                    }
+                                    @if (instance.PingResult == PingResult.Failure)
+                                    {
+                                        <span class="alert-danger glyphicon glyphicon-thumbs-down text-center"></span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+        <br />
+    </div>
+</div>

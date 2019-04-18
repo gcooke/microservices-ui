@@ -1,28 +1,29 @@
-﻿using System;
+﻿using Absa.Cib.JwtAuthentication.Extensions;
+using Absa.Cib.JwtAuthentication.Models;
 using Absa.Cib.MIT.TaskScheduling.Client.Scheduler;
-using Bagl.Cib.MIT.IoC;
 using Bagl.Cib.MIT.IO;
 using Bagl.Cib.MIT.IO.Impl;
+using Bagl.Cib.MIT.IoC;
 using Bagl.Cib.MIT.Logging;
 using Bagl.Cib.MIT.Redis;
+using Bagl.Cib.MIT.Redis.Caching;
+using Bagl.Cib.MIT.Redis.Serialization;
+using Bagl.Cib.MIT.Redis.Serialization.Json;
 using Bagl.Cib.MSF.ClientAPI.Provider;
+using Gateway.Web.Controllers;
 using Gateway.Web.Database;
 using Gateway.Web.Models.Schedule.Input;
 using Gateway.Web.Services;
 using Gateway.Web.Services.Batches;
 using Gateway.Web.Services.Batches.Interfaces;
-using StackExchange.Redis;
-using Gateway.Web.Services.Monitoring.ServerDiagnostics;
-using Gateway.Web.Services.Schedule;
-using Gateway.Web.Services.Schedule.Interfaces;
-using Absa.Cib.JwtAuthentication.Extensions;
-using Absa.Cib.JwtAuthentication.Models;
-using Bagl.Cib.MIT.Redis.Caching;
-using Bagl.Cib.MIT.Redis.Serialization;
-using Bagl.Cib.MIT.Redis.Serialization.Json;
-using Gateway.Web.Controllers;
 using Gateway.Web.Services.Batches.Interrogation.Services.BatchService;
 using Gateway.Web.Services.Batches.Interrogation.Services.IssueService;
+using Gateway.Web.Services.Monitoring.ServerDiagnostics;
+using Gateway.Web.Services.Pdc;
+using Gateway.Web.Services.Schedule;
+using Gateway.Web.Services.Schedule.Interfaces;
+using StackExchange.Redis;
+using System;
 using Unity.Injection;
 
 namespace Gateway.Web
@@ -118,7 +119,6 @@ namespace Gateway.Web
 
             information.RegisterType<IRedisCache, RedisCache>(Scope.Singleton);
 
-
             information.RegisterType<IPnRFoDatabaseService, PnRfoDatabaseService>(Scope.Singleton);
             information.RegisterType<IGatewayDatabaseService, GatewayDatabaseService>(Scope.Singleton);
 
@@ -148,6 +148,7 @@ namespace Gateway.Web
             information.RegisterType<IBatchHelper, BatchHelper>(Scope.ContainerSingleton);
             information.RegisterType<IDatabaseStateProvider, DatabaseStateProvider>(Scope.ContainerSingleton);
             information.RegisterType<IManifestService, ManifestService>(Scope.ContainerSingleton);
+            information.RegisterType<IPdcService, PdcService>(Scope.ContainerSingleton);
 
             Absa.Cib.Authorization.Extensions.Registration.Register(information);
             Absa.Cib.Authorization.Extensions.Registration.RegisterCertificates(information);

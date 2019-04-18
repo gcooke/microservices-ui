@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Web.Mvc;
-using Bagl.Cib.MIT.Logging;
+﻿using Bagl.Cib.MIT.Logging;
 using Gateway.Web.Authorization;
 using Gateway.Web.Database;
 using Gateway.Web.Models.Group;
@@ -14,6 +8,11 @@ using Gateway.Web.Models.Shared;
 using Gateway.Web.Models.User;
 using Gateway.Web.Services;
 using Gateway.Web.Utils;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Web.Mvc;
 namespace Gateway.Web.Controllers
 {
     [RoleBasedAuthorize(Roles = "Security.View")]
@@ -25,7 +24,8 @@ namespace Gateway.Web.Controllers
         private readonly IGatewayDatabaseService _database;
         private readonly IManifestService _manifestService;
 
-        public SecurityController(IGatewayService gateway, ILoggingService loggingService, IGatewayDatabaseService database, IManifestService manifestService)
+        public SecurityController(IGatewayService gateway, ILoggingService loggingService,
+            IGatewayDatabaseService database, IManifestService manifestService)
             : base(loggingService)
         {
             _gateway = gateway;
