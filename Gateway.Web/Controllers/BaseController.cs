@@ -6,7 +6,7 @@ namespace Gateway.Web.Controllers
 {
     public class BaseController : Controller
     {
-        public ILogger _logger;
+        private readonly ILogger _logger;
 
         public BaseController(ILoggingService loggingService)
         {
