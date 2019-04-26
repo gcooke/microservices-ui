@@ -45,6 +45,7 @@ namespace Gateway.Web
             information.RegisterType<MarketDataController>(Scope.ContainerSingleton);
             information.RegisterType<MonitoringController>(Scope.ContainerSingleton);
             information.RegisterType<PermissionController>(Scope.ContainerSingleton);
+            information.RegisterType<RbhController>(Scope.ContainerSingleton);
             information.RegisterType<ReleaseProcessController>(Scope.ContainerSingleton);
             information.RegisterType<RequestController>(Scope.ContainerSingleton);
             information.RegisterType<RequestScheduleController>(Scope.ContainerSingleton);
