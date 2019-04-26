@@ -29,7 +29,7 @@ namespace Gateway.Web.Controllers
 
         private ActionResult GetPnrVersionImpl(string version)
         {
-            if (_packageLocations?.Length == null)
+            if ((_packageLocations?.Length ?? 0) == 0)
                 throw new Exception("Pnr.PricingLocation has not been configured.");
 
             if (string.IsNullOrEmpty(version))
