@@ -13,12 +13,14 @@ namespace Gateway.Web.Controllers
     [RoutePrefix("rbh")]
     public class RbhController : BaseController
     {
+        private readonly ILogger _logger;
         private readonly string[] _packageLocations;
 
         public RbhController(ILoggingService loggingService,
             ISystemInformation systemInformation)
             : base(loggingService)
         {
+            _logger = loggingService.GetLogger(this);
             _packageLocations = systemInformation.GetSetting("Pnr.PricingLocation")?.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
@@ -27,13 +29,14 @@ namespace Gateway.Web.Controllers
 
         private ActionResult GetPnrVersionImpl(string version)
         {
-            if ((_packageLocations?.Length ?? 0) == 0)
+            if (_packageLocations?.Length == null)
                 throw new Exception("Pnr.PricingLocation has not been configured.");
 
             if (string.IsNullOrEmpty(version))
                 throw new ArgumentException("Unexpected null or empty string.", nameof(version));
 
             version = version.Replace("-", ".");
+            _logger.InfoFormat("Version of PnR (pricing) requested '{0}'.", version);
 
             if (!IsValidVersionParameter(version))
                 throw new Exception($"'{version}' is not an valid version representation.");
@@ -45,11 +48,11 @@ namespace Gateway.Web.Controllers
                 if (!Directory.Exists(sourcePath))
                     continue;
 
-                var sourceZipFile = Directory.GetFiles(sourcePath, "*.zip").FirstOrDefault();
+                var sourceZipFile = Directory.GetFiles(sourcePath, "*.zip")
+                    .FirstOrDefault() 
+                    ?? throw new Exception($"Could not find a pricing controller zip for '{version}'.");
 
-                if (sourceZipFile == null)
-                    throw new Exception($"Could not find a pricing controller zip for '{version}'.");
-
+                _logger.InfoFormat("Returning '{0}'.", sourceZipFile);
                 return File(sourceZipFile, System.Net.Mime.MediaTypeNames.Application.Octet, Path.GetFileName(sourceZipFile));
             }
 
