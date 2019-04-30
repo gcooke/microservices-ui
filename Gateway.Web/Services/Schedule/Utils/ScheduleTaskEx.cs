@@ -9,6 +9,7 @@ namespace Gateway.Web.Services.Schedule.Utils
         {
             var task = new ScheduleTask(schedule.Type)
             {
+                GroupId = schedule.GroupId,
                 ScheduleId = schedule.ScheduleId,
                 Schedule = string.Empty,
                 ScheduleKey = schedule.ScheduleKey,

@@ -6,6 +6,8 @@ namespace Gateway.Web.Models.Schedule.Output
 {
     public class ScheduleTask
     {
+        public long? GroupId { get; set; }
+
         public long ScheduleId { get; set; }
 
         public string ScheduleKey { get; set; }

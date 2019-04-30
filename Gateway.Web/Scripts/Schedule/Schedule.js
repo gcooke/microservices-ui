@@ -113,7 +113,10 @@ function updateView(data) {
         function (index, value) {
             $("#status-" + value.ScheduleId).html(getStatusHtml(value));
             $("#timing-" + value.ScheduleId).html(getTimingsHtml(value));
-
+            $("#stop-" + value.ScheduleId).prop('disabled', isTaskStopDisabled(value.Status));
+            $("#run-" + value.ScheduleId).prop('disabled', isTaskRerunDisabled(value.Status));
+            $("#stopall-" + value.GroupId).prop('disabled', isTaskStopDisabled(value.Status));
+            $("#runall-" + value.GroupId).prop('disabled', isTaskRerunDisabled(value.Status));
         });
 
     $("#paginator li").each(function (index, item) {
@@ -221,6 +224,19 @@ function rerunTask(url) {
 
 }
 
+function stopTask(url) {
+    $.each(requests,
+        function (index, value) {
+            value.abort();
+        });
+
+    $.get(url, function (date) {
+        toastr.success('Task(s) has been added to queue and will be stopped shortly.', 'Success');
+        pollResults();
+    });
+
+}
+
 function bulkFunction(childClass, baseUrl, isAsync) {
     var items = [];
     $("." + childClass).each(function (index) {
@@ -240,4 +256,26 @@ function bulkFunction(childClass, baseUrl, isAsync) {
     } else {
         this.document.location.href = url;
     }
+}
+
+function isTaskStopDisabled(status) {
+    var result = true;
+    if (status === "Succeeded" || status === "Failed" || status === "Not Started") {
+        result = true;
+    }    
+    else {
+        result = false;
+    }        
+    return result;
+}
+
+function isTaskRerunDisabled(status) {
+    var result = false;
+    if (status === "Succeeded" || status === "Failed" || status === "Not Started") {
+        result = false;
+    }    
+    else {
+        result = true;
+    }        
+    return result;
 }

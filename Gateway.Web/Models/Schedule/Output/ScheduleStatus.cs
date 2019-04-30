@@ -19,6 +19,7 @@ namespace Gateway.Web.Models.Schedule.Output
 
     public class ScheduleStatus
     {
+        public long? GroupId { get; set; }
         public long ScheduleId { get; set; }
         public string Status { get; set; }
         public Guid? RequestId { get; set; }

@@ -1,26 +1,25 @@
-﻿using System;
-using System.Configuration;
-using System.Diagnostics;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Optimization;
-using System.Web.Routing;
+﻿using Absa.Cib.JwtAuthentication.Extensions;
 using Absa.Cib.MIT.TaskScheduling.Client;
 using Absa.Cib.MIT.TaskScheduling.Models;
 using Bagl.Cib.MIT.IoC;
 using Bagl.Cib.MIT.IoC.Models;
 using Bagl.Cib.MIT.IoC.Service;
 using Bagl.Cib.MIT.Logging;
-using Bagl.Cib.MSF.ClientAPI.Gateway;
 using CommonServiceLocator;
 using Gateway.Web.Authorization;
 using Gateway.Web.Controllers;
-using Gateway.Web.Database;
 using Gateway.Web.ModelBindersConverters;
 using Gateway.Web.Models.Schedule.Input;
 using Gateway.Web.Models.Security;
-using Gateway.Web.Services;
 using Gateway.Web.Services.Schedule.Utils;
+using System;
+using System.Configuration;
+using System.Diagnostics;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using System.Web.Optimization;
+using System.Web.Routing;
 using Unity;
 using Unity.ServiceLocation;
 
@@ -67,7 +66,18 @@ namespace Gateway.Web
             CentralConfigurationService.ApplyCentralConfiguration(information);
 
             var dns = information.GetSetting("DnsName", "abcap-foutils.intra.absa.co.za");
+
             var authurl = $"https://{dns}";
+            var issuers = Issuer.GetIssuers(information);
+            if (issuers.Any())
+            {
+                if (Debugger.IsAttached)
+                    dns = "sigma-dev.absa.co.za";
+                authurl = issuers.FirstOrDefault(i => i.Contains(dns)) ?? "abcap -foutils.intra.absa.co.za";
+                if (Debugger.IsAttached)
+                    dns = information.GetSetting("DnsName", "abcap-foutils.intra.absa.co.za");
+
+            }
 
             BatchRequestBuilderEx.AuthUrl = authurl;
             BatchRequestBuilderEx.BaseUrl = information.GetSetting("redstonebaseurl", "https://abcap-foutils.intra.absa.co.za:7010/") + "Api/";
@@ -87,6 +97,8 @@ namespace Gateway.Web
             var server = systemInformation.GetSetting("DatabaseServer");
             var schedulingConnectionString = $"data source={server};initial catalog={database};integrated security=True;multipleactiveresultsets=True;application name=EntityFramework";
             SigmaHomePage = $"https://{dns}";
+            if (Debugger.IsAttached)
+                SigmaHomePage = $"https://sigma-dev.absa.co.za";
 
             logger.Info($"SchedulingClientProvider : Using connection string:{schedulingConnectionString}");
             var schedulingClientProvider = new SchedulingClientProvider();

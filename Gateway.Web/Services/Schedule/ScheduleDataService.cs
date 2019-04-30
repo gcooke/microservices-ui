@@ -1,16 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data.Entity;
-using System.Linq;
 using Absa.Cib.MIT.TaskScheduling.Client.Scheduler;
 using Bagl.Cib.MIT.IoC;
 using Gateway.Web.Database;
 using Gateway.Web.Models.Schedule.Output;
 using Gateway.Web.Services.Schedule.Interfaces;
 using Gateway.Web.Services.Schedule.Utils;
-using NCrontab;
-using ScheduleGroup = Gateway.Web.Models.Schedule.Output.ScheduleGroup;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
 
 namespace Gateway.Web.Services.Schedule
 {
@@ -20,7 +17,7 @@ namespace Gateway.Web.Services.Schedule
         private readonly IRedstoneWebRequestScheduler _scheduler;
         private readonly string ConnectionString;
 
-        public ScheduleDataService(IExecutableScheduler executableScheduler, 
+        public ScheduleDataService(IExecutableScheduler executableScheduler,
             IRedstoneWebRequestScheduler scheduler,
             ISystemInformation systemInformation)
         {
@@ -228,7 +225,7 @@ namespace Gateway.Web.Services.Schedule
             db.Dispose();
         }
 
-        public void RerunTask(long id, DateTime businessDate)
+        public void RerunTask(long id)
         {
             using (var db = new GatewayEntities(ConnectionString))
             {
@@ -237,13 +234,26 @@ namespace Gateway.Web.Services.Schedule
                 if (batch == null)
                     return;
 
-                if (batch.ExecutableConfiguration != null)
-                {
-                    _executableScheduler.EnqueueExecutable(batch.ToExecutableOptions());
-                    return;
-                }
+                _scheduler.TriggerScheduledWebRequest(batch.ScheduleKey);
+            }
+        }
 
-                _scheduler.EnqueueAsyncWebRequest(batch.ToRequest(businessDate));
+        public void StopTask(long id)
+        {
+            using (var db = new GatewayEntities(ConnectionString))
+            {
+                var batch = db.Schedules.SingleOrDefault(x => x.ScheduleId == id);
+
+                if (batch == null)
+                    return;
+
+                var statusCheck = new string[] { "failed", "succeeded" };
+                var jobId = batch.ScheduledJobs
+                    .OrderByDescending(j => j.Id)
+                    .FirstOrDefault(j => !statusCheck.Contains(j.Status.ToLowerInvariant()))
+                    ?.JobId;
+
+                _scheduler.RemoveEnqueuedWebRequest(jobId);
             }
         }
 
@@ -267,7 +277,38 @@ namespace Gateway.Web.Services.Schedule
 
                 foreach (var schedule in batches)
                 {
-                    _scheduler.EnqueueAsyncWebRequest(schedule.ToRequest(businessDate));
+                    _scheduler.TriggerScheduledWebRequest(schedule.ScheduleKey);
+                }
+            }
+        }
+
+        public void StopTaskGroup(long id, string searchTerm)
+        {
+            using (var db = new GatewayEntities(ConnectionString))
+            {
+                var batches = db.Schedules
+                    .Include("RiskBatchSchedule")
+                    .Include("RiskBatchSchedule.RiskBatchConfiguration")
+                    .Include("RequestConfiguration")
+                    .Include("ExecutableConfiguration")
+                    .Include("ParentSchedule")
+                    .Include("Children")
+                    .Where(GetSearchCriteria(searchTerm))
+                    .Where(x => x.GroupId == id)
+                    .ToList();
+
+                if (!batches.Any())
+                    return;
+
+                var statusCheck = new string[] { "failed", "succeeded" };
+                foreach (var schedule in batches)
+                {
+                    var jobId = schedule.ScheduledJobs
+                        .OrderByDescending(j => j.Id)
+                        .FirstOrDefault(j => !statusCheck.Contains(j.Status.ToLowerInvariant()))
+                        ?.JobId;
+
+                    _scheduler.RemoveEnqueuedWebRequest(jobId);
                 }
             }
         }

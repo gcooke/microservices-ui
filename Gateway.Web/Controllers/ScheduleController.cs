@@ -1,19 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Mvc;
-using System.Web.Routing;
-using Bagl.Cib.MIT.Logging;
+﻿using Bagl.Cib.MIT.Logging;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
 using Bagl.Cib.MSF.ClientAPI.Model;
 using Gateway.Web.Authorization;
-using Gateway.Web.Models.Schedule;
 using Gateway.Web.Models.Schedule.Input;
 using Gateway.Web.Models.Schedule.Output;
 using Gateway.Web.Services.Batches.Interfaces;
 using Gateway.Web.Services.Schedule.Interfaces;
 using Gateway.Web.Services.Schedule.Utils;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web.Mvc;
+using System.Web.Routing;
 
 namespace Gateway.Web.Controllers
 {
@@ -155,7 +154,14 @@ namespace Gateway.Web.Controllers
         [Route("Rerun/{id}/{businessDate}")]
         public void RerunTask(long id, DateTime businessDate)
         {
-            _scheduleDataService.RerunTask(id, businessDate);
+            _scheduleDataService.RerunTask(id);
+        }
+
+        [HttpGet]
+        [Route("Stop/{id}/{businessDate}")]
+        public void StopTask(long id, DateTime businessDate)
+        {
+            _scheduleDataService.StopTask(id);
         }
 
         [HttpGet]
@@ -180,7 +186,7 @@ namespace Gateway.Web.Controllers
         {
             var id = long.Parse(collection["_id"]);
             var valuationDate = DateTime.Parse(collection["_businessDate"]).ToString("yyyy-MM-dd");
-            var custom = collection["custom"].Replace(" ", "").Replace(Environment.NewLine, ",").Replace(",,",",");
+            var custom = collection["custom"].Replace(" ", "").Replace(Environment.NewLine, ",").Replace(",,", ",");
 
             if (string.IsNullOrEmpty(custom))
                 throw new InvalidOperationException("Custom run must have custom parameters");
@@ -204,6 +210,13 @@ namespace Gateway.Web.Controllers
         }
 
         [HttpGet]
+        [Route("Group/Stop/{id}/{businessDate}")]
+        public void StopGroup(long id, DateTime businessDate, string searchTerm)
+        {
+            _scheduleDataService.StopTaskGroup(id, searchTerm);
+        }
+
+        [HttpGet]
         [Route("{id}/Disable")]
         public ActionResult DisableSchedule(long id)
         {
@@ -224,7 +237,8 @@ namespace Gateway.Web.Controllers
             var statuses = tasks
                 .SelectMany(x => x.Tasks)
                 .Select(x => new ScheduleStatus
-                {
+                {            
+                    GroupId = x.GroupId,
                     ScheduleId = x.ScheduleId,
                     Status = x.Status,
                     RequestId = x.RequestId,
