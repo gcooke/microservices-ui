@@ -99,7 +99,12 @@
                                                         {
                                                             <span class="label label-info" style="padding: 2px !important;">@item.Type</span>
                                                         }
+
                                                         <span class="m-l-5" style="margin-top: 2px" id="@item.Key">
+                                                            @if (item.IsLive)
+                                                            {
+                                                                <span class="label" style="color: red; padding: 2px !important;">LIVE</span>
+                                                            }
                                                             @item.Name.Truncate(45)
                                                         </span>
                                                     </td>

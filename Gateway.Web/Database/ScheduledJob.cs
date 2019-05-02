@@ -22,6 +22,7 @@ namespace Gateway.Web.Database
         public Nullable<System.DateTime> StartedAt { get; set; }
         public Nullable<System.DateTime> FinishedAt { get; set; }
         public string Status { get; set; }
+        public Nullable<long> TimeTakenMs { get; set; }
     
         public virtual Schedule Schedule { get; set; }
     }

@@ -29,6 +29,7 @@ namespace Gateway.Web.Database
         public long RiskBatchConfigurationId { get; set; }
         public string TradeSourceType { get; set; }
         public string AdditionalProperties { get; set; }
+        public bool IsLive { get; set; }
     
         public virtual RiskBatchConfiguration RiskBatchConfiguration { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

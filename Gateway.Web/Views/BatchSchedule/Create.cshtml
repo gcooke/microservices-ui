@@ -75,6 +75,7 @@
                                                             <th>Trade Source</th>
                                                             <th>Site</th>
                                                             <th>Market Data Map</th>
+                                                            <th>Is Live</th>
                                                             <th></th>
                                                         </tr>
                                                     </thead>
@@ -94,6 +95,9 @@
                                                                         @Html.TextBoxFor(m => m.TradeSources[index].MarketDataMap, new { @class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;" })
                                                                     </td>
                                                                     <td>
+                                                                        @Html.CheckBoxFor(m => m.TradeSources[index].IsLive, new { @class = "form-control input-sm", style = "height: 13px; margin: 0 !important; border: none !important;" })
+                                                                    </td>
+                                                                    <td>
                                                                         <a>[X]</a>
                                                                     </td>
                                                                 </tr>
@@ -107,6 +111,7 @@
                                                                     <td style="padding: 0 !important">@Html.TextBoxFor(m => m.TradeSources[0].TradeSource, new { @class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;" })</td>
                                                                     <td style="padding: 0 !important">@Html.TextBoxFor(m => m.TradeSources[0].Site, new { @class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;" })</td>
                                                                     <td style="padding: 0 !important">@Html.TextBoxFor(m => m.TradeSources[0].MarketDataMap, new { @class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;" })</td>
+                                                                    <td style="padding: 0 !important">@Html.CheckBoxFor(m => m.TradeSources[0].IsLive, new { @class = "form-control input-sm", style = "padding: 5px !important; margin-left: 10px; border: none !important;" })</td>
                                                                     <td>
                                                                         <a>[X]</a>
                                                                     </td>

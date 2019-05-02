@@ -33,7 +33,7 @@ namespace Gateway.Web.Services.Schedule.Utils
 
             var tradeSources = new List<TradeSourceParameter>
             {
-                new TradeSourceParameter(schedule.RiskBatchSchedule?.TradeSourceType, schedule.RiskBatchSchedule?.TradeSource, schedule.RiskBatchSchedule?.Site)
+                new TradeSourceParameter(schedule.RiskBatchSchedule?.TradeSourceType, schedule.RiskBatchSchedule?.TradeSource, schedule.RiskBatchSchedule?.Site, schedule.RiskBatchSchedule?.IsLive ?? false)
                 {
                     MarketDataMap = schedule.RiskBatchSchedule?.MarketDataMap
                 }
@@ -67,7 +67,7 @@ namespace Gateway.Web.Services.Schedule.Utils
             };
 
             var tradeSources = schedules
-                .Select(schedule => new TradeSourceParameter(schedule.RiskBatchSchedule?.TradeSourceType, schedule.RiskBatchSchedule?.TradeSource, schedule.RiskBatchSchedule?.Site) {MarketDataMap = schedule.RiskBatchSchedule?.MarketDataMap})
+                .Select(schedule => new TradeSourceParameter(schedule.RiskBatchSchedule?.TradeSourceType, schedule.RiskBatchSchedule?.TradeSource, schedule.RiskBatchSchedule?.Site, schedule.RiskBatchSchedule?.IsLive ?? false) {MarketDataMap = schedule.RiskBatchSchedule?.MarketDataMap})
                 .Distinct()
                 .ToList();
 

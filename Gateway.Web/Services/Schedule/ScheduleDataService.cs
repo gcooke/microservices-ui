@@ -243,7 +243,7 @@ namespace Gateway.Web.Services.Schedule
                     return;
                 }
 
-                _scheduler.EnqueueAsyncWebRequest(batch.ToRequest(businessDate));
+                _scheduler.EnqueueAsyncWebRequest(batch.ToRequest(batch.RiskBatchSchedule?.IsLive ?? false, businessDate));
             }
         }
 
@@ -267,7 +267,7 @@ namespace Gateway.Web.Services.Schedule
 
                 foreach (var schedule in batches)
                 {
-                    _scheduler.EnqueueAsyncWebRequest(schedule.ToRequest(businessDate));
+                    _scheduler.EnqueueAsyncWebRequest(schedule.ToRequest(schedule.RiskBatchSchedule?.IsLive ?? false, businessDate));
                 }
             }
         }
@@ -303,13 +303,13 @@ namespace Gateway.Web.Services.Schedule
             if (group == null)
             {
                 _scheduler.RemoveScheduledWebRequest(entity.ParentSchedule.ScheduleKey);
-                var parent = entity.ParentSchedule.ToRequest();
+                var parent = entity.ParentSchedule.ToRequest(entity.RiskBatchSchedule?.IsLive ?? false);
                 var cron = entity.ParentSchedule.ScheduleGroup.Schedule;
                 _scheduler.ScheduleAsyncWebRequest(parent, entity.ParentSchedule.ScheduleKey, cron);
             }
             else
             {
-                var request = entity.ToRequest();
+                var request = entity.ToRequest(entity.RiskBatchSchedule?.IsLive ?? false);
                 var cron = group.Schedule;
                 _scheduler.ScheduleAsyncWebRequest(request, entity.ScheduleKey, cron);
             }

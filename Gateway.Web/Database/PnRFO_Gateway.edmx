@@ -184,6 +184,7 @@
           <Property Name="RiskBatchConfigurationId" Type="bigint" Nullable="false" />
           <Property Name="TradeSourceType" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="AdditionalProperties" Type="varchar(max)" />
+          <Property Name="IsLive" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Schedule">
           <Key>
@@ -248,6 +249,7 @@
           <Property Name="StartedAt" Type="datetime" />
           <Property Name="FinishedAt" Type="datetime" />
           <Property Name="Status" Type="varchar" MaxLength="50" />
+          <Property Name="TimeTakenMs" Type="bigint" />
         </EntityType>
         <Association Name="FK_ControllerExternalResource_ControllerId">
           <End Role="Controller" Type="Self.Controller" Multiplicity="1" />
@@ -1120,6 +1122,7 @@
           <Property Name="AdditionalProperties" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="RiskBatchConfiguration" Relationship="GatewayModel.FK_RiskBatchSchedule_RiskBatchConfiguration" FromRole="RiskBatchSchedule" ToRole="RiskBatchConfiguration" />
           <NavigationProperty Name="Schedules" Relationship="GatewayModel.FK_Schedule_RiskBatchSchedule" FromRole="RiskBatchSchedule" ToRole="Schedule" />
+          <Property Name="IsLive" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="Schedule">
           <Key>
@@ -1255,6 +1258,7 @@
           <Property Name="FinishedAt" Type="DateTime" Precision="3" />
           <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Schedule" Relationship="GatewayModel.FK_ScheduledJob_Schedule" FromRole="ScheduledJob" ToRole="Schedule" />
+          <Property Name="TimeTakenMs" Type="Int64" />
         </EntityType>
         <Association Name="FK_ScheduledJob_Schedule">
           <End Type="GatewayModel.Schedule" Role="Schedule" Multiplicity="1" />
@@ -1676,6 +1680,7 @@
           <EntitySetMapping Name="RiskBatchSchedules">
             <EntityTypeMapping TypeName="GatewayModel.RiskBatchSchedule">
               <MappingFragment StoreEntitySet="RiskBatchSchedule">
+                <ScalarProperty Name="IsLive" ColumnName="IsLive" />
                 <ScalarProperty Name="AdditionalProperties" ColumnName="AdditionalProperties" />
                 <ScalarProperty Name="TradeSourceType" ColumnName="TradeSourceType" />
                 <ScalarProperty Name="RiskBatchConfigurationId" ColumnName="RiskBatchConfigurationId" />
@@ -1746,6 +1751,7 @@
           <EntitySetMapping Name="ScheduledJobs">
             <EntityTypeMapping TypeName="GatewayModel.ScheduledJob">
               <MappingFragment StoreEntitySet="ScheduledJob">
+                <ScalarProperty Name="TimeTakenMs" ColumnName="TimeTakenMs" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="FinishedAt" ColumnName="FinishedAt" />
                 <ScalarProperty Name="StartedAt" ColumnName="StartedAt" />

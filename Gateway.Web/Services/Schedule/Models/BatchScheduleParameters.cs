@@ -72,16 +72,18 @@ namespace Gateway.Web.Services.Schedule.Models
         public string MarketDataMap { get; set; }
         public string FundingCurrency { get; set; }
         public string ReportingCurrency { get; set; }
+        public bool IsLive { get; }
 
         public TradeSourceParameter()
         {
         }
 
-        public TradeSourceParameter(string tradeSourceType, string tradeSource, string site)
+        public TradeSourceParameter(string tradeSourceType, string tradeSource, string site, bool isLive)
         {
             TradeSourceType = tradeSourceType;
             TradeSource = tradeSource;
             Site = site;
+            IsLive = isLive;
         }
 
         public override bool Equals(object obj)
@@ -92,7 +94,8 @@ namespace Gateway.Web.Services.Schedule.Models
 
             if (item.TradeSourceType == TradeSourceType &&
                 item.TradeSource == TradeSource &&
-                item.Site == Site)
+                item.Site == Site &&
+                item.IsLive == IsLive)
                 return true;
 
             return false;
@@ -100,7 +103,7 @@ namespace Gateway.Web.Services.Schedule.Models
 
         public override int GetHashCode()
         {
-            return $"{TradeSourceType}{TradeSource}{Site}".GetHashCode();
+            return $"{TradeSourceType}{TradeSource}{Site}{IsLive}".GetHashCode();
         }
 
         public bool IsEmpty()
