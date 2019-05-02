@@ -21,7 +21,8 @@ namespace Gateway.Web.Services.Schedule.Utils
                 RequestUrl = schedule.RequestConfiguration?.Url ?? string.Empty,
                 IsEnabled = schedule.IsEnabled ?? true,
                 IsBatch = schedule.RiskBatchScheduleId != null,
-                IsExe = schedule.ExecutableConfigurationId != null
+                IsExe = schedule.ExecutableConfigurationId != null,
+                IsLive = schedule.RiskBatchSchedule?.IsLive ?? false
             };
             
             return task;

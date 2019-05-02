@@ -143,7 +143,7 @@ function getStatusHtml(value) {
             " <a target='_blank' href='Request/Summary?correlationId=" + value.RequestId + "' style='color: " + color + "'>" + value.Status + "</a>";
     } else {
         html = "<span style='color: " + color + "'>" +
-            "<span class='"+icon+"'></span> " +
+            "<span class='"+icon+"' style='padding-left: 0 !important;'></span> " +
             value.Status +
             "</span>";
     }

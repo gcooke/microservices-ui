@@ -37,7 +37,7 @@ namespace Gateway.Web.Models.Schedule.Input
 
             foreach (var index in Enumerable.Range(0, 100))
             {
-                TradeSources.Add(new TradeSourceParameter(null, null, null)
+                TradeSources.Add(new TradeSourceParameter(null, null, null, false)
                 {
                     MarketDataMap = "Default"
                 });

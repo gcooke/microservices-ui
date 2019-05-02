@@ -45,7 +45,7 @@ namespace Gateway.Web.Services.Schedule
             {
                 foreach (var tradeSourceParameter in parameters.TradeSources)
                 {
-                    var key = GenerateKey(config, tradeSourceParameter.TradeSource);
+                    var key = GenerateKey(config, tradeSourceParameter.TradeSource, tradeSourceParameter.IsLive);
                     var entity = GetSchedule(db, parameters.ScheduleId, key);
                     var errors = parameters.Validate(entity);
 
@@ -86,12 +86,13 @@ namespace Gateway.Web.Services.Schedule
                 .Where(x => x.TradeSourceType == tradeSource.TradeSourceType)
                 .Where(x => x.TradeSource == tradeSource.TradeSource)
                 .Where(x => x.Site == tradeSource.Site)
+                .Where(x => x.IsLive == tradeSource.IsLive)
                 .SingleOrDefault();
         }
 
         protected override RedstoneRequest GetJob(Database.Schedule schedule, DateTime? businessDate = null)
         {
-            return schedule.ToRequest(businessDate);
+            return schedule.ToRequest(schedule.RiskBatchSchedule?.IsLive ?? false, businessDate);
         }
 
         protected override void ScheduleTask(RedstoneRequest item, string key, string cron)
@@ -104,9 +105,12 @@ namespace Gateway.Web.Services.Schedule
             _scheduler.ScheduleAsyncWebRequest(item, key, cron);
         }
 
-        protected string GenerateKey(RiskBatchConfiguration configuration, string tradeSource)
+        protected string GenerateKey(RiskBatchConfiguration configuration, string tradeSource, bool isLive)
         {
-            return $"BATCH={configuration.ConfigurationId}-TRADESOURCE={tradeSource.ToUpper().Trim()}";
+            var key = $"BATCH={configuration.ConfigurationId}-TRADESOURCE={tradeSource.ToUpper().Trim()}";
+            if (isLive)
+                key = $"{key}-LIVE";
+            return key;
         }
 
         protected virtual void AssignSchedule(Database.Schedule entity, RiskBatchSchedule riskBatchSchedule, BatchScheduleParameters parameters, TradeSourceParameter tradeSourceParameter, long configurationId)
@@ -120,6 +124,7 @@ namespace Gateway.Web.Services.Schedule
             riskBatchSchedule.FundingCurrency = tradeSourceParameter.FundingCurrency?.Trim();
             riskBatchSchedule.ReportingCurrency = tradeSourceParameter.ReportingCurrency?.Trim();
             riskBatchSchedule.AdditionalProperties = JsonConvert.SerializeObject(parameters.Properties);
+            riskBatchSchedule.IsLive = tradeSourceParameter.IsLive;
         }
     }
 }
