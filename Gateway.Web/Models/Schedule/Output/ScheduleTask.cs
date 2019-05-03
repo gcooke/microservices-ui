@@ -38,6 +38,8 @@ namespace Gateway.Web.Models.Schedule.Output
 
         public string Type { get; }
 
+        public bool IsLive { get; set; }
+
         public bool HasChildren => ChildrenCount > 0;
 
         public int TimeTakenMs => (int)((FinishedAt ?? DateTime.MinValue) - (StartedAt ?? DateTime.MinValue)).TotalMilliseconds;

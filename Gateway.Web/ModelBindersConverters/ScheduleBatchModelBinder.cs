@@ -34,7 +34,16 @@ namespace Gateway.Web.ModelBindersConverters
                 var tradeSource = request.Form[$"TradeSources[{index}].TradeSource"];
                 var site = request.Form[$"TradeSources[{index}].Site"];
                 var marketDataMap = request.Form[$"TradeSources[{index}].MarketDataMap"];
-                model.TradeSources.Add(new TradeSourceParameter(tradeSourceType, tradeSource, site)
+                var isLive = request.Form[$"TradeSources[{index}].IsLive"]?.Split(',')[0];
+                if (string.IsNullOrWhiteSpace(isLive)) isLive = "false";
+
+                bool isLiveValue;
+                if (!bool.TryParse(isLive, out isLiveValue))
+                {
+                    throw new Exception("Unable to parse value for 'Is Live'");
+                }
+
+                model.TradeSources.Add(new TradeSourceParameter(tradeSourceType, tradeSource, site, isLiveValue)
                 {
                     MarketDataMap = marketDataMap
                 });
