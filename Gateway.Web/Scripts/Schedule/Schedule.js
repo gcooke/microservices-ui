@@ -115,8 +115,11 @@ function updateView(data) {
             $("#timing-" + value.ScheduleId).html(getTimingsHtml(value));
             $("#stop-" + value.ScheduleId).prop('disabled', isTaskStopDisabled(value.Status));
             $("#run-" + value.ScheduleId).prop('disabled', isTaskRerunDisabled(value.Status));
-            $("#stopall-" + value.GroupId).prop('disabled', isTaskStopDisabled(value.Status));
+            $("#stopall-" + value.GroupId).prop('disabled', isTaskStopDisabled(value.Status));                        
             $("#runall-" + value.GroupId).prop('disabled', isTaskRerunDisabled(value.Status));
+
+            taskRunHint(value.ScheduleId, value.Status, value.BusinessDate);
+            taskRunAllHint(value.GroupId, value.Status, value.BusinessDate)
         });
 
     $("#paginator li").each(function (index, item) {
@@ -217,7 +220,7 @@ function rerunTask(url) {
             value.abort();
         });
 
-    $.get(url, function(date) {
+    $.get(url, function (date) {          
         toastr.success('Task(s) has been added to queue and will be rerun shortly.', 'Success');
         pollResults();
     });
@@ -231,7 +234,7 @@ function stopTask(url) {
         });
 
     $.get(url, function (date) {
-        toastr.success('Task(s) has been added to queue and will be stopped shortly.', 'Success');
+        toastr.success('Task(s) has been added to queue and will be stopped shortly.', 'Info');
         pollResults();
     });
 
@@ -272,10 +275,32 @@ function isTaskStopDisabled(status) {
 function isTaskRerunDisabled(status) {
     var result = false;
     if (status === "Succeeded" || status === "Failed" || status === "Not Started") {
-        result = false;
+        result = false;        
     }    
     else {
-        result = true;
+        result = true;        
     }        
     return result;
+}
+
+function taskRunHint(scheduleId, status, businessDate) {    
+    if (status === "Succeeded" || status === "Failed" || status === "Not Started") {
+        $("#run-" + scheduleId).removeAttr("title")
+        $("#stop-" + scheduleId).removeAttr("title")
+    }
+    else {        
+        $("#run-" + scheduleId).attr('title', "There is a job currently executing for this schedule for business date: " + businessDate);
+        $("#stop-" + scheduleId).attr('title', "Stop currently executing job for this schedule for business date: " + businessDate);
+    }    
+}
+
+function taskRunAllHint(groupId, status, businessDate) {    
+    if (status === "Succeeded" || status === "Failed" || status === "Not Started") {
+        $("#runall-" + groupId).removeAttr("title")
+        $("#stopall-" + groupId).removeAttr("title")
+    }
+    else {        
+        $("#runall-" + groupId).attr('title', "There are jobs currently executing for this schedule group for business date: " + businessDate);
+        $("#stopall-" + groupId).attr('title', "Stop currently executing jobs for this schedule group for business date: " + businessDate);
+    }    
 }

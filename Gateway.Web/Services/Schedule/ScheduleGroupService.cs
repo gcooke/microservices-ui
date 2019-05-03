@@ -80,6 +80,7 @@ namespace Gateway.Web.Services.Schedule
                         task.RequestId = lastJob.RequestId;
                         task.StartedAt = lastJob.StartedAt;
                         task.FinishedAt = lastJob.FinishedAt;
+                        task.BusinessDate = lastJob.BusinessDate;
                         tasks.Add(task);
                     }
 

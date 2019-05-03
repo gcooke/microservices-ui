@@ -16,6 +16,7 @@ namespace Gateway.Web.Services.Schedule
         private readonly IExecutableScheduler _executableScheduler;
         private readonly IRedstoneWebRequestScheduler _scheduler;
         private readonly string ConnectionString;
+        private readonly string[] statusCheck = { "failed", "succeeded" };
 
         public ScheduleDataService(IExecutableScheduler executableScheduler,
             IRedstoneWebRequestScheduler scheduler,
@@ -225,7 +226,7 @@ namespace Gateway.Web.Services.Schedule
             db.Dispose();
         }
 
-        public void RerunTask(long id)
+        public void RerunTask(long id, DateTime businessDate)
         {
             using (var db = new GatewayEntities(ConnectionString))
             {
@@ -234,7 +235,10 @@ namespace Gateway.Web.Services.Schedule
                 if (batch == null)
                     return;
 
-                _scheduler.TriggerScheduledWebRequest(batch.ScheduleKey);
+                if (businessDate.CompareTo(DateTime.Now.Date) == 0)
+                    _scheduler.TriggerScheduledWebRequest(batch.ScheduleKey);
+                else
+                    _scheduler.EnqueueAsyncWebRequest(batch.ToRequest(businessDate));
             }
         }
 
@@ -246,8 +250,7 @@ namespace Gateway.Web.Services.Schedule
 
                 if (batch == null)
                     return;
-
-                var statusCheck = new string[] { "failed", "succeeded" };
+                
                 var jobId = batch.ScheduledJobs
                     .OrderByDescending(j => j.Id)
                     .FirstOrDefault(j => !statusCheck.Contains(j.Status.ToLowerInvariant()))
@@ -277,7 +280,10 @@ namespace Gateway.Web.Services.Schedule
 
                 foreach (var schedule in batches)
                 {
-                    _scheduler.TriggerScheduledWebRequest(schedule.ScheduleKey);
+                    if (businessDate.CompareTo(DateTime.Now.Date) == 0)
+                        _scheduler.TriggerScheduledWebRequest(schedule.ScheduleKey);
+                    else
+                        _scheduler.EnqueueAsyncWebRequest(schedule.ToRequest(businessDate));
                 }
             }
         }
@@ -299,8 +305,7 @@ namespace Gateway.Web.Services.Schedule
 
                 if (!batches.Any())
                     return;
-
-                var statusCheck = new string[] { "failed", "succeeded" };
+                
                 foreach (var schedule in batches)
                 {
                     var jobId = schedule.ScheduledJobs

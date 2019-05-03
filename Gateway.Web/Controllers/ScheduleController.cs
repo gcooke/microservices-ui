@@ -154,7 +154,7 @@ namespace Gateway.Web.Controllers
         [Route("Rerun/{id}/{businessDate}")]
         public void RerunTask(long id, DateTime businessDate)
         {
-            _scheduleDataService.RerunTask(id);
+            _scheduleDataService.RerunTask(id, businessDate);
         }
 
         [HttpGet]
@@ -231,14 +231,15 @@ namespace Gateway.Web.Controllers
             if (businessDate == null)
                 businessDate = DateTime.Now;
 
-            var startDate = businessDate?.AddMinutes(-1);
-            var endDate = startDate?.AddHours(24);
-            var tasks = _scheduleGroupService.GetScheduleGroups(startDate.Value, endDate.Value, null, true);
+            var startDate = businessDate?.AddDays(-7);
+            var endDate = DateTime.Now;
+            var tasks = _scheduleGroupService.GetScheduleGroups(startDate.Value, endDate, null, true);
             var statuses = tasks
                 .SelectMany(x => x.Tasks)
                 .Select(x => new ScheduleStatus
-                {            
+                {
                     GroupId = x.GroupId,
+                    BusinessDate = x.BusinessDate?.ToString("yyyy-MM-dd"),
                     ScheduleId = x.ScheduleId,
                     Status = x.Status,
                     RequestId = x.RequestId,

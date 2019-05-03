@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace Gateway.Web.Models.Schedule.Output
 {
@@ -27,5 +25,6 @@ namespace Gateway.Web.Models.Schedule.Output
         public string FinishedAt { get; set; }
         public int Retries { get; set; }
         public string TimeTakenFormatted { get; set; }
+        public string BusinessDate { get; set; }
     }
 }
