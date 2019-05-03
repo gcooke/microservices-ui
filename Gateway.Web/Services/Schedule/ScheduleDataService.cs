@@ -238,7 +238,7 @@ namespace Gateway.Web.Services.Schedule
                 if (businessDate.CompareTo(DateTime.Now.Date) == 0)
                     _scheduler.TriggerScheduledWebRequest(batch.ScheduleKey);
                 else
-                    _scheduler.EnqueueAsyncWebRequest(batch.ToRequest(businessDate));
+                    _scheduler.EnqueueAsyncWebRequest(batch.ToRequest(batch.RiskBatchSchedule?.IsLive ?? false, businessDate));
             }
         }
 
@@ -250,13 +250,12 @@ namespace Gateway.Web.Services.Schedule
 
                 if (batch == null)
                     return;
-                
+
                 var jobId = batch.ScheduledJobs
                     .OrderByDescending(j => j.Id)
                     .FirstOrDefault(j => !statusCheck.Contains(j.Status.ToLowerInvariant()))
                     ?.JobId;
 
-                _scheduler.EnqueueAsyncWebRequest(batch.ToRequest(batch.RiskBatchSchedule?.IsLive ?? false, businessDate));
                 _scheduler.RemoveEnqueuedWebRequest(jobId);
             }
         }
@@ -281,7 +280,10 @@ namespace Gateway.Web.Services.Schedule
 
                 foreach (var schedule in batches)
                 {
-                    _scheduler.EnqueueAsyncWebRequest(schedule.ToRequest(businessDate));
+                    if (businessDate.CompareTo(DateTime.Now.Date) == 0)
+                        _scheduler.TriggerScheduledWebRequest(schedule.ScheduleKey);
+                    else
+                        _scheduler.EnqueueAsyncWebRequest(schedule.ToRequest(schedule.RiskBatchSchedule?.IsLive ?? false, businessDate));
                 }
             }
         }
@@ -303,7 +305,7 @@ namespace Gateway.Web.Services.Schedule
 
                 if (!batches.Any())
                     return;
-                
+
                 foreach (var schedule in batches)
                 {
                     var jobId = schedule.ScheduledJobs
