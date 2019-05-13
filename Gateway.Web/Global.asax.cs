@@ -30,12 +30,35 @@ namespace Gateway.Web
         public const string ContainerKey = "container";
         private static UnityContainer _container;
 
+        public static string ControllerIcon { get; set; }
         public static string Environment { get; set; }
         public static string FavIcon { get; set; }
-        public static string ControllerIcon { get; set; }
+        public static string SigmaHomePage { get; set; }
         public static string SiteLogo { get; set; }
 
-        public static string SigmaHomePage { get; set; }
+        protected void Application_BeginRequest(object sender, EventArgs e)
+        {
+            var childContainer = _container.CreateChildContainer();
+            HttpContext.Current.Items[ContainerKey] = childContainer;
+            var resolver = new UnityDependencyResolver(childContainer);
+            DependencyResolver.SetResolver(resolver);
+        }
+
+        protected void Application_EndRequest(object sender, EventArgs e)
+        {
+            var container = HttpContext.Current.Items[ContainerKey] as IUnityContainer;
+            if (container == null) return;
+            container.Dispose();
+            HttpContext.Current.Items.Remove(ContainerKey);
+        }
+
+        protected void Application_Error()
+        {
+            var ex = Server.GetLastError();
+            var loggingService = ServiceLocator.Current.GetInstance<ILoggingService>();
+            loggingService.GetLogger(this).Error(ex, "Application Exception");
+            loggingService.GetLogger(this).Error(ex.InnerException, "Application InnerException");
+        }
 
         protected void Application_Start(object sender, EventArgs e)
         {
@@ -43,7 +66,6 @@ namespace Gateway.Web
             FavIcon = "~/content/img/favicon." + Environment + ".png";
             ControllerIcon = "~/content/img/controller." + Environment + ".png";
             SiteLogo = "~/Content/img/Redstone." + Environment + ".png";
-
 
             AreaRegistration.RegisterAllAreas();
 
@@ -76,7 +98,6 @@ namespace Gateway.Web
                 authurl = issuers.FirstOrDefault(i => i.Contains(dns)) ?? "abcap -foutils.intra.absa.co.za";
                 if (Debugger.IsAttached)
                     dns = information.GetSetting("DnsName", "abcap-foutils.intra.absa.co.za");
-
             }
 
             BatchRequestBuilderEx.AuthUrl = authurl;
@@ -91,7 +112,6 @@ namespace Gateway.Web
             loggingservice.Initialize(information.LoggingInformation);
             var logger = loggingservice.GetLogger(this);
 
-
             var systemInformation = _container.Resolve<ISystemInformation>();
             var database = systemInformation.GetSetting("GatewayDatabase");
             var server = systemInformation.GetSetting("DatabaseServer");
@@ -105,6 +125,9 @@ namespace Gateway.Web
             schedulingClientProvider.Setup(new SchedulingClientOptions
             {
                 SqlServerConnectionString = schedulingConnectionString
+                //AuthQuery = BatchRequestBuilderEx.AuthQuery,
+                //AuthUrl = BatchRequestBuilderEx.AuthUrl,
+                //BaseUrl BatchRequestBuilderEx.BaseUrl
             });
 
             var locator = new UnityServiceLocator(_container);
@@ -126,32 +149,7 @@ namespace Gateway.Web
                 var report = new DynamicSecurityReport(value);
                 SecurityController.DyanmicReports.Add(report);
                 index++;
-
             } while (true);
-        }
-
-        protected void Application_Error()
-        {
-            var ex = Server.GetLastError();
-            var loggingService = ServiceLocator.Current.GetInstance<ILoggingService>();
-            loggingService.GetLogger(this).Error(ex, "Application Exception");
-            loggingService.GetLogger(this).Error(ex.InnerException, "Application InnerException");
-        }
-
-        protected void Application_BeginRequest(object sender, EventArgs e)
-        {
-            var childContainer = _container.CreateChildContainer();
-            HttpContext.Current.Items[ContainerKey] = childContainer;
-            var resolver = new UnityDependencyResolver(childContainer);
-            DependencyResolver.SetResolver(resolver);
-        }
-
-        protected void Application_EndRequest(object sender, EventArgs e)
-        {
-            var container = HttpContext.Current.Items[ContainerKey] as IUnityContainer;
-            if (container == null) return;
-            container.Dispose();
-            HttpContext.Current.Items.Remove(ContainerKey);
         }
     }
 }
