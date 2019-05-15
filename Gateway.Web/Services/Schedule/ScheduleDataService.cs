@@ -174,6 +174,9 @@ namespace Gateway.Web.Services.Schedule
                 throw new Exception($"Unable to find schedule with ID {id}");
             }
 
+            var requestConfigurationId = entity.RequestConfigurationId;
+            var requestConfiguration = entity.RequestConfiguration;
+
             foreach (var child in entity.Children)
             {
                 child.Parent = entity.Parent;
@@ -194,8 +197,8 @@ namespace Gateway.Web.Services.Schedule
 
             db.Schedules.Remove(entity);
 
-            if (entity.RequestConfigurationId != null)
-                db.RequestConfigurations.Remove(entity.RequestConfiguration);
+            if (requestConfigurationId != null)
+                db.RequestConfigurations.Remove(requestConfiguration);
 
             if (!saveChanges)
                 return;
