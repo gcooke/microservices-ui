@@ -202,7 +202,18 @@ namespace Gateway.Web.Services.Schedule
             {
                 RemoveSchedule(entity.ParentSchedule.ScheduleKey);
                 var parent = GetJob(entity.ParentSchedule);
-                var cron = entity.ParentSchedule.ScheduleGroup.Schedule;
+                var cron = entity.ParentSchedule.ScheduleGroup?.Schedule;
+                var nextParent = entity.ParentSchedule.ParentSchedule;
+
+                while (cron == null && nextParent != null)
+                {
+                    cron = nextParent?.ScheduleGroup?.Schedule;
+                    nextParent = nextParent?.ParentSchedule;
+                }
+
+                if (cron == null)
+                    throw new Exception("Unable to determine CRON of root parent");
+
                 if (isAsync)
                     ScheduleTaskAsync(parent, entity.ParentSchedule.ScheduleKey, cron);
                 else
