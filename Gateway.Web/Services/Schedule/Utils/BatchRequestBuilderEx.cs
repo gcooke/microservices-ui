@@ -69,6 +69,8 @@ namespace Gateway.Web.Services.Schedule.Utils
                 webRequest.AddArgument(new Argument(argument.Key, argument.Type, argument.FormatValue));
             }
 
+            AddChildRequest(webRequest, schedule.Children.ToList());
+
             return webRequest;
         }
 
