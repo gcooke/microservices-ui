@@ -231,7 +231,7 @@ namespace Gateway.Web.Services.Schedule
             db.Dispose();
         }
 
-        public void RerunTask(long id, DateTime businessDate)
+        public void RerunTask(long id, DateTime businessDate, bool includeChildren = true)
         {
             using (var db = new GatewayEntities(ConnectionString))
             {
@@ -246,7 +246,7 @@ namespace Gateway.Web.Services.Schedule
                     return;
                 }
 
-                _scheduler.EnqueueAsyncWebRequest(batch.ToRequest(batch.RiskBatchSchedule?.IsLive ?? false, businessDate));
+                _scheduler.EnqueueAsyncWebRequest(batch.ToRequest(batch.RiskBatchSchedule?.IsLive ?? false, businessDate, includeChildren));
             }
         }
 
