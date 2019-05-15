@@ -199,25 +199,23 @@ namespace Gateway.Web.Services.Schedule
             RemoveSchedule(entity.ScheduleKey);
 
             if (group == null)
-            {
-                RemoveSchedule(entity.ParentSchedule.ScheduleKey);
-                var parent = GetJob(entity.ParentSchedule);
-                var cron = entity.ParentSchedule.ScheduleGroup?.Schedule;
-                var nextParent = entity.ParentSchedule.ParentSchedule;
+            {               
+                var rootParent = GetRootParent(entity);
 
-                while (cron == null && nextParent != null)
-                {
-                    cron = nextParent?.ScheduleGroup?.Schedule;
-                    nextParent = nextParent?.ParentSchedule;
-                }
+                if (rootParent == null)
+                    throw new Exception("Unable to determine root parent of child task.");
+
+                RemoveSchedule(rootParent.ScheduleKey);
+                var rootParentJob = GetJob(rootParent);
+                var cron = rootParent.ScheduleGroup?.Schedule;
 
                 if (cron == null)
                     throw new Exception("Unable to determine CRON of root parent");
 
                 if (isAsync)
-                    ScheduleTaskAsync(parent, entity.ParentSchedule.ScheduleKey, cron);
+                    ScheduleTaskAsync(rootParentJob, rootParent.ScheduleKey, cron);
                 else
-                    ScheduleTask(parent, entity.ParentSchedule.ScheduleKey, cron);
+                    ScheduleTask(rootParentJob, rootParent.ScheduleKey, cron);
             }
             else
             {
@@ -228,6 +226,22 @@ namespace Gateway.Web.Services.Schedule
                 else
                     ScheduleTask(request, entity.ScheduleKey, cron);
             }
+        }
+
+        private Database.Schedule GetRootParent(Database.Schedule child)
+        {
+            if (child.ParentSchedule == null) return null;
+
+            Database.Schedule rootParent = null;
+            var previousParent = child.ParentSchedule;
+
+            while (previousParent != null)
+            {
+                rootParent = previousParent;
+                previousParent = previousParent.ParentSchedule;
+            }
+
+            return rootParent;
         }
 
         protected virtual void HandleException(Exception ex, IList<string> jobKeys)

@@ -159,6 +159,13 @@ namespace Gateway.Web.Controllers
         }
 
         [HttpGet]
+        [Route("Rerun/{id}/{businessDate}/SkipChildren")]
+        public void RerunTaskSkipChildren(long id, DateTime businessDate)
+        {
+            _scheduleDataService.RerunTask(id, businessDate, false);
+        }
+
+        [HttpGet]
         [Route("RunCustom/{id}/{businessDate}")]
         public ActionResult RunCustom(long id, DateTime businessDate)
         {
