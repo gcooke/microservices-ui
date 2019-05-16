@@ -95,7 +95,7 @@ namespace Gateway.Web
             {
                 if (Debugger.IsAttached)
                     dns = "sigma-dev.absa.co.za";
-                authurl = issuers.FirstOrDefault(i => i.Contains(dns)) ?? "abcap -foutils.intra.absa.co.za";
+                authurl = issuers.FirstOrDefault(i => i.Contains(dns)) ?? "abcap-foutils.intra.absa.co.za";
                 if (Debugger.IsAttached)
                     dns = information.GetSetting("DnsName", "abcap-foutils.intra.absa.co.za");
             }
@@ -124,10 +124,8 @@ namespace Gateway.Web
             var schedulingClientProvider = new SchedulingClientProvider();
             schedulingClientProvider.Setup(new SchedulingClientOptions
             {
-                SqlServerConnectionString = schedulingConnectionString
-                //AuthQuery = BatchRequestBuilderEx.AuthQuery,
-                //AuthUrl = BatchRequestBuilderEx.AuthUrl,
-                //BaseUrl BatchRequestBuilderEx.BaseUrl
+                SqlServerConnectionString = schedulingConnectionString,
+                SystemInformation = information
             });
 
             var locator = new UnityServiceLocator(_container);
