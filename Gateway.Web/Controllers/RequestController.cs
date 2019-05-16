@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Xml.Linq;
@@ -9,6 +10,7 @@ using Bagl.Cib.MIT.Cube;
 using Bagl.Cib.MIT.Logging;
 using Gateway.Web.Authorization;
 using Gateway.Web.Database;
+using Gateway.Web.Helpers;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Request;
 using Gateway.Web.Services;
@@ -103,6 +105,15 @@ namespace Gateway.Web.Controllers
             var data = _dataService.GetPayload(payloadId);
             var bytes = data.GetBytes();
             var extension = data.GetExtension();
+            if (extension.ToLower() == "xml")
+            {
+                var str = Encoding.UTF8.GetString(bytes);
+                var element = XElement.Parse(str);
+                element = XmlSort.TrySortPayload(_logger, element);
+
+                str = element.ToString(SaveOptions.None);
+                bytes = Encoding.UTF8.GetBytes(str);
+            }
             return File(bytes, "text/xml", string.Format("Payload_{0}.{1}", payloadId, extension));
         }
 

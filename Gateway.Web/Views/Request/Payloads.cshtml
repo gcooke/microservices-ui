@@ -39,6 +39,10 @@
                     }
                 }
             </h4>
+            if (payload.ContainsXmlResult)
+            {
+                <small><i>xml payloads may be sorted on download for convenience</i></small>
+            }
             if (payload.IsCube)
             {
                 <pre style="height: 280px; width: 100%">@Html.Raw(@payload.Data)</pre>
