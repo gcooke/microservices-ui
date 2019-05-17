@@ -88,6 +88,7 @@
                                             {
                                                 var taskUrl = @Url.Content("~/Schedule/Rerun/" + @item.ScheduleId + "/" + @Model.BusinessDate.ToString("yyyy-MM-dd"));
                                                 var taskUrlStop = @Url.Content("~/Schedule/Stop/" + @item.ScheduleId + "/" + @Model.BusinessDate.ToString("yyyy-MM-dd"));
+                                                var taskUrlNoChildren = @Url.Content("~/Schedule/Rerun/" + @item.ScheduleId + "/" + @Model.BusinessDate.ToString("yyyy-MM-dd")) + "/SkipChildren";
                                                 <tr title="@item.Type: @item.Name" class="batch-schedule-container" style="padding: 20px !important;" data-tt-branch="@item.HasChildren" data-tt-id="@item.ScheduleId" data-tt-parent-id="@item.ParentId">
                                                     <td style="width: 40%;">
                                                         @if (item.Type.ToLower() == "request")
@@ -138,6 +139,9 @@
                                                                 {
                                                                     <li>
                                                                         <a target="_blank" href="~/Controller/History/@item.RequestSearchController?search=@item.RequestSearchString">View History</a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a onclick="rerunTask('@taskUrlNoChildren')">Run (Ignore Child Tasks)</a>
                                                                     </li>
                                                                 }
                                                                 <li role="separator" class="divider"></li>

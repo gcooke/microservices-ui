@@ -18,7 +18,7 @@ namespace Gateway.Web.Services.Schedule.Utils
         public static string AuthQuery = String.Empty; 
         private static string _query = "RiskBatch/Official/Batch/Run/%id%/%valuationDate%";
 
-        public static RedstoneRequest ToRequest(this Database.Schedule schedule, bool isLive, DateTime? businessDate = null)
+        public static RedstoneRequest ToRequest(this Database.Schedule schedule, bool isLive, DateTime? businessDate = null, bool includeChildRequests = true)
         {
             if (schedule.ScheduleId == 0)
                 throw new Exception("Unable to create request for scheduling - Schedule Id is set to 0.");
@@ -41,7 +41,9 @@ namespace Gateway.Web.Services.Schedule.Utils
                     ? new Argument("valuationDate", ArgumentDataTypes.PreviousWeekDay.ToString(), "yyyy-MM-dd")
                     : new Argument("valuationDate", ArgumentDataTypes.CurrentDateAndTime.ToString(), "yyyy-MM-dd"));
 
-                AddChildRequest(batchRequest, schedule.Children.ToList());
+                if(includeChildRequests)
+                    AddChildRequest(batchRequest, schedule.Children.ToList());
+
                 return batchRequest;
             }
 
@@ -69,6 +71,9 @@ namespace Gateway.Web.Services.Schedule.Utils
                 webRequest.AddArgument(new Argument(argument.Key, argument.Type, argument.FormatValue));
             }
 
+            if (includeChildRequests)
+                AddChildRequest(webRequest, schedule.Children.ToList());
+
             return webRequest;
         }
 
@@ -89,6 +94,7 @@ namespace Gateway.Web.Services.Schedule.Utils
             foreach (var child in children)
             {
                 var request = child.ToRequest(child.RiskBatchSchedule?.IsLive ?? false);
+                if (parent.ContinueWith.Any(x => x.ScheduleId == request.ScheduleId)) continue;
                 parent.ContinueWith.Add(request);
                 AddChildRequest(request, child.Children.ToList());
             }

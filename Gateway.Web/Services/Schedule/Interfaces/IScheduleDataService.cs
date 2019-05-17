@@ -14,7 +14,7 @@ namespace Gateway.Web.Services.Schedule.Interfaces
         IDictionary<string, string> GetDailyStatuses(DateTime now);
         void DeleteSchedule(long id, GatewayEntities db = null, bool saveChanges = true);
         void DeleteForConfiguration(long id, GatewayEntities db = null, bool saveChanges = true);
-        void RerunTask(long id, DateTime businessDate);
+        void RerunTask(long id, DateTime businessDate, bool includeChildren = true);
         void StopTask(long id);
         void RerunTaskGroup(long id, DateTime businessDate, string searchTerm);
         void StopTaskGroup(long id, string searchTerm);

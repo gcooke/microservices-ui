@@ -69,6 +69,9 @@ namespace Gateway.Web.Services.Schedule
                 throw new Exception($"Unable to find schedule with ID {id}");
             }
 
+            var requestConfigurationId = entity.RequestConfigurationId;
+            var requestConfiguration = entity.RequestConfiguration;
+
             foreach (var child in entity.Children)
             {
                 child.Parent = entity.Parent;
@@ -89,8 +92,8 @@ namespace Gateway.Web.Services.Schedule
 
             db.Schedules.Remove(entity);
 
-            if (entity.RequestConfigurationId != null)
-                db.RequestConfigurations.Remove(entity.RequestConfiguration);
+            if (requestConfigurationId != null)
+                db.RequestConfigurations.Remove(requestConfiguration);
 
             if (!saveChanges)
                 return;
@@ -250,7 +253,7 @@ namespace Gateway.Web.Services.Schedule
             }
         }
 
-        public void RerunTask(long id, DateTime businessDate)
+        public void RerunTask(long id, DateTime businessDate, bool includeChildren = true)
         {
             using (var db = new GatewayEntities(ConnectionString))
             {
@@ -262,7 +265,7 @@ namespace Gateway.Web.Services.Schedule
                 if (businessDate.CompareTo(DateTime.Now.Date) == 0)
                     _scheduler.TriggerScheduledWebRequest(batch.ScheduleKey);
                 else
-                    _scheduler.EnqueueAsyncWebRequest(batch.ToRequest(batch.RiskBatchSchedule?.IsLive ?? false, businessDate));
+                    _scheduler.EnqueueAsyncWebRequest(batch.ToRequest(batch.RiskBatchSchedule?.IsLive ?? false, businessDate, includeChildren));
             }
         }
 
