@@ -420,6 +420,7 @@
     <Compile Include="Database\spGetRequestStats_Result.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\XmlSort.cs" />
     <Compile Include="ModelBindersConverters\ScheduleBatchModelBinder.cs" />
     <Compile Include="Models\AuthorizationModel.cs" />
     <Compile Include="Models\Interrogation\InterrogationModel.cs" />

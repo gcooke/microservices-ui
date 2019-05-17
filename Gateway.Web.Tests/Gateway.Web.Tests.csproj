@@ -227,6 +227,7 @@
     <Compile Include="Models\Security\UserSecurityTest.cs" />
     <Compile Include="Services\LogsServiceTests.cs" />
     <Compile Include="Utils\ReportsModelExTests.cs" />
+    <Compile Include="Utils\XmlSortTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -275,6 +276,10 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\GatewayInfoPayload.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Utils\SortedPayload.xml" />
+    <EmbeddedResource Include="Utils\UnsortedPayload.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

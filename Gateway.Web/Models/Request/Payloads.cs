@@ -55,6 +55,8 @@ namespace Gateway.Web.Models.Request
 
         public bool ContainsCubeResult { get; set; }
 
+        public bool ContainsXmlResult { get; set; }
+
         public string Data { get; set; }
 
         public string Direction { get; set; }
@@ -67,6 +69,9 @@ namespace Gateway.Web.Models.Request
             {
                 if (payloadType == "Cube")
                     IsCube = true;
+
+                if (payloadType.ToLower() == "xelement" || payloadType.ToLower() == "string")
+                    ContainsXmlResult = true;
 
                 if (lengthInBytes >= 50000)
                 {
