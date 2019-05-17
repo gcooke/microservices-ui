@@ -63,7 +63,7 @@ namespace Gateway.Web.Database
                 {
                     var element = XElement.Parse(data);
                     data = element.ToString(SaveOptions.None);
-                    _extension = ".xml";
+                    _extension = "xml";
                 }
                 catch (Exception ex)
                 {
