@@ -1,16 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data.Entity;
-using System.Linq;
 using Absa.Cib.MIT.TaskScheduling.Client.Scheduler;
 using Bagl.Cib.MIT.IoC;
 using Gateway.Web.Database;
 using Gateway.Web.Models.Schedule.Output;
 using Gateway.Web.Services.Schedule.Interfaces;
 using Gateway.Web.Services.Schedule.Utils;
-using NCrontab;
-using ScheduleGroup = Gateway.Web.Models.Schedule.Output.ScheduleGroup;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
 
 namespace Gateway.Web.Services.Schedule
 {
@@ -19,8 +16,9 @@ namespace Gateway.Web.Services.Schedule
         private readonly IExecutableScheduler _executableScheduler;
         private readonly IRedstoneWebRequestScheduler _scheduler;
         private readonly string ConnectionString;
+        private readonly string[] statusCheck = { "executing task", "processing" };
 
-        public ScheduleDataService(IExecutableScheduler executableScheduler, 
+        public ScheduleDataService(IExecutableScheduler executableScheduler,
             IRedstoneWebRequestScheduler scheduler,
             ISystemInformation systemInformation)
         {
@@ -29,77 +27,102 @@ namespace Gateway.Web.Services.Schedule
             ConnectionString = systemInformation.GetConnectionString("GatewayDatabase", "Database.PnRFO_Gateway");
         }
 
-        public IList<ScheduleTask> GetScheduleTasks(IEnumerable<long> scheduleIdList)
+        public void DeleteForConfiguration(long id, GatewayEntities db = null, bool saveChanges = true)
         {
-            using (var db = new GatewayEntities(ConnectionString))
+            db = db ?? new GatewayEntities(ConnectionString);
+            var entities = db.Schedules
+                .Where(x => x.RiskBatchSchedule != null && x.RiskBatchSchedule.RiskBatchConfigurationId == id)
+                .Include("RiskBatchSchedule")
+                .Include("RiskBatchSchedule.RiskBatchConfiguration")
+                .Include("RequestConfiguration")
+                .Include("ExecutableConfiguration")
+                .Include("ParentSchedule")
+                .Include("Children");
+
+            foreach (var schedule in entities)
             {
-                return db.Schedules
-                    .Where(x => scheduleIdList.Contains(x.ScheduleId))
-                    .Include("RiskBatchSchedule")
-                    .Include("RiskBatchSchedule.RiskBatchConfiguration")
-                    .Include("RequestConfiguration")
-                    .Include("ExecutableConfiguration")
-                    .Include("ParentSchedule")
-                    .Include("Children")
-                    .ToList()
-                    .Select(x => x.ToModel())
-                    .ToList();
+                DeleteSchedule(schedule.ScheduleId, db, false);
             }
+
+            if (!saveChanges)
+                return;
+
+            db.SaveChanges();
+            db.Dispose();
         }
 
-        public ScheduleTask GetScheduleTask(long id)
+        public void DeleteSchedule(long id, GatewayEntities db = null, bool saveChanges = true)
         {
-            using (var db = new GatewayEntities(ConnectionString))
+            db = db ?? new GatewayEntities(ConnectionString);
+            var entity = db.Schedules
+                .Where(x => x.ScheduleId == id)
+                .Include("RiskBatchSchedule")
+                .Include("RiskBatchSchedule.RiskBatchConfiguration")
+                .Include("RequestConfiguration")
+                .Include("ExecutableConfiguration")
+                .Include("ParentSchedule")
+                .Include("Children")
+                .SingleOrDefault();
+
+            if (entity == null)
             {
-                var entity = db.Schedules
-                    .Include("RiskBatchSchedule")
-                    .Include("RiskBatchSchedule.RiskBatchConfiguration")
-                    .Include("RequestConfiguration")
-                    .Include("ExecutableConfiguration")
-                    .Include("ParentSchedule")
-                    .Include("Children")
-                    .SingleOrDefault(x => x.ScheduleId == id);
-
-                if (entity == null)
-                    throw new Exception($"Unable to get batch schedule with ID {id}.");
-
-                return entity.ToModel();
+                throw new Exception($"Unable to find schedule with ID {id}");
             }
+
+            var requestConfigurationId = entity.RequestConfigurationId;
+            var requestConfiguration = entity.RequestConfiguration;
+
+            foreach (var child in entity.Children)
+            {
+                child.Parent = entity.Parent;
+                child.GroupId = entity.GroupId;
+                ScheduleTask(child, entity.ScheduleGroup);
+            }
+
+            _scheduler.RemoveScheduledWebRequest(entity.ScheduleKey);
+
+            var scheduledJobs = entity.ScheduledJobs.ToList();
+            foreach (var scheduledJob in scheduledJobs)
+            {
+                db.ScheduledJobs.Remove(scheduledJob);
+            }
+
+            if (entity.RiskBatchScheduleId != null)
+                db.RiskBatchSchedules.Remove(entity.RiskBatchSchedule);
+
+            db.Schedules.Remove(entity);
+
+            if (requestConfigurationId != null)
+                db.RequestConfigurations.Remove(requestConfiguration);
+
+            if (!saveChanges)
+                return;
+
+            db.SaveChanges();
+            db.Dispose();
         }
 
-        public Database.Schedule GetSchedule(long id)
+        public void DisableSchedule(long id)
         {
             using (var db = new GatewayEntities(ConnectionString))
             {
-                var entity = db.Schedules
+                var schedule = db.Schedules
+                    .Where(x => x.ScheduleId == id)
                     .Include("RiskBatchSchedule")
                     .Include("RiskBatchSchedule.RiskBatchConfiguration")
                     .Include("RequestConfiguration")
                     .Include("ExecutableConfiguration")
                     .Include("ParentSchedule")
                     .Include("Children")
-                    .SingleOrDefault(x => x.ScheduleId == id);
+                    .SingleOrDefault();
 
-                if (entity == null)
-                    throw new Exception($"Unable to get batch schedule with ID {id}.");
+                if (schedule == null)
+                    return;
 
-                return entity;
-            }
-        }
+                _scheduler.RemoveScheduledWebRequest(schedule.ScheduleKey);
 
-        public IList<Database.Schedule> GetSchedules(IEnumerable<long> scheduleIdList)
-        {
-            using (var db = new GatewayEntities(ConnectionString))
-            {
-                return db.Schedules
-                    .Where(x => scheduleIdList.Contains(x.ScheduleId))
-                    .Include("RiskBatchSchedule")
-                    .Include("RiskBatchSchedule.RiskBatchConfiguration")
-                    .Include("RequestConfiguration")
-                    .Include("ExecutableConfiguration")
-                    .Include("ParentSchedule")
-                    .Include("Children")
-                    .ToList();
+                schedule.IsEnabled = false;
+                db.SaveChanges();
             }
         }
 
@@ -156,79 +179,78 @@ namespace Gateway.Web.Services.Schedule
             }
         }
 
-        public void DeleteSchedule(long id, GatewayEntities db = null, bool saveChanges = true)
+        public Database.Schedule GetSchedule(long id)
         {
-            db = db ?? new GatewayEntities(ConnectionString);
-            var entity = db.Schedules
-                .Where(x => x.ScheduleId == id)
-                .Include("RiskBatchSchedule")
-                .Include("RiskBatchSchedule.RiskBatchConfiguration")
-                .Include("RequestConfiguration")
-                .Include("ExecutableConfiguration")
-                .Include("ParentSchedule")
-                .Include("Children")
-                .SingleOrDefault();
-
-            if (entity == null)
+            using (var db = new GatewayEntities(ConnectionString))
             {
-                throw new Exception($"Unable to find schedule with ID {id}");
+                var entity = db.Schedules
+                    .Include("RiskBatchSchedule")
+                    .Include("RiskBatchSchedule.RiskBatchConfiguration")
+                    .Include("RequestConfiguration")
+                    .Include("ExecutableConfiguration")
+                    .Include("ParentSchedule")
+                    .Include("Children")
+                    .SingleOrDefault(x => x.ScheduleId == id);
+
+                if (entity == null)
+                    throw new Exception($"Unable to get batch schedule with ID {id}.");
+
+                return entity;
             }
-
-            var requestConfigurationId = entity.RequestConfigurationId;
-            var requestConfiguration = entity.RequestConfiguration;
-
-            foreach (var child in entity.Children)
-            {
-                child.Parent = entity.Parent;
-                child.GroupId = entity.GroupId;
-                ScheduleTask(child, entity.ScheduleGroup);
-            }
-
-            _scheduler.RemoveScheduledWebRequest(entity.ScheduleKey);
-
-            var scheduledJobs = entity.ScheduledJobs.ToList();
-            foreach (var scheduledJob in scheduledJobs)
-            {
-                db.ScheduledJobs.Remove(scheduledJob);
-            }
-
-            if (entity.RiskBatchScheduleId != null)
-                db.RiskBatchSchedules.Remove(entity.RiskBatchSchedule);
-
-            db.Schedules.Remove(entity);
-
-            if (requestConfigurationId != null)
-                db.RequestConfigurations.Remove(requestConfiguration);
-
-            if (!saveChanges)
-                return;
-
-            db.SaveChanges();
-            db.Dispose();
         }
 
-        public void DeleteForConfiguration(long id, GatewayEntities db = null, bool saveChanges = true)
+        public IList<Database.Schedule> GetSchedules(IEnumerable<long> scheduleIdList)
         {
-            db = db ?? new GatewayEntities(ConnectionString);
-            var entities = db.Schedules
-                .Where(x => x.RiskBatchSchedule != null && x.RiskBatchSchedule.RiskBatchConfigurationId == id)
-                .Include("RiskBatchSchedule")
-                .Include("RiskBatchSchedule.RiskBatchConfiguration")
-                .Include("RequestConfiguration")
-                .Include("ExecutableConfiguration")
-                .Include("ParentSchedule")
-                .Include("Children");
-
-            foreach (var schedule in entities)
+            using (var db = new GatewayEntities(ConnectionString))
             {
-                DeleteSchedule(schedule.ScheduleId, db, false);
+                return db.Schedules
+                    .Where(x => scheduleIdList.Contains(x.ScheduleId))
+                    .Include("RiskBatchSchedule")
+                    .Include("RiskBatchSchedule.RiskBatchConfiguration")
+                    .Include("RequestConfiguration")
+                    .Include("ExecutableConfiguration")
+                    .Include("ParentSchedule")
+                    .Include("Children")
+                    .ToList();
             }
+        }
 
-            if (!saveChanges)
-                return;
+        public ScheduleTask GetScheduleTask(long id)
+        {
+            using (var db = new GatewayEntities(ConnectionString))
+            {
+                var entity = db.Schedules
+                    .Include("RiskBatchSchedule")
+                    .Include("RiskBatchSchedule.RiskBatchConfiguration")
+                    .Include("RequestConfiguration")
+                    .Include("ExecutableConfiguration")
+                    .Include("ParentSchedule")
+                    .Include("Children")
+                    .SingleOrDefault(x => x.ScheduleId == id);
 
-            db.SaveChanges();
-            db.Dispose();
+                if (entity == null)
+                    throw new Exception($"Unable to get batch schedule with ID {id}.");
+
+                return entity.ToModel();
+            }
+        }
+
+        public IList<ScheduleTask> GetScheduleTasks(IEnumerable<long> scheduleIdList)
+        {
+            using (var db = new GatewayEntities(ConnectionString))
+            {
+                return db.Schedules
+                    .Where(x => scheduleIdList.Contains(x.ScheduleId))
+                    .Include("RiskBatchSchedule")
+                    .Include("RiskBatchSchedule.RiskBatchConfiguration")
+                    .Include("RequestConfiguration")
+                    .Include("ExecutableConfiguration")
+                    .Include("ParentSchedule")
+                    .Include("Children")
+                    .ToList()
+                    .Select(x => x.ToModel())
+                    .ToList();
+            }
         }
 
         public void RerunTask(long id, DateTime businessDate, bool includeChildren = true)
@@ -240,13 +262,10 @@ namespace Gateway.Web.Services.Schedule
                 if (batch == null)
                     return;
 
-                if (batch.ExecutableConfiguration != null)
-                {
-                    _executableScheduler.EnqueueExecutable(batch.ToExecutableOptions());
-                    return;
-                }
-
-                _scheduler.EnqueueAsyncWebRequest(batch.ToRequest(batch.RiskBatchSchedule?.IsLive ?? false, businessDate, includeChildren));
+                if (businessDate.CompareTo(DateTime.Now.Date) == 0)
+                    _scheduler.TriggerScheduledWebRequest(batch.ScheduleKey);
+                else
+                    _scheduler.EnqueueAsyncWebRequest(batch.ToRequest(batch.RiskBatchSchedule?.IsLive ?? false, businessDate, includeChildren));
             }
         }
 
@@ -270,33 +289,71 @@ namespace Gateway.Web.Services.Schedule
 
                 foreach (var schedule in batches)
                 {
-                    _scheduler.EnqueueAsyncWebRequest(schedule.ToRequest(schedule.RiskBatchSchedule?.IsLive ?? false, businessDate));
+                    if (businessDate.CompareTo(DateTime.Now.Date) == 0)
+                        _scheduler.TriggerScheduledWebRequest(schedule.ScheduleKey);
+                    else
+                        _scheduler.EnqueueAsyncWebRequest(schedule.ToRequest(schedule.RiskBatchSchedule?.IsLive ?? false, businessDate));
                 }
             }
         }
 
-        public void DisableSchedule(long id)
+        public void StopTask(long id)
         {
             using (var db = new GatewayEntities(ConnectionString))
             {
-                var schedule = db.Schedules
-                    .Where(x => x.ScheduleId == id)
+                var batch = db.Schedules.SingleOrDefault(x => x.ScheduleId == id);
+
+                if (batch == null)
+                    return;
+
+                var jobId = batch.ScheduledJobs
+                    .OrderByDescending(j => j.Id)
+                    .FirstOrDefault(j => statusCheck.Contains(j.Status.ToLowerInvariant()))
+                    ?.JobId;
+
+                _scheduler.RemoveEnqueuedWebRequest(jobId);
+            }
+        }
+
+        public void StopTaskGroup(long id, string searchTerm)
+        {
+            using (var db = new GatewayEntities(ConnectionString))
+            {
+                var batches = db.Schedules
                     .Include("RiskBatchSchedule")
                     .Include("RiskBatchSchedule.RiskBatchConfiguration")
                     .Include("RequestConfiguration")
                     .Include("ExecutableConfiguration")
                     .Include("ParentSchedule")
                     .Include("Children")
-                    .SingleOrDefault();
+                    .Where(GetSearchCriteria(searchTerm))
+                    .Where(x => x.GroupId == id)
+                    .ToList();
 
-                if (schedule == null)
+                if (!batches.Any())
                     return;
 
-                _scheduler.RemoveScheduledWebRequest(schedule.ScheduleKey);
+                foreach (var schedule in batches)
+                {
+                    var jobId = schedule.ScheduledJobs
+                        .OrderByDescending(j => j.Id)
+                        .FirstOrDefault(j => statusCheck.Contains(j.Status.ToLowerInvariant()))
+                        ?.JobId;
 
-                schedule.IsEnabled = false;
-                db.SaveChanges();
+                    _scheduler.RemoveEnqueuedWebRequest(jobId);
+                }
             }
+        }
+
+        private Func<Database.Schedule, bool> GetSearchCriteria(string s)
+        {
+            if (string.IsNullOrWhiteSpace(s))
+                return x => true;
+
+            var terms = s.ToLower().Split(' ');
+            return x => terms.Any(y => (x.RiskBatchSchedule != null && x.RiskBatchSchedule.TradeSource != null && x.RiskBatchSchedule.TradeSource.ToLower().Contains(y)) ||
+                                       (x.RiskBatchSchedule != null && x.RiskBatchSchedule.RiskBatchConfiguration.Type.ToLower().Contains(y)) ||
+                                       (x.RequestConfiguration != null && x.RequestConfiguration.Name.ToLower().Contains(y)));
         }
 
         private void ScheduleTask(Database.Schedule entity, Database.ScheduleGroup group)
@@ -316,17 +373,6 @@ namespace Gateway.Web.Services.Schedule
                 var cron = group.Schedule;
                 _scheduler.ScheduleAsyncWebRequest(request, entity.ScheduleKey, cron);
             }
-        }
-
-        private Func<Database.Schedule, bool> GetSearchCriteria(string s)
-        {
-            if (string.IsNullOrWhiteSpace(s))
-                return x => true;
-
-            var terms = s.ToLower().Split(' ');
-            return x => terms.Any(y => (x.RiskBatchSchedule != null && x.RiskBatchSchedule.TradeSource != null && x.RiskBatchSchedule.TradeSource.ToLower().Contains(y)) ||
-                                       (x.RiskBatchSchedule != null && x.RiskBatchSchedule.RiskBatchConfiguration.Type.ToLower().Contains(y)) ||
-                                       (x.RequestConfiguration != null && x.RequestConfiguration.Name.ToLower().Contains(y)));
         }
     }
 }

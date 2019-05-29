@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Gateway.Web.Database;
-using Gateway.Web.Models.Schedule;
+﻿using Gateway.Web.Database;
 using Gateway.Web.Models.Schedule.Output;
-using ScheduleGroup = Gateway.Web.Models.Schedule.Output.ScheduleGroup;
+using System;
+using System.Collections.Generic;
 
 namespace Gateway.Web.Services.Schedule.Interfaces
 {
@@ -17,7 +15,9 @@ namespace Gateway.Web.Services.Schedule.Interfaces
         void DeleteSchedule(long id, GatewayEntities db = null, bool saveChanges = true);
         void DeleteForConfiguration(long id, GatewayEntities db = null, bool saveChanges = true);
         void RerunTask(long id, DateTime businessDate, bool includeChildren = true);
+        void StopTask(long id);
         void RerunTaskGroup(long id, DateTime businessDate, string searchTerm);
-        void DisableSchedule(long l);
+        void StopTaskGroup(long id, string searchTerm);
+        void DisableSchedule(long l);        
     }
 }
