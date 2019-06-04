@@ -110,6 +110,15 @@ namespace Gateway.Web.Services.Schedule
             var key = $"BATCH={configuration.ConfigurationId}-TRADESOURCE={tradeSource.ToUpper().Trim()}";
             if (isLive)
                 key = $"{key}-LIVE";
+
+            if (key.Length >= 50)
+            {
+                var shortenedTradeSources = tradeSource.ToUpper().Trim().GetHashCode();
+                key = $"BATCH={configuration.ConfigurationId}-TRADESOURCE={shortenedTradeSources}";
+                if (isLive)
+                    key = $"{key}-LIVE";
+            }
+
             return key;
         }
 
