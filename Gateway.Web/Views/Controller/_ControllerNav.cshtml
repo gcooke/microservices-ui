@@ -52,6 +52,14 @@
                 <span class="glyphicon glyphicon-cog"></span>&nbsp;&nbsp;Configuration
             </a>
         </li>
+
+        <li>
+            <a href="~/Controller/Servers/@Model.Name"
+               class="@(ViewBag.Current == "Servers" ? "active" : "")">
+                <span class="glyphicon glyphicon-cog"></span>&nbsp;&nbsp;Servers
+            </a>
+        </li>
+
         <li>
             <a href="~/Controller/Documentation/@Model.Name"
                class="@(ViewBag.Current == "Documentation" ? "active" : "")">

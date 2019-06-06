@@ -58,6 +58,10 @@ namespace Gateway.Web
                 "~/Scripts/ServerResources/ServerResources.js"
             ));
 
+            bundles.Add(new ScriptBundle("~/bundles/selectAllTable").Include(
+                "~/Scripts/Shared/SelectAllTable.js"
+            ));
+
             bundles.Add(new StyleBundle("~/styles/css").Include(
                 "~/Content/css/bootstrap.css",
                 "~/Content/css/font-awesome.css",

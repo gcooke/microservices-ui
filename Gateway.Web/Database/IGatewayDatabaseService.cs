@@ -75,12 +75,15 @@ namespace Gateway.Web.Database
         bool HasStatusChanged(string controller, string version, string status, string alias);
 
         Task<List<ExtendedBatchSummary>> GetBatchSummaryStatsAsync(DateTime valuationDate);
-        ResourceConfigModel GetConfiguredServers();
-        ResourceConfigModel GetControllerResources();
+       
+        ControllerServersModel GetControllerServers(string controllerName);
 
-        void DeleteServerResourceLink(string serverName, string resourceName);
-        void AddServerResourceLink(string serverName, string resourceName);
-        void DeleteControllerResourceLink(string controllerName, string resourceName);
-        void AddControllerResourceLink(string controllerName, string resourceName);
+        void UpdateControllerServers(ControllerServersModel controllerServers);
+
+        IList<Server> GetServers();
+
+        ServerControllerModel GetSeverControllers(int serverId);
+
+        void UpdateServerControllers(ServerControllerModel serverControllerModel);
     }
 }

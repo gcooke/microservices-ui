@@ -6,7 +6,9 @@ using System.Web.Mvc;
 using Bagl.Cib.MIT.Logging;
 using Bagl.Cib.MIT.Redis;
 using Gateway.Web.Database;
+using Gateway.Web.Models.ServerResource;
 using Controller = System.Web.Mvc.Controller;
+using Gateway.Web.Authorization;
 
 namespace Gateway.Web.Controllers
 {
@@ -24,53 +26,46 @@ namespace Gateway.Web.Controllers
 
         public ActionResult Index()
         {
-            return RedirectToAction("ServerConfiguration");
+            var serverResourceModel = new ServerResourceModel
+            {
+                Servers = _databaseService.GetServers().ToList()
+            };
+
+            return View("Index", serverResourceModel);
         }
 
-        public ActionResult ServerConfiguration()
+        public ActionResult ServerControllers(string id)
         {
-            return View("Index",_databaseService.GetConfiguredServers());
+            int serverid;
+
+            if (!Int32.TryParse(id, out serverid))
+            {
+                return RedirectToAction("Index");
+            }
+
+            var model = _databaseService.GetSeverControllers(serverid);
+
+            return View("ServerControllers", model);
+
         }
 
-        [Route("DeleteServer/{serverName}/{resourceName}")]
-        public ActionResult DeleteServer(string serverName, string resourceName)
+        [HttpPost]
+        [RoleBasedAuthorize(Roles = "Security.Modify")]
+        public ActionResult SaveServerControllers(ServerControllerModel model)
         {
-            _databaseService.DeleteServerResourceLink(serverName, resourceName);
+            try
+            {
+                _databaseService.UpdateServerControllers(model);
+                return RedirectToAction("Index");
+            }
+            catch(Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+            }
 
-            return RedirectToAction("ServerConfiguration");
+            return View("ServerControllers", model);
         }
 
-        [Route("AddServer/{serverName}/{resourceName}")]
-        public ActionResult AddServer(string serverName, string resourceName)
-        {
-            _databaseService.AddServerResourceLink(serverName, resourceName);
-
-            return RedirectToAction("ServerConfiguration");
-        }
-
-
-
-        public ActionResult ControllerConfiguration()
-        {
-            return View("Index", _databaseService.GetControllerResources());
-        }
-      
-
-        [Route("DeleteController/{controllerName}/{resourceName}")]
-        public ActionResult DeleteController(string controllerName, string resourceName)
-        {
-            _databaseService.DeleteControllerResourceLink(controllerName, resourceName);
-
-            return RedirectToAction("ControllerConfiguration");
-        }
-
-        [Route("AddController/{controllerName}/{resourceName}")]
-        public ActionResult AddController(string controllerName, string resourceName)
-        {
-            _databaseService.AddControllerResourceLink(controllerName, resourceName);
-
-            return RedirectToAction("ControllerConfiguration");
-        }
     }
 
 

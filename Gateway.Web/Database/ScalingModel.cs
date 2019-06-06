@@ -12,13 +12,9 @@ namespace Gateway.Web.Database
     using System;
     using System.Collections.Generic;
     
-    public partial class ControllerExternalResource
+    public partial class ScalingModel
     {
         public int Id { get; set; }
-        public long ControllerId { get; set; }
-        public int ExternalResourceId { get; set; }
-    
-        public virtual Controller Controller { get; set; }
-        public virtual ExternalResource ExternalResource { get; set; }
+        public string Description { get; set; }
     }
 }

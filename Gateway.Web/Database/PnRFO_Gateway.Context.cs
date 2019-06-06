@@ -17,12 +17,16 @@ namespace Gateway.Web.Database
     
     public partial class GatewayEntities : DbContext
     {
+        public GatewayEntities()
+            : base("name=GatewayEntities")
+        {
+        }
+    
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Controller> Controllers { get; set; }
         public virtual DbSet<Request> Requests { get; set; }
         public virtual DbSet<Response> Responses { get; set; }
         public virtual DbSet<Version> Versions { get; set; }
@@ -32,10 +36,7 @@ namespace Gateway.Web.Database
         public virtual DbSet<StatusChange> StatusChanges { get; set; }
         public virtual DbSet<Link> Links { get; set; }
         public virtual DbSet<BatchStat> BatchStats { get; set; }
-        public virtual DbSet<ControllerExternalResource> ControllerExternalResources { get; set; }
-        public virtual DbSet<ExternalResource> ExternalResources { get; set; }
         public virtual DbSet<Server> Servers { get; set; }
-        public virtual DbSet<ServerExternalResource> ServerExternalResources { get; set; }
         public virtual DbSet<ScheduleGroup> ScheduleGroups { get; set; }
         public virtual DbSet<RequestConfiguration> RequestConfigurations { get; set; }
         public virtual DbSet<ExecutableConfiguration> ExecutableConfigurations { get; set; }
@@ -43,6 +44,8 @@ namespace Gateway.Web.Database
         public virtual DbSet<RiskBatchSchedule> RiskBatchSchedules { get; set; }
         public virtual DbSet<Schedule> Schedules { get; set; }
         public virtual DbSet<ScheduledJob> ScheduledJobs { get; set; }
+        public virtual DbSet<ScalingModel> ScalingModels { get; set; }
+        public virtual DbSet<Controller> Controllers { get; set; }
     
         public virtual ObjectResult<spGetJobStats_Result> spGetJobStats(Nullable<System.DateTime> start, string controller)
         {
