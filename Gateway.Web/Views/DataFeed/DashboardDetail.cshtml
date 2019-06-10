@@ -1,0 +1,60 @@
+﻿@using Gateway.Web.Enums
+@using Gateway.Web.Models.Home
+@using Gateway.Web.Models.Monitoring
+@model Gateway.Web.Models.DataFeeds.DataFeedDashboardItem
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "Data Feed Item";
+    ViewBag.Current = "Data Feed Item";
+}
+@{ Html.RenderPartial("_DataFeedNav"); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <h3  >
+                    Data Feed @Model.DataFeedHeader.DataFeedName<small id="reportDate" data-date="@Model.RunDate.ToString("yyyy-MM-dd")">@Model.RunDate.ToString("yyyy-MM-dd")</small>
+                </h3>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div id="paginator" data-current-date="@Model.RunDate.ToString("yyyy-MM-dd")"></div>
+            </div>
+        </div>
+
+        <div id="report-content" style="margin-top: 10px;">
+            <div>
+                <table class="datatable table report-table" id="searchable-table" style="width: 100%; white-space: nowrap">
+                    <thead>
+                    <tr>   
+                        <td class="table-header" style="width: 280px;">SourceName</td>
+                        <td class="table-header" style="width: 140px;">SourceTotalRows</td>
+                        <td class="table-header" style="width: 50px;">DestinationName</td>
+                        <td class="table-header" style="width: 50px;">DestinationTotalRows</td>
+                        <td class="table-header" style="width: 50px;">TimeTakenInSeconds</td>
+                        <td class="table-header" style="width: 50px;">Started</td>
+                        <td class="table-header" style="width: 140px;">Ended</td>
+                        <td class="table-header" style="width: 140px;">Message</td>
+                        <td class="table-header" style="width: 140px;">IsSuccessful</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.DataFeedHeader.DataFeedDetail)
+                        {
+                            <tr class="report-table-detail-row">
+                                <td style="text-align: center; padding-left: 5px">@item.SourceName</td>
+                                 
+                            </tr> 
+                             
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>

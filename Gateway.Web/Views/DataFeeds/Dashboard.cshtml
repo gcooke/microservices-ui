@@ -1,0 +1,73 @@
+﻿@using System.Xml.Schema
+@using Gateway.Web.Models
+@using Gateway.Web.Models.DataFeeds
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "All DataFeeds";
+    ViewBag.Current = "Dashboard";
+}
+@{ Html.RenderPartial("_DataFeedNav"); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit"> 
+        <h3>All DataFeeds</h3> 
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div id="paginator" data-current-date="@Model.BusinessDate.ToString("yyyy-MM-dd")"></div>
+            </div>
+        </div>
+
+
+        <br style="clear:both" />
+        <div class="containerx bulk">
+            @foreach (var controller in Model.DataFeeds)
+            {
+                <a href="~/DataFeed/DashboardDetail/@Model.BusinessDate.ToString("yyyy-MM-dd")">
+                    <div class="widget" title="@controller.Name">
+                        <div class="content">
+                            <div class="list-head clearfix" style="color:black">
+                                <table>
+                                    <tr>
+                                        <td><img src="@Url.Content(MvcApplication.ControllerIcon)" alt="" class="avatar" /></td>
+                                        <td style="width: 200px; overflow: hidden; text-overflow: ellipsis;">
+                                            <h3 style="margin: 0 40px 0 5px;">
+                                                @controller.Name
+                                            </h3>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <br />
+                                <br />
+                                <div style="float: left;">
+                                    <table style="min-width: 200px; padding: 10px">
+                                        <tr>
+                                            <td colspan="2">
+                                                <span class="glyphicon glyphicon-log-in" style="color: green"></span>&nbsp;&nbsp;@controller.Message
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 100px">
+                                                <span class="glyphicon glyphicon-adjust" style="color: red"></span>&nbsp;&nbsp;Status
+                                            </td>
+                                            <td>@controller.Message</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 100px">
+                                                <span class="glyphicon glyphicon-time" style="color: black"></span>&nbsp;&nbsp;Duration
+                                            </td>
+                                            <td>@controller.Duration</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            }
+
+        </div>
+        <br />
+    </div>
+</div>
