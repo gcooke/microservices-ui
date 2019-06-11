@@ -31,14 +31,27 @@ namespace Gateway.Web.Controllers
             _dataFeedService = dataFeedService;
         }
 
-        public ActionResult DashboardDetail(DateTime? reportDate = null)
+        public ActionResult DashboardDetail(long? id = null, DateTime? businessDate = null)
         {
+            DataFeedHeader datafeeds = null;
             var model = new DataFeedDashboardItem();
-            if (!reportDate.HasValue)
-                reportDate = DateTime.Now;
+            if (!businessDate.HasValue)
+                businessDate = DateTime.Now;
 
-            model.RunDate = reportDate.Value;
-            var datafeeds = _dataFeedService.FetchDataFeedByHeaderId(1);
+            model.RunDate = businessDate.Value;
+            if (id.HasValue)
+            {
+                datafeeds = _dataFeedService.FetchDataFeedByHeaderId(id.Value);
+                if (datafeeds != null)
+                    ViewBag.DataFeedTypeId = datafeeds.DataFeedTypeId;
+            }
+            else
+            {
+                if (businessDate.HasValue && ViewBag.DataFeedTypeId != null)
+                {
+                    datafeeds = _dataFeedService.FetchDataFeedByRunDateAndType(businessDate.Value, (int)ViewBag.DataFeedTypeId);
+                }
+            }
 
             model.DataFeedHeader = datafeeds;
             return View(model);

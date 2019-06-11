@@ -14,41 +14,80 @@
 
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <h3  >
-                    Data Feed @Model.DataFeedHeader.DataFeedName<small id="reportDate" data-date="@Model.RunDate.ToString("yyyy-MM-dd")">@Model.RunDate.ToString("yyyy-MM-dd")</small>
+                <h3>
+                    Data Feed @Model.DataFeedHeader.DataFeedName&nbsp;&nbsp;<small id="reportDate" data-date="@Model.RunDate.ToString("yyyy-MM-dd")">@Model.RunDate.ToString("yyyy-MM-dd")</small>
                 </h3>
             </div>
-        </div>
-
+        </div> 
+      
         <div class="row">
             <div class="col-sm-12">
                 <div id="paginator" data-current-date="@Model.RunDate.ToString("yyyy-MM-dd")"></div>
             </div>
         </div>
-
+        <h4>Summary</h4>
+        <table style="min-width: 200px; padding: 10px">
+            <tr>
+                <td style="width: 150px">
+                     &nbsp;&nbsp;Start Date
+                </td>
+                <td>@Model.DataFeedHeader.Started</td>
+            </tr>
+            <tr>
+                <td style="width: 150px">
+                     &nbsp;&nbsp;End Date
+                </td>
+                <td>@Model.DataFeedHeader.Ended</td>
+            </tr>
+            <tr>
+                <td style="width: 150px">
+                    &nbsp;&nbsp;Status
+                </td>
+                <td>@Model.DataFeedHeader.DataFeedStatus</td>
+            </tr>
+            <tr>
+                <td style="width: 150px">
+                     &nbsp;&nbsp;DataFeed Type
+                </td>
+                <td>@Model.DataFeedHeader.DataFeedType</td>
+            </tr>
+            <tr>
+                <td style="width: 150px">
+                     &nbsp;&nbsp;Message
+                </td>
+                <td>@Model.DataFeedHeader.Message</td>
+            </tr>
+        </table>
         <div id="report-content" style="margin-top: 10px;">
             <div>
                 <table class="datatable table report-table" id="searchable-table" style="width: 100%; white-space: nowrap">
                     <thead>
                     <tr>   
-                        <td class="table-header" style="width: 280px;">SourceName</td>
-                        <td class="table-header" style="width: 140px;">SourceTotalRows</td>
-                        <td class="table-header" style="width: 50px;">DestinationName</td>
-                        <td class="table-header" style="width: 50px;">DestinationTotalRows</td>
-                        <td class="table-header" style="width: 50px;">TimeTakenInSeconds</td>
+                        <td class="table-header" style="width: 280px;">Source Name</td>
+                        <td class="table-header" style="width: 140px;">Source Total Rows</td>
+                        <td class="table-header" style="width: 50px;">Destination Name</td>
+                        <td class="table-header" style="width: 50px;">Destination Total Rows</td>
+                        <td class="table-header" style="width: 50px;">Time Taken (s)</td>
                         <td class="table-header" style="width: 50px;">Started</td>
                         <td class="table-header" style="width: 140px;">Ended</td>
                         <td class="table-header" style="width: 140px;">Message</td>
-                        <td class="table-header" style="width: 140px;">IsSuccessful</td>
+                        <td class="table-header" style="width: 140px;">Successful</td>
                     </tr>
                     </thead>
                     <tbody>
                         @foreach (var item in Model.DataFeedHeader.DataFeedDetail)
                         {
-                            <tr class="report-table-detail-row">
-                                <td style="text-align: center; padding-left: 5px">@item.SourceName</td>
-                                 
-                            </tr> 
+                        <tr class="report-table-detail-row">
+                            <td style="text-align: center; padding-left: 5px">@item.SourceName</td>
+                            <td style="text-align: center; padding-left: 5px">@item.SourceTotalRows</td>
+                            <td style="text-align: center; padding-left: 5px">@item.DestinationName</td>
+                            <td style="text-align: center; padding-left: 5px">@item.DestinationTotalRows</td>
+                            <td style="text-align: center; padding-left: 5px">@item.TimeTakenInSeconds</td>
+                            <td style="text-align: center; padding-left: 5px">@item.Started</td>
+                            <td style="text-align: center; padding-left: 5px">@item.Ended</td>
+                            <td style="text-align: center; padding-left: 5px">@item.Message</td>
+                            <td style="text-align: center; padding-left: 5px">@item.IsSuccessful</td>
+                        </tr> 
                              
                         }
                     </tbody>

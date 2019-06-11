@@ -23,7 +23,7 @@
         <div class="containerx bulk">
             @foreach (var controller in Model.DataFeeds)
             {
-                <a href="~/DataFeed/DashboardDetail/@Model.BusinessDate.ToString("yyyy-MM-dd")">
+                <a href="~/DataFeed/DashboardDetail/@controller.HeaderId">
                     <div class="widget" title="@controller.Name">
                         <div class="content">
                             <div class="list-head clearfix" style="color:black">
