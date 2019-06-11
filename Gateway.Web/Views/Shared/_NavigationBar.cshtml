@@ -26,13 +26,13 @@
                     </ul>
                 </li>
                 @*<li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                        Services <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li>@Html.ActionLink("Pdc", "Index", "Pdc")</li>
-                    </ul>
-                </li>*@
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            Services <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Pdc", "Index", "Pdc")</li>
+                        </ul>
+                    </li>*@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                         Reports <span class="caret"></span>
@@ -42,6 +42,9 @@
                         <li>@Html.ActionLink("Batch Interrogation", "Index", "Interrogation")</li>
                         <li>@Html.ActionLink("Workers", "Workers", "Controllers")</li>
                         <li>@Html.ActionLink("Security", "Reports", "Security")</li>
+                        <li>
+                            <a href=@System.Configuration.ConfigurationManager.AppSettings["MonitoringDashboardUrl"]>Statistics</a>
+                        </li>
                     </ul>
                 </li>
                 <li class="dropdown">
@@ -66,18 +69,17 @@
                         <li>@Html.ActionLink("Batch", "Index", "Batch")</li>
                         <li>@Html.ActionLink("Schedule", "Index", "Schedule")</li>
                         <li>@Html.ActionLink("Server Resources", "Index", "ServerResource")</li>
-
                     </ul>
                 </li>
                 @*<li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                Releases <span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu">
-                <li>@Html.ActionLink("Current Release", "Current", "ReleaseProcess")</li>
-                <li>@Html.ActionLink("Historical Releases", "Historical", "ReleaseProcess")</li>
-            </ul>
-        </li>*@
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            Releases <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Current Release", "Current", "ReleaseProcess")</li>
+                            <li>@Html.ActionLink("Historical Releases", "Historical", "ReleaseProcess")</li>
+                        </ul>
+                    </li>*@
             </ul>
 
             <div class="pull-right">
