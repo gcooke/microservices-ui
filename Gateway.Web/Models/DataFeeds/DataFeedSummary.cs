@@ -15,5 +15,6 @@ namespace Gateway.Web.Models.DataFeeds
         public string Status { get; set; }
         public string Duration { get; set; }
         public long HeaderId { get; set; }
+        public string DataFeedName { get; set; }
     }
 }

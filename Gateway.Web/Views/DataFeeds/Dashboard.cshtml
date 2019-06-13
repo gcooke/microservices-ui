@@ -7,7 +7,24 @@
     ViewBag.Current = "Dashboard";
 }
 @{ Html.RenderPartial("_DataFeedNav"); }
+<style>
+    .Error {
+        border-color :red;
+        border-style: solid;
+        border-width: 2px 10px 4px 20px;
+    }
 
+</style>
+<script>
+    function HasDetail(headerId) {
+        if (headerId == 0) {
+            alert("This data feed has no detail to be displayed.");
+            return false;
+        } else
+            return true;
+
+    }
+</script>
 <div id="page-content-wrapper">
     <div class="hero-unit"> 
         <h3>All DataFeeds</h3> 
@@ -23,8 +40,8 @@
         <div class="containerx bulk">
             @foreach (var controller in Model.DataFeeds)
             {
-                <a href="~/DataFeed/DashboardDetail/@controller.HeaderId">
-                    <div class="widget" title="@controller.Name">
+                <a onclick="return HasDetail(@controller.HeaderId)" href="~/DataFeed/DashboardDetail/@controller.HeaderId?businessDate=@Model.BusinessDate.ToString("yyyy-MM-dd")">
+                    <div class="widget @controller.Status" title="@controller.Name">
                         <div class="content">
                             <div class="list-head clearfix" style="color:black">
                                 <table>
@@ -38,26 +55,32 @@
                                     </tr>
                                 </table>
                                 <br />
-                                <br />
                                 <div style="float: left;">
-                                    <table style="min-width: 200px; padding: 10px">
+                                    <table style="min-width: 200px; padding: 10px;align-content:left">
                                         <tr>
                                             <td colspan="2">
-                                                <span class="glyphicon glyphicon-log-in" style="color: green"></span>&nbsp;&nbsp;@controller.Message
+                                                <span class="glyphicon glyphicon-log-in" style="color: green"></span>&nbsp;&nbsp;@controller.DataFeedName
                                             </td>
-
                                         </tr>
                                         <tr>
                                             <td style="width: 100px">
                                                 <span class="glyphicon glyphicon-adjust" style="color: red"></span>&nbsp;&nbsp;Status
                                             </td>
-                                            <td>@controller.Message</td>
+                                            <td>@controller.Status</td>
                                         </tr>
                                         <tr>
                                             <td style="width: 100px">
                                                 <span class="glyphicon glyphicon-time" style="color: black"></span>&nbsp;&nbsp;Duration
                                             </td>
                                             <td>@controller.Duration</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">
+                                                <span style="color:Red" ></span>&nbsp;&nbsp;<u>Message</u></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">
+                                                <span  ></span>&nbsp;&nbsp;  @controller.Message</td>
                                         </tr>
                                     </table>
                                 </div>
