@@ -335,6 +335,8 @@
     <Compile Include="Authorization\GatewayAuthenticationFilter.cs" />
     <Compile Include="Authorization\HttpContainerProvider.cs" />
     <Compile Include="Authorization\RoleBasedAuthorizeAttribute.cs" />
+    <Compile Include="Controllers\DataFeedController.cs" />
+    <Compile Include="Controllers\DataFeedsController.cs" />
     <Compile Include="Controllers\InterrogationController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ExecutableScheduleController.cs" />
@@ -423,6 +425,11 @@
     <Compile Include="Helpers\XmlSort.cs" />
     <Compile Include="ModelBindersConverters\ScheduleBatchModelBinder.cs" />
     <Compile Include="Models\AuthorizationModel.cs" />
+    <Compile Include="Models\DataFeeds\DataFeedDashboard.cs" />
+    <Compile Include="Models\DataFeeds\DataFeedDashboardItem.cs" />
+    <Compile Include="Models\DataFeeds\DataFeedDetail.cs" />
+    <Compile Include="Models\DataFeeds\DataFeedHeader.cs" />
+    <Compile Include="Models\DataFeeds\DataFeedSummary.cs" />
     <Compile Include="Models\Interrogation\InterrogationModel.cs" />
     <Compile Include="Models\Pdc\PdcServiceModel.cs" />
     <Compile Include="Models\Schedule\Input\BaseScheduleModel.cs" />
@@ -693,6 +700,8 @@
     <Compile Include="Services\Batches\Interrogation\Services\IssueService\IssueTrackerService.cs" />
     <Compile Include="Services\Batches\Interrogation\Utils\ScheduleEx.cs" />
     <Compile Include="Services\DatabaseStateProvider.cs" />
+    <Compile Include="Services\DataFeedService.cs" />
+    <Compile Include="Services\IDataFeedService.cs" />
     <Compile Include="Services\IManifestService.cs" />
     <Compile Include="Services\IRiskBatchInterrogationService.cs" />
     <Compile Include="Services\ManifestService.cs" />
@@ -998,6 +1007,10 @@
     <Content Include="Views\Interrogation\_InterrogationNav.cshtml" />
     <Content Include="Views\Pdc\Services.cshtml" />
     <Content Include="Views\Pdc\_PdcNav.cshtml" />
+    <Content Include="Views\DataFeeds\Dashboard.cshtml" />
+    <Content Include="Views\DataFeeds\_DataFeedNav.cshtml" />
+    <Content Include="Views\DataFeed\DashboardDetail.cshtml" />
+    <Content Include="Views\DataFeed\_DataFeedNav.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />
@@ -1050,7 +1063,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>9895</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:9896</IISUrl>
+          <IISUrl>http://localhost:9896/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

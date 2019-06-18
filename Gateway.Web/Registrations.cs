@@ -63,11 +63,10 @@ namespace Gateway.Web
 
             information.RegisterType<ILogsService, LogsService>(Scope.Singleton);
 
-            //Register Redis 
+            //Register Redis
             information.RegisterType<ConfigurationOptions>(Scope.Singleton, new InjectionFactory(
                 e =>
                 {
-
                     var redisConnectionStr = information.GetSetting("RedisConnection");
                     redisConnectionStr = string.IsNullOrEmpty(redisConnectionStr) ? "localhost" : redisConnectionStr;
 
@@ -146,6 +145,7 @@ namespace Gateway.Web
             information.RegisterType<IGatewayService, GatewayService>(Scope.ContainerSingleton);
             information.RegisterType<IBasicRestService, BasicRestService>(Scope.ContainerSingleton);
             information.RegisterType<IServerDiagnosticsService, ServerDiagnosticsService>(Scope.ContainerSingleton);
+            information.RegisterType<IDataFeedService, DataFeedService>(Scope.ContainerSingleton);
             information.RegisterType<IBatchHelper, BatchHelper>(Scope.ContainerSingleton);
             information.RegisterType<IDatabaseStateProvider, DatabaseStateProvider>(Scope.ContainerSingleton);
             information.RegisterType<IManifestService, ManifestService>(Scope.ContainerSingleton);
@@ -158,10 +158,8 @@ namespace Gateway.Web
             Bagl.Cib.MSF.ClientAPI.Registrations.Register(information);
         }
 
-
         private static void SetupLogging(ISystemInformation information)
         {
-
         }
 
         private static void SetLogLevel(this LogLevel value, string logLevel)
