@@ -53,16 +53,8 @@ namespace Gateway.Web.Models.Controller
         public int MaxInstances { get; set; }
 
         [XmlElement]
-        [StringLength(10, ErrorMessage = "Name cannot be longer than 10 characters.")]
-        public string Type { get; set; }
-
-        [XmlElement]
         [StringLength(100, ErrorMessage = "Name cannot be longer than 100 characters.")]
         public string Configuration { get; set; }
-
-        [XmlElement]
-        [Display(Name = "User Call Limit Per Sec")]
-        public int UserCallLimit { get; set; }
 
         [XmlArray(ElementName="Versions")]
         [XmlArrayItem(ElementName = "Version", Namespace= "Gateway.Web.Models.Controller")]
@@ -73,9 +65,8 @@ namespace Gateway.Web.Models.Controller
         [Display(Name = "Description")]
         public string Description { get; set; }
 
-        [XmlElement]
-        [Display(Name = "Excluded Servers")]
-        [StringLength(1000, ErrorMessage = "List cannot be longer than 1000 characters.")]
-        public string ExcludedServers { get; set; }
+        [Display(Name = "Controller Server Restrictions")]
+        public List<ControllerServer> ControllerServerRestrictions { get; set; }
+        
     }
 }

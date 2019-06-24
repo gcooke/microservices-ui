@@ -35,20 +35,6 @@
                 </div>
             </div>
         </div>
-
-        <div class="row" hidden="@Model.IsUpdate">
-            <div class="col-md-3">
-                @Html.LabelFor(m => m.Type, new { @class = "control-label" })
-            </div>
-
-            <div class="col-md-4">
-                <div class="input-group spinner">
-                    <div class="input-group">
-                        @Html.TextBoxFor(m => m.Type, new { @name = "Type", @class = "form-control" })
-                    </div>
-                </div>
-            </div>
-        </div>
         
         <div class="row">
             <div class="col-md-3">
@@ -155,44 +141,6 @@
             </div>
         </div>
 
-        <div class="row" hidden="@Model.IsUpdate">
-            <div class="col-md-3">
-                @Html.LabelFor(m => m.UserCallLimit, new {@class = "control-label"})
-            </div>
-
-            <div class="col-md-3">
-                <div class="input-group">
-                    <span class="input-group-btn">
-                        <button type="button" class="btn btn-spinner btn-number" data-type="minus" data-field="UserCallLimit">
-                            <span class="glyphicon glyphicon-minus"></span>
-                        </button>
-                    </span>
-
-                    @Html.TextBoxFor(m => m.UserCallLimit, new {@name = "UserCallLimit", @class = "number-spinner input-number", @min = "0", @max = "10000"})
-
-                    <span class="input-group-btn">
-                        <button type="button" class="btn btn-spinner btn-number" data-type="plus" data-field="UserCallLimit">
-                            <span class="glyphicon glyphicon-plus"></span>
-                        </button>
-                    </span>
-                </div>
-            </div>
-
-        </div>
-        
-        <div class="row">
-            <div class="col-md-3">
-                @Html.LabelFor(m => m.ExcludedServers, new {@class = "control-label"})
-            </div>
-
-            <div class="col-md-3">
-                <div class="input-group">
-                    @Html.TextAreaFor(m => m.ExcludedServers, new {@name = "Excluded Servers" })
-                </div>
-            </div>
-
-        </div>
-
         <div class="row">
             <div class="col-md-3">
                 @Html.LabelFor(m => m.Description, new {@class = "control-label"})
@@ -205,6 +153,8 @@
             </div>
 
         </div>
+        
+        
 
         <div class="col-md-offset-3 col-md-4">
             <img src="../../Content/img/ajax-loader.gif" id="loading"/>

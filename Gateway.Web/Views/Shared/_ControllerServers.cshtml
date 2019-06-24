@@ -1,0 +1,74 @@
+﻿@model Gateway.Web.Models.Controller.ControllerServersModel
+
+<div class="form-group">
+    @Html.AntiForgeryToken()
+    <div class="container-fluid">
+        @Html.HiddenFor(x => x.ControllerId, @Model.ControllerId)
+        @Html.HiddenFor(x => x.Name, @Model.Name)
+        <div class="row">
+            <div class="col-md-6 ">
+                <table class="datatable table report-table select-all-table" id="ControllerRestriction-table">
+                    <thead>
+                        <tr style="background: #990505;">
+                            <th style="background: #990505;">
+                                @Html.CheckBox("select-all")
+                            </th>
+                            <th style="background: #990505;">Server</th>
+                            <th style="background: #990505;">Domain</th>
+                            <th style="background: #990505;">CPU Cores</th>
+                            <th style="background: #990505;">RAM</th>
+                        </tr>
+                        <tr>
+                            <td colspan="5">
+                                <div class="col-sm-12" style="padding:0px">
+                                    <input class="form-control "
+                                           placeholder="search the requests below..."
+                                           data-input="quick-search"
+                                           data-search-target="#ControllerRestriction-table tbody > tr"
+                                           name="quick-search"
+                                           type="text">
+                                    <span class="form-control-feedback form-action-clear glyphicon glyphicon-remove input-group-addon form-control"
+                                          aria-hidden="true" style="right:1px"></span>
+                                </div>
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.Servers.Count(); i++)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.CheckBoxFor(x => x.Servers[i].Allowed)
+                                    @Html.HiddenFor(x => x.Servers[i].ServerId, @Model.Servers[i].ServerId)
+
+                                </td>
+                                <td>
+                                    @Model.Servers[i].ServerName
+                                </td>
+                                <td>
+                                    @Model.Servers[i].Domain
+                                </td>
+                                <td>
+                                    @Model.Servers[i].CPUCores
+                                </td>
+                                <td>
+                                    @Model.Servers[i].RAM
+                                </td>
+                            </tr>
+                        }
+
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6" align="right">
+                <img src="../../Content/img/ajax-loader.gif" id="loading" />
+                <button class="btn btn-default btn-sm" type="submit" i="submit">
+                    Save
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

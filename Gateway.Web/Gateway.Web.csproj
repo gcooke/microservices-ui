@@ -347,6 +347,9 @@
     <Compile Include="Database\BatchCommentDto.cs" />
     <Compile Include="Database\BatchHelper.cs" />
     <Compile Include="Database\BatchSummary.cs" />
+    <Compile Include="Database\Controller.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
     <Compile Include="Database\Counterparty.cs">
       <DependentUpon>PnRFO.tt</DependentUpon>
     </Compile>
@@ -394,6 +397,9 @@
     <Compile Include="Database\RiskType.cs">
       <DependentUpon>PnRFO.tt</DependentUpon>
     </Compile>
+    <Compile Include="Database\ScalingModel.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
     <Compile Include="Database\Schedule.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
@@ -425,6 +431,8 @@
     <Compile Include="Helpers\XmlSort.cs" />
     <Compile Include="ModelBindersConverters\ScheduleBatchModelBinder.cs" />
     <Compile Include="Models\AuthorizationModel.cs" />
+    <Compile Include="Models\Controller\ControllerServer.cs" />
+    <Compile Include="Models\Controller\ControllerServersModel.cs" />
     <Compile Include="Models\DataFeeds\DataFeedDashboard.cs" />
     <Compile Include="Models\DataFeeds\DataFeedDashboardItem.cs" />
     <Compile Include="Models\DataFeeds\DataFeedDetail.cs" />
@@ -461,13 +469,7 @@
     <Compile Include="Database\BatchStat.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
-    <Compile Include="Database\ControllerExternalResource.cs">
-      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
-    </Compile>
     <Compile Include="Database\ExtendedBatchSummary.cs" />
-    <Compile Include="Database\ExternalResource.cs">
-      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
-    </Compile>
     <Compile Include="Database\GatewayDatabaseService.cs" />
     <Compile Include="Database\HistoricalSummary.cs" />
     <Compile Include="Database\IGatewayDatabaseService.cs" />
@@ -486,9 +488,6 @@
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\Server.cs">
-      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Database\ServerExternalResource.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\spGetChildRequests_Result.cs">
@@ -516,9 +515,6 @@
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\spGetRequestChildSummary_Result.cs">
-      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Database\Controller.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\ModelEx.cs" />
@@ -614,8 +610,9 @@
     <Compile Include="Models\Security\LinkModel.cs" />
     <Compile Include="Models\Security\LinksModel.cs" />
     <Compile Include="Models\Security\Manifest.cs" />
-    <Compile Include="Models\ServerResource\ResourceConfigModel.cs" />
-    <Compile Include="Models\ServerResource\ResourceConfigType.cs" />
+    <Compile Include="Models\ServerResource\ServerController.cs" />
+    <Compile Include="Models\ServerResource\ServerControllerModel.cs" />
+    <Compile Include="Models\ServerResource\ServerResourceModel.cs" />
     <Compile Include="Models\Shared\AddInModel.cs" />
     <Compile Include="Models\Shared\ApplicationModel.cs" />
     <Compile Include="Models\Shared\EntityAddInVersionModel.cs" />
@@ -883,6 +880,7 @@
     <Content Include="Scripts\Queues\Shared\ChartRenderer.js" />
     <Content Include="Scripts\Queues\ControllersQueueCharts.js" />
     <Content Include="Scripts\Queues\Shared\SelectionFilter.js" />
+    <Content Include="Scripts\Shared\SelectAllTable.js" />
     <Content Include="Views\Controllers\Create.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -1007,6 +1005,9 @@
     <Content Include="Views\Interrogation\_InterrogationNav.cshtml" />
     <Content Include="Views\Pdc\Services.cshtml" />
     <Content Include="Views\Pdc\_PdcNav.cshtml" />
+    <Content Include="Views\Controller\Servers.cshtml" />
+    <Content Include="Views\Shared\_ControllerServers.cshtml" />
+    <Content Include="Views\ServerResource\ServerControllers.cshtml" />
     <Content Include="Views\DataFeeds\Dashboard.cshtml" />
     <Content Include="Views\DataFeeds\_DataFeedNav.cshtml" />
     <Content Include="Views\DataFeed\DashboardDetail.cshtml" />

@@ -1,0 +1,76 @@
+﻿@using Gateway.Web.Models.ServerResource
+
+@model  ServerControllerModel
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = " Server Controllers";
+    ViewBag.Current = "Server Controllers";
+}
+
+@{ Html.RenderPartial("_ServerResourcesNav"); }
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+        <h3 class="text-lowercase">@Model.ServerName:  Controllers</h3>
+        <br />
+        @using (Html.BeginForm("SaveServerControllers", "ServerResource", FormMethod.Post, new { name = "form", @class = "form-horizontal", role = "form" }))
+        {
+            <div class="row">
+                <div class="col-md-8">
+                    @Html.HiddenFor(x => x.ServerId, Model.ServerId)
+                    @Html.HiddenFor(x => x.ServerName, Model.ServerName)
+                    <table class="datatable table report-table select-all-table" style="width: 100%; white-space: nowrap" id="searchable-table">
+                        <thead>
+                            <tr>
+                                <th style="background: #990505;">
+                                    @Html.CheckBox("select-all")
+                                </th>
+                                <th style="background: #990505;">Name</th>
+                                <th style="background: #990505;">Description</th>
+                            </tr>
+                            <tr >
+                                <td colspan="4">
+                                    <div class="col-sm-12" style="padding:0px" >
+                                        <input class="form-control "
+                                               placeholder="search the requests below..."
+                                               data-input="quick-search"
+                                               data-search-target="#searchable-table tbody > tr"
+                                               name="quick-search"
+                                               type="text">
+                                        <span  class="form-control-feedback form-action-clear glyphicon glyphicon-remove input-group-addon form-control"
+                                              aria-hidden="true" style="right:1px" ></span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.Controllers.Count; i++)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.CheckBoxFor(x => x.Controllers[i].Allowed)
+                                        @Html.HiddenFor(x => x.Controllers[i].Id, Model.Controllers[i].Id)
+                                    </td>
+                                    <td>
+                                        @Model.Controllers[i].Name
+                                    </td>
+                                    <td>
+                                        @Model.Controllers[i].Description
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-8" align="right">
+                    <img src="../../Content/img/ajax-loader.gif" id="loading" />
+                    <button class="btn btn-default btn-sm" type="submit" i="submit">
+                        Save
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+</div>

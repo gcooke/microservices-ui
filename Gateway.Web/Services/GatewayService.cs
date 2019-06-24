@@ -76,7 +76,7 @@ namespace Gateway.Web.Services
         public ServersModel GetServers()
         {
             var gatewayInfo = GetGatewayInfo();
-            return new ServersModel(gatewayInfo);
+            return new Models.Controllers.ServersModel(gatewayInfo);
         }
 
         public async Task<List<ServiceInfoModel>> GetWorkersAsync()

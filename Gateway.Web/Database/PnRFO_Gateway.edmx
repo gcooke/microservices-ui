@@ -5,21 +5,20 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="GatewayModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <EntityType Name="ControllerExternalResource">
+        <EntityType Name="ControllerServerRestriction">
           <Key>
-            <PropertyRef Name="Id" />
+            <PropertyRef Name="ControllerId" />
+            <PropertyRef Name="ServerId" />
           </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ControllerId" Type="bigint" Nullable="false" />
-          <Property Name="ExternalResourceId" Type="int" Nullable="false" />
+          <Property Name="ServerId" Type="int" Nullable="false" />
         </EntityType>
-        <EntityType Name="ExternalResource">
+        <EntityType Name="ScalingModel">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="Type" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="20" Nullable="false" />
         </EntityType>
         <EntityType Name="Server">
           <Key>
@@ -30,14 +29,6 @@
           <Property Name="Domain" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="RAM" Type="int" Nullable="false" />
           <Property Name="CpuCores" Type="int" Nullable="false" />
-        </EntityType>
-        <EntityType Name="ServerExternalResource">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="ServerId" Type="int" Nullable="false" />
-          <Property Name="ExternalResourceId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="BatchStats">
           <Key>
@@ -61,8 +52,6 @@
           </Key>
           <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
-          <Property Name="Type" Type="nvarchar" MaxLength="10" Nullable="false" />
-          <Property Name="UserCallLimitPerSec" Type="int" Nullable="false" />
           <Property Name="TimeToLiveSec" Type="int" />
           <Property Name="Configuration" Type="nvarchar" MaxLength="200" Nullable="false" />
           <Property Name="ScalingStrategy" Type="nvarchar" MaxLength="10" Nullable="false" />
@@ -70,7 +59,6 @@
           <Property Name="MaxInstances" Type="int" Nullable="false" />
           <Property Name="TimeoutMilliSec" Type="int" />
           <Property Name="Description" Type="varchar" MaxLength="500" />
-          <Property Name="ExcludedServers" Type="nvarchar" MaxLength="1000" />
         </EntityType>
         <EntityType Name="ExecutableConfiguration">
           <Key>
@@ -184,7 +172,7 @@
           <Property Name="RiskBatchConfigurationId" Type="bigint" Nullable="false" />
           <Property Name="TradeSourceType" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="AdditionalProperties" Type="varchar(max)" />
-          <Property Name="IsLive" Type="bit" Nullable="false" />
+          <Property Name="IsLive" Type="bit" />
         </EntityType>
         <EntityType Name="Schedule">
           <Key>
@@ -251,27 +239,27 @@
           <Property Name="Status" Type="varchar" MaxLength="50" />
           <Property Name="TimeTakenMs" Type="bigint" />
         </EntityType>
-        <Association Name="FK_ControllerExternalResource_ControllerId">
+        <Association Name="FK_ControllerServer_ControllerServer">
           <End Role="Controller" Type="Self.Controller" Multiplicity="1" />
-          <End Role="ControllerExternalResource" Type="Self.ControllerExternalResource" Multiplicity="*" />
+          <End Role="ControllerServerRestriction" Type="Self.ControllerServerRestriction" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Controller">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="ControllerExternalResource">
+            <Dependent Role="ControllerServerRestriction">
               <PropertyRef Name="ControllerId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_ControllerExternalResource_ExternalResourceId">
-          <End Role="ExternalResource" Type="Self.ExternalResource" Multiplicity="1" />
-          <End Role="ControllerExternalResource" Type="Self.ControllerExternalResource" Multiplicity="*" />
+        <Association Name="FK_ControllerServer_Server">
+          <End Role="Server" Type="Self.Server" Multiplicity="1" />
+          <End Role="ControllerServerRestriction" Type="Self.ControllerServerRestriction" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="ExternalResource">
+            <Principal Role="Server">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="ControllerExternalResource">
-              <PropertyRef Name="ExternalResourceId" />
+            <Dependent Role="ControllerServerRestriction">
+              <PropertyRef Name="ServerId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -359,30 +347,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_ServerExternalResource_ExternalResourceId">
-          <End Role="ExternalResource" Type="Self.ExternalResource" Multiplicity="1" />
-          <End Role="ServerExternalResource" Type="Self.ServerExternalResource" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ExternalResource">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ServerExternalResource">
-              <PropertyRef Name="ExternalResourceId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ServerExternalResource_ServerId">
-          <End Role="Server" Type="Self.Server" Multiplicity="1" />
-          <End Role="ServerExternalResource" Type="Self.ServerExternalResource" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Server">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ServerExternalResource">
-              <PropertyRef Name="ServerId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Version_Controller">
           <End Role="Controller" Type="Self.Controller" Multiplicity="1" />
           <End Role="Version" Type="Self.Version" Multiplicity="*" />
@@ -458,10 +422,9 @@
           <Parameter Name="Start" Type="datetime" Mode="In" />
         </Function>
         <EntityContainer Name="GatewayModelStoreContainer">
-          <EntitySet Name="ControllerExternalResource" EntityType="Self.ControllerExternalResource" Schema="config" store:Type="Tables" />
-          <EntitySet Name="ExternalResource" EntityType="Self.ExternalResource" Schema="config" store:Type="Tables" />
+          <EntitySet Name="ControllerServerRestriction" EntityType="Self.ControllerServerRestriction" Schema="config" store:Type="Tables" />
+          <EntitySet Name="ScalingModel" EntityType="Self.ScalingModel" Schema="config" store:Type="Tables" />
           <EntitySet Name="Server" EntityType="Self.Server" Schema="config" store:Type="Tables" />
-          <EntitySet Name="ServerExternalResource" EntityType="Self.ServerExternalResource" Schema="config" store:Type="Tables" />
           <EntitySet Name="BatchStats" EntityType="Self.BatchStats" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Controller" EntityType="Self.Controller" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ExecutableConfiguration" EntityType="Self.ExecutableConfiguration" Schema="dbo" store:Type="Tables" />
@@ -478,14 +441,14 @@
           <EntitySet Name="Status" EntityType="Self.Status" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="StatusChange" EntityType="Self.StatusChange" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Version" EntityType="Self.Version" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="ScheduledJob" EntityType="Self.ScheduledJob" Schema="Hangfire" store:Type="Tables" />
-          <AssociationSet Name="FK_ControllerExternalResource_ControllerId" Association="Self.FK_ControllerExternalResource_ControllerId">
+          <EntitySet Name="ScheduledJob" EntityType="Self.ScheduledJob" Schema="HangFire" store:Type="Tables" />
+          <AssociationSet Name="FK_ControllerServer_ControllerServer" Association="Self.FK_ControllerServer_ControllerServer">
             <End Role="Controller" EntitySet="Controller" />
-            <End Role="ControllerExternalResource" EntitySet="ControllerExternalResource" />
+            <End Role="ControllerServerRestriction" EntitySet="ControllerServerRestriction" />
           </AssociationSet>
-          <AssociationSet Name="FK_ControllerExternalResource_ExternalResourceId" Association="Self.FK_ControllerExternalResource_ExternalResourceId">
-            <End Role="ExternalResource" EntitySet="ExternalResource" />
-            <End Role="ControllerExternalResource" EntitySet="ControllerExternalResource" />
+          <AssociationSet Name="FK_ControllerServer_Server" Association="Self.FK_ControllerServer_Server">
+            <End Role="Server" EntitySet="Server" />
+            <End Role="ControllerServerRestriction" EntitySet="ControllerServerRestriction" />
           </AssociationSet>
           <AssociationSet Name="FK_RiskBatchSchedule_RiskBatchConfiguration" Association="Self.FK_RiskBatchSchedule_RiskBatchConfiguration">
             <End Role="RiskBatchConfiguration" EntitySet="RiskBatchConfiguration" />
@@ -515,14 +478,6 @@
             <End Role="Schedule" EntitySet="Schedule" />
             <End Role="ScheduledJob" EntitySet="ScheduledJob" />
           </AssociationSet>
-          <AssociationSet Name="FK_ServerExternalResource_ExternalResourceId" Association="Self.FK_ServerExternalResource_ExternalResourceId">
-            <End Role="ExternalResource" EntitySet="ExternalResource" />
-            <End Role="ServerExternalResource" EntitySet="ServerExternalResource" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ServerExternalResource_ServerId" Association="Self.FK_ServerExternalResource_ServerId">
-            <End Role="Server" EntitySet="Server" />
-            <End Role="ServerExternalResource" EntitySet="ServerExternalResource" />
-          </AssociationSet>
           <AssociationSet Name="FK_Version_Controller" Association="Self.FK_Version_Controller">
             <End Role="Controller" EntitySet="Controller" />
             <End Role="Version" EntitySet="Version" />
@@ -536,25 +491,6 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="GatewayModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="Controller">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Type" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="UserCallLimitPerSec" Type="Int32" Nullable="false" />
-          <Property Name="TimeToLiveSec" Type="Int32" />
-          <Property Name="Configuration" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="ScalingStrategy" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Weighting" Type="Int32" Nullable="false" />
-          <Property Name="MaxInstances" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Versions" Relationship="Self.FK_Version_Controller" FromRole="Controller" ToRole="Version" />
-          <Property Name="TimeoutMilliSec" Type="Int32" />
-          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="ExcludedServers" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="ControllerExternalResources" Relationship="GatewayModel.FK_ControllerExternalResource_ControllerId" FromRole="Controller" ToRole="ControllerExternalResource" />
-        </EntityType>
         <EntityType Name="Request">
           <Key>
             <PropertyRef Name="Id" />
@@ -598,30 +534,13 @@
           <Property Name="Version1" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Alias" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="StatusId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Controller" Relationship="Self.FK_Version_Controller" FromRole="Version" ToRole="Controller" />
           <NavigationProperty Name="Status" Relationship="GatewayModel.FK_Version_Status" FromRole="Version" ToRole="Status" />
+          <NavigationProperty Name="Controller" Relationship="GatewayModel.FK_Version_Controller" FromRole="Version" ToRole="Controller" />
         </EntityType>
-        <Association Name="FK_Version_Controller">
-          <End Role="Controller" Type="Self.Controller" Multiplicity="1" />
-          <End Role="Version" Type="Self.Version" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Controller">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Version">
-              <PropertyRef Name="ControllerId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="GatewayEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Controllers" EntityType="Self.Controller" />
           <EntitySet Name="Requests" EntityType="Self.Request" />
           <EntitySet Name="Responses" EntityType="Self.Response" />
           <EntitySet Name="Versions" EntityType="Self.Version" />
-          <AssociationSet Name="FK_Version_Controller" Association="Self.FK_Version_Controller">
-            <End Role="Controller" EntitySet="Controllers" />
-            <End Role="Version" EntitySet="Versions" />
-          </AssociationSet>
           <FunctionImport Name="spGetJobStats" ReturnType="Collection(GatewayModel.spGetJobStats_Result)">
             <Parameter Name="Start" Mode="In" Type="DateTime" />
             <Parameter Name="Controller" Mode="In" Type="String" />
@@ -680,26 +599,7 @@
           <FunctionImport Name="spGetIncompleteRequestCount" ReturnType="Collection(GatewayModel.spGetIncompleteRequestCount_Result)">
           <Parameter Name="time" Mode="In" Type="DateTime" />
           </FunctionImport>
-          <EntitySet Name="ControllerExternalResources" EntityType="GatewayModel.ControllerExternalResource" />
-          <EntitySet Name="ExternalResources" EntityType="GatewayModel.ExternalResource" />
           <EntitySet Name="Servers" EntityType="GatewayModel.Server" />
-          <EntitySet Name="ServerExternalResources" EntityType="GatewayModel.ServerExternalResource" />
-          <AssociationSet Name="FK_ControllerExternalResource_ControllerId" Association="GatewayModel.FK_ControllerExternalResource_ControllerId">
-            <End Role="Controller" EntitySet="Controllers" />
-            <End Role="ControllerExternalResource" EntitySet="ControllerExternalResources" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ControllerExternalResource_ExternalResourceId" Association="GatewayModel.FK_ControllerExternalResource_ExternalResourceId">
-            <End Role="ExternalResource" EntitySet="ExternalResources" />
-            <End Role="ControllerExternalResource" EntitySet="ControllerExternalResources" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ServerExternalResource_ExternalResourceId" Association="GatewayModel.FK_ServerExternalResource_ExternalResourceId">
-            <End Role="ExternalResource" EntitySet="ExternalResources" />
-            <End Role="ServerExternalResource" EntitySet="ServerExternalResources" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ServerExternalResource_ServerId" Association="GatewayModel.FK_ServerExternalResource_ServerId">
-            <End Role="Server" EntitySet="Servers" />
-            <End Role="ServerExternalResource" EntitySet="ServerExternalResources" />
-          </AssociationSet>
           <EntitySet Name="ScheduleGroups" EntityType="GatewayModel.ScheduleGroup" />
           <EntitySet Name="RequestConfigurations" EntityType="GatewayModel.RequestConfiguration" />
           <EntitySet Name="ExecutableConfigurations" EntityType="GatewayModel.ExecutableConfiguration" />
@@ -746,6 +646,16 @@
           <AssociationSet Name="FK_ScheduledJob_Schedule" Association="GatewayModel.FK_ScheduledJob_Schedule">
             <End Role="Schedule" EntitySet="Schedules" />
             <End Role="ScheduledJob" EntitySet="ScheduledJobs" />
+          </AssociationSet>
+          <EntitySet Name="ScalingModels" EntityType="GatewayModel.ScalingModel" />
+          <EntitySet Name="Controllers" EntityType="GatewayModel.Controller" />
+          <AssociationSet Name="FK_Version_Controller" Association="GatewayModel.FK_Version_Controller">
+            <End Role="Controller" EntitySet="Controllers" />
+            <End Role="Version" EntitySet="Versions" />
+          </AssociationSet>
+          <AssociationSet Name="ControllerServerRestriction" Association="GatewayModel.ControllerServerRestriction">
+            <End Role="Controller" EntitySet="Controllers" />
+            <End Role="Server" EntitySet="Servers" />
           </AssociationSet>
           </EntityContainer>
         <ComplexType Name="spGetJobStats_Result">
@@ -974,26 +884,6 @@
           <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
           <Property Type="Int32" Name="InCompleteRequests" Nullable="true" />
         </ComplexType>
-        <EntityType Name="ControllerExternalResource">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ControllerId" Type="Int64" Nullable="false" />
-          <Property Name="ExternalResourceId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Controller" Relationship="GatewayModel.FK_ControllerExternalResource_ControllerId" FromRole="ControllerExternalResource" ToRole="Controller" />
-          <NavigationProperty Name="ExternalResource" Relationship="GatewayModel.FK_ControllerExternalResource_ExternalResourceId" FromRole="ControllerExternalResource" ToRole="ExternalResource" />
-        </EntityType>
-        <EntityType Name="ExternalResource">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Type" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="ControllerExternalResources" Relationship="GatewayModel.FK_ControllerExternalResource_ExternalResourceId" FromRole="ExternalResource" ToRole="ControllerExternalResource" />
-          <NavigationProperty Name="ServerExternalResources" Relationship="GatewayModel.FK_ServerExternalResource_ExternalResourceId" FromRole="ExternalResource" ToRole="ServerExternalResource" />
-        </EntityType>
         <EntityType Name="Server">
           <Key>
             <PropertyRef Name="Id" />
@@ -1003,66 +893,8 @@
           <Property Name="Domain" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="RAM" Type="Int32" Nullable="false" />
           <Property Name="CpuCores" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="ServerExternalResources" Relationship="GatewayModel.FK_ServerExternalResource_ServerId" FromRole="Server" ToRole="ServerExternalResource" />
+          <NavigationProperty Name="Controllers" Relationship="GatewayModel.ControllerServerRestriction" FromRole="Server" ToRole="Controller" />
         </EntityType>
-        <EntityType Name="ServerExternalResource">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ServerId" Type="Int32" Nullable="false" />
-          <Property Name="ExternalResourceId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="ExternalResource" Relationship="GatewayModel.FK_ServerExternalResource_ExternalResourceId" FromRole="ServerExternalResource" ToRole="ExternalResource" />
-          <NavigationProperty Name="Server" Relationship="GatewayModel.FK_ServerExternalResource_ServerId" FromRole="ServerExternalResource" ToRole="Server" />
-        </EntityType>
-        <Association Name="FK_ControllerExternalResource_ControllerId">
-          <End Type="GatewayModel.Controller" Role="Controller" Multiplicity="1" />
-          <End Type="GatewayModel.ControllerExternalResource" Role="ControllerExternalResource" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Controller">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ControllerExternalResource">
-              <PropertyRef Name="ControllerId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ControllerExternalResource_ExternalResourceId">
-          <End Type="GatewayModel.ExternalResource" Role="ExternalResource" Multiplicity="1" />
-          <End Type="GatewayModel.ControllerExternalResource" Role="ControllerExternalResource" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ExternalResource">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ControllerExternalResource">
-              <PropertyRef Name="ExternalResourceId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ServerExternalResource_ExternalResourceId">
-          <End Type="GatewayModel.ExternalResource" Role="ExternalResource" Multiplicity="1" />
-          <End Type="GatewayModel.ServerExternalResource" Role="ServerExternalResource" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ExternalResource">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ServerExternalResource">
-              <PropertyRef Name="ExternalResourceId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ServerExternalResource_ServerId">
-          <End Type="GatewayModel.Server" Role="Server" Multiplicity="1" />
-          <End Type="GatewayModel.ServerExternalResource" Role="ServerExternalResource" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Server">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ServerExternalResource">
-              <PropertyRef Name="ServerId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="ScheduleGroup">
           <Key>
             <PropertyRef Name="GroupId" />
@@ -1122,7 +954,7 @@
           <Property Name="AdditionalProperties" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="RiskBatchConfiguration" Relationship="GatewayModel.FK_RiskBatchSchedule_RiskBatchConfiguration" FromRole="RiskBatchSchedule" ToRole="RiskBatchConfiguration" />
           <NavigationProperty Name="Schedules" Relationship="GatewayModel.FK_Schedule_RiskBatchSchedule" FromRole="RiskBatchSchedule" ToRole="Schedule" />
-          <Property Name="IsLive" Type="Boolean" Nullable="false" />
+          <Property Name="IsLive" Type="Boolean" />
         </EntityType>
         <EntityType Name="Schedule">
           <Key>
@@ -1257,8 +1089,8 @@
           <Property Name="StartedAt" Type="DateTime" Precision="3" />
           <Property Name="FinishedAt" Type="DateTime" Precision="3" />
           <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Schedule" Relationship="GatewayModel.FK_ScheduledJob_Schedule" FromRole="ScheduledJob" ToRole="Schedule" />
           <Property Name="TimeTakenMs" Type="Int64" />
+          <NavigationProperty Name="Schedule" Relationship="GatewayModel.FK_ScheduledJob_Schedule" FromRole="ScheduledJob" ToRole="Schedule" />
         </EntityType>
         <Association Name="FK_ScheduledJob_Schedule">
           <End Type="GatewayModel.Schedule" Role="Schedule" Multiplicity="1" />
@@ -1272,30 +1104,51 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="ScalingModel">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Controller">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="TimeToLiveSec" Type="Int32" />
+          <Property Name="Configuration" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="ScalingStrategy" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Weighting" Type="Int32" Nullable="false" />
+          <Property Name="MaxInstances" Type="Int32" Nullable="false" />
+          <Property Name="TimeoutMilliSec" Type="Int32" />
+          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Versions" Relationship="GatewayModel.FK_Version_Controller" FromRole="Controller" ToRole="Version" />
+          <NavigationProperty Name="Servers" Relationship="GatewayModel.ControllerServerRestriction" FromRole="Controller" ToRole="Server" />
+        </EntityType>
+        <Association Name="FK_Version_Controller">
+          <End Type="GatewayModel.Controller" Role="Controller" Multiplicity="1" />
+          <End Type="GatewayModel.Version" Role="Version" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Controller">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Version">
+              <PropertyRef Name="ControllerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ControllerServerRestriction">
+          <End Type="GatewayModel.Controller" Role="Controller" Multiplicity="*" />
+          <End Type="GatewayModel.Server" Role="Server" Multiplicity="*" />
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="GatewayModelStoreContainer" CdmEntityContainer="GatewayEntities">
-          <EntitySetMapping Name="Controllers">
-            <EntityTypeMapping TypeName="GatewayModel.Controller">
-              <MappingFragment StoreEntitySet="Controller">
-                <ScalarProperty Name="ExcludedServers" ColumnName="ExcludedServers" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="TimeoutMilliSec" ColumnName="TimeoutMilliSec" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Type" ColumnName="Type" />
-                <ScalarProperty Name="UserCallLimitPerSec" ColumnName="UserCallLimitPerSec" />
-                <ScalarProperty Name="TimeToLiveSec" ColumnName="TimeToLiveSec" />
-                <ScalarProperty Name="Configuration" ColumnName="Configuration" />
-                <ScalarProperty Name="ScalingStrategy" ColumnName="ScalingStrategy" />
-                <ScalarProperty Name="Weighting" ColumnName="Weighting" />
-                <ScalarProperty Name="MaxInstances" ColumnName="MaxInstances" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Requests">
             <EntityTypeMapping TypeName="GatewayModel.Request">
               <MappingFragment StoreEntitySet="Request">
@@ -1595,24 +1448,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <EntitySetMapping Name="ControllerExternalResources">
-            <EntityTypeMapping TypeName="GatewayModel.ControllerExternalResource">
-              <MappingFragment StoreEntitySet="ControllerExternalResource">
-                <ScalarProperty Name="ExternalResourceId" ColumnName="ExternalResourceId" />
-                <ScalarProperty Name="ControllerId" ColumnName="ControllerId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="ExternalResources">
-            <EntityTypeMapping TypeName="GatewayModel.ExternalResource">
-              <MappingFragment StoreEntitySet="ExternalResource">
-                <ScalarProperty Name="Type" ColumnName="Type" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Servers">
             <EntityTypeMapping TypeName="GatewayModel.Server">
               <MappingFragment StoreEntitySet="Server">
@@ -1620,15 +1455,6 @@
                 <ScalarProperty Name="RAM" ColumnName="RAM" />
                 <ScalarProperty Name="Domain" ColumnName="Domain" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="ServerExternalResources">
-            <EntityTypeMapping TypeName="GatewayModel.ServerExternalResource">
-              <MappingFragment StoreEntitySet="ServerExternalResource">
-                <ScalarProperty Name="ExternalResourceId" ColumnName="ExternalResourceId" />
-                <ScalarProperty Name="ServerId" ColumnName="ServerId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -1763,6 +1589,37 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="ScalingModels">
+            <EntityTypeMapping TypeName="GatewayModel.ScalingModel">
+              <MappingFragment StoreEntitySet="ScalingModel">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Controllers">
+            <EntityTypeMapping TypeName="GatewayModel.Controller">
+              <MappingFragment StoreEntitySet="Controller">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="TimeoutMilliSec" ColumnName="TimeoutMilliSec" />
+                <ScalarProperty Name="MaxInstances" ColumnName="MaxInstances" />
+                <ScalarProperty Name="Weighting" ColumnName="Weighting" />
+                <ScalarProperty Name="ScalingStrategy" ColumnName="ScalingStrategy" />
+                <ScalarProperty Name="Configuration" ColumnName="Configuration" />
+                <ScalarProperty Name="TimeToLiveSec" ColumnName="TimeToLiveSec" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="ControllerServerRestriction" TypeName="GatewayModel.ControllerServerRestriction" StoreEntitySet="ControllerServerRestriction">
+            <EndProperty Name="Server">
+              <ScalarProperty Name="Id" ColumnName="ServerId" />
+            </EndProperty>
+            <EndProperty Name="Controller">
+              <ScalarProperty Name="Id" ColumnName="ControllerId" />
+            </EndProperty>
+          </AssociationSetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

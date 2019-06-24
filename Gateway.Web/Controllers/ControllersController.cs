@@ -133,7 +133,7 @@ namespace Gateway.Web.Controllers
                     var response = _gateway.UpdateControllerConfiguration(model);
 
                     if (response.Successfull)
-                        return RedirectToAction("Dashboard");
+                        return Redirect($"~/Controller/Servers/{model.Name}");
 
                     ModelState.AddModelError(string.Empty, response.Message);
                 }

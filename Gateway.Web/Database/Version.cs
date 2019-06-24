@@ -20,7 +20,7 @@ namespace Gateway.Web.Database
         public string Alias { get; set; }
         public int StatusId { get; set; }
     
-        public virtual Controller Controller { get; set; }
         public virtual Status Status { get; set; }
+        public virtual Controller Controller { get; set; }
     }
 }

@@ -229,6 +229,31 @@ namespace Gateway.Web.Controllers
             return View(model);
         }
 
+        public ActionResult Servers(string id)
+        {
+
+            var model = _dataService.GetControllerServers(id);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [RoleBasedAuthorize(Roles = "Security.Modify")]
+        public ActionResult Servers(ControllerServersModel model)
+        {
+            try
+            {
+                _dataService.UpdateControllerServers(model);
+                return RedirectToAction("Dashboard", new { id = model.Name });
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+            }
+
+            return View(model);
+        }
+
         [HttpPost]
         [RoleBasedAuthorize(Roles = "Security.Modify")]
         public ActionResult Configuration(ConfigurationModel model)
