@@ -43,9 +43,9 @@ namespace Gateway.Web.Database
         public virtual DbSet<RiskBatchConfiguration> RiskBatchConfigurations { get; set; }
         public virtual DbSet<RiskBatchSchedule> RiskBatchSchedules { get; set; }
         public virtual DbSet<Schedule> Schedules { get; set; }
-        public virtual DbSet<ScheduledJob> ScheduledJobs { get; set; }
-        public virtual DbSet<ScalingModel> ScalingModels { get; set; }
         public virtual DbSet<Controller> Controllers { get; set; }
+        public virtual DbSet<ScalingModel> ScalingModels { get; set; }
+        public virtual DbSet<ScheduledJob> ScheduledJobs { get; set; }
     
         public virtual ObjectResult<spGetJobStats_Result> spGetJobStats(Nullable<System.DateTime> start, string controller)
         {
