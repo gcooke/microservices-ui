@@ -788,12 +788,15 @@
     <Content Include="Content\css\Site.css" />
     <Content Include="Content\img\bg.jpg" />
     <Content Include="Content\img\controller.dev.png" />
+    <Content Include="Content\img\controller.epic.png" />
     <Content Include="Content\img\controller.prod.png" />
     <Content Include="Content\img\controller.uat.png" />
     <Content Include="Content\img\error.png" />
     <Content Include="Content\img\favicon.dev.png" />
+    <Content Include="Content\img\favicon.epic.png" />
     <Content Include="Content\img\favicon.uat.png" />
     <Content Include="Content\img\header.dev.jpg" />
+    <Content Include="Content\img\header.epic.jpg" />
     <Content Include="Content\img\header.prod.jpg" />
     <Content Include="Content\img\header.uat.jpg" />
     <Content Include="Content\img\okay.png" />
