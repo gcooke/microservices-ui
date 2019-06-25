@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Data.Entity;
-using System.Data.Entity.Core.Objects;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
-using System.Web.Mvc;
-using Bagl.Cib.MIT.Cube;
+﻿using Bagl.Cib.MIT.Cube;
 using Bagl.Cib.MIT.IoC;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Controllers;
@@ -17,9 +7,11 @@ using Gateway.Web.Models.Monitoring;
 using Gateway.Web.Models.Request;
 using Gateway.Web.Models.Security;
 using Gateway.Web.Models.ServerResource;
-using Newtonsoft.Json.Converters;
-using RestSharp.Extensions;
-using WebGrease.Css.Ast.Selectors;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 using QueueChartModel = Gateway.Web.Models.Controller.QueueChartModel;
 
 namespace Gateway.Web.Database
