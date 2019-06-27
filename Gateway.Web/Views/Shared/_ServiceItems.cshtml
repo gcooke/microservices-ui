@@ -47,12 +47,12 @@
                 <div class="col-sm-2 text-center">@item.InProgressId</div>
                 <div class="col-sm-offset-11" >
                     <div class="col-sm-3 col-sm-offset-3" >
-                        <a href="~/Controllers/ShutdownWorker/?controllername=@item.Controller&version=@item.Version&pid=@item.PID" title="Shutdown">
+                        <a href="~/Controllers/ShutdownWorker/?controllername=@item.Controller&version=@item.Version&pid=@item.Id" title="Shutdown">
                             <small class="btn btn-warning btn-xs glyphicon glyphicon-remove pull-right"></small>
                         </a>
                     </div>
                     <div class="col-sm-3" >
-                        <a href="~/Controllers/KillWorker/?controllername=@item.Controller&version=@item.Version&pid=@item.PID" title="Kill">
+                        <a href="~/Controllers/KillWorker/?controllername=@item.Controller&version=@item.Version&pid=@item.Id" title="Kill">
                             <small class="btn btn-danger btn-xs glyphicon glyphicon-remove pull-right"></small>
                         </a>
                     </div>

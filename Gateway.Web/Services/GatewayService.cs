@@ -1106,18 +1106,11 @@ namespace Gateway.Web.Services
 
         private string GetDefaultKnownGateways(string environment)
         {
-            var env = (environment ?? string.Empty).ToUpper();
-            switch (env)
-            {
-                case "DEV":
-                    return "jhbdsm020000245;jhbdsm020000244";
-                case "UAT":
-                    return "jhbpsm020000757;jhbpsm020000758";
-                case "PRD":
-                case "PROD":
-                default:
-                    return "JHBPSM050000114";
-            }
+            if (environment.Equals("PROD", StringComparison.InvariantCultureIgnoreCase))
+                return "sigma.absa.co.za";
+
+            return $"sigma-{environment}.absa.co.za";
+
         }
 
         private IEnumerable<QueueModel> GetCurrentQueues(IEnumerable<ServerResponse> docs)
