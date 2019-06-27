@@ -40,6 +40,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "intra", "intra", "{42133ABA
 		Configuration\UAT\intra\appsettings.config = Configuration\UAT\intra\appsettings.config
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EPIC", "EPIC", "{BB5B44C3-2508-44B0-8248-B48D1B31BA61}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "corp", "corp", "{B6EDA50A-3AE0-4295-AAC2-1D3C2191EB4A}"
+	ProjectSection(SolutionItems) = preProject
+		Configuration\EPIC\corp\appsettings.config = Configuration\EPIC\corp\appsettings.config
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,9 +84,11 @@ Global
 		{F3C9DAB6-6A74-4A19-BDAA-338CF40FB2D6} = {3577F3A9-5F37-4EE1-AAFD-F63F8AA7696D}
 		{6B70E333-D08A-4DED-8455-7A137B5FB69A} = {B8D4D991-2B65-4C0B-BBEE-CFA63589F045}
 		{42133ABA-4241-4060-A235-FDD864384FDE} = {B8D4D991-2B65-4C0B-BBEE-CFA63589F045}
+		{BB5B44C3-2508-44B0-8248-B48D1B31BA61} = {BE7972A3-D1EB-48FB-BE0B-66A26F445DD7}
+		{B6EDA50A-3AE0-4295-AAC2-1D3C2191EB4A} = {BB5B44C3-2508-44B0-8248-B48D1B31BA61}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35
 		SolutionGuid = {EE9C3593-AB9E-4351-9511-938ACC325FEA}
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35
 	EndGlobalSection
 EndGlobal
