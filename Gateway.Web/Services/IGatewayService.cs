@@ -208,7 +208,7 @@ namespace Gateway.Web.Services
 
         Task DeleteWorkersAsync(string controller);
 
-        Task DeleteWorkerAsync(string controller, string version, string pid);
+        Task DeleteWorkerAsync(string controller, string version, string id);
 
         Task RequestWorkersAsync(string controller, string version, int instances);
 

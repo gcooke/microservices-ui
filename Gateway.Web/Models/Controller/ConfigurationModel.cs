@@ -9,8 +9,11 @@ namespace Gateway.Web.Models.Controller
     {
         public enum ScalingStrategies
         {
-            Local,
-            Remote
+            [XmlEnum(Name = "1")]
+            Static = 1,
+
+            [XmlEnum(Name = "2")]
+            Dynamic =2 
         }
 
         public bool IsUpdate { get { return ControllerId != 0; } }
@@ -38,7 +41,7 @@ namespace Gateway.Web.Models.Controller
         [XmlElement]
         [Required]
         [Display(Name = "Scaling Strategy")]
-        public ScalingStrategies ScalingStrategy { get; set; }
+        public ScalingStrategies ScalingStrategyId { get; set; }
 
         [XmlElement]
         [Required]
