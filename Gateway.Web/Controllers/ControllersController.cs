@@ -211,9 +211,9 @@ namespace Gateway.Web.Controllers
             return Redirect($"~/Controller/Workers/{controllername}");
         }
 
-        public async Task<ActionResult> ShutdownWorker(string controllername, string version, string pid)
+        public async Task<ActionResult> ShutdownWorker(string controllername, string version, string id)
         {
-            await _gateway.ShutdownWorkerAsync(controllername, version, pid);
+            await _gateway.ShutdownWorkerAsync(controllername, version, id);
             return Redirect($"~/Controller/Workers/{controllername}");
         }
 
@@ -226,9 +226,9 @@ namespace Gateway.Web.Controllers
         }
 
         [RoleBasedAuthorize(Roles = "Security.Delete")]
-        public async Task<ActionResult> KillWorker(string controllername, string version, string pid)
+        public async Task<ActionResult> KillWorker(string controllername, string version, string id)
         {
-            await _gateway.DeleteWorkerAsync(controllername, version,pid);
+            await _gateway.DeleteWorkerAsync(controllername, version,id);
              return Redirect($"~/Controller/Workers/{controllername}");
         }
 

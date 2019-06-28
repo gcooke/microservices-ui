@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Web;
-using System.Xml;
-using System.Xml.Linq;
-using System.Xml.Serialization;
-
-namespace Gateway.Web.Utils
+﻿namespace Gateway.Web.Utils
 {
+    using System;
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Xml;
+    using System.Xml.Linq;
+    using System.Xml.Serialization;
+
     public static class SerializationEx
     {
-        private static readonly ConcurrentDictionary<Type, SerializerRegistration> Serializers =
-            new ConcurrentDictionary<Type, SerializerRegistration>();
+        private static readonly ConcurrentDictionary<Type, SerializerRegistration> Serializers = new ConcurrentDictionary<Type, SerializerRegistration>();
 
         public static string Serialize(this object obj, params Type[] additionalTypes)
         {
