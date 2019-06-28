@@ -1460,14 +1460,14 @@ namespace Gateway.Web.Services
 
 
 
-        public async Task DeleteWorkerAsync(string controller, string version, string pid)
+        public async Task DeleteWorkerAsync(string controller, string version, string id)
         {
-            await Delete($"worker/kill/{controller}/{version}/{pid}");
+            await Delete($"worker/kill/{controller}/{version}/{id}");
         }
 
-        public async Task ShutdownWorkerAsync(string controller, string version, string pid)
+        public async Task ShutdownWorkerAsync(string controller, string version, string id)
         {
-            await Delete($"worker/shutdown/{controller}/{version}/{pid}");
+            await Delete($"worker/shutdown/{controller}/{version}/{id}");
         }
 
         private class ServerResponse
