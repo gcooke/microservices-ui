@@ -115,7 +115,7 @@ namespace Gateway.Web
             var systemInformation = _container.Resolve<ISystemInformation>();
             var database = systemInformation.GetSetting("GatewayDatabase");
             var server = systemInformation.GetSetting("DatabaseServer");
-            var schedulingConnectionString = $"data source={server};initial catalog={database};User Id=DBSync;Password={{8B225ECF-AA9A-4C9B-8AC7-78E91B8DBC37}};multipleactiveresultsets=True;application name=EntityFramework";
+            var schedulingConnectionString = $"data source={server};initial catalog={database};integrated security=True;multipleactiveresultsets=True;application name=EntityFramework";
             SigmaHomePage = $"https://{dns}";
             if (Debugger.IsAttached)
                 SigmaHomePage = $"https://sigma-dev.absa.co.za";
