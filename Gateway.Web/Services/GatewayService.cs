@@ -1435,7 +1435,8 @@ namespace Gateway.Web.Services
         //Needs to be reworked.
         public async Task CancelWorkItemAsync(string correlationId)
         {
-            await Delete($"worker/cancel/{correlationId}");
+            var gateway = _gateways.FirstOrDefault();
+            await GetAsync(gateway, $"worker/cancel/{correlationId}");
         }
 
         public async Task RetryWorkItemAsync(string correlationId)
@@ -1460,9 +1461,9 @@ namespace Gateway.Web.Services
 
 
 
-        public async Task DeleteWorkerAsync(string controller, string version, string id)
+        public async Task DeleteWorkerAsync(string controller, string version, string pid)
         {
-            await Delete($"worker/kill/{controller}/{version}/{id}");
+            await Delete($"worker/kill/{controller}/{version}/{pid}");
         }
 
         public async Task ShutdownWorkerAsync(string controller, string version, string id)
