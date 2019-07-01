@@ -1441,7 +1441,8 @@ namespace Gateway.Web.Services
 
         public async Task RetryWorkItemAsync(string correlationId)
         {
-            await Delete($"worker/retry/{correlationId}");
+            var gateway = _gateways.FirstOrDefault();
+            await GetAsync(gateway, $"worker/retry/{correlationId}");
         }
 
         public async Task DeleteWorkersAsync()
