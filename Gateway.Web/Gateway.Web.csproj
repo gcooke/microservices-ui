@@ -55,8 +55,8 @@
     <Reference Include="Absa.Cib.MIT.Redis.IoC, Version=1.0.37.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Bagl.Cib.MIT.Redis.IoC.1.0.37\lib\net461\Absa.Cib.MIT.Redis.IoC.dll</HintPath>
     </Reference>
-    <Reference Include="Absa.Cib.MIT.TaskScheduling, Version=1.1.103.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Absa.Cib.MIT.TaskScheduling.1.1.103\lib\net46\Absa.Cib.MIT.TaskScheduling.dll</HintPath>
+    <Reference Include="Absa.Cib.MIT.TaskScheduling, Version=1.1.115.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Absa.Cib.MIT.TaskScheduling.1.1.115\lib\net46\Absa.Cib.MIT.TaskScheduling.dll</HintPath>
     </Reference>
     <Reference Include="Bagl.Cib.MIT.Cube, Version=1.0.43.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Bagl.Cib.MIT.Cube.1.0.43\lib\net452\Bagl.Cib.MIT.Cube.dll</HintPath>
