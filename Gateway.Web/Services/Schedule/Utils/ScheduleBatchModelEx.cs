@@ -102,7 +102,7 @@ namespace Gateway.Web.Services.Schedule.Utils
         {
             model.Types = service
                 .GetConfigurations()
-                .Select(x => new SelectListItem { Value = x.ConfigurationId.ToString(), Text = $"{x.Type}" })
+                .Select(x => new SelectListItem { Value = x.ConfigurationId.ToString(), Text = $"{x.Type} (OutputTag : {x.OutputTag})" })
                 .ToList();
 
             var selectListItems = model.Types.Where(x => selectedValues.Contains(x.Value)).ToList();
