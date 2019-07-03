@@ -45,7 +45,8 @@ namespace Gateway.Web.Services.Schedule
             {
                 foreach (var tradeSourceParameter in parameters.TradeSources)
                 {
-                    var key = GenerateKey(config, tradeSourceParameter.TradeSource, tradeSourceParameter.IsLive);
+                    var serializedProperties = JsonConvert.SerializeObject(parameters.Properties);
+                    var key = GenerateKey(config, tradeSourceParameter.TradeSource, tradeSourceParameter.IsLive, serializedProperties);
                     var entity = GetSchedule(db, parameters.ScheduleId, key);
                     var errors = parameters.Validate(entity);
 
@@ -57,7 +58,7 @@ namespace Gateway.Web.Services.Schedule
 
                     jobKeys.Add(key);
 
-                    var riskBatchSchedule = GetRiskBatchSchedule(db, config.ConfigurationId, tradeSourceParameter) ?? new RiskBatchSchedule();
+                    var riskBatchSchedule = GetRiskBatchSchedule(db, config.ConfigurationId, tradeSourceParameter, serializedProperties) ?? new RiskBatchSchedule();
                     if (riskBatchSchedule.RiskBatchScheduleId == 0 && entity.ScheduleId != 0)
                         entity = new Database.Schedule() { ScheduleKey = key };
 
@@ -79,7 +80,7 @@ namespace Gateway.Web.Services.Schedule
             return schedules;
         }
 
-        private RiskBatchSchedule GetRiskBatchSchedule(GatewayEntities db, long configurationId, TradeSourceParameter tradeSource)
+        private RiskBatchSchedule GetRiskBatchSchedule(GatewayEntities db, long configurationId, TradeSourceParameter tradeSource, string additionalProperties)
         {
             return db.RiskBatchSchedules
                 .Where(x => x.RiskBatchConfigurationId == configurationId)
@@ -87,7 +88,7 @@ namespace Gateway.Web.Services.Schedule
                 .Where(x => x.TradeSource == tradeSource.TradeSource)
                 .Where(x => x.Site == tradeSource.Site)
                 .Where(x => x.IsLive == tradeSource.IsLive)
-                .SingleOrDefault();
+                .SingleOrDefault(x => x.AdditionalProperties.ToUpper() == additionalProperties.ToUpper());
         }
 
         protected override RedstoneRequest GetJob(Database.Schedule schedule, DateTime? businessDate = null)
@@ -105,18 +106,24 @@ namespace Gateway.Web.Services.Schedule
             _scheduler.ScheduleAsyncWebRequest(item, key, cron);
         }
 
-        protected string GenerateKey(RiskBatchConfiguration configuration, string tradeSource, bool isLive)
+        protected string GenerateKey(RiskBatchConfiguration configuration, string tradeSource, bool isLive, string serializedProperties)
         {
-            var key = $"BATCH={configuration.ConfigurationId}-TRADESOURCE={tradeSource.ToUpper().Trim()}";
+            var key = $"BATCH={configuration.ConfigurationId}-TRADESOURCE={tradeSource.ToUpper().Trim()}.PROPS={serializedProperties.Trim()}";
             if (isLive)
                 key = $"{key}-LIVE";
 
             if (key.Length >= 50)
             {
                 var shortenedTradeSources = tradeSource.ToUpper().Trim().GetHashCode();
-                key = $"BATCH={configuration.ConfigurationId}-TRADESOURCE={shortenedTradeSources}";
+                var shortenedProps = serializedProperties.ToUpper().Trim().GetHashCode();
+                key = $"BATCH={configuration.ConfigurationId}-TRADESOURCE={shortenedTradeSources}.PROPS={shortenedProps}";
                 if (isLive)
                     key = $"{key}-LIVE";
+            }
+
+            if (key.Length >= 50)
+            {
+                key = $"BATCH={key.GetHashCode()}";
             }
 
             return key;
