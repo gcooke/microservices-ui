@@ -170,7 +170,7 @@ namespace Gateway.Web.Controllers
             types.Insert(0, null);
 
             return types
-                .Select(x => new SelectListItem { Value = x?.Type, Text = x?.Type })
+                .Select(x => new SelectListItem { Value = x?.Type, Text = x == null? String.Empty : $"{x?.Type} (OutputTag :{x?.OutputTag})"})
                 .ToList();
         }
     }
