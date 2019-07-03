@@ -220,7 +220,7 @@ namespace Gateway.Web.Services.Batches
                 }
             }
 
-            return db.RiskBatchConfigurations.Count(x => x.Type == batchConfigModel.Type) == 0;
+            return db.RiskBatchConfigurations.Count(x => x.Type == batchConfigModel.Type && x.OutputTag == batchConfigModel.OutputTag) == 0;
         }
     }
 }
