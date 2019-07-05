@@ -146,6 +146,7 @@ namespace Gateway.Web
             information.RegisterType<IBasicRestService, BasicRestService>(Scope.ContainerSingleton);
             information.RegisterType<IServerDiagnosticsService, ServerDiagnosticsService>(Scope.ContainerSingleton);
             information.RegisterType<IDataFeedService, DataFeedService>(Scope.ContainerSingleton);
+            information.RegisterType<IExportService, ExportService>(Scope.ContainerSingleton);
             information.RegisterType<IBatchHelper, BatchHelper>(Scope.ContainerSingleton);
             information.RegisterType<IDatabaseStateProvider, DatabaseStateProvider>(Scope.ContainerSingleton);
             information.RegisterType<IManifestService, ManifestService>(Scope.ContainerSingleton);

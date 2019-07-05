@@ -337,6 +337,7 @@
     <Compile Include="Authorization\RoleBasedAuthorizeAttribute.cs" />
     <Compile Include="Controllers\DataFeedController.cs" />
     <Compile Include="Controllers\DataFeedsController.cs" />
+    <Compile Include="Controllers\ExportScheduleController.cs" />
     <Compile Include="Controllers\InterrogationController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ExecutableScheduleController.cs" />
@@ -507,6 +508,12 @@
     <Compile Include="Models\DataFeeds\DataFeedDetail.cs" />
     <Compile Include="Models\DataFeeds\DataFeedHeader.cs" />
     <Compile Include="Models\DataFeeds\DataFeedSummary.cs" />
+    <Compile Include="Models\Export\ExportCRONGroup.cs" />
+    <Compile Include="Models\Export\ExportSchedularViewModel.cs" />
+    <Compile Include="Models\Export\ExportUpdate.cs" />
+    <Compile Include="Models\Export\ExportUpdateViewModel.cs" />
+    <Compile Include="Models\Export\FetchExportCube.cs" />
+    <Compile Include="Models\Export\FileExport.cs" />
     <Compile Include="Models\Interrogation\InterrogationModel.cs" />
     <Compile Include="Models\Pdc\PdcServiceModel.cs" />
     <Compile Include="Models\Schedule\Input\BaseScheduleModel.cs" />
@@ -698,7 +705,9 @@
     <Compile Include="Services\Batches\Interrogation\Utils\ScheduleEx.cs" />
     <Compile Include="Services\DatabaseStateProvider.cs" />
     <Compile Include="Services\DataFeedService.cs" />
+    <Compile Include="Services\ExportService.cs" />
     <Compile Include="Services\IDataFeedService.cs" />
+    <Compile Include="Services\IExportService.cs" />
     <Compile Include="Services\IManifestService.cs" />
     <Compile Include="Services\IRiskBatchInterrogationService.cs" />
     <Compile Include="Services\ManifestService.cs" />
@@ -1016,6 +1025,9 @@
     <Content Include="Views\DataFeeds\_DataFeedNav.cshtml" />
     <Content Include="Views\DataFeed\DashboardDetail.cshtml" />
     <Content Include="Views\DataFeed\_DataFeedNav.cshtml" />
+    <Content Include="Views\ExportSchedule\Index.cshtml" />
+    <Content Include="Views\Shared\_ExportConfigNav.cshtml" />
+    <Content Include="Views\ExportSchedule\Update.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />
