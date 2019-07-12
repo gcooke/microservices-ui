@@ -1,23 +1,17 @@
-﻿using System;
-
-namespace Gateway.Web.Models.Export
+﻿namespace Gateway.Web.Models.Export
 {
     public class FileExport
     {
-        public string Name { get; set; }
+        public long Id { get; set; }
         public string Type { get; set; }
-
+        public string SourceInformation { get; set; }
+        public string DestinationInformation { get; set; }
         public string Schedule { get; set; }
-
-        public DateTime StartDateTime { get; set; }
-        public DateTime? EndTime { get; set; }
-        public DateTime? StartTime { get; set; }
         public bool IsDisabled { get; set; }
-
-        public string Status { get; set; }
-
-        public long ExportId { get; set; }
-
-        public long FileExportsHistoryId { get; set; }
+        public string SuccessEmailAddress { get; set; }
+        public string FailureEmailAddress { get; set; }
+        public string Name { get; set; }
+        public bool IsDeleted { get; set; }
+        public System.DateTime StartDateTime { get; set; }
     }
 }

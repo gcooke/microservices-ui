@@ -58,6 +58,9 @@
     <Reference Include="Absa.Cib.MIT.TaskScheduling, Version=1.1.115.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Absa.Cib.MIT.TaskScheduling.1.1.115\lib\net46\Absa.Cib.MIT.TaskScheduling.dll</HintPath>
     </Reference>
+    <Reference Include="AutoMapper, Version=8.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.8.1.1\lib\net461\AutoMapper.dll</HintPath>
+    </Reference>
     <Reference Include="Bagl.Cib.MIT.Cube, Version=1.0.43.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Bagl.Cib.MIT.Cube.1.0.43\lib\net452\Bagl.Cib.MIT.Cube.dll</HintPath>
     </Reference>
@@ -498,8 +501,11 @@
     <Compile Include="Database\Version.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
+    <Compile Include="Enums\ExportType.cs" />
     <Compile Include="Helpers\XmlSort.cs" />
+    <Compile Include="ModelBindersConverters\DestinationInformationViewModelBinders.cs" />
     <Compile Include="ModelBindersConverters\ScheduleBatchModelBinder.cs" />
+    <Compile Include="ModelBindersConverters\SourceInformationViewModelBinders.cs" />
     <Compile Include="Models\AuthorizationModel.cs" />
     <Compile Include="Models\Controller\ControllerServer.cs" />
     <Compile Include="Models\Controller\ControllerServersModel.cs" />
@@ -508,12 +514,20 @@
     <Compile Include="Models\DataFeeds\DataFeedDetail.cs" />
     <Compile Include="Models\DataFeeds\DataFeedHeader.cs" />
     <Compile Include="Models\DataFeeds\DataFeedSummary.cs" />
+    <Compile Include="Models\Export\Argument.cs" />
+    <Compile Include="Models\Export\CubeToCsvExportDto.cs" />
+    <Compile Include="Models\Export\CubeToCsvDestinationInformation.cs" />
+    <Compile Include="Models\Export\DestinationInfoViewModel.cs" />
     <Compile Include="Models\Export\ExportCRONGroup.cs" />
+    <Compile Include="Models\Export\ExportResponse.cs" />
     <Compile Include="Models\Export\ExportSchedularViewModel.cs" />
-    <Compile Include="Models\Export\ExportUpdate.cs" />
+    <Compile Include="Models\Export\ExportSchedule.cs" />
     <Compile Include="Models\Export\ExportUpdateViewModel.cs" />
     <Compile Include="Models\Export\FetchExportCube.cs" />
     <Compile Include="Models\Export\FileExport.cs" />
+    <Compile Include="Models\Export\FileExportViewModel.cs" />
+    <Compile Include="Models\Export\CubeToCsvSourceInformation.cs" />
+    <Compile Include="Models\Export\SourceInformationViewModel.cs" />
     <Compile Include="Models\Interrogation\InterrogationModel.cs" />
     <Compile Include="Models\Pdc\PdcServiceModel.cs" />
     <Compile Include="Models\Schedule\Input\BaseScheduleModel.cs" />
@@ -675,6 +689,7 @@
     <Compile Include="Models\User\UserModel.cs" />
     <Compile Include="Models\Security\UsersModel.cs" />
     <Compile Include="Models\User\HistoryModel.cs" />
+    <Compile Include="Profiles\ExportProfile.cs" />
     <Compile Include="Registrations.cs" />
     <Compile Include="ModelBindersConverters\ScheduleWebRequestModelBinder.cs" />
     <Compile Include="Services\BasicRestService.cs" />

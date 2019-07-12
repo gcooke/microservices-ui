@@ -1,6 +1,7 @@
 ﻿using Absa.Cib.JwtAuthentication.Extensions;
 using Absa.Cib.JwtAuthentication.Models;
 using Absa.Cib.MIT.TaskScheduling.Client.Scheduler;
+using AutoMapper;
 using Bagl.Cib.MIT.IO;
 using Bagl.Cib.MIT.IO.Impl;
 using Bagl.Cib.MIT.IoC;
@@ -13,6 +14,7 @@ using Bagl.Cib.MSF.ClientAPI.Provider;
 using Gateway.Web.Controllers;
 using Gateway.Web.Database;
 using Gateway.Web.Models.Schedule.Input;
+using Gateway.Web.Profiles;
 using Gateway.Web.Services;
 using Gateway.Web.Services.Batches;
 using Gateway.Web.Services.Batches.Interfaces;
@@ -157,6 +159,11 @@ namespace Gateway.Web
             Absa.Cib.JwtAuthentication.Registrations.Register(information);
             Absa.Cib.JwtAuthentication.Registrations.RegisterCertificates(information);
             Bagl.Cib.MSF.ClientAPI.Registrations.Register(information);
+
+            Mapper.Initialize(cfg =>
+            {
+                cfg.AddProfile<ExportProfile>();
+            });
         }
 
         private static void SetupLogging(ISystemInformation information)

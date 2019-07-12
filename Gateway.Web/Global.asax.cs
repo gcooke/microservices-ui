@@ -9,6 +9,7 @@ using CommonServiceLocator;
 using Gateway.Web.Authorization;
 using Gateway.Web.Controllers;
 using Gateway.Web.ModelBindersConverters;
+using Gateway.Web.Models.Export;
 using Gateway.Web.Models.Schedule.Input;
 using Gateway.Web.Models.Security;
 using Gateway.Web.Services.Schedule.Utils;
@@ -76,6 +77,8 @@ namespace Gateway.Web
 
             ModelBinders.Binders[typeof(ScheduleWebRequestModel)] = new ScheduleWebRequestModelBinder();
             ModelBinders.Binders[typeof(ScheduleBatchModel)] = new ScheduleBatchModelBinder();
+            ModelBinders.Binders[typeof(SourceInformationViewModel)] = new SourceInformationViewModelBinders();
+            ModelBinders.Binders[typeof(DestinationInfoViewModel)] = new DestinationInformationViewModelBinders();
 
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);

@@ -23,10 +23,20 @@ namespace Gateway.Web.Services
             _gateway.SetGatewayUrlForService(ControllerName, "http://localhost:7000/");
         }
 
-        public ExportUpdate CreateExport(ExportUpdate insert)
+        public ExportSchedule CreateExport(ExportSchedule insert)
         {
-            var query = "";
-            var response = _gateway.Put<string, string>(ControllerName, query, insert.Serialize()).Result;
+            var query = $"Exports/Create/{insert.Type}";
+
+            var dto = new CubeToCsvExportDto()
+            {
+                Schedule = insert.Schedule,
+                Name = insert.Name,
+                StartDateTime = insert.StartDateTime,
+                DestinationInfo = insert.DestinationInfo,
+                SourceInfo = insert.SourceInfo
+            };
+
+            var response = _gateway.Put<string, string>(ControllerName, query, dto.Serialize()).Result;
 
             if (response.Successfull)
                 return insert;
@@ -49,6 +59,33 @@ namespace Gateway.Web.Services
             return cube;
         }
 
+        public FileExport FetchExport(long id)
+        {
+            ICube cube = null;
+            var query = $"Exports/Fetch/Id/{id}";
+            var resultTask = _gateway.Get<ICube>(ControllerName, query).GetAwaiter().GetResult();
+            if (resultTask.Successfull)
+                cube = resultTask.Body;
+            else
+                throw new Exception(resultTask.Message);
+
+            var fileExportCube = cube.GetRow(0);
+            var fileExport = new FileExport();
+            fileExport.Id = fileExportCube.GetValue<long>("Id").Value;
+            fileExport.Name = fileExportCube.GetStringValue("Name");
+            fileExport.Type = fileExportCube.GetStringValue("Type");
+            fileExport.DestinationInformation = fileExportCube.GetStringValue("DestinationInformation");
+            fileExport.SourceInformation = fileExportCube.GetStringValue("SourceInformation");
+            fileExport.FailureEmailAddress = fileExportCube.GetStringValue("FailureEmailAddress");
+            fileExport.IsDeleted = fileExportCube.GetValue<bool>("IsDeleted").Value;
+            fileExport.IsDisabled = fileExportCube.GetValue<bool>("IsDisabled").Value;
+            fileExport.Schedule = fileExportCube.GetStringValue("Schedule");
+            fileExport.SuccessEmailAddress = fileExportCube.GetStringValue("SuccessEmailAddress");
+            fileExport.StartDateTime = fileExportCube.GetValue<DateTime>("StartDateTime").Value;
+
+            return fileExport;
+        }
+
         public IList<ExportCRONGroup> FetchExports(DateTime date)
         {
             var query = $@"Exports/Fetch/{date.ToString("yyyy-MM-dd")}";
@@ -57,52 +94,50 @@ namespace Gateway.Web.Services
             IList<ExportCRONGroup> result = ConvertCubeToExportCRONGroup(cube);
 
             return result;
-            var groups = new List<ExportCRONGroup>();
-            var exports = new List<FileExport>();
-            exports.Add(new FileExport()
-            {
-                Name = "Test 1",
-                Status = "Succeeded",
-                Type = "CubeToCsv"
-            });
-            exports.Add(new FileExport()
-            {
-                Name = "Test 2",
-                Status = "Succeeded",
-                Type = "CubeToCsv"
-            });
-            var group = new ExportCRONGroup()
-            {
-                FileExports = exports,
-                GroupName = CronExpressionDescriptor.ExpressionDescriptor.GetDescription("0 9 * * MON-FRI")
-            };
-            groups.Add(group);
-
-            exports = new List<FileExport>();
-            exports.Add(new FileExport()
-            {
-                Name = "Test 3",
-                Status = "Succeeded",
-                Type = "CubeToCsv"
-            });
-            exports.Add(new FileExport()
-            {
-                Name = "Test 4",
-                Status = "Succeeded",
-                Type = "CubeToCsv"
-            });
-            group = new ExportCRONGroup()
-            {
-                FileExports = exports,
-                GroupName = "Manual"
-            };
-            groups.Add(group);
-            return groups;
         }
 
-        public void UpdateExport(ExportUpdate update)
+        public ExportResponse RunExport(long id, DateTime time)
         {
-            throw new NotImplementedException();
+            var query = $"Export/Run/{id}/{time.ToString("yyyy-MM-dd")}";
+            var response = _gateway.Put<string, string>(ControllerName, query, string.Empty).Result;
+
+            if (!response.Successfull)
+                return new ExportResponse() { Message = response.Message, Successful = false };
+            else
+                return new ExportResponse() { Message = response.Message, Successful = false };
+        }
+
+        public ExportResponse RunScheduleExport(DateTime time)
+        {
+            var query = $"Export/Run/Scheduled/{time.ToString("yyyy-MM-dd")}";
+            var response = _gateway.Put<string, string>(ControllerName, query, string.Empty).Result;
+
+            if (!response.Successfull)
+                return new ExportResponse() { Message = response.Message, Successful = false };
+            else
+                return new ExportResponse() { Message = response.Message, Successful = false };
+        }
+
+        public void UpdateExport(ExportSchedule update)
+        {
+            var query = $"Exports/Update/{update.Type}";
+
+            var dto = new CubeToCsvExportDto()
+            {
+                Id = update.Id,
+                Schedule = update.Schedule,
+                Name = update.Name,
+                StartDateTime = update.StartDateTime,
+                DestinationInfo = update.DestinationInfo,
+                SourceInfo = update.SourceInfo
+            };
+
+            var response = _gateway.Put<string, string>(ControllerName, query, dto.Serialize()).Result;
+
+            if (!response.Successfull)
+            {
+                throw new Exception(response.Message);
+            }
         }
 
         private IList<ExportCRONGroup> ConvertCubeToExportCRONGroup(ICube cube)
@@ -149,12 +184,12 @@ namespace Gateway.Web.Services
                     {
                         Schedule = exportCube.Schedule,
                         GroupName = string.IsNullOrEmpty(exportCube.Schedule) ? "Manual" : CronExpressionDescriptor.ExpressionDescriptor.GetDescription(exportCube.Schedule),
-                        FileExports = new List<FileExport>()
+                        FileExports = new List<FileExportViewModel>()
                     });
                     group = groups.FirstOrDefault(x => x.Schedule == exportCube.Schedule);
                 }
 
-                group.FileExports.Add(new FileExport()
+                group.FileExports.Add(new FileExportViewModel()
                 {
                     FileExportsHistoryId = exportCube.FileExportsHistoryId,
                     ExportId = exportCube.ExportId,

@@ -1,9 +1,13 @@
-﻿using Bagl.Cib.MIT.Logging;
+﻿using AutoMapper;
+using Bagl.Cib.MIT.Logging;
+using Gateway.Web.Enums;
 using Gateway.Web.Models.Export;
 using Gateway.Web.Services;
 using System;
+using System.IO;
 using System.Web.Mvc;
 using System.Web.Routing;
+using System.Xml.Serialization;
 
 namespace Gateway.Web.Controllers
 {
@@ -44,6 +48,30 @@ namespace Gateway.Web.Controllers
                 IsDisabled = true,
                 IsDeleted = true
             };
+
+            if (id.HasValue && id.Value > 0)
+            {
+                var fileExport = _exportService.FetchExport(id.Value);
+                model = Mapper.Map<ExportUpdateViewModel>(fileExport);
+
+                CubeToCsvSourceInformation sourceInfoResult = null;
+                CubeToCsvDestinationInformation destinationInfoResult = null;
+                var serializer = new XmlSerializer(typeof(CubeToCsvSourceInformation));
+                using (var reader = new StringReader(fileExport.SourceInformation))
+                {
+                    sourceInfoResult = (CubeToCsvSourceInformation)serializer.Deserialize(reader);
+                }
+
+                serializer = new XmlSerializer(typeof(CubeToCsvDestinationInformation));
+                using (var reader = new StringReader(fileExport.DestinationInformation))
+                {
+                    destinationInfoResult = (CubeToCsvDestinationInformation)serializer.Deserialize(reader);
+                }
+
+                model.SourceInformation = Mapper.Map<SourceInformationViewModel>(sourceInfoResult);
+                model.DestinationInformation = Mapper.Map<DestinationInfoViewModel>(destinationInfoResult);
+            }
+
             return View(model);
         }
 
@@ -51,7 +79,7 @@ namespace Gateway.Web.Controllers
         [Route("CreateOrUpdate")]
         public ActionResult CreateOrUpdate(ExportUpdateViewModel model)
         {
-            if (model.ExportId > 0)
+            if (model.ExportId == 0)
             {
                 var insert = _exportService.CreateExport(ConvertViewModel(model));
                 if (insert.Id.HasValue)
@@ -60,12 +88,29 @@ namespace Gateway.Web.Controllers
             else
                 _exportService.UpdateExport(ConvertViewModel(model));
 
-            return View(model);
+            return RedirectToAction("Index");
         }
 
-        private ExportUpdate ConvertViewModel(ExportUpdateViewModel model)
+        private ExportSchedule ConvertViewModel(ExportUpdateViewModel model)
         {
-            throw new NotImplementedException();
+            var exportUpdate = new ExportSchedule()
+            {
+                DestinationInfo = Mapper.Map<CubeToCsvDestinationInformation>(model.DestinationInformation),
+                Schedule = model.Schedule,
+                Name = model.Name,
+                IsDisabled = model.IsDisabled,
+                Type = (ExportType)Enum.Parse(typeof(ExportType), model.Type),
+                StartDateTime = model.StartDateTime,
+                IsDeleted = model.IsDeleted,
+                SourceInfo = Mapper.Map<CubeToCsvSourceInformation>(model.SourceInformation),
+                FailureEmailAddress = model.FailureEmailAddress,
+                SuccessEmailAddress = model.SuccessEmailAddress
+            };
+
+            if (model.ExportId > 0)
+                exportUpdate.Id = model.ExportId;
+
+            return exportUpdate;
         }
     }
 }

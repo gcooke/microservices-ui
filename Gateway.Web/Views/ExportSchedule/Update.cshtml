@@ -19,7 +19,7 @@
 
         <div class="row">
             <div class="col-sm-6">
-                @if (Model.ExportId!=0)
+                @if (Model.ExportId != 0)
                 {
                     <h3 class="text-lowercase">Update Export Configuration</h3>
                 }
@@ -55,8 +55,9 @@
                 @Html.ValidationSummary(false, "", new {@class = "text-danger"})
             </div>
         }
-    @using (@Html.BeginForm("CreateOrUpdate", "ExportSchedule", FormMethod.Post))
+    @using (@Html.BeginForm("CreateOrUpdate", "ExportSchedule", FormMethod.Post, new { id = "Form-" + @Model.Group }))
     {
+        @Html.HiddenFor(m=>m.ExportId)
         <div class="row">
             <div class="col-sm-2">
                 <ul class="nav nav-pills nav-stacked">
@@ -64,7 +65,10 @@
                         <a href="#config" data-toggle="tab">Configuration</a>
                     </li>
                     <li>
-                        <a href="#export-info" data-toggle="tab">Export Information</a>
+                        <a href="#export-info" data-toggle="tab">Source Information</a>
+                    </li>
+                    <li>
+                        <a href="#destination-info" data-toggle="tab">Destination Information</a>
                     </li>
                     <li>
                         <a href="#email" data-toggle="tab">Email</a>
@@ -75,46 +79,168 @@
                 <div class="tab-content">
                     <div class="tab-pane fade active in" id="config">
                         <div class="form-group">
-                            @Html.LabelFor(m => m.Name, new {@class = "control-label"})
-                            @Html.TextBoxFor(m => m.Name, new {@class = "form-control"})
+                            @Html.LabelFor(m => m.Name, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(m => m.Type, new {@class = "control-label"})
-                            @Html.TextBoxFor(m => m.Type, new {@class = "form-control ",})
+                            @Html.LabelFor(m => m.Schedule, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.Schedule, new { @class = "form-control" })
+                            <span class="input-group-btn">
+                                <a href="https://crontab.guru/" target="_blank" class="btn btn-default" type="button">Generate Cron</a>
+                            </span>
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(m => m.IsDisabled, new {@class = "control-label"})
-                            @Html.CheckBoxFor(m => m.IsDisabled, new {@class = "form-control ",})
+                            @Html.LabelFor(m => m.Type, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.Type, Model.ExportTypes, new { @name = "Type", @class = "form-control" })
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(m => m.IsDeleted, new {@class = "control-label"})
-                            @Html.CheckBoxFor(m => m.IsDeleted, new {@class = "form-control  "})
+                            @Html.LabelFor(m => m.StartDateTime, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.StartDateTime, new { @class = "form-control datepicker", onclick = "datepicker()" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.IsDisabled, new { @class = "control-label" })
+                            @Html.CheckBoxFor(m => m.IsDisabled, new { @class = "form-control ", })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.IsDeleted, new { @class = "control-label" })
+                            @Html.CheckBoxFor(m => m.IsDeleted, new { @class = "form-control  " })
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="export-info"  >
+
+                    @if (Model.SourceInformation != null)
+                    {
+                    <div class="tab-pane fade" id="export-info">
                         <div class="form-group">
-                            @Html.LabelFor(m => m.SourceInformation, new {@class = "control-label"})
-                            @Html.TextAreaFor(m => m.SourceInformation, new {@class = "form-control", style = "height: 200px;"})
+                            @Html.LabelFor(m => m.SourceInformation.Controller, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.SourceInformation.Controller, new { @class = "form-control" })
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(m => m.DestinationInformation, new {@class = "control-label"})
-                            @Html.TextAreaFor(m => m.DestinationInformation, new {@class = "form-control ", style = "height:200px;"})
+                            @Html.LabelFor(m => m.SourceInformation.ExpectedResponseType, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.SourceInformation.ExpectedResponseType, new { @class = "form-control" })
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(m => m.StartDateTime, new {@class = "control-label"})
-                            @Html.TextBoxFor(m => m.StartDateTime, new {@class = "form-control datepicker", onclick= "datepicker()" })
+                            @Html.LabelFor(m => m.SourceInformation.Query, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.SourceInformation.Query, new { @class = "form-control" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.SourceInformation.Verb, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.SourceInformation.Verb, Model.SourceInformation.Verbs, new { @class = "form-control" })
+                        </div>
+                        <div class="form-group" >
+                            <table style="width: 100%;" class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Type</th>
+                                        <th>Format/Value</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="argument-table-body" class="editable-table">
+                                    @if (Model.SourceInformation.Arguments.Any(x => x.Key != null))
+                                    {
+                                        foreach (var index in Enumerable.Range(0, Model.SourceInformation.Arguments.Count(x => x.Key != null)))
+                                        {
+                                            <tr>
+                                                <td style="padding: 0 !important">@Html.TextBoxFor(m => m.SourceInformation.Arguments[index].Key, new { @class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;" })</td>
+                                                <td style="padding: 0 !important">@Html.DropDownListFor(m => m.SourceInformation.Arguments[index].Type, Model.SourceInformation.GetArgumentTypes(Model.SourceInformation.Arguments[index].Type), new { @class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;" })</td>
+                                                <td style="padding: 0 !important">@Html.TextBoxFor(m => m.SourceInformation.Arguments[index].FormatValue, new { @class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;" })</td>
+                                                <td>
+                                                    <a>[X]</a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (Model.SourceInformation.Arguments.Count > 0)
+                                        {
+                                            <tr>
+                                                <td style="padding: 0 !important">@Html.TextBoxFor(m => m.SourceInformation.Arguments[0].Key, new { @class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;" })</td>
+                                                <td style="padding: 0 !important">@Html.DropDownListFor(m => m.SourceInformation.Arguments[0].Type, Model.SourceInformation.GetArgumentTypes(), new { @class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;" })</td>
+                                                <td style="padding: 0 !important">@Html.TextBoxFor(m => m.SourceInformation.Arguments[0].FormatValue, new { @class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;" })</td>
+                                                <td>
+                                                    <a>[X]</a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                            <a class="add-row-button" style="cursor: pointer" data-table-body="#argument-table-body">Insert Row</a>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="email">
-                        <div class="form-group">
-                            @Html.LabelFor(m => m.SuccessEmailAddress, new {@class = "control-label"})
-                            @Html.TextBoxFor(m => m.SuccessEmailAddress, new {@class = "form-control"  })
+                    }
+
+                    @if (Model.DestinationInformation != null)
+                    {
+                        <div class="tab-pane fade" id="destination-info">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.DestinationInformation.FileName, new { @class = "control-label" })
+                                @Html.TextBoxFor(m => m.DestinationInformation.FileName, new { @class = "form-control" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.DestinationInformation.DestinationUrl, new { @class = "control-label" })
+                                @Html.TextBoxFor(m => m.DestinationInformation.DestinationUrl, new { @class = "form-control " })
+                            </div>  
+                        
+                            <div class="form-group">
+                                <table style="width: 100%;" class="table table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Type</th>
+                                        <th>Format/Value</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="argument-table-body2" class="editable-table">
+                                    @if (Model.DestinationInformation.Arguments.Any(x => x.Key != null))
+                                    {
+                                        foreach (var index in Enumerable.Range(0, Model.DestinationInformation.Arguments.Count(x => x.Key != null)))
+                                        {
+                                            <tr>
+                                                <td style="padding: 0 !important">@Html.TextBoxFor(m => m.DestinationInformation.Arguments[index].Key, new { @class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;" })</td>
+                                                <td style="padding: 0 !important">@Html.DropDownListFor(m => m.DestinationInformation.Arguments[index].Type, Model.DestinationInformation.GetArgumentTypes(Model.DestinationInformation.Arguments[index].Type), new { @class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;" })</td>
+                                                <td style="padding: 0 !important">@Html.TextBoxFor(m => m.DestinationInformation.Arguments[index].FormatValue, new { @class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;" })</td>
+                                                <td>
+                                                    <a>[X]</a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (Model.DestinationInformation.Arguments.Count > 0)
+                                        {
+                                            <tr>
+                                                <td style="padding: 0 !important">@Html.TextBoxFor(m => m.DestinationInformation.Arguments[0].Key, new { @class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;" })</td>
+                                                <td style="padding: 0 !important">@Html.DropDownListFor(m => m.DestinationInformation.Arguments[0].Type, Model.DestinationInformation.GetArgumentTypes(), new { @class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;" })</td>
+                                                <td style="padding: 0 !important">@Html.TextBoxFor(m => m.DestinationInformation.Arguments[0].FormatValue, new { @class = "form-control input-sm", style = "padding: 5px !important; margin: 0 !important; border: none !important;" })</td>
+                                                <td>
+                                                    <a>[X]</a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                    </tbody>
+                                </table>
+                                <a class="add-row-button" style="cursor: pointer" data-table-body="#argument-table-body2">Insert Row</a>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            @Html.LabelFor(m => m.FailureEmailAddress, new {@class = "control-label"})
-                            @Html.TextBoxFor(m => m.FailureEmailAddress, new {@class = "form-control "})
+                    }
+
+                        <div class="tab-pane fade" id="email">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.SuccessEmailAddress, new { @class = "control-label" })
+                                @Html.TextBoxFor(m => m.SuccessEmailAddress, new { @class = "form-control" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.FailureEmailAddress, new { @class = "control-label" })
+                                @Html.TextBoxFor(m => m.FailureEmailAddress, new { @class = "form-control " })
+                            </div>
+                            
                         </div>
-                    </div>
                 </div>
             </div>
         </div>

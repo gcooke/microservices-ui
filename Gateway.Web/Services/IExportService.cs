@@ -8,8 +8,14 @@ namespace Gateway.Web.Services
     {
         IList<ExportCRONGroup> FetchExports(DateTime date);
 
-        ExportUpdate CreateExport(ExportUpdate insert);
+        FileExport FetchExport(long id);
 
-        void UpdateExport(ExportUpdate update);
+        ExportSchedule CreateExport(ExportSchedule insert);
+
+        void UpdateExport(ExportSchedule update);
+
+        ExportResponse RunExport(long id, DateTime time);
+
+        ExportResponse RunScheduleExport(DateTime time);
     }
 }
