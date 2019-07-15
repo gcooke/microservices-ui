@@ -60,6 +60,7 @@
                 {
                     foreach (var batch in Model.ExportCrons)
                     {
+
                         <div class="panel panel-primary" style="border-color: #990505">
                             <div class="panel-heading" style="background: #990505; border-color: #990505">
                                 @batch.GroupName
@@ -73,6 +74,7 @@
                                         <table class="batch-table" style="width: 100%; border: none !important;">
                                             @foreach (var item in batch.FileExports)
                                             {
+                                            var taskUrl = @Url.Content("~/ExportSchedule/Rerun/" + @item.ExportId + "/" + @Model.BusinessDate.ToString("yyyy-MM-dd"));
                                             <tr title="@item.Name" class="batch-schedule-container" style="padding: 20px !important;">
                                                 <td style="width: 40%;">
                                                     @if (item.Type.ToLower() == "request")
@@ -111,15 +113,15 @@
                                                 </td>
                                                 <td style="width: 10%;">
                                                     <div class="btn-group btn-group-xs pull-right"> 
-                                                        <button type="button" class="btn btn-default" style="margin: 0 !important">Rerun</button>
+                                                        <button type="button" class="btn btn-default" style="margin: 0 !important" onclick="rerunTask('@taskUrl')" id="run-@item.ExportId">Rerun</button>
                                                         <button type="button" class="btn btn-default dropdown-toggle" style="margin: 0 !important; border-left: 0 !important" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                             ...
                                                         </button>
                                                         <ul class="dropdown-menu">
                                                              
-                                                                <li>
+                                                                @*<li>
                                                                     <a target="_blank" >Rerun custom...</a>
-                                                                </li>
+                                                                </li>*@
                                                                 <li>
                                                                     <a target="_blank"  >View History</a>
                                                                 </li>

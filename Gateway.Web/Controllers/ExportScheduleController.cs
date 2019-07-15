@@ -75,6 +75,13 @@ namespace Gateway.Web.Controllers
             return View(model);
         }
 
+        [HttpGet]
+        [Route("Rerun/{id}/{businessDate}")]
+        public void RerunSchedule(long id, DateTime businessDate)
+        {
+            _exportService.RunExport(id, businessDate);
+        }
+
         [HttpPost]
         [Route("CreateOrUpdate")]
         public ActionResult CreateOrUpdate(ExportUpdateViewModel model)
