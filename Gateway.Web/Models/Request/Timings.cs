@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Gateway.Web.Services;
 using Gateway.Web.Utils;
 
 namespace Gateway.Web.Models.Request
 {
     public class Timings
     {
+        private IEnumerable<RequestPayload> _entireTree;
+
         public Timings(RequestPayload root)
         {
             Root = root;
@@ -16,17 +17,13 @@ namespace Gateway.Web.Models.Request
             CalculateSummaryTotals();
         }
 
-        public RequestPayload Root { get; private set; }
+        public RequestPayload Root { get; }
 
-        public List<RequestPayload> Items { get; private set; }
-
-        private IEnumerable<RequestPayload> EntireTree { get; set; }
+        public List<RequestPayload> Items { get; }
 
         public IEnumerable<ControllerSummary> ControllerSummaries { get; private set; }
 
         public decimal TotalTimeMs { get; private set; }
-
-        public List<SummaryStatistic> SummaryStatistics { get; set; }
 
         public string TotalTime
         {
@@ -34,7 +31,7 @@ namespace Gateway.Web.Models.Request
             {
                 return
                     TimeSpan.FromMilliseconds(
-                        EntireTree.Where(t => !string.IsNullOrEmpty(t.EndUtc))
+                        _entireTree.Where(t => !string.IsNullOrEmpty(t.EndUtc))
                             .DefaultIfEmpty(
                                 new RequestPayload
                                 {
@@ -52,9 +49,9 @@ namespace Gateway.Web.Models.Request
         private void CalculateTotals()
         {
             // Calculate total time -  it is not necessarily the first request item (although it should be).
-            EntireTree = GetAllChildren(Root).ToArray();
+            _entireTree = GetAllChildren(Root).ToArray();
 
-            var items = EntireTree
+            var items = _entireTree
                         .Where(t => !string.IsNullOrEmpty(t.EndUtc))
                         .DefaultIfEmpty(new RequestPayload { EndUtc = DateTime.MinValue.ToString(), StartUtc = DateTime.MinValue.ToString() })
                         .ToList();
@@ -67,7 +64,7 @@ namespace Gateway.Web.Models.Request
             TotalTimeMs = Math.Max(1, (decimal)totalTime.TotalMilliseconds);
 
             // Calculate start times offsets
-            foreach (var payload in EntireTree)
+            foreach (var payload in _entireTree)
             {
                 var requestStart = DateTime.Parse(payload.StartUtc);
                 payload.StartTimeMs = (int)(requestStart - start).TotalMilliseconds;
@@ -80,7 +77,7 @@ namespace Gateway.Web.Models.Request
 
         private void CalculateSummaryTotals()
         {
-            ControllerSummaries = EntireTree.GroupBy(p => p.Controller).Select(p =>
+            ControllerSummaries = _entireTree.GroupBy(p => p.Controller).Select(p =>
             {
                 var totalTimeMs = p.Sum(x => x.ProcessingTimeMs + x.QueueTimeMs);
                 var averageTimeMs = decimal.Divide(totalTimeMs.GetValueOrDefault(), Math.Max(1, p.Count()));
@@ -92,15 +89,14 @@ namespace Gateway.Web.Models.Request
         private IEnumerable<RequestPayload> GetAllChildren(RequestPayload payload)
         {
             yield return payload;
-            if (payload.ChildRequests != null)
+
+            if (payload.ChildRequests == null)
+                yield break;
+
+            foreach (var item in payload.ChildRequests)
             {
-                foreach (var item in payload.ChildRequests)
-                {
-                    foreach (var child in GetAllChildren(item))
-                    {
-                        yield return child;
-                    }
-                }
+                foreach (var child in GetAllChildren(item))
+                    yield return child;
             }
         }
 

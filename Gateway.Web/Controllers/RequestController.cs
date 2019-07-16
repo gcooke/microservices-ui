@@ -161,15 +161,11 @@ namespace Gateway.Web.Controllers
         public ActionResult Timings(string id)
         {
             Guid correlationId;
+
             if (!Guid.TryParse(id, out correlationId))
                 return View();
 
-            var payload = _gateway.GetRequestTree(correlationId);
-            var model = new Timings(payload)
-            {
-                SummaryStatistics = _statisticsService.GetChildMessageSummary(correlationId)
-            };
-
+            var model = _statisticsService.GetTimings(correlationId);
             return View(model);
         }
     }

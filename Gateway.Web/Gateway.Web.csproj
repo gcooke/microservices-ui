@@ -509,6 +509,7 @@
     <Compile Include="Models\DataFeeds\DataFeedSummary.cs" />
     <Compile Include="Models\Interrogation\InterrogationModel.cs" />
     <Compile Include="Models\Pdc\PdcServiceModel.cs" />
+    <Compile Include="Models\Request\SummaryStatistic.cs" />
     <Compile Include="Models\Schedule\Input\BaseScheduleModel.cs" />
     <Compile Include="Models\Schedule\Output\CustomRunTask.cs" />
     <Compile Include="Models\Schedule\Output\ScheduleGroup.cs" />
