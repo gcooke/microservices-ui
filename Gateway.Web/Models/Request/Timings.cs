@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Gateway.Web.Services;
 using Gateway.Web.Utils;
 
 namespace Gateway.Web.Models.Request
@@ -24,6 +25,8 @@ namespace Gateway.Web.Models.Request
         public IEnumerable<ControllerSummary> ControllerSummaries { get; private set; }
 
         public decimal TotalTimeMs { get; private set; }
+
+        public List<SummaryStatistic> SummaryStatistics { get; set; }
 
         public string TotalTime
         {
