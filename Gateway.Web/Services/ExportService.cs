@@ -20,7 +20,7 @@ namespace Gateway.Web.Services
             _gateway = gateway;
             _logger = loggingService.GetLogger(this);
             //For testing
-            _gateway.SetGatewayUrlForService(ControllerName, "http://localhost:7000/");
+            //_gateway.SetGatewayUrlForService(ControllerName, "http://localhost:7000/");
         }
 
         public ExportSchedule CreateExport(ExportSchedule insert)
