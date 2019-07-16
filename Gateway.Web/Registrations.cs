@@ -143,6 +143,7 @@ namespace Gateway.Web
 
             //Reset Services Registrations
             information.RegisterType<IGatewayService, GatewayService>(Scope.ContainerSingleton);
+            information.RegisterType<IStatisticsService, StatisticsService>(Scope.ContainerSingleton);
             information.RegisterType<IBasicRestService, BasicRestService>(Scope.ContainerSingleton);
             information.RegisterType<IServerDiagnosticsService, ServerDiagnosticsService>(Scope.ContainerSingleton);
             information.RegisterType<IDataFeedService, DataFeedService>(Scope.ContainerSingleton);

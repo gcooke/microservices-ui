@@ -85,5 +85,7 @@ namespace Gateway.Web.Database
         ServerControllerModel GetSeverControllers(int serverId);
 
         void UpdateServerControllers(ServerControllerModel serverControllerModel);
+
+        IEnumerable<RequestResponsePair> GetChildMessagePairs(Guid correlationId);
     }
 }

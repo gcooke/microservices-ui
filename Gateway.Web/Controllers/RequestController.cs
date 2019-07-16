@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -24,13 +23,19 @@ namespace Gateway.Web.Controllers
         private readonly IGatewayDatabaseService _dataService;
         private readonly IGatewayService _gateway;
         private readonly ILogsService _logsService;
+        private readonly IStatisticsService _statisticsService;
 
-        public RequestController(IGatewayDatabaseService dataService, IGatewayService gateway, ILogsService logsService, ILoggingService loggingService)
+        public RequestController(IGatewayDatabaseService dataService,
+            IGatewayService gateway,
+            ILogsService logsService,
+            ILoggingService loggingService,
+            IStatisticsService statisticsService)
             : base(loggingService)
         {
             _dataService = dataService;
             _gateway = gateway;
             _logsService = logsService;
+            _statisticsService = statisticsService;
         }
 
         public ActionResult Summary(string correlationId)
@@ -156,11 +161,11 @@ namespace Gateway.Web.Controllers
         public ActionResult Timings(string id)
         {
             Guid correlationId;
-            if (!Guid.TryParse(Convert.ToString(id), out correlationId))
+
+            if (!Guid.TryParse(id, out correlationId))
                 return View();
 
-            var payload = _gateway.GetRequestTree(correlationId);
-            var model = new Timings(payload);
+            var model = _statisticsService.GetTimings(correlationId);
             return View(model);
         }
     }
