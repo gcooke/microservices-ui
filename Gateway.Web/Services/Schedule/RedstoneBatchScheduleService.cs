@@ -120,6 +120,10 @@ namespace Gateway.Web.Services.Schedule
                 if (isLive)
                     key = $"{key}-LIVE";
             }
+            if (key.Length >= 50)
+            {
+                key = $"BATCH={key.GetHashCode()}";
+            }
 
             if (key.Length >= 50)
             {
