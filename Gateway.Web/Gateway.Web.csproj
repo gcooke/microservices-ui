@@ -530,6 +530,7 @@
     <Compile Include="Models\Export\SourceInformationViewModel.cs" />
     <Compile Include="Models\Interrogation\InterrogationModel.cs" />
     <Compile Include="Models\Pdc\PdcServiceModel.cs" />
+    <Compile Include="Models\Request\SummaryStatistic.cs" />
     <Compile Include="Models\Schedule\Input\BaseScheduleModel.cs" />
     <Compile Include="Models\Schedule\Output\CustomRunTask.cs" />
     <Compile Include="Models\Schedule\Output\ScheduleGroup.cs" />
@@ -725,6 +726,7 @@
     <Compile Include="Services\IExportService.cs" />
     <Compile Include="Services\IManifestService.cs" />
     <Compile Include="Services\IRiskBatchInterrogationService.cs" />
+    <Compile Include="Services\IStatisticsService.cs" />
     <Compile Include="Services\ManifestService.cs" />
     <Compile Include="Services\Pdc\IPdcService.cs" />
     <Compile Include="Services\Pdc\PdcClient.cs" />
@@ -765,6 +767,7 @@
     <Compile Include="Services\Schedule\Utils\ScheduleGroupEx.cs" />
     <Compile Include="Services\Schedule\Utils\ScheduleTaskEx.cs" />
     <Compile Include="Services\Schedule\Utils\ScheduleWebRequestModelEx.cs" />
+    <Compile Include="Services\StatisticsService.cs" />
     <Compile Include="Services\VersionUpdate.cs" />
     <Compile Include="UnityDependencyResolver.cs" />
     <Compile Include="Global.asax.cs">

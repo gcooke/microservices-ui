@@ -145,6 +145,7 @@ namespace Gateway.Web
 
             //Reset Services Registrations
             information.RegisterType<IGatewayService, GatewayService>(Scope.ContainerSingleton);
+            information.RegisterType<IStatisticsService, StatisticsService>(Scope.ContainerSingleton);
             information.RegisterType<IBasicRestService, BasicRestService>(Scope.ContainerSingleton);
             information.RegisterType<IServerDiagnosticsService, ServerDiagnosticsService>(Scope.ContainerSingleton);
             information.RegisterType<IDataFeedService, DataFeedService>(Scope.ContainerSingleton);
@@ -160,7 +161,7 @@ namespace Gateway.Web
             Absa.Cib.JwtAuthentication.Registrations.RegisterCertificates(information);
             Bagl.Cib.MSF.ClientAPI.Registrations.Register(information);
 
-            Mapper.Initialize(cfg =>
+            Mapper.Initialize(cfg =>
             {
                 cfg.AddProfile<ExportProfile>();
             });

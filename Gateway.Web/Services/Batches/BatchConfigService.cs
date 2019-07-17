@@ -126,11 +126,12 @@ namespace Gateway.Web.Services.Batches
             using (var db = new GatewayEntities(ConnectionString))
             {
                 return db.RiskBatchConfigurations
-                    .Select(x => new { x.Type, x.ConfigurationId})
+                    .Select(x => new { x.Type, x.ConfigurationId,x.OutputTag})
                     .Select(x => new BatchConfigModel
                     {
                         ConfigurationId = x.ConfigurationId,
-                        Type = x.Type
+                        Type = x.Type,
+                        OutputTag = x.OutputTag
                     })
                     .ToList();
             }
@@ -182,7 +183,7 @@ namespace Gateway.Web.Services.Batches
         {
             using (var db = new GatewayEntities(ConnectionString))
             {
-                var entity = db.RiskBatchConfigurations.SingleOrDefault(x => x.Type.ToLower() == type.ToLower());
+                var entity = db.RiskBatchConfigurations.FirstOrDefault(x => x.Type.ToLower() == type.ToLower());
 
                 if (entity == null)
                 {
@@ -220,7 +221,7 @@ namespace Gateway.Web.Services.Batches
                 }
             }
 
-            return db.RiskBatchConfigurations.Count(x => x.Type == batchConfigModel.Type) == 0;
+            return db.RiskBatchConfigurations.Count(x => x.Type == batchConfigModel.Type && x.OutputTag == batchConfigModel.OutputTag) == 0;
         }
     }
 }
