@@ -14,12 +14,22 @@
         border-style: solid;
         border-width: 1px 1px 1px 1px;
     }
-
 </style>
 <script>
     function HasDetail(headerId) {
         if (headerId == 0) {
-            alert("This data feed has no detail to be displayed.");
+            toastr.options = {
+                "positionClass": "toast-top-right",
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            }
+            toastr.info('This data feed has no detail to be displayed.', 'Info');
             return false;
         } else
             return true;
@@ -27,15 +37,14 @@
     }
 </script>
 <div id="page-content-wrapper">
-    <div class="hero-unit"> 
-        <h3>All DataFeeds</h3> 
+    <div class="hero-unit">
+        <h3>All DataFeeds</h3>
 
         <div class="row">
             <div class="col-sm-12">
                 <div id="paginator" data-current-date="@Model.BusinessDate.ToString("yyyy-MM-dd")"></div>
             </div>
         </div>
-
 
         <br style="clear:both" />
         <div class="containerx bulk">
@@ -77,11 +86,13 @@
                                         </tr>
                                         <tr>
                                             <td colspan="2">
-                                                <span style="color:Red" ></span>&nbsp;&nbsp;<u>Message</u></td>
+                                                <span style="color:Red"></span>&nbsp;&nbsp;<u>Message</u>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td colspan="2">
-                                                <span  ></span>&nbsp;&nbsp;  @controller.Message</td>
+                                                <span></span>&nbsp;&nbsp;  @controller.Message
+                                            </td>
                                         </tr>
                                     </table>
                                 </div>
@@ -90,7 +101,6 @@
                     </div>
                 </a>
             }
-
         </div>
         <br />
     </div>
