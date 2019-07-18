@@ -7,7 +7,7 @@
     ViewBag.Title = "Request";
     ViewBag.Current = "Timing";
 }
-@{ Html.RenderPartial("_RequestNav", (RequestPayload)@Model.Root); }
+@{ Html.RenderPartial("_RequestNav", (MessageHierarchy)@Model.Root); }
 <div id="page-content-wrapper">
 
     @{

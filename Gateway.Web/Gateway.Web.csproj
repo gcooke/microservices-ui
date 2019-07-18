@@ -414,6 +414,7 @@
     <Compile Include="Database\spGetRecentRequests_Result.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
+    <Compile Include="Database\spGetRequestChildrenPayloadDetails_Result.cs" />
     <Compile Include="Database\spGetRequestCounts_Result.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
@@ -425,6 +426,7 @@
     <Compile Include="Models\AuthorizationModel.cs" />
     <Compile Include="Models\Interrogation\InterrogationModel.cs" />
     <Compile Include="Models\Pdc\PdcServiceModel.cs" />
+    <Compile Include="Models\Request\MessageHierarchy.cs" />
     <Compile Include="Models\Schedule\Input\BaseScheduleModel.cs" />
     <Compile Include="Models\Schedule\Output\CustomRunTask.cs" />
     <Compile Include="Models\Schedule\Output\ScheduleGroup.cs" />

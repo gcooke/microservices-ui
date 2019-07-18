@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Bagl.Cib.MIT.Logging;
 using Gateway.Web.Database;
@@ -22,9 +21,15 @@ namespace Gateway.Web.Services
             _gatewayService = gatewayService;
         }
 
+        private void GetFullChildData(Guid correlationId)
+        {
+            var data = _gatewayDatabaseService.GetChildMessages(correlationId, r => r).ToList();
+        }
+
         public Timings GetTimings(Guid correlationId)
         {
-            var payload = _gatewayService.GetRequestTree(correlationId);
+            MessageHierarchy payload = null;
+            GetFullChildData(correlationId);
             var result = new Timings(payload);
             return result;
         }

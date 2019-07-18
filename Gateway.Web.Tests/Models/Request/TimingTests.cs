@@ -26,8 +26,8 @@ namespace Gateway.Web.Tests.Models.Request
             var simple = GetSimplePayload();
             var empty = GetEmptyPayload();
 
-            Assert.AreEqual(4, small.Root.ChildRequests.Count);
-            Assert.AreEqual(144, large.Root.ChildRequests.Count);
+            Assert.AreEqual(4, small.Root.ChildRequests.Length);
+            Assert.AreEqual(144, large.Root.ChildRequests.Length);
             Assert.AreEqual(1, simple.Items.Count);
             Assert.AreEqual(1, empty.Items.Count);
         }
@@ -158,7 +158,7 @@ namespace Gateway.Web.Tests.Models.Request
             using (var reader = new StreamReader(stream))
             {
                 var payload = reader.ReadToEnd().DeserializeUsingDataContract<RequestPayload>();
-                return new Timings(payload);
+                return new Timings(null);
             }
         }
     }

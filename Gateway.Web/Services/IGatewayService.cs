@@ -38,8 +38,6 @@ namespace Gateway.Web.Services
 
         string[] UpdateControllerVersionStatuses(List<VersionUpdate> versionStatusUpdates);
 
-        RequestPayload GetRequestTree(Guid correlationId);
-
         ConfigurationModel GetControllerConfiguration(string name);
 
         GatewayResponse<string> UpdateControllerConfiguration(ConfigurationModel model);

@@ -7,19 +7,19 @@ namespace Gateway.Web.Models.Request
 {
     public class Timings
     {
-        private IEnumerable<RequestPayload> _flattenedPayloads;
+        private IEnumerable<MessageHierarchy> _flattenedPayloads;
 
-        public Timings(RequestPayload root)
+        public Timings(MessageHierarchy root)
         {
             Root = root;
-            Items = new List<RequestPayload> { root };
+            Items = new List<MessageHierarchy> { root };
             CalculateTotals();
             CalculateSummaryTotals();
         }
 
-        public RequestPayload Root { get; }
+        public MessageHierarchy Root { get; }
 
-        public List<RequestPayload> Items { get; }
+        public List<MessageHierarchy> Items { get; }
 
         public IEnumerable<ControllerSummary> ControllerSummaries { get; private set; }
 
@@ -33,7 +33,7 @@ namespace Gateway.Web.Models.Request
                     TimeSpan.FromMilliseconds(
                         _flattenedPayloads.Where(t => !string.IsNullOrEmpty(t.EndUtc))
                             .DefaultIfEmpty(
-                                new RequestPayload
+                                new MessageHierarchy
                                 {
                                     EndUtc = DateTime.MinValue.ToString(),
                                     StartUtc = DateTime.MinValue.ToString()
@@ -53,7 +53,7 @@ namespace Gateway.Web.Models.Request
 
             var items = _flattenedPayloads
                         .Where(t => !string.IsNullOrEmpty(t.EndUtc))
-                        .DefaultIfEmpty(new RequestPayload { EndUtc = DateTime.MinValue.ToString(), StartUtc = DateTime.MinValue.ToString() })
+                        .DefaultIfEmpty(new MessageHierarchy { EndUtc = DateTime.MinValue.ToString(), StartUtc = DateTime.MinValue.ToString() })
                         .ToList();
 
             var start = items.Min(t => DateTime.Parse(t.StartUtc));
@@ -104,7 +104,7 @@ namespace Gateway.Web.Models.Request
                 .ToList();
         }
 
-        private IEnumerable<RequestPayload> FlattenChildHierarchy(RequestPayload payload)
+        private IEnumerable<MessageHierarchy> FlattenChildHierarchy(MessageHierarchy payload)
         {
             yield return payload;
 
@@ -127,6 +127,8 @@ namespace Gateway.Web.Models.Request
             public TimeSpan TotalQueueTime { get; set; }
 
             public TimeSpan TotalProcessingTime { get; set; }
+
+            public int TotalResponseSize { get; set; } = 0;
 
             public string PrettyTotalQueueTime
                 => TotalQueueTime.Humanize();

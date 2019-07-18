@@ -82,6 +82,9 @@ namespace Gateway.Web.Database
         void AddServerResourceLink(string serverName, string resourceName);
         void DeleteControllerResourceLink(string controllerName, string resourceName);
         void AddControllerResourceLink(string controllerName, string resourceName);
-        IEnumerable<RequestResponsePair> GetChildMessagePairs(Guid correlationId);
+
+        IEnumerable<T> GetChildMessages<T>(Guid correlationId,
+            Func<spGetRequestChildrenPayloadDetails_Result, T> converter);
+
     }
 }
