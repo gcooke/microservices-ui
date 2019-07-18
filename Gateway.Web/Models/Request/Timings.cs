@@ -75,6 +75,19 @@ namespace Gateway.Web.Models.Request
             }
         }
 
+
+        private static string GetControllerLabel(string controller, IEnumerable<MessageHierarchy> messages)
+        {
+            if (!string.Equals(controller, "tradestore", StringComparison.CurrentCultureIgnoreCase))
+                return controller;
+
+            var details = messages
+                .Where(m => string.Equals(m.SizeUnit, "Trades", StringComparison.InvariantCultureIgnoreCase))
+                .Sum(t => t.Size.GetValueOrDefault());
+
+            return $"{controller} ({details} Trades)";
+        }
+
         private void CalculateSummaryTotals()
         {
             ControllerSummaries = _flattenedPayloads
@@ -97,6 +110,7 @@ namespace Gateway.Web.Models.Request
                     return new ControllerSummary()
                     {
                         Controller = group.Key,
+                        SummaryText = GetControllerLabel(group.Key, group),
                         CallCount = count,
                         TotalProcessingTime = TimeSpan.FromMilliseconds(totalProcessingTime),
                         TotalQueueTime = TimeSpan.FromMilliseconds(totalQueueTime),
@@ -124,6 +138,8 @@ namespace Gateway.Web.Models.Request
         public class ControllerSummary
         {
             public string Controller { get; set; }
+
+            public string SummaryText { get; set; }
 
             public int CallCount { get; set; }
 
