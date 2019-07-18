@@ -57,7 +57,7 @@ namespace Gateway.Web.Models.Request
                         .ToList();
 
             var start = items.Min(t => t.StartUtc);
-            var end = items.Where(t => t.EndUtc.GetValueOrDefault() != DateTime.MinValue).Max(t => t.EndUtc.GetValueOrDefault());
+            var end = items.Max(t => t.EndUtc.GetValueOrDefault());
 
             var totalTime = (end - start);
             WallClock = totalTime.Humanize();
