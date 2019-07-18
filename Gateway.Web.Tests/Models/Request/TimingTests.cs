@@ -158,7 +158,7 @@ namespace Gateway.Web.Tests.Models.Request
             using (var reader = new StreamReader(stream))
             {
                 var payload = reader.ReadToEnd().DeserializeUsingDataContract<RequestPayload>();
-                return new Timings(payload);
+                return new Timings(null);
             }
         }
     }
