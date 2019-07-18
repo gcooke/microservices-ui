@@ -23,7 +23,7 @@ namespace Gateway.Web.Models.Request
 
         public int? QueueTimeMs { get; set; }
 
-        public int? ProcessingTimeMs{ get; set; }
+        public int? ProcessingTimeMs { get; set; }
 
         public int? TotalTimeMs { get; set; }
 
@@ -39,27 +39,30 @@ namespace Gateway.Web.Models.Request
 
         public decimal StartTime { get; set; }
 
+        public long RequestSize { get; set; }
+
         public long ResponseSize { get; set; }
     }
 
     internal static class MessageHierarchyUtils
     {
-        public static MessageHierarchy ToModel(this spGetRequestChildrenPayloadDetails_Result db)
+        public static MessageHierarchy ToModel(this spGetRequestChildrenPayloadDetails_Result record)
         {
-            return new MessageHierarchy()
+            return new MessageHierarchy
             {
-                CorrelationId = db.CorrelationId,
-                ParentCorrelationId = db.ParentCorrelationId,
-                Controller = db.Controller,
-                StartUtc = db.StartUtc,
-                EndUtc = db.EndUtc,
-                Successful = db.ResultCode.GetValueOrDefault() == 1 ? "true" : "false",
-                QueueTimeMs = db.QueueTimeMs,
-                ProcessingTimeMs = db.TimeTakeMs - db.QueueTimeMs,
-                TotalTimeMs = db.TimeTakeMs,
-                Size = db.Size,
-                SizeUnit = db.SizeUnit, 
-                ResponseSize = db.DataLengthBytes.GetValueOrDefault()
+                CorrelationId = record.CorrelationId,
+                ParentCorrelationId = record.ParentCorrelationId,
+                Controller = record.Controller,
+                StartUtc = record.StartUtc,
+                EndUtc = record.EndUtc,
+                Successful = record.ResultCode.GetValueOrDefault() == 1 ? "true" : "false",
+                QueueTimeMs = record.QueueTimeMs,
+                ProcessingTimeMs = record.TimeTakeMs - record.QueueTimeMs,
+                TotalTimeMs = record.TimeTakeMs,
+                Size = record.Size,
+                SizeUnit = record.SizeUnit,
+                RequestSize = record.RequestLength,
+                ResponseSize = record.ResponseLength
             };
         }
 

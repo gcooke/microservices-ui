@@ -84,14 +84,14 @@ namespace Gateway.Web.Models.Request
                     var count = 0;
                     var totalQueueTime = 0;
                     var totalProcessingTime = 0;
-                    var totalResponseSize = 0L;
+                    var totalPayloadSize = 0L;
 
                     foreach (var message in group)
                     {
                         ++count;
                         totalQueueTime += message.QueueTimeMs.GetValueOrDefault();
                         totalProcessingTime += message.ProcessingTimeMs.GetValueOrDefault();
-                        totalResponseSize += message.ResponseSize;
+                        totalPayloadSize += message.RequestSize + message.ResponseSize;
                     }
                     
                     return new ControllerSummary()
@@ -100,7 +100,7 @@ namespace Gateway.Web.Models.Request
                         CallCount = count,
                         TotalProcessingTime = TimeSpan.FromMilliseconds(totalProcessingTime),
                         TotalQueueTime = TimeSpan.FromMilliseconds(totalQueueTime),
-                        TotalResponseSize = totalResponseSize
+                        TotalPayloadSize = totalPayloadSize
                     };
                 })
                 .OrderBy(c => c.Controller)
@@ -131,7 +131,7 @@ namespace Gateway.Web.Models.Request
 
             public TimeSpan TotalProcessingTime { get; set; }
 
-            public long TotalResponseSize { get; set; }
+            public long TotalPayloadSize { get; set; }
 
             public string PrettyTotalQueueTime
                 => TotalQueueTime.Humanize();
@@ -139,8 +139,8 @@ namespace Gateway.Web.Models.Request
             public string PrettyTotalProcessingTime 
                 => TotalProcessingTime.Humanize();
 
-            public string PrettyTotalResponseSize
-                => DataMeasurementUtils.SizeSuffix(TotalResponseSize, 3);
+            public string PrettyTotalPayloadSize
+                => DataMeasurementUtils.SizeSuffix(TotalPayloadSize, 3);
         }
     }
 }
