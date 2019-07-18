@@ -414,7 +414,9 @@
     <Compile Include="Database\spGetRecentRequests_Result.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
-    <Compile Include="Database\spGetRequestChildrenPayloadDetails_Result.cs" />
+    <Compile Include="Database\spGetRequestChildrenPayloadDetails_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
     <Compile Include="Database\spGetRequestCounts_Result.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
@@ -749,6 +751,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Schedule\Utils\BaseScheduleModelEx.cs" />
     <Compile Include="Utils\Calculations.cs" />
+    <Compile Include="Utils\DataMeasurementUtils.cs" />
     <Compile Include="Utils\Constants.cs" />
     <Compile Include="Utils\CronTabExpression.cs" />
     <Compile Include="Utils\DashboardEx.cs" />

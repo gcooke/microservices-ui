@@ -21,15 +21,17 @@ namespace Gateway.Web.Services
             _gatewayService = gatewayService;
         }
 
-        private void GetFullChildData(Guid correlationId)
+        private MessageHierarchy GetFullChildData(Guid correlationId)
         {
-            var data = _gatewayDatabaseService.GetChildMessages(correlationId, r => r).ToList();
+            var records = _gatewayDatabaseService.GetChildMessages(correlationId, MessageHierarchyUtils.ToModel).ToList();
+            var result = records.ToTree(correlationId);
+
+            return result;
         }
 
         public Timings GetTimings(Guid correlationId)
         {
-            MessageHierarchy payload = null;
-            GetFullChildData(correlationId);
+            var payload = GetFullChildData(correlationId);
             var result = new Timings(payload);
             return result;
         }
