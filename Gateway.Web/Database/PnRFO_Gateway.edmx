@@ -930,11 +930,9 @@
           <Property Type="Int32" Name="TimeTakeMs" Nullable="true" />
           <Property Type="Int32" Name="Size" Nullable="true" />
           <Property Type="String" Name="SizeUnit" Nullable="true" MaxLength="20" />
-          <Property Type="String" Name="Direction" Nullable="true" MaxLength="10" />
-          <Property Type="String" Name="PayloadType" Nullable="true" MaxLength="10" />
-          <Property Type="String" Name="CompressionType" Nullable="true" MaxLength="50" />
-          <Property Type="DateTime" Name="UpdateTime" Nullable="true" Precision="23" />
-          <Property Type="Int64" Name="DataLengthBytes" Nullable="true" />
+          <Property Type="Int64" Name="RequestLength" Nullable="false" />
+          <Property Type="Int64" Name="ResponseLength" Nullable="false" />
+          <Property Type="String" Name="Resource" Nullable="false" MaxLength="1024" />
         </ComplexType>
         <EntityType Name="StatusChange">
           <Key>
@@ -1801,11 +1799,6 @@
                 <ScalarProperty Name="TimeTakeMs" ColumnName="TimeTakeMs" />
                 <ScalarProperty Name="Size" ColumnName="Size" />
                 <ScalarProperty Name="SizeUnit" ColumnName="SizeUnit" />
-                <ScalarProperty Name="Direction" ColumnName="Direction" />
-                <ScalarProperty Name="PayloadType" ColumnName="PayloadType" />
-                <ScalarProperty Name="CompressionType" ColumnName="CompressionType" />
-                <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
-                <ScalarProperty Name="DataLengthBytes" ColumnName="DataLengthBytes" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

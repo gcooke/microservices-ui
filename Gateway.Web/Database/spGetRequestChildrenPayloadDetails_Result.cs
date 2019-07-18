@@ -24,10 +24,8 @@ namespace Gateway.Web.Database
         public Nullable<int> TimeTakeMs { get; set; }
         public Nullable<int> Size { get; set; }
         public string SizeUnit { get; set; }
-        public string Direction { get; set; }
-        public string PayloadType { get; set; }
-        public string CompressionType { get; set; }
-        public Nullable<System.DateTime> UpdateTime { get; set; }
-        public Nullable<long> DataLengthBytes { get; set; }
+        public long RequestLength { get; set; }
+        public long ResponseLength { get; set; }
+        public string Resource { get; set; }
     }
 }

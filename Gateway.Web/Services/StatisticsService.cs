@@ -10,15 +10,12 @@ namespace Gateway.Web.Services
     {
         private readonly ILogger _logger;
         private readonly IGatewayDatabaseService _gatewayDatabaseService;
-        private readonly IGatewayService _gatewayService;
 
         public StatisticsService(ILoggingService loggingService,
-            IGatewayDatabaseService gatewayDatabaseService,
-            IGatewayService gatewayService)
+            IGatewayDatabaseService gatewayDatabaseService)
         {
             _logger = loggingService.GetLogger(this);
             _gatewayDatabaseService = gatewayDatabaseService;
-            _gatewayService = gatewayService;
         }
 
         private MessageHierarchy GetFullChildData(Guid correlationId)
