@@ -98,6 +98,7 @@ namespace Gateway.Web.Models.Request
                     var totalQueueTime = 0;
                     var totalProcessingTime = 0;
                     var totalPayloadSize = 0L;
+                    var startTime = DateTime.MaxValue;
 
                     foreach (var message in group)
                     {
@@ -105,6 +106,9 @@ namespace Gateway.Web.Models.Request
                         totalQueueTime += message.QueueTimeMs.GetValueOrDefault();
                         totalProcessingTime += message.ProcessingTimeMs.GetValueOrDefault();
                         totalPayloadSize += message.RequestSize + message.ResponseSize;
+
+                        if (message.StartUtc < startTime)
+                            startTime = message.StartUtc;
                     }
                     
                     return new ControllerSummary()
@@ -114,10 +118,11 @@ namespace Gateway.Web.Models.Request
                         CallCount = count,
                         TotalProcessingTime = TimeSpan.FromMilliseconds(totalProcessingTime),
                         TotalQueueTime = TimeSpan.FromMilliseconds(totalQueueTime),
+                        EarliestStartTime = startTime - Root.StartUtc,
                         TotalPayloadSize = totalPayloadSize
                     };
                 })
-                .OrderBy(c => c.Controller)
+                .OrderBy(c => c.EarliestStartTime.TotalMilliseconds)
                 .ToList();
         }
 
@@ -147,6 +152,8 @@ namespace Gateway.Web.Models.Request
 
             public TimeSpan TotalProcessingTime { get; set; }
 
+            public TimeSpan EarliestStartTime { get; set; }
+
             public long TotalPayloadSize { get; set; }
 
             public string PrettyTotalQueueTime
@@ -155,8 +162,11 @@ namespace Gateway.Web.Models.Request
             public string PrettyTotalProcessingTime 
                 => TotalProcessingTime.Humanize();
 
+            public string PrettyEarliestStartTime
+                => EarliestStartTime.Humanize();
+
             public string PrettyTotalPayloadSize
-                => DataMeasurementUtils.SizeSuffix(TotalPayloadSize, 3);
+                => string.Concat((TotalPayloadSize / (1024f * 1024f)).ToString("#,##0.0##"), " MB");
         }
     }
 }
