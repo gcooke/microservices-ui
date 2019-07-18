@@ -626,7 +626,6 @@
     <Compile Include="Models\Request\Children.cs" />
     <Compile Include="Models\Request\Transitions.cs" />
     <Compile Include="Models\Request\Payloads.cs" />
-    <Compile Include="Models\Request\RequestPayload.cs" />
     <Compile Include="Models\Request\Summary.cs" />
     <Compile Include="Models\Controller\TimeChartModel.cs" />
     <Compile Include="Models\Controller\VersionsModel.cs" />
