@@ -42,6 +42,7 @@
                         <td class=""># of Call(s)</td>
                         <td class="">Total Queue Time</td>
                         <td class="">Total Process Time</td>
+                        <td class="">Total Response Size</td>
                     </tr>
                 </thead>
                 @foreach (var summary in Model.ControllerSummaries)
@@ -51,6 +52,7 @@
                     <td>@summary.CallCount</td>
                     <td>@summary.PrettyTotalQueueTime</td>
                     <td>@summary.PrettyTotalProcessingTime</td>
+                    <td>@summary.PrettyTotalResponseSize</td>
                 </tr>
                 }
             </table>

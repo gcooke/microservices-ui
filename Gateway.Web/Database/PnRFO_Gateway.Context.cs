@@ -17,6 +17,11 @@ namespace Gateway.Web.Database
     
     public partial class GatewayEntities : DbContext
     {
+        public GatewayEntities()
+            : base("name=GatewayEntities")
+        {
+        }
+    
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             throw new UnintentionalCodeFirstException();
@@ -232,6 +237,15 @@ namespace Gateway.Web.Database
                 new ObjectParameter("SearchString", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetRecentRequests_Result>("spGetRecentRequests", startParameter, controllerParameter, searchStringParameter);
+        }
+    
+        public virtual ObjectResult<spGetRequestChildrenPayloadDetails_Result> spGetRequestChildrenPayloadDetails(Nullable<System.Guid> correlationId)
+        {
+            var correlationIdParameter = correlationId.HasValue ?
+                new ObjectParameter("correlationId", correlationId) :
+                new ObjectParameter("correlationId", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetRequestChildrenPayloadDetails_Result>("spGetRequestChildrenPayloadDetails", correlationIdParameter);
         }
     }
 }

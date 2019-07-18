@@ -31,14 +31,14 @@ namespace Gateway.Web.Models.Request
             {
                 return
                     TimeSpan.FromMilliseconds(
-                        _flattenedPayloads.Where(t => !string.IsNullOrEmpty(t.EndUtc))
+                        _flattenedPayloads.Where(t => t.EndUtc != null)
                             .DefaultIfEmpty(
                                 new MessageHierarchy
                                 {
-                                    EndUtc = DateTime.MinValue.ToString(),
-                                    StartUtc = DateTime.MinValue.ToString()
+                                    EndUtc = DateTime.MinValue,
+                                    StartUtc = DateTime.MinValue
                                 })
-                            .Sum(t => (DateTime.Parse(t.EndUtc) - DateTime.Parse(t.StartUtc)).TotalMilliseconds)
+                            .Sum(t => (t.EndUtc.GetValueOrDefault() - t.StartUtc).TotalMilliseconds)
                         )
                         .Humanize();
             }
@@ -52,12 +52,12 @@ namespace Gateway.Web.Models.Request
             _flattenedPayloads = FlattenChildHierarchy(Root).ToArray();
 
             var items = _flattenedPayloads
-                        .Where(t => !string.IsNullOrEmpty(t.EndUtc))
-                        .DefaultIfEmpty(new MessageHierarchy { EndUtc = DateTime.MinValue.ToString(), StartUtc = DateTime.MinValue.ToString() })
+                        .Where(t => t.EndUtc != null)
+                        .DefaultIfEmpty(new MessageHierarchy { EndUtc = DateTime.MinValue, StartUtc = DateTime.MinValue })
                         .ToList();
 
-            var start = items.Min(t => DateTime.Parse(t.StartUtc));
-            var end = items.Max(t => DateTime.Parse(t.EndUtc));
+            var start = items.Min(t => t.StartUtc);
+            var end = items.Where(t => t.EndUtc.GetValueOrDefault() != DateTime.MinValue).Max(t => t.EndUtc.GetValueOrDefault());
 
             var totalTime = (end - start);
             WallClock = totalTime.Humanize();
@@ -66,7 +66,7 @@ namespace Gateway.Web.Models.Request
             // Calculate start times offsets
             foreach (var payload in _flattenedPayloads)
             {
-                var requestStart = DateTime.Parse(payload.StartUtc);
+                var requestStart = payload.StartUtc;
                 payload.StartTimeMs = (int)(requestStart - start).TotalMilliseconds;
                 payload.QueueTime = decimal.Round(decimal.Divide((payload.QueueTimeMs.GetValueOrDefault() * 100), TotalTimeMs));
                 payload.ProcessingTime = decimal.Round(Math.Max(1,
@@ -84,12 +84,14 @@ namespace Gateway.Web.Models.Request
                     var count = 0;
                     var totalQueueTime = 0;
                     var totalProcessingTime = 0;
+                    var totalResponseSize = 0L;
 
                     foreach (var message in group)
                     {
                         ++count;
                         totalQueueTime += message.QueueTimeMs.GetValueOrDefault();
                         totalProcessingTime += message.ProcessingTimeMs.GetValueOrDefault();
+                        totalResponseSize += message.ResponseSize;
                     }
                     
                     return new ControllerSummary()
@@ -97,7 +99,8 @@ namespace Gateway.Web.Models.Request
                         Controller = group.Key,
                         CallCount = count,
                         TotalProcessingTime = TimeSpan.FromMilliseconds(totalProcessingTime),
-                        TotalQueueTime = TimeSpan.FromMilliseconds(totalQueueTime)
+                        TotalQueueTime = TimeSpan.FromMilliseconds(totalQueueTime),
+                        TotalResponseSize = totalResponseSize
                     };
                 })
                 .OrderBy(c => c.Controller)
@@ -128,13 +131,16 @@ namespace Gateway.Web.Models.Request
 
             public TimeSpan TotalProcessingTime { get; set; }
 
-            public int TotalResponseSize { get; set; } = 0;
+            public long TotalResponseSize { get; set; }
 
             public string PrettyTotalQueueTime
                 => TotalQueueTime.Humanize();
 
             public string PrettyTotalProcessingTime 
                 => TotalProcessingTime.Humanize();
+
+            public string PrettyTotalResponseSize
+                => TotalResponseSize.ToString();
         }
     }
 }

@@ -839,12 +839,11 @@ namespace Gateway.Web.Database
         {
             using (var database = new GatewayEntities(ConnectionString))
             {
-                //var records = database.spGetRequestChildrenPayloadDetails(correlationId);
+                var records = database.spGetRequestChildrenPayloadDetails(correlationId);
 
-                //foreach (var record in records)
-                //    yield return converter(record);
+                foreach (var record in records)
+                    yield return converter(record);
             }
-            return null;
         }
     }
 
@@ -878,12 +877,6 @@ namespace Gateway.Web.Database
         public string Controller { get; set; }
         //public string Version { get; set; }
         public int Count { get; set; }
-    }
-
-    public class RequestResponsePair
-    {
-        public Request Request { get; set; }
-        public Response Response { get; set; }
     }
 
     public class QueueSizeModel
