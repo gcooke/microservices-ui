@@ -7,6 +7,8 @@ namespace Gateway.Web.Models.Request
 {
     public class Timings
     {
+        private IEnumerable<RequestPayload> _flattenedPayloads;
+
         public Timings(RequestPayload root)
         {
             Root = root;
@@ -15,11 +17,9 @@ namespace Gateway.Web.Models.Request
             CalculateSummaryTotals();
         }
 
-        public RequestPayload Root { get; private set; }
+        public RequestPayload Root { get; }
 
-        public List<RequestPayload> Items { get; private set; }
-
-        private IEnumerable<RequestPayload> EntireTree { get; set; }
+        public List<RequestPayload> Items { get; }
 
         public IEnumerable<ControllerSummary> ControllerSummaries { get; private set; }
 
@@ -31,7 +31,7 @@ namespace Gateway.Web.Models.Request
             {
                 return
                     TimeSpan.FromMilliseconds(
-                        EntireTree.Where(t => !string.IsNullOrEmpty(t.EndUtc))
+                        _flattenedPayloads.Where(t => !string.IsNullOrEmpty(t.EndUtc))
                             .DefaultIfEmpty(
                                 new RequestPayload
                                 {
@@ -49,9 +49,9 @@ namespace Gateway.Web.Models.Request
         private void CalculateTotals()
         {
             // Calculate total time -  it is not necessarily the first request item (although it should be).
-            EntireTree = GetAllChildren(Root).ToArray();
+            _flattenedPayloads = FlattenChildHierarchy(Root).ToArray();
 
-            var items = EntireTree
+            var items = _flattenedPayloads
                         .Where(t => !string.IsNullOrEmpty(t.EndUtc))
                         .DefaultIfEmpty(new RequestPayload { EndUtc = DateTime.MinValue.ToString(), StartUtc = DateTime.MinValue.ToString() })
                         .ToList();
@@ -64,7 +64,7 @@ namespace Gateway.Web.Models.Request
             TotalTimeMs = Math.Max(1, (decimal)totalTime.TotalMilliseconds);
 
             // Calculate start times offsets
-            foreach (var payload in EntireTree)
+            foreach (var payload in _flattenedPayloads)
             {
                 var requestStart = DateTime.Parse(payload.StartUtc);
                 payload.StartTimeMs = (int)(requestStart - start).TotalMilliseconds;
@@ -77,51 +77,62 @@ namespace Gateway.Web.Models.Request
 
         private void CalculateSummaryTotals()
         {
-            ControllerSummaries = EntireTree.GroupBy(p => p.Controller).Select(p =>
-            {
-                var totalTimeMs = p.Sum(x => x.ProcessingTimeMs + x.QueueTimeMs);
-                var averageTimeMs = decimal.Divide(totalTimeMs.GetValueOrDefault(), Math.Max(1, p.Count()));
+            ControllerSummaries = _flattenedPayloads
+                .GroupBy(p => p.Controller)
+                .Select(group =>
+                {
+                    var count = 0;
+                    var totalQueueTime = 0;
+                    var totalProcessingTime = 0;
 
-                return new ControllerSummary(p.Key, totalTimeMs.GetValueOrDefault(), (double)averageTimeMs);
-            });
+                    foreach (var message in group)
+                    {
+                        ++count;
+                        totalQueueTime += message.QueueTimeMs.GetValueOrDefault();
+                        totalProcessingTime += message.ProcessingTimeMs.GetValueOrDefault();
+                    }
+                    
+                    return new ControllerSummary()
+                    {
+                        Controller = group.Key,
+                        CallCount = count,
+                        TotalProcessingTime = TimeSpan.FromMilliseconds(totalProcessingTime),
+                        TotalQueueTime = TimeSpan.FromMilliseconds(totalQueueTime)
+                    };
+                })
+                .OrderBy(c => c.Controller)
+                .ToList();
         }
 
-        private IEnumerable<RequestPayload> GetAllChildren(RequestPayload payload)
+        private IEnumerable<RequestPayload> FlattenChildHierarchy(RequestPayload payload)
         {
             yield return payload;
-            if (payload.ChildRequests != null)
+
+            if (payload.ChildRequests == null)
+                yield break;
+
+            foreach (var item in payload.ChildRequests)
             {
-                foreach (var item in payload.ChildRequests)
-                {
-                    foreach (var child in GetAllChildren(item))
-                    {
-                        yield return child;
-                    }
-                }
+                foreach (var child in FlattenChildHierarchy(item))
+                    yield return child;
             }
         }
 
         public class ControllerSummary
         {
-            public ControllerSummary(string controller, double totalTimeMs, double averageTimeMs)
-            {
-                Controller = controller;
-                TotalTimeMs = totalTimeMs;
-                AverageTimeMs = averageTimeMs;
-            }
+            public string Controller { get; set; }
 
-            public string Controller { get; private set; }
+            public int CallCount { get; set; }
 
-            public double TotalTimeMs { get; private set; }
+            public TimeSpan TotalQueueTime { get; set; }
 
-            public double AverageTimeMs { get; private set; }
+            public TimeSpan TotalProcessingTime { get; set; }
 
-            public string PrettyTotalTimeMs { get { return TimeSpan.FromMilliseconds(TotalTimeMs).Humanize(); } }
+            public string PrettyTotalQueueTime
+                => TotalQueueTime.Humanize();
 
-            public string PrettyAverageTimeMs
-            {
-                get { return TimeSpan.FromMilliseconds(AverageTimeMs).Humanize(); }
-            }
+            public string PrettyTotalProcessingTime 
+                => TotalProcessingTime.Humanize();
         }
     }
 }

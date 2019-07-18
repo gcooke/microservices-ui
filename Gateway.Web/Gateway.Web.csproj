@@ -695,6 +695,7 @@
     <Compile Include="Services\DatabaseStateProvider.cs" />
     <Compile Include="Services\IManifestService.cs" />
     <Compile Include="Services\IRiskBatchInterrogationService.cs" />
+    <Compile Include="Services\IStatisticsService.cs" />
     <Compile Include="Services\ManifestService.cs" />
     <Compile Include="Services\Pdc\IPdcService.cs" />
     <Compile Include="Services\Pdc\PdcClient.cs" />
@@ -735,6 +736,7 @@
     <Compile Include="Services\Schedule\Utils\ScheduleGroupEx.cs" />
     <Compile Include="Services\Schedule\Utils\ScheduleTaskEx.cs" />
     <Compile Include="Services\Schedule\Utils\ScheduleWebRequestModelEx.cs" />
+    <Compile Include="Services\StatisticsService.cs" />
     <Compile Include="Services\VersionUpdate.cs" />
     <Compile Include="UnityDependencyResolver.cs" />
     <Compile Include="Global.asax.cs">

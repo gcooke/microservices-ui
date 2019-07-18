@@ -57,30 +57,39 @@ namespace Gateway.Web.Tests.Models.Request
         }
 
         [Test]
-        public void Summary_total_is_calculated_on_small_payload()
+        public void Summary_TotalProcessingTime_is_calculated_on_small_payload()
         {
             var small = GetSmallPayload();
 
             var tradeStoreSummary = small.ControllerSummaries.First(f => f.Controller == "tradestore");
-            Assert.AreEqual(22776m, tradeStoreSummary.TotalTimeMs);
+            Assert.AreEqual(13723d, tradeStoreSummary.TotalProcessingTime.TotalMilliseconds);
         }
 
         [Test]
-        public void Summary_average_is_calculated_on_small_payload()
+        public void Summary_TotalQueueTime_is_calculated_on_small_payload()
         {
             var small = GetSmallPayload();
 
             var summary = small.ControllerSummaries.First(f => f.Controller == "tradestore");
-            Assert.AreEqual(7592d, summary.AverageTimeMs);
+            Assert.AreEqual(9053d, summary.TotalQueueTime.TotalMilliseconds);
         }
 
         [Test]
-        public void Summary_average_with_no_size_is_calculated_on_small_payload()
+        public void Summary_callcount_is_calculated_on_small_payload()
+        {
+            var small = GetSmallPayload();
+
+            var summary = small.ControllerSummaries.First(f => f.Controller == "tradestore");
+            Assert.AreEqual(3, summary.CallCount);
+        }
+
+        [Test]
+        public void Summary_TotalQueueTime_with_no_size_is_calculated_on_small_payload()
         {
             var small = GetSmallPayload();
 
             var summary = small.ControllerSummaries.First(f => f.Controller == "riskbatch");
-            Assert.AreEqual(38582, summary.AverageTimeMs);
+            Assert.AreEqual(11121, summary.TotalQueueTime.TotalMilliseconds);
         }
 
         [Test]

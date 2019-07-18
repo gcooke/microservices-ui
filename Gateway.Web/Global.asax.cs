@@ -35,12 +35,13 @@ namespace Gateway.Web
         public static string FavIcon { get; set; }
         public static string ControllerIcon { get; set; }
         public static string SiteLogo { get; set; }
-
+        public static string MetricsUrlTemplate { get; set; }
         public static string SigmaHomePage { get; set; }
 
         protected void Application_Start(object sender, EventArgs e)
         {
             Environment = ConfigurationManager.AppSettings["Environment"];
+            MetricsUrlTemplate = ConfigurationManager.AppSettings["BatchMetricsUrl"];
             FavIcon = "~/content/img/favicon." + Environment + ".png";
             ControllerIcon = "~/content/img/controller." + Environment + ".png";
             SiteLogo = "~/Content/img/Redstone." + Environment + ".png";
