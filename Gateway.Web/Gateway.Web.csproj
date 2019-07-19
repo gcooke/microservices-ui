@@ -474,6 +474,9 @@
     <Compile Include="Database\spGetRecentUserRequests_Result.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
+    <Compile Include="Database\spGetRequestChildrenPayloadDetails_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
     <Compile Include="Database\spGetRequestChildSummary_Result.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
@@ -530,6 +533,7 @@
     <Compile Include="Models\Export\SourceInformationViewModel.cs" />
     <Compile Include="Models\Interrogation\InterrogationModel.cs" />
     <Compile Include="Models\Pdc\PdcServiceModel.cs" />
+    <Compile Include="Models\Request\MessageHierarchy.cs" />
     <Compile Include="Models\Request\SummaryStatistic.cs" />
     <Compile Include="Models\Schedule\Input\BaseScheduleModel.cs" />
     <Compile Include="Models\Schedule\Output\CustomRunTask.cs" />
@@ -782,6 +786,7 @@
     <Compile Include="Utils\CronTabExpression.cs" />
     <Compile Include="Utils\DashboardEx.cs" />
     <Compile Include="Utils\DataContractSerializationEx.cs" />
+    <Compile Include="Utils\DataMeasurementUtils.cs" />
     <Compile Include="Utils\ExceptionEx.cs" />
     <Compile Include="Utils\LegacyCompession.cs" />
     <Compile Include="Utils\MonitoringHtmlEx.cs" />

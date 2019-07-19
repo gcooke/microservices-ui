@@ -236,5 +236,14 @@ namespace Gateway.Web.Database
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetRecentRequests_Result>("spGetRecentRequests", startParameter, controllerParameter, searchStringParameter);
         }
+    
+        public virtual ObjectResult<spGetRequestChildrenPayloadDetails_Result> spGetRequestChildrenPayloadDetails(Nullable<System.Guid> correlationId)
+        {
+            var correlationIdParameter = correlationId.HasValue ?
+                new ObjectParameter("correlationId", correlationId) :
+                new ObjectParameter("correlationId", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetRequestChildrenPayloadDetails_Result>("spGetRequestChildrenPayloadDetails", correlationIdParameter);
+        }
     }
 }

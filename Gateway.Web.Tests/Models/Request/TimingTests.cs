@@ -157,7 +157,7 @@ namespace Gateway.Web.Tests.Models.Request
             using (var stream = assembly.GetManifestResourceStream(resourceName))
             using (var reader = new StreamReader(stream))
             {
-                var payload = reader.ReadToEnd().DeserializeUsingDataContract<RequestPayload>();
+                var payload = reader.ReadToEnd().Deserialize<MessageHierarchy>();
                 return new Timings(payload);
             }
         }

@@ -1,4 +1,4 @@
-﻿<Request xmlns="">
+﻿<MessageHierarchy xmlns="">
   <CorrelationId>b3062604-5eed-4888-9512-b349e17b4767</CorrelationId>
   <ParentCorrelationId>00000000-0000-0000-0000-000000000000</ParentCorrelationId>
   <Controller>catalogue</Controller>
@@ -11,4 +11,4 @@
   <ProcessingTimeMs p2:nil="true" xmlns:p2="http://www.w3.org/2001/XMLSchema-instance" />
   <TotalTimeMs p2:nil="true" xmlns:p2="http://www.w3.org/2001/XMLSchema-instance" />
   <ChildRequests />
-</Request>
+</MessageHierarchy>

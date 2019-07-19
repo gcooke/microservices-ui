@@ -86,6 +86,7 @@ namespace Gateway.Web.Database
 
         void UpdateServerControllers(ServerControllerModel serverControllerModel);
 
-        IEnumerable<RequestResponsePair> GetChildMessagePairs(Guid correlationId);
+         IEnumerable<T> GetChildMessages<T>(Guid correlationId,
+            Func<spGetRequestChildrenPayloadDetails_Result, T> converter);
     }
 }
