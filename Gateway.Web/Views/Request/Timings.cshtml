@@ -48,17 +48,21 @@
                 </thead>
                 @foreach (var summary in Model.ControllerSummaries)
                 {
-                <tr>
-                    <td>@summary.SummaryText</td>
-                    <td style="text-align: right;">@summary.PrettyEarliestStartTime</td>
-                    <td style="text-align: right;">@summary.CallCount</td>
-                    <td style="text-align: right;">@summary.PrettyTotalQueueTime</td>
-                    <td style="text-align: right;">@summary.PrettyTotalProcessingTime</td>
-                    <td style="text-align: right;">@summary.PrettyTotalPayloadSize</td>
-                </tr>
+                    <tr>
+                        <td>@summary.SummaryText</td>
+                        <td style="text-align: right;">@summary.PrettyEarliestStartTime</td>
+                        <td style="text-align: right;">@summary.CallCount</td>
+                        <td>@summary.PrettyTotalQueueTime</td>
+                        <td>
+                            <div style="width: @summary.RelativePercentage%; background: rgb(200, 270, 200);">
+                                @summary.PrettyTotalProcessingTime
+                            </div>
+                        </td>
+                        <td style="text-align: right;">@summary.PrettyTotalPayloadSize</td>
+                    </tr>
                 }
             </table>
-            
+
         </div>
     </div>
 
