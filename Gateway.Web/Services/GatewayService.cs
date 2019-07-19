@@ -180,15 +180,6 @@ namespace Gateway.Web.Services
             return result.ToArray();
         }
 
-        public RequestPayload GetRequestTree(Guid correlationId)
-        {
-            var response = _gateway.Get<XElement>("Catalogue", string.Format("tree/{0}", correlationId)).GetAwaiter().GetResult();
-            if (!response.Successfull)
-                throw new RemoteGatewayException(response.Message);
-
-            return response.Body.DeserializeUsingDataContract<RequestPayload>();
-        }
-
         public ConfigurationModel GetControllerConfiguration(string name)
         {
             var response = _gateway.Get<XElement>("Catalogue", string.Format("controllers/{0}", name)).GetAwaiter().GetResult();
