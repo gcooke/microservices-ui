@@ -8,6 +8,8 @@ namespace Gateway.Web.Models.Request
     public class Timings
     {
         private IEnumerable<MessageHierarchy> _flattenedPayloads;
+        private DateTime _start;
+        private DateTime _end;
 
         public Timings(MessageHierarchy root)
         {
@@ -56,10 +58,10 @@ namespace Gateway.Web.Models.Request
                         .DefaultIfEmpty(new MessageHierarchy { EndUtc = DateTime.MinValue, StartUtc = DateTime.MinValue })
                         .ToList();
 
-            var start = items.Min(t => t.StartUtc);
-            var end = items.Max(t => t.EndUtc.GetValueOrDefault());
+            _start = items.Min(t => t.StartUtc);
+            _end = items.Max(t => t.EndUtc.GetValueOrDefault());
 
-            var totalTime = (end - start);
+            var totalTime = _end - _start;
             WallClock = totalTime.Humanize();
             TotalTimeMs = Math.Max(1, (decimal)totalTime.TotalMilliseconds);
 
@@ -67,14 +69,13 @@ namespace Gateway.Web.Models.Request
             foreach (var payload in _flattenedPayloads)
             {
                 var requestStart = payload.StartUtc;
-                payload.StartTimeMs = (int)(requestStart - start).TotalMilliseconds;
+                payload.StartTimeMs = (int)(requestStart - _start).TotalMilliseconds;
                 payload.QueueTime = decimal.Round(decimal.Divide((payload.QueueTimeMs.GetValueOrDefault() * 100), TotalTimeMs));
                 payload.ProcessingTime = decimal.Round(Math.Max(1,
                     decimal.Round(decimal.Divide((payload.ProcessingTimeMs.GetValueOrDefault() * 100), TotalTimeMs))));
                 payload.StartTime = decimal.Round(decimal.Divide((payload.StartTimeMs * 100), TotalTimeMs));
             }
         }
-
 
         private static string GetControllerLabel(string controller, IEnumerable<MessageHierarchy> messages)
         {
@@ -90,40 +91,56 @@ namespace Gateway.Web.Models.Request
 
         private void CalculateSummaryTotals()
         {
-            ControllerSummaries = _flattenedPayloads
-                .GroupBy(p => p.Controller)
-                .Select(group =>
+            var serializedTotalTime = 0L;
+
+            var summaries = _flattenedPayloads
+               .GroupBy(p => p.Controller)
+               .Select(g => CreateSummary(g.Key, g.ToList()))
+               .OrderBy(c => c.EarliestStartTime.TotalMilliseconds)
+               .ToList();
+
+            foreach (var item in summaries)
+            {
+                var percentage = item.TotalProcessingTime.TotalMilliseconds /
+                                 serializedTotalTime * 100;
+
+                item.RelativePercentage = (int)Math.Round(percentage, 0, MidpointRounding.AwayFromZero);
+            }
+                
+            ControllerSummaries = summaries;
+
+            ControllerSummary CreateSummary(string controller, List<MessageHierarchy> messages)
+            {
+                var count = 0;
+                var totalQueueTime = 0;
+                var totalProcessingTime = 0;
+                var totalPayloadSize = 0L;
+                var startTime = DateTime.MaxValue;
+
+                foreach (var message in messages)
                 {
-                    var count = 0;
-                    var totalQueueTime = 0;
-                    var totalProcessingTime = 0;
-                    var totalPayloadSize = 0L;
-                    var startTime = DateTime.MaxValue;
+                    ++count;
+                    totalQueueTime += message.QueueTimeMs.GetValueOrDefault();
+                    totalProcessingTime += message.ProcessingTimeMs.GetValueOrDefault();
+                    totalPayloadSize += message.RequestSize + message.ResponseSize;
 
-                    foreach (var message in group)
-                    {
-                        ++count;
-                        totalQueueTime += message.QueueTimeMs.GetValueOrDefault();
-                        totalProcessingTime += message.ProcessingTimeMs.GetValueOrDefault();
-                        totalPayloadSize += message.RequestSize + message.ResponseSize;
+                    if (message.StartUtc < startTime)
+                        startTime = message.StartUtc;
+                }
 
-                        if (message.StartUtc < startTime)
-                            startTime = message.StartUtc;
-                    }
-                    
-                    return new ControllerSummary()
-                    {
-                        Controller = group.Key,
-                        SummaryText = GetControllerLabel(group.Key, group),
-                        CallCount = count,
-                        TotalProcessingTime = TimeSpan.FromMilliseconds(totalProcessingTime),
-                        TotalQueueTime = TimeSpan.FromMilliseconds(totalQueueTime),
-                        EarliestStartTime = startTime - Root.StartUtc,
-                        TotalPayloadSize = totalPayloadSize
-                    };
-                })
-                .OrderBy(c => c.EarliestStartTime.TotalMilliseconds)
-                .ToList();
+                serializedTotalTime += totalProcessingTime;
+
+                return new ControllerSummary()
+                {
+                    Controller = controller,
+                    SummaryText = GetControllerLabel(controller, messages),
+                    CallCount = count,
+                    TotalProcessingTime = TimeSpan.FromMilliseconds(totalProcessingTime),
+                    TotalQueueTime = TimeSpan.FromMilliseconds(totalQueueTime),
+                    EarliestStartTime = startTime - Root.StartUtc,
+                    TotalPayloadSize = totalPayloadSize
+                };
+            }
         }
 
         private IEnumerable<MessageHierarchy> FlattenChildHierarchy(MessageHierarchy payload)
@@ -156,10 +173,12 @@ namespace Gateway.Web.Models.Request
 
             public long TotalPayloadSize { get; set; }
 
+            public int RelativePercentage { get; set; }
+
             public string PrettyTotalQueueTime
                 => TotalQueueTime.Humanize();
 
-            public string PrettyTotalProcessingTime 
+            public string PrettyTotalProcessingTime
                 => TotalProcessingTime.Humanize();
 
             public string PrettyEarliestStartTime
