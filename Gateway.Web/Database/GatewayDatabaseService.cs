@@ -781,25 +781,14 @@ namespace Gateway.Web.Database
             return resource.Substring(lastIndex + 1).Trim();
         }
 
-        public IEnumerable<RequestResponsePair> GetChildMessagePairs(Guid correlationId)
+        public IEnumerable<T> GetChildMessages<T>(Guid correlationId, Func<spGetRequestChildrenPayloadDetails_Result, T> converter)
         {
-            using (var model = new GatewayEntities(_connectionString))
+            using (var database = new GatewayEntities(_connectionString))
             {
-                var items = from req in model.Requests
-                            join resp in model.Responses on req.CorrelationId equals resp.CorrelationId
-                            where req.ParentCorrelationId == correlationId
-                            select new { req, resp };
+                var records = database.spGetRequestChildrenPayloadDetails(correlationId);
 
-                foreach (var item in items)
-                {
-                    var result = new RequestResponsePair
-                    {
-                        Response = item.resp,
-                        Request = item.req
-                    };
-
-                    yield return result;
-                }
+                foreach (var record in records)
+                    yield return converter(record);
             }
         }
     }
@@ -835,12 +824,6 @@ namespace Gateway.Web.Database
 
         //public string Version { get; set; }
         public int Count { get; set; }
-    }
-
-    public class RequestResponsePair
-    {
-        public Request Request { get; set; }
-        public Response Response { get; set; }
     }
 
     public class QueueSizeModel

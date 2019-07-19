@@ -1,17 +1,15 @@
-﻿using Bagl.Cib.MSF.ClientAPI.Model;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Xml.Linq;
+using Bagl.Cib.MSF.ClientAPI.Model;
 using Gateway.Web.Models.AddIn;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Controllers;
 using Gateway.Web.Models.Group;
 using Gateway.Web.Models.MarketData;
-using Gateway.Web.Models.Request;
 using Gateway.Web.Models.Security;
 using Gateway.Web.Models.Shared;
 using Gateway.Web.Models.User;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 using VersionsModel = Gateway.Web.Models.Controller.VersionsModel;
 
 namespace Gateway.Web.Services
@@ -37,8 +35,6 @@ namespace Gateway.Web.Services
         void ExpireWorkItem(string id);
 
         string[] UpdateControllerVersionStatuses(List<VersionUpdate> versionStatusUpdates);
-
-        RequestPayload GetRequestTree(Guid correlationId);
 
         ConfigurationModel GetControllerConfiguration(string name);
 
