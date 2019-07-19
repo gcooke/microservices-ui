@@ -86,6 +86,8 @@
                                             {
                                                 var taskUrl = @Url.Content("~/Schedule/Rerun/" + @item.ScheduleId + "/" + @Model.BusinessDate.ToString("yyyy-MM-dd"));
                                                 var taskUrlNoChildren = @Url.Content("~/Schedule/Rerun/" + @item.ScheduleId + "/" + @Model.BusinessDate.ToString("yyyy-MM-dd")) + "/SkipChildren";
+                                                var metricsUrl = string.Format(MvcApplication.MetricsUrlTemplate, item.ScheduleId);
+
                                                 <tr title="@item.Type: @item.Name" class="batch-schedule-container" style="padding: 20px !important;" data-tt-branch="@item.HasChildren" data-tt-id="@item.ScheduleId" data-tt-parent-id="@item.ParentId">
                                                     <td style="width: 40%;">
                                                         @if (item.Type.ToLower() == "request")
@@ -129,6 +131,9 @@
                                                                     </li>
                                                                     <li>
                                                                         <a target="_blank" href="~/Controller/History/RiskBatch?search=@item.ScheduleId&searchResultsText=@item.Name">View History</a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a target="_blank" href="@metricsUrl">View Metrics</a>
                                                                     </li>
                                                                 }
                                                                 else
