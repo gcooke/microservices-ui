@@ -91,7 +91,8 @@ namespace Gateway.Web.Models.Request
 
         private void CalculateSummaryTotals()
         {
-            var serializedTotalTime = 0L;
+            // populated in the local CreateSummary() function
+            var serializedProcessingTime = 0L;
 
             var summaries = _flattenedPayloads
                .GroupBy(p => p.Controller)
@@ -99,14 +100,21 @@ namespace Gateway.Web.Models.Request
                .OrderBy(c => c.EarliestStartTime.TotalMilliseconds)
                .ToList();
 
-            foreach (var item in summaries)
+            foreach (var summary in summaries)
             {
-                var percentage = item.TotalProcessingTime.TotalMilliseconds /
-                                 serializedTotalTime * 100;
+                // percentage is calculated relative to the total message's processing time, less the processing time 
+                // for the parent message
+                var time = string.Equals(summary.Controller, Root.Controller)
+                    ? summary.TotalProcessingTime.TotalMilliseconds - Root.ProcessingTimeMs.GetValueOrDefault()
+                    : summary.TotalProcessingTime.TotalMilliseconds;
 
-                item.RelativePercentage = (int)Math.Round(percentage, 0, MidpointRounding.AwayFromZero);
+                var percentage = serializedProcessingTime != 0
+                    ? time / serializedProcessingTime * 100
+                    : 0;
+
+                summary.RelativePercentage = (int)Math.Round(percentage, 0, MidpointRounding.AwayFromZero);
             }
-                
+
             ControllerSummaries = summaries;
 
             ControllerSummary CreateSummary(string controller, List<MessageHierarchy> messages)
@@ -124,11 +132,12 @@ namespace Gateway.Web.Models.Request
                     totalProcessingTime += message.ProcessingTimeMs.GetValueOrDefault();
                     totalPayloadSize += message.RequestSize + message.ResponseSize;
 
+                    if (message.CorrelationId != Root.CorrelationId)
+                        serializedProcessingTime += message.ProcessingTimeMs.GetValueOrDefault();
+
                     if (message.StartUtc < startTime)
                         startTime = message.StartUtc;
                 }
-
-                serializedTotalTime += totalProcessingTime;
 
                 return new ControllerSummary()
                 {
