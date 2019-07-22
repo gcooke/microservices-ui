@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Gateway.Web.Models.Pdc;
 
 namespace Gateway.Web.Services.Pdc
@@ -7,5 +8,6 @@ namespace Gateway.Web.Services.Pdc
     {
         IEnumerable<PdcServiceModel> PingAll(IEnumerable<PdcServiceModel> services);
         PdcServiceModel[] GetInstances();
+        PdcTradesModel GetTradesSummary(DateTime asOf);
     }
 }
