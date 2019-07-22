@@ -1,0 +1,78 @@
+﻿@using Gateway.Web.Models.Pdc
+@model Gateway.Web.Models.Pdc.PdcTradesModel
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "Pdc";
+    ViewBag.Current = "Trades";
+}
+
+@{ Html.RenderPartial("_PdcNav", (PdcTradesModel)@Model); }
+
+<div id="page-content-wrapper">
+    <br />
+    <div class="hero-unit">
+
+        <br />
+        <div id="containerx bulk">
+            <h3 class="text-lowercase">trades</h3>
+            
+            <div id="paginator" 
+                 data-start-date="@Model.BusinessDate.ToString("yyyy-MM-dd")"
+                 data-current-date="@Model.BusinessDate.ToString("yyyy-MM-dd")"></div>
+
+            <table style="white-space: nowrap" class="datatable table" id="searchable-table">
+                <thead>
+                    <tr>
+                        <td class="text-center">Booking Platform</td>
+                        <td class="text-center">Sds Id</td>
+                        <td class="text-center">Counterparty</td>
+                        <td class="text-center">Request Id</td>
+                        <td class="text-center">Trade Number</td>
+                        <td class="text-center">Request Date</td>
+                        <td class="text-center">Allowed</td>
+                        <td class="text-center">Reason</td>
+                    </tr>
+                <tr>
+                    <td colspan="8">
+                        <div class="form-group">
+                            <input class="form-control col-sm-11"
+                                   placeholder="search the trades below..."
+                                   data-input="quick-search"
+                                   data-search-target="#searchable-table tbody > tr"
+                                   name="quick-search"
+                                   type="text">
+                            <span class="col-sm-1 form-control-feedback form-action-clear glyphicon glyphicon-remove form-control input-group-addon"
+                                  aria-hidden="true"></span>
+                        </div>
+                    </td>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var instance in @Model.Items)
+                {
+                    <tr>
+                        <td>@instance.BookingSystem</td>
+                        <td>@instance.SdsId</td>
+                        <td>@instance.Counterparty</td>
+                        <td>@instance.RequestId</td>
+                        <td>@instance.TradeId</td>
+                        <td>@instance.RequestDate.ToString("yyyy-MM-dd")</td>
+                        <td class="text-center">
+                        @if (instance.PredealCheckResult)
+                        {
+                            <span class="alert-success glyphicon glyphicon-thumbs-up text-center"></span>
+                        }
+                        @if (!instance.PredealCheckResult)
+                        {
+                            <span class="alert-danger glyphicon glyphicon-thumbs-down text-center"></span>
+                        }
+                        </td>
+                        <td>@instance.PredealCheckReason</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+        <br />
+    </div>
+</div>

@@ -533,6 +533,9 @@
     <Compile Include="Models\Export\SourceInformationViewModel.cs" />
     <Compile Include="Models\Interrogation\InterrogationModel.cs" />
     <Compile Include="Models\Pdc\PdcServiceModel.cs" />
+    <Compile Include="Models\Pdc\PdcServicesModel.cs" />
+    <Compile Include="Models\Pdc\PdcTradeModel.cs" />
+    <Compile Include="Models\Pdc\PdcTradesModel.cs" />
     <Compile Include="Models\Request\MessageHierarchy.cs" />
     <Compile Include="Models\Schedule\Input\BaseScheduleModel.cs" />
     <Compile Include="Models\Schedule\Output\CustomRunTask.cs" />
@@ -1039,6 +1042,7 @@
     <Content Include="Views\Interrogation\_InterrogationNav.cshtml" />
     <Content Include="Views\Pdc\Services.cshtml" />
     <Content Include="Views\Pdc\_PdcNav.cshtml" />
+    <Content Include="Views\Pdc\TradeHistory.cshtml" />
     <Content Include="Views\Controller\Servers.cshtml" />
     <Content Include="Views\Shared\_ControllerServers.cshtml" />
     <Content Include="Views\ServerResource\ServerControllers.cshtml" />
@@ -1101,7 +1105,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>9895</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:9896/</IISUrl>
+          <IISUrl>http://localhost:9895/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
