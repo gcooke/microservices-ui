@@ -6,14 +6,18 @@ namespace Gateway.Web.Utils
 {
     public static class TimeSpanExtensions
     {
-        private static TimeSpan Hour = TimeSpan.FromHours(1);
-        private static TimeSpan Minute = TimeSpan.FromMinutes(1);
-        private static TimeSpan Second = TimeSpan.FromSeconds(1);
+        private static readonly TimeSpan Hour = TimeSpan.FromHours(1);
+        private static readonly TimeSpan Minute = TimeSpan.FromMinutes(1);
+        private static readonly TimeSpan Second = TimeSpan.FromSeconds(1);
 
-        private static Func<double, string, string> FormatValue = (number, description) => number == 0D ? string.Empty : string.Format("{0}{1}", number, description);
+        private static string FormatValue(int number, string description)
+            => number == 0 ? string.Empty : $"{number}{description}";
 
         public static string Humanize(this TimeSpan date)
         {
+            if (date == TimeSpan.Zero)
+                return "0s";
+
             var values = new List<string>();
             values.Add(FormatValue(date.Days, "d"));
             values.Add(FormatValue(date.Hours, "h"));
@@ -21,7 +25,8 @@ namespace Gateway.Web.Utils
             values.Add(FormatValue(date.Seconds, "s"));
             values.Add(FormatValue(date.Milliseconds, "ms"));
 
-            values.RemoveAll(v => string.IsNullOrEmpty(v));
+            values.RemoveAll(string.IsNullOrEmpty);
+
             var builder = new StringBuilder();
             for (var i = 0; i < values.Count; i++)
             {
@@ -47,24 +52,28 @@ namespace Gateway.Web.Utils
             if (time > Hour)
             {
                 if (includeMs)
-                    return string.Format("{0:N2} hours ({1:N0}ms)", time.TotalHours, milliseconds);
-                return string.Format("{0:N2} hours", time.TotalHours);
+                    return $"{time.TotalHours:N2} hours ({milliseconds:N0}ms)";
+
+                return $"{time.TotalHours:N2} hours";
             }
 
             if (time > Minute)
             {
                 if (includeMs)
-                    return string.Format("{0:N2} mins ({1:N0}ms)", time.TotalMinutes, milliseconds);
-                return string.Format("{0:N2} mins", time.TotalMinutes);
+                    return $"{time.TotalMinutes:N2} mins ({milliseconds:N0}ms)";
+
+                return $"{time.TotalMinutes:N2} mins";
             }
 
             if (time > Second)
             {
                 if (includeMs)
-                    return string.Format("{0:N2} secs ({1:N0}ms)", time.TotalSeconds, milliseconds);
-                return string.Format("{0:N2} secs", time.TotalSeconds);
+                    return $"{time.TotalSeconds:N2} secs ({milliseconds:N0}ms)";
+
+                return $"{time.TotalSeconds:N2} secs";
             }
-            return string.Format("{0} ms", milliseconds);
+
+            return $"{milliseconds} ms";
         }
     }
 }
