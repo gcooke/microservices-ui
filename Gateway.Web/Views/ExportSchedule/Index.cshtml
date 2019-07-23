@@ -119,16 +119,16 @@
                                                         </button>
                                                         <ul class="dropdown-menu">
                                                              
-                                                                @*<li>
-                                                                    <a target="_blank" >Rerun custom...</a>
-                                                                </li>*@
+                                                                <li>
+                                                                    <a href="~/ExportSchedule/Update?Id=@item.ExportId&copy=true" >Save as...</a>
+                                                                </li>
                                                                 <li>
                                                                     <a target="_blank"  >View History</a>
                                                                 </li>
                                                            
                                                             <li role="separator" class="divider"></li>
                                                             <li>
-                                                                <a href="~/ExportSchedule/Update?Id=@item.ExportId" >
+                                                                <a href="~/ExportSchedule/Update?Id=@item.ExportId&copy=false" >
                                                                     Edit
                                                                 </a>
                                                             </li>
