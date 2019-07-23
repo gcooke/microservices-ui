@@ -40,19 +40,23 @@ namespace Gateway.Web.Controllers
 
         [HttpGet]
         [Route("Update")]
-        public ActionResult Update(long? id = null)
+        public ActionResult Update(long? id = null, bool copy = false)
         {
             var model = new ExportUpdateViewModel()
             {
-                StartDateTime = DateTime.Now.Date,
-                IsDisabled = true,
-                IsDeleted = true
+                StartDateTime = DateTime.Now.Date
             };
 
             if (id.HasValue && id.Value > 0)
             {
                 var fileExport = _exportService.FetchExport(id.Value);
                 model = Mapper.Map<ExportUpdateViewModel>(fileExport);
+
+                if (copy)
+                {
+                    model.ExportId = 0;
+                    model.Name = "Copy of " + model.Name;
+                }
 
                 CubeToCsvSourceInformation sourceInfoResult = null;
                 CubeToCsvDestinationInformation destinationInfoResult = null;
