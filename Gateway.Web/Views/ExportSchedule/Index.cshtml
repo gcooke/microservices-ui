@@ -74,7 +74,8 @@
                                         <table class="batch-table" style="width: 100%; border: none !important;">
                                             @foreach (var item in batch.FileExports)
                                             {
-                                            var taskUrl = @Url.Content("~/ExportSchedule/Rerun/" + @item.ExportId + "/" + @Model.BusinessDate.ToString("yyyy-MM-dd"));
+                                            var taskUrl = @Url.Content("~/ExportSchedule/Rerun/" + @item.ExportId + "/" + @Model.BusinessDate.ToString("yyyy-MM-dd") + "/false");
+                                            var taskUrlForce = @Url.Content("~/ExportSchedule/Rerun/" + @item.ExportId + "/" + @Model.BusinessDate.ToString("yyyy-MM-dd") + "/true");
                                             <tr title="@item.Name" class="batch-schedule-container" style="padding: 20px !important;">
                                                 <td style="width: 40%;">
                                                     @if (item.Type.ToLower() == "request")
@@ -118,7 +119,9 @@
                                                             ...
                                                         </button>
                                                         <ul class="dropdown-menu">
-                                                             
+                                                            <li>
+                                                                <a target="_blank" onclick="rerunTask('@taskUrlForce')" >Force Run</a>
+                                                            </li>
                                                                 <li>
                                                                     <a href="~/ExportSchedule/Update?Id=@item.ExportId&copy=true" >Save as...</a>
                                                                 </li>
