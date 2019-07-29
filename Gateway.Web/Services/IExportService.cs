@@ -14,7 +14,7 @@ namespace Gateway.Web.Services
 
         void UpdateExport(ExportSchedule update);
 
-        ExportResponse RunExport(long id, DateTime time);
+        ExportResponse RunExport(long id, DateTime time, bool force);
 
         ExportResponse RunScheduleExport(DateTime time);
     }

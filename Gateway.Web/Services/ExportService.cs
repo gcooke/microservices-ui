@@ -96,9 +96,11 @@ namespace Gateway.Web.Services
             return result;
         }
 
-        public ExportResponse RunExport(long id, DateTime time)
+        public ExportResponse RunExport(long id, DateTime time, bool force)
         {
             var query = $"Export/Run/{id}/{time.ToString("yyyy-MM-dd")}";
+            if (force)
+                query = $"{query}?force={force}";
             var response = _gateway.Put<string, string>(ControllerName, query, string.Empty).Result;
 
             if (!response.Successfull)

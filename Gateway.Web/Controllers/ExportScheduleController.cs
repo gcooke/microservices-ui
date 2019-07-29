@@ -80,10 +80,10 @@ namespace Gateway.Web.Controllers
         }
 
         [HttpGet]
-        [Route("Rerun/{id}/{businessDate}")]
-        public void RerunSchedule(long id, DateTime businessDate)
+        [Route("Rerun/{id}/{businessDate}/{force}")]
+        public void RerunSchedule(long id, DateTime businessDate, bool force)
         {
-            _exportService.RunExport(id, businessDate);
+            _exportService.RunExport(id, businessDate, force);
         }
 
         [HttpPost]
