@@ -23,24 +23,12 @@ namespace Gateway.Web.Controllers
     public class HomeController : BaseController
     {
         private readonly IGatewayDatabaseService _dataService;
-        private readonly IServerDiagnosticsService _serverDiagnosticsService;
-        private readonly IBatchHelper _batchHelper;
-        private readonly ISystemInformation _systemInformation;
-        private readonly IDatabaseStateProvider _databaseStateProvider;
 
         public HomeController(IGatewayDatabaseService dataService,
-            IServerDiagnosticsService serverDiagnosticsService,
-            ILoggingService loggingService,
-            IBatchHelper batchHelper,
-            ISystemInformation systemInformation,
-            IDatabaseStateProvider databaseStateProvider)
+                              ILoggingService loggingService)
             : base(loggingService)
         {
             _dataService = dataService;
-            _serverDiagnosticsService = serverDiagnosticsService;
-            _batchHelper = batchHelper;
-            _systemInformation = systemInformation;
-            _databaseStateProvider = databaseStateProvider;
         }
 
         [OutputCache(Duration = 60, VaryByParam = "none")]
@@ -101,10 +89,5 @@ namespace Gateway.Web.Controllers
             var path = Request.Url.GetLeftPart(UriPartial.Authority);
             return Redirect(path + "/Reporting");
         }
-    }
-
-    public interface IDatabaseStateProvider
-    {
-        DatabaseState GetDatabaseState(string DatabaseConfigId);
     }
 }
