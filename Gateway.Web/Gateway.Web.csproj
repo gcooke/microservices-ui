@@ -724,7 +724,6 @@
     <Compile Include="Services\Batches\Interrogation\Services\IssueService\IIssueTrackerService.cs" />
     <Compile Include="Services\Batches\Interrogation\Services\IssueService\IssueTrackerService.cs" />
     <Compile Include="Services\Batches\Interrogation\Utils\ScheduleEx.cs" />
-    <Compile Include="Services\DatabaseStateProvider.cs" />
     <Compile Include="Services\DataFeedService.cs" />
     <Compile Include="Services\ExportService.cs" />
     <Compile Include="Services\IDataFeedService.cs" />

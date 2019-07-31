@@ -151,7 +151,6 @@ namespace Gateway.Web
             information.RegisterType<IDataFeedService, DataFeedService>(Scope.ContainerSingleton);
             information.RegisterType<IExportService, ExportService>(Scope.ContainerSingleton);
             information.RegisterType<IBatchHelper, BatchHelper>(Scope.ContainerSingleton);
-            information.RegisterType<IDatabaseStateProvider, DatabaseStateProvider>(Scope.ContainerSingleton);
             information.RegisterType<IManifestService, ManifestService>(Scope.ContainerSingleton);
             information.RegisterType<IPdcService, PdcService>(Scope.ContainerSingleton);
 
@@ -161,8 +160,7 @@ namespace Gateway.Web
             Absa.Cib.JwtAuthentication.Registrations.RegisterCertificates(information);
             Bagl.Cib.MSF.ClientAPI.Registrations.Register(information);
 
-            Mapper.Initialize(cfg =>
-            {
+            Mapper.Initialize(cfg =>            {
                 cfg.AddProfile<ExportProfile>();
             });
         }

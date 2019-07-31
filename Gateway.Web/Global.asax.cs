@@ -92,7 +92,7 @@ namespace Gateway.Web
 
             CentralConfigurationService.ApplyCentralConfiguration(information);
 
-            var dns = information.GetSetting("DnsName", "abcap-foutils.intra.absa.co.za");
+            var dns = information.GetSetting("DnsName", "sigma.absa.co.za");
 
             var authurl = $"https://{dns}";
             var issuers = Issuer.GetIssuers(information);
@@ -100,9 +100,9 @@ namespace Gateway.Web
             {
                 if (Debugger.IsAttached)
                     dns = "sigma-dev.absa.co.za";
-                authurl = issuers.FirstOrDefault(i => i.Contains(dns)) ?? "abcap-foutils.intra.absa.co.za";
+                authurl = issuers.FirstOrDefault(i => i.Contains(dns)) ?? "sigma.absa.co.za";
                 if (Debugger.IsAttached)
-                    dns = information.GetSetting("DnsName", "abcap-foutils.intra.absa.co.za");
+                    dns = information.GetSetting("DnsName", "sigma.absa.co.za");
             }
 
             BatchRequestBuilderEx.AuthUrl = authurl;
