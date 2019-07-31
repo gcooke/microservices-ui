@@ -33,7 +33,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="row m-t-15">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <table class="datatable table report-table" id="searchable-table">
@@ -50,43 +50,42 @@
                             <td colspan="10">
                                 @using (@Html.BeginForm("Index", "Batch", FormMethod.Get))
                                 {
-                                    @Html.TextBoxFor(m => m.SearchTerm, new {@name = "q", @class = "form-control", @placeholder = "Search for batch configuration..."})
+                                    @Html.TextBoxFor(m => m.SearchTerm, new { @name = "q", @class = "form-control", @placeholder = "Search for batch configuration..." })
                                 }
                             </td>
                         </tr>
                     </thead>
                     <tbody>
 
-                    @if (!Model.BatchConfigModels.Any())
-                    {
-                        <tr>
-                            <td colspan="10" class="center-text">
-                                No batch configurations have been created
-                            </td>
-                        </tr>
-                    }
+                        @if (!Model.BatchConfigModels.Any())
+                        {
+                            <tr>
+                                <td colspan="10" class="center-text">
+                                    No batch configurations have been created
+                                </td>
+                            </tr>
+                        }
 
-                    @foreach (var item in Model.BatchConfigModels.OrderBy(x => x.Type))
-                    {
-                        <tr>
-                            <td>@Html.CheckBox("select-" + @item.Type, new { @class = "select-config", @data_id = @item.ConfigurationId })</td>
-                            <td><a href="~/Schedule?SearchTerm=@item.Type">@item.Type</a></td>
-                            <td>@item.OutputType</td>
-                            <td>@item.OutputTag</td>
-                            <td>@item.StateTtlMinutes</td>
-                            <td>
-                                <a href="~/Schedule/Batch/Create/@item.ConfigurationId" class="text-center glyphicon glyphicon glyphicon-dashboard"></a>
-                                <a href="~/Batch/Update/@item.ConfigurationId" class="text-center glyphicon glyphicon-pencil"></a>
-                                <a href="~/Batch/Delete/@item.ConfigurationId/@item.Type" class="text-center glyphicon glyphicon-trash"></a>
-                            </td>
-                        </tr>
-                    }
+                        @foreach (var item in Model.BatchConfigModels.OrderBy(x => x.Type))
+                        {
+                            <tr>
+                                <td>@Html.CheckBox("select-" + @item.Type, new { @class = "select-config", @data_id = @item.ConfigurationId })</td>
+                                <td><a href="~/Schedule?SearchTerm=@item.Type">@item.Type</a></td>
+                                <td>@item.OutputType</td>
+                                <td>@item.OutputTag</td>
+                                <td>@item.StateTtlMinutes</td>
+                                <td>
+                                    <a href="~/Schedule/Batch/Create/@item.ConfigurationId" class="text-center glyphicon glyphicon glyphicon-dashboard"></a>
+                                    <a href="~/Batch/Update/@item.ConfigurationId" class="text-center glyphicon glyphicon-pencil"></a>
+                                    <a href="~/Batch/Delete/@item.ConfigurationId/@item.Type.Replace(".","!")" class="text-center glyphicon glyphicon-trash"></a>
+                                </td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>
         </div>
-        
-        
+
         @if (Model.PageCount > 1)
         {
             <div class="row">
@@ -121,8 +120,7 @@
                                     <li><a href="~/Batch?page=@page&searchTerm=@Model.SearchTerm">@page</a></li>
                                 }
                             }
-                        
-                        
+
                             @if (Model.CurrentPage == Model.PageCount)
                             {
                                 <li class="disabled">
@@ -139,7 +137,6 @@
                                     </a>
                                 </li>
                             }
-
                         </ul>
                     </nav>
                 </div>

@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Bagl.Cib.MIT.Logging;
+using Gateway.Web.Enums;
+using Gateway.Web.Models.Batches;
+using Gateway.Web.Services.Batches.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Bagl.Cib.MIT.Logging;
-using Gateway.Web.Enums;
-using Gateway.Web.Models.Batches;
-using Gateway.Web.Services.Batches.Interfaces;
 
 namespace Gateway.Web.Controllers
 {
@@ -15,13 +15,13 @@ namespace Gateway.Web.Controllers
     {
         private readonly IBatchConfigService _riskBatchConfigService;
 
-        public BatchController(IBatchConfigService riskBatchConfigService, 
+        public BatchController(IBatchConfigService riskBatchConfigService,
             ILoggingService loggingService)
-           :base(loggingService)
+           : base(loggingService)
         {
             _riskBatchConfigService = riskBatchConfigService;
         }
-        
+
         [HttpGet]
         public ActionResult Index(int page = 1, int pageSize = 100, string searchTerm = null)
         {
@@ -72,7 +72,7 @@ namespace Gateway.Web.Controllers
             var model = new BatchDeleteConfigModel
             {
                 ConfigurationId = id,
-                Type = type,
+                Type = type.Replace("!", "."), //due to MVC special character limitation we are switching . -> ! and Vice Versa as a workaround
                 ScheduleCount = config.ScheduleCount
             };
             return View("Delete", model);
@@ -170,7 +170,7 @@ namespace Gateway.Web.Controllers
             types.Insert(0, null);
 
             return types
-                .Select(x => new SelectListItem { Value = x?.Type, Text = x == null? String.Empty : $"{x?.Type} (OutputTag :{x?.OutputTag})"})
+                .Select(x => new SelectListItem { Value = x?.Type, Text = x == null ? String.Empty : $"{x?.Type} (OutputTag :{x?.OutputTag})" })
                 .ToList();
         }
     }
