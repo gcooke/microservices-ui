@@ -33,7 +33,8 @@ namespace Gateway.Web.Services
                 Name = insert.Name,
                 StartDateTime = insert.StartDateTime,
                 DestinationInfo = insert.DestinationInfo,
-                SourceInfo = insert.SourceInfo
+                SourceInfo = insert.SourceInfo,
+                GroupName = insert.GroupName
             };
 
             var response = _gateway.Put<string, string>(ControllerName, query, dto.Serialize()).Result;
@@ -73,6 +74,7 @@ namespace Gateway.Web.Services
             var fileExport = new FileExport();
             fileExport.Id = fileExportCube.GetValue<long>("Id").Value;
             fileExport.Name = fileExportCube.GetStringValue("Name");
+            fileExport.GroupName = fileExportCube.GetStringValue("GroupName");
             fileExport.Type = fileExportCube.GetStringValue("Type");
             fileExport.DestinationInformation = fileExportCube.GetStringValue("DestinationInformation");
             fileExport.SourceInformation = fileExportCube.GetStringValue("SourceInformation");
@@ -91,7 +93,7 @@ namespace Gateway.Web.Services
             var query = $@"Exports/Fetch/{date.ToString("yyyy-MM-dd")}";
             var cube = FetchCube(query);
 
-            IList<ExportCRONGroup> result = ConvertCubeToExportCRONGroup(cube);
+            IList<ExportCRONGroup> result = ConvertCubeToExportCRONGroup(cube).OrderBy(x => x.GroupName).ToList();
 
             return result;
         }
@@ -99,6 +101,19 @@ namespace Gateway.Web.Services
         public ExportResponse RunExport(long id, DateTime time, bool force)
         {
             var query = $"Export/Run/{id}/{time.ToString("yyyy-MM-dd")}";
+            if (force)
+                query = $"{query}?force={force}";
+            var response = _gateway.Put<string, string>(ControllerName, query, string.Empty).Result;
+
+            if (!response.Successfull)
+                return new ExportResponse() { Message = response.Message, Successful = false };
+            else
+                return new ExportResponse() { Message = response.Message, Successful = false };
+        }
+
+        public ExportResponse RunExport(string groupName, DateTime time, bool force)
+        {
+            var query = $"Export/RunByGroup/{groupName}/{time.ToString("yyyy-MM-dd")}";
             if (force)
                 query = $"{query}?force={force}";
             var response = _gateway.Put<string, string>(ControllerName, query, string.Empty).Result;
@@ -131,7 +146,8 @@ namespace Gateway.Web.Services
                 Name = update.Name,
                 StartDateTime = update.StartDateTime,
                 DestinationInfo = update.DestinationInfo,
-                SourceInfo = update.SourceInfo
+                SourceInfo = update.SourceInfo,
+                GroupName = update.GroupName
             };
 
             var response = _gateway.Put<string, string>(ControllerName, query, dto.Serialize()).Result;
@@ -149,6 +165,7 @@ namespace Gateway.Web.Services
             {
                 var export = new FetchExportCube()
                 {
+                    GroupName = row["GroupName"]?.ToString(),
                     Message = row["Message"]?.ToString(),
                     Name = row["Name"]?.ToString(),
                     IsDisabled = row["IsDisabled"] != null ? bool.Parse(row["IsDisabled"].ToString()) : false,
@@ -197,6 +214,7 @@ namespace Gateway.Web.Services
                     ExportId = exportCube.ExportId,
                     Schedule = exportCube.Schedule,
                     Name = exportCube.Name,
+                    GroupName = exportCube.GroupName,
                     Status = GetStatus(exportCube.FileExportsHistoryId, exportCube.IsSuccessful, exportCube.EndTime),
                     IsDisabled = exportCube.IsDisabled,
                     Type = exportCube.Type,

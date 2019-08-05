@@ -16,6 +16,8 @@ namespace Gateway.Web.Services
 
         ExportResponse RunExport(long id, DateTime time, bool force);
 
+        ExportResponse RunExport(string groupName, DateTime time, bool force);
+
         ExportResponse RunScheduleExport(DateTime time);
     }
 }

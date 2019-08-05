@@ -5,6 +5,8 @@ namespace Gateway.Web.Models.Export
     public class FileExportViewModel
     {
         public string Name { get; set; }
+
+        public string GroupName { get; set; }
         public string Type { get; set; }
 
         public string Schedule { get; set; }

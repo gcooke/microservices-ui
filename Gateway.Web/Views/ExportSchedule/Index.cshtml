@@ -23,7 +23,21 @@
     .status-Processing {
         color: orange;
     }
+    .child
+    {
+        display: none;
+    }
 </style>
+<script type="text/javascript">
+    function ToggleGroup(groupName) {
+        var chevronDown = groupName + "-chevronDown";
+         
+        var chevronUp = groupName + "-chevronLeft";
+        $("tr[name^='" + groupName + "']").toggleClass("child");
+        $("span[name^='" + chevronDown + "']").toggleClass("child");
+        $("span[name^='" + chevronUp + "']").toggleClass("child");
+    }
+</script>
 <div id="page-content-wrapper">
     <div class="hero-unit">
 
@@ -71,78 +85,135 @@
                                 <div class="row" style="padding-left: 15px; padding-right: 15px;">
                                     @if (batch.FileExports.Any())
                                     {
-                                        <table class="batch-table" style="width: 100%; border: none !important;">
-                                            @foreach (var item in batch.FileExports)
-                                            {
+                                        var groupName = "";
+                                        var child = "";
+                                    <table class="batch-table" style="width: 100%; border: none !important;">
+                                        @foreach (var item in batch.FileExports)
+                                        {
                                             var taskUrl = @Url.Content("~/ExportSchedule/Rerun/" + @item.ExportId + "/" + @Model.BusinessDate.ToString("yyyy-MM-dd") + "/false");
                                             var taskUrlForce = @Url.Content("~/ExportSchedule/Rerun/" + @item.ExportId + "/" + @Model.BusinessDate.ToString("yyyy-MM-dd") + "/true");
-                                            <tr title="@item.Name" class="batch-schedule-container" style="padding: 20px !important;">
-                                                <td style="width: 40%;">
-                                                    @if (item.Type.ToLower() == "request")
-                                                    {
-                                                        <span class="label label-danger" style="padding: 2px !important;">@item.Type</span>
-                                                    }
-                                                    else if (item.Type.ToLower() == "executable")
-                                                    {
-                                                        <span class="label label-warning" style="padding: 2px !important;">@item.Type</span>
-                                                    }
-                                                    else
-                                                    {
-                                                        <span class="label label-info" style="padding: 2px !important;">@item.Type</span>
-                                                    }
-                                                    <span class="m-l-5" style="margin-top: 2px">
-                                                        @item.Name.Truncate(45)
-                                                    </span>
-                                                </td>
-                                                <td style="width: 20%;">
-                                                    <span>&nbsp;</span>
-                                                </td>
-                                                <td style="width: 20%;">
-                                                    @if (@item.Status == "Succeeded")
-                                                    {
-                                                        <span class="glyphicon glyphicon-ok status-@item.Status.Replace(' ', '-')"></span>
-                                                    }
-                                                    else if (@item.Status == "Failed")
-                                                    {
-                                                        <span class="glyphicon glyphicon-remove status-@item.Status.Replace(' ', '-')"></span>
-                                                    }
-                                                    else { 
+                                         
+                                            var taskUrlByGroup = @Url.Content("~/ExportSchedule/RerunByGroup/" + @item.GroupName + "/" + @Model.BusinessDate.ToString("yyyy-MM-dd") + "/false");
+                                            var taskUrlForceByGroup = @Url.Content("~/ExportSchedule/RerunByGroup/" + @item.GroupName + "/" + @Model.BusinessDate.ToString("yyyy-MM-dd") + "/true");
+
+                                            child = groupName != item.GroupName ? "" : "child";
+                                            groupName = item.GroupName;
+
+
+
+                                        <tr title="@item.Name"  class="@child batch-schedule-container" style="padding: 20px !important;">
+                                            <td style="width: 1%;">
+                                                <span onclick="ToggleGroup('@item.GroupName')" style="color:grey;font-size:smaller;cursor: pointer" name='@item.GroupName-chevronDown'   class="child glyphicon glyphicon-chevron-down"></span>
+                                                <span onclick="ToggleGroup('@item.GroupName')" style="color:grey;font-size:smaller;cursor: pointer" name='@item.GroupName-chevronLeft' class="glyphicon glyphicon-chevron-left"></span>
+                                            </td>
+                                            <td style="width: 39%;">
+                                                <span class="m-l-5" style="margin-top: 2px">
+                                                    @item.GroupName
+                                                </span>
+                                            </td>
+                                            <td style="width: 20%;">
+                                                <span>&nbsp;</span>
+                                            </td>
+                                            <td style="width: 20%;">
+                                                @if (@item.Status == "Succeeded")
+                                                {
+                                                    <span class="glyphicon glyphicon-ok status-@item.Status.Replace(' ', '-')"></span>
+                                                }
+                                                else if (@item.Status == "Failed")
+                                                {
+                                                    <span class="glyphicon glyphicon-remove status-@item.Status.Replace(' ', '-')"></span>
+                                                }
+                                                else
+                                                {
                                                     <span class="glyphicon glyphicon-hourglass status-@item.Status.Replace(' ', '-')"></span>
-                                                    }
-                                                    <span class="status-@item.Status.Replace(' ', '-')">@item.Status</span>
+                                                }
+                                                <span class="status-@item.Status.Replace(' ', '-')">@item.Status</span>
 
-                                                </td>
-                                                <td style="width: 10%;">
-                                                    <div class="btn-group btn-group-xs pull-right"> 
-                                                        <button type="button" class="btn btn-default" style="margin: 0 !important" onclick="rerunTask('@taskUrl')" id="run-@item.ExportId">Rerun</button>
-                                                        <button type="button" class="btn btn-default dropdown-toggle" style="margin: 0 !important; border-left: 0 !important" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            ...
-                                                        </button>
-                                                        <ul class="dropdown-menu">
-                                                            <li>
-                                                                <a target="_blank" onclick="rerunTask('@taskUrlForce')" >Force Run</a>
-                                                            </li>
-                                                                <li>
-                                                                    <a href="~/ExportSchedule/Update?Id=@item.ExportId&copy=true" >Save as...</a>
-                                                                </li>
-                                                                <li>
-                                                                    <a target="_blank"  >View History</a>
-                                                                </li>
-                                                           
-                                                            <li role="separator" class="divider"></li>
-                                                            <li>
-                                                                <a href="~/ExportSchedule/Update?Id=@item.ExportId&copy=false" >
-                                                                    Edit
-                                                                </a>
-                                                            </li>
+                                            </td>
+                                            <td style="width: 10%;">
+                                                <div class="btn-group btn-group-xs pull-right">
+                                                    <button type="button" class="btn btn-default" style="margin: 0 !important" onclick="rerunTask('@taskUrlByGroup')" id="run-@item.ExportId">Rerun All</button>
+                                                    <button type="button" class="btn btn-default dropdown-toggle" style="margin: 0 !important; border-left: 0 !important" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        ...
+                                                    </button>
+                                                    <ul class="dropdown-menu">
+                                                        <li>
+                                                            <a target="_blank" onclick="rerunTask('@taskUrlForceByGroup')">Force Run</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
 
-                                                        </ul>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            }
-                               
-                                        </table>
+                                        <tr title="@item.Name" name="@item.GroupName" class="child batch-schedule-container" style="padding: 20px !important;">
+                                            <td style="width: 1%;">&nbsp;</td>
+                                            <td style="width: 39%;">
+                                                @if (item.Type.ToLower() == "request")
+                                                {
+                                                    <span class="label label-danger" style="padding: 2px !important;">@item.Type</span>
+                                                }
+                                                else if (item.Type.ToLower() == "executable")
+                                                {
+                                                    <span class="label label-warning" style="padding: 2px !important;">@item.Type</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="label label-info" style="padding: 2px !important;">@item.Type</span>
+                                                }
+                                                <span class="m-l-5" style="margin-top: 2px">
+                                                    @item.Name.Truncate(45)
+                                                </span>
+                                            </td>
+                                            <td style="width: 20%;">
+                                                <span>&nbsp;</span>
+                                            </td>
+                                            <td style="width: 20%;">
+                                                @if (@item.Status == "Succeeded")
+                                                {
+                                                    <span class="glyphicon glyphicon-ok status-@item.Status.Replace(' ', '-')"></span>
+                                                }
+                                                else if (@item.Status == "Failed")
+                                                {
+                                                    <span class="glyphicon glyphicon-remove status-@item.Status.Replace(' ', '-')"></span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="glyphicon glyphicon-hourglass status-@item.Status.Replace(' ', '-')"></span>
+                                                }
+                                                <span class="status-@item.Status.Replace(' ', '-')">@item.Status</span>
+
+                                            </td>
+                                            <td style="width: 10%;">
+                                                <div class="btn-group btn-group-xs pull-right">
+                                                    <button type="button" class="btn btn-default" style="margin: 0 !important" onclick="rerunTask('@taskUrl')" id="run-@item.ExportId">Rerun</button>
+                                                    <button type="button" class="btn btn-default dropdown-toggle" style="margin: 0 !important; border-left: 0 !important" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        ...
+                                                    </button>
+                                                    <ul class="dropdown-menu">
+                                                        <li>
+                                                            <a target="_blank" onclick="rerunTask('@taskUrlForce')">Force Run</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="~/ExportSchedule/Update?Id=@item.ExportId&copy=true">Save as...</a>
+                                                        </li>
+                                                        <li>
+                                                            <a target="_blank">View History</a>
+                                                        </li>
+
+                                                        <li role="separator" class="divider"></li>
+                                                        <li>
+                                                            <a href="~/ExportSchedule/Update?Id=@item.ExportId&copy=false">
+                                                                Edit
+                                                            </a>
+                                                        </li>
+
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        }
+
+                                    </table>
                                     }
                                     </div>
                             </div>

@@ -11,6 +11,7 @@
         public string SuccessEmailAddress { get; set; }
         public string FailureEmailAddress { get; set; }
         public string Name { get; set; }
+        public string GroupName { get; set; }
         public bool IsDeleted { get; set; }
         public System.DateTime StartDateTime { get; set; }
     }
