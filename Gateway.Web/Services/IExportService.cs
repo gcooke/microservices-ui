@@ -10,6 +10,8 @@ namespace Gateway.Web.Services
 
         FileExport FetchExport(long id);
 
+        IList<FileExportsHistory> FetchExportsHistory(long id, DateTime date);
+
         ExportSchedule CreateExport(ExportSchedule insert);
 
         void UpdateExport(ExportSchedule update);

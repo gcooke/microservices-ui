@@ -93,9 +93,43 @@ namespace Gateway.Web.Services
             var query = $@"Exports/Fetch/{date.ToString("yyyy-MM-dd")}";
             var cube = FetchCube(query);
 
-            IList<ExportCRONGroup> result = ConvertCubeToExportCRONGroup(cube).OrderBy(x => x.GroupName).ToList();
+            var result = ConvertCubeToExportCRONGroup(cube).OrderBy(x => x.GroupName).ToList();
 
             return result;
+        }
+
+        public IList<FileExportsHistory> FetchExportsHistory(long id, DateTime date)
+        {
+            var query = $"Exports/Fetch/History/{id}/{date.ToString("yyyy-MM-dd")}";
+            var response = FetchCube(query);
+
+            var result = ConvertCubeToFileExportsHistory(response);
+
+            return result;
+        }
+
+        private IList<FileExportsHistory> ConvertCubeToFileExportsHistory(ICube response)
+        {
+            var historyList = new List<FileExportsHistory>();
+            foreach (var item in response.GetRows())
+            {
+                var history = new FileExportsHistory();
+
+                history.EmailSent = item.GetValue<bool>("EmailSent").Value;
+                history.IsForced = item.GetValue<bool>("IsForced").Value;
+                history.Message = item.GetStringValue("Message");
+                history.StartTime = item.GetValue<DateTime>("StartTime").Value;
+                history.TriggeredBy = item.GetStringValue("TriggeredBy");
+                history.EndTime = item.GetValue<DateTime>("EndTime");
+                history.ExportId = item.GetValue<long>("ExportId").Value;
+                history.Id = item.GetValue<long>("Id").Value;
+                history.ValuationDate = item.GetValue<DateTime>("ValuationDate").Value;
+                history.IsSuccessful = item.GetValue<bool>("IsSuccessful").Value;
+
+                historyList.Add(history);
+            }
+
+            return historyList;
         }
 
         public ExportResponse RunExport(long id, DateTime time, bool force)
@@ -113,7 +147,7 @@ namespace Gateway.Web.Services
 
         public ExportResponse RunExport(string groupName, DateTime time, bool force)
         {
-            var query = $"Export/RunByGroup/{groupName}/{time.ToString("yyyy-MM-dd")}";
+            var query = $"Export/Run/ByGroup/{groupName}/{time.ToString("yyyy-MM-dd")}";
             if (force)
                 query = $"{query}?force={force}";
             var response = _gateway.Put<string, string>(ControllerName, query, string.Empty).Result;
