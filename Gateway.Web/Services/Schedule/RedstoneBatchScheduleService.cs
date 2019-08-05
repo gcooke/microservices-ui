@@ -58,6 +58,41 @@ namespace Gateway.Web.Services.Schedule
 
                     jobKeys.Add(key);
 
+                    // ************************ NEW CODE ************************
+                    RiskBatchSchedule riskBatchSchedule = null;
+                    if (entity.ScheduleId != 0)
+                    {
+                        riskBatchSchedule =
+                            db.RiskBatchSchedules.FirstOrDefault(s =>
+                                s.RiskBatchScheduleId == entity.RiskBatchScheduleId);
+
+                        AssignSchedule(entity, riskBatchSchedule, parameters, tradeSourceParameter, config.ConfigurationId);
+                    }
+                    else
+                    {
+                        ////////entity = new Database.Schedule() { ScheduleKey = key };
+
+                        ////////riskBatchSchedule = new RiskBatchSchedule();
+
+                        ////////AssignSchedule(entity, riskBatchSchedule, parameters, tradeSourceParameter, config.ConfigurationId);
+
+                        ////////db.RiskBatchSchedules.Add(riskBatchSchedule);
+
+                        ////////db.SaveChanges();
+
+                        ////////entity.RiskBatchSchedule = riskBatchSchedule;
+
+                        ////////schedules.Add(entity);
+                    }
+
+                    
+
+                    if (parameters.ModifyParent) HandleParentSchedule(entity, parameters);
+                    if (parameters.ModifyChildren) HandleChildSchedules(entity, parameters);
+                    // ********************** END NEW CODE  *******************
+
+                    /* ******************************** OLD CODE ******************************
+
                     var riskBatchSchedule = GetRiskBatchSchedule(db, config.ConfigurationId, tradeSourceParameter, serializedProperties) ?? new RiskBatchSchedule();
                     if (riskBatchSchedule.RiskBatchScheduleId == 0 && entity.ScheduleId != 0)
                         entity = new Database.Schedule() { ScheduleKey = key };
@@ -74,6 +109,8 @@ namespace Gateway.Web.Services.Schedule
                     }
 
                     schedules.Add(entity);
+
+                      ********************************* END OLD CODE **************************** */
                 }
             }
 
