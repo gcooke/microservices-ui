@@ -58,7 +58,6 @@ namespace Gateway.Web.Services.Schedule
 
                     jobKeys.Add(key);
 
-                    // ************************ NEW CODE ************************
                     RiskBatchSchedule riskBatchSchedule = null;
                     if (entity.ScheduleId != 0)
                     {
@@ -67,50 +66,29 @@ namespace Gateway.Web.Services.Schedule
                                 s.RiskBatchScheduleId == entity.RiskBatchScheduleId);
 
                         AssignSchedule(entity, riskBatchSchedule, parameters, tradeSourceParameter, config.ConfigurationId);
+
+                        if (parameters.ModifyParent) HandleParentSchedule(entity, parameters);
+
+                        if (parameters.ModifyChildren) HandleChildSchedules(entity, parameters);
                     }
                     else
                     {
-                        ////////entity = new Database.Schedule() { ScheduleKey = key };
+                        entity.ScheduleKey = key;
 
-                        ////////riskBatchSchedule = new RiskBatchSchedule();
+                        riskBatchSchedule = new RiskBatchSchedule();
 
-                        ////////AssignSchedule(entity, riskBatchSchedule, parameters, tradeSourceParameter, config.ConfigurationId);
+                        AssignSchedule(entity, riskBatchSchedule, parameters, tradeSourceParameter, config.ConfigurationId);
 
-                        ////////db.RiskBatchSchedules.Add(riskBatchSchedule);
+                        if (parameters.ModifyParent) HandleParentSchedule(entity, parameters);
 
-                        ////////db.SaveChanges();
+                        if (parameters.ModifyChildren) HandleChildSchedules(entity, parameters);
 
-                        ////////entity.RiskBatchSchedule = riskBatchSchedule;
+                        entity.RiskBatchSchedule = riskBatchSchedule;
 
-                        ////////schedules.Add(entity);
-                    }
-
-                    
-
-                    if (parameters.ModifyParent) HandleParentSchedule(entity, parameters);
-                    if (parameters.ModifyChildren) HandleChildSchedules(entity, parameters);
-                    // ********************** END NEW CODE  *******************
-
-                    /* ******************************** OLD CODE ******************************
-
-                    var riskBatchSchedule = GetRiskBatchSchedule(db, config.ConfigurationId, tradeSourceParameter, serializedProperties) ?? new RiskBatchSchedule();
-                    if (riskBatchSchedule.RiskBatchScheduleId == 0 && entity.ScheduleId != 0)
-                        entity = new Database.Schedule() { ScheduleKey = key };
-
-                    AssignSchedule(entity, riskBatchSchedule, parameters, tradeSourceParameter, config.ConfigurationId);
-
-                    if (parameters.ModifyParent) HandleParentSchedule(entity, parameters);
-                    if (parameters.ModifyChildren) HandleChildSchedules(entity, parameters);
-
-                    if (riskBatchSchedule.RiskBatchScheduleId == 0)
-                    {
-                        riskBatchSchedule.Schedules.Add(entity);
-                        db.RiskBatchSchedules.Add(riskBatchSchedule);
+                        db.Schedules.Add(entity);
                     }
 
                     schedules.Add(entity);
-
-                      ********************************* END OLD CODE **************************** */
                 }
             }
 
