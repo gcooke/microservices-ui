@@ -6,6 +6,7 @@ namespace Gateway.Web.Models.Export
     {
         public long? Id { get; set; }
         public string Name { get; set; }
+        public string GroupName { get; set; }
         public string Schedule { get; set; }
         public DateTime StartDateTime { get; set; }
         public CubeToCsvSourceInformation SourceInfo { get; set; }

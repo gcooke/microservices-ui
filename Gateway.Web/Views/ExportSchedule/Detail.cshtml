@@ -1,0 +1,82 @@
+﻿@model Gateway.Web.Models.Export.ExportDetailViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "Configuration";
+    ViewBag.Current = "Export Schedule";
+}
+@{ Html.RenderPartial("_ExportConfigNav"); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+
+        @*<div class="row">
+            <div class="col-sm-6">
+                <h3 class="text-lowercase">
+                    Schedule <small id="businessDate" data-date="@Model.BusinessDate.ToString("yyyy-MM-dd")">@Model.BusinessDate.ToString("yyyy-MM-dd")</small>
+                </h3>
+            </div> 
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div id="paginator"  data-current-date="@Model.BusinessDate.ToString("yyyy-MM-dd")"></div>
+            </div>
+        </div>*@
+
+
+        <table style="min-width: 200px; padding: 10px">
+            <tr>
+                <td style="width: 150px">
+                    <h4>Summary</h4>
+                </td>
+                <td><a href="~/ExportSchedule/?businessDate=@Model.BusinessDate.ToString("yyyy-MM-dd")"><div class="h3"> <span class="glyphicon glyphicon-arrow-left" title="Back" style="size:20px; color: red"></div></span></a></td>
+            </tr>
+            <tr>
+                <td style="width: 150px">
+                    &nbsp;&nbsp;Nam
+                </td>
+                <td>@Model.FileExport.Name</td>
+            </tr>
+            <tr>
+                <td style="width: 150px">
+                    &nbsp;&nbsp;Type
+                </td>
+                <td>@Model.FileExport.Type</td>
+            </tr>
+        </table>
+        <div id="report-content" style="margin-top: 10px;">
+            <div>
+                <table class="datatable table report-table" id="searchable-table" style="width: 100%; white-space: nowrap;">
+                    <thead>
+                    <tr>
+                        <td class="table-header" style="width: 140px;">IsSuccessful</td>
+                        <td class="table-header" style="width: 50px;">StartTime</td>
+                        <td class="table-header" style="width: 140px;">IsForced</td>
+                   
+                        <td class="table-header" style="width: 140px;">TriggeredBy</td>
+                        <td class="table-header" style="width: 50px;">EmailSent</td>
+                        <td class="table-header" style="width: 280px;">Message</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.FileExportsHistory)
+                        {
+                            <tr class="report-table-detail-row">
+                                <td style="text-align: center; padding-left: 5px;text-align:left">@item.IsSuccessful</td>
+                                <td style="text-align: center; padding-left: 5px;text-align:left">@item.StartTime</td>
+                                <td style="text-align: center; padding-left: 5px">@item.IsForced</td>
+                                <td style="text-align: center; padding-left: 5px;text-align:left">@item.TriggeredBy</td>
+                                <td style="text-align: center; padding-left: 5px;">@item.EmailSent</td>
+                                <td style="text-align: center; padding-left: 5px;">@item.Message</td>
+                             </tr>
+
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+</div>

@@ -25,6 +25,9 @@ namespace Gateway.Web.Models.Export
         [Display(Name = "Export Name")]
         public string Name { get; set; }
 
+        [Display(Name = "Group Name")]
+        public string GroupName { get; set; }
+
         public long ExportId { get; set; }
 
         [Display(Name = "Type")]

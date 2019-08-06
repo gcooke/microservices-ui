@@ -39,6 +39,22 @@ namespace Gateway.Web.Controllers
         }
 
         [HttpGet]
+        [Route("Detail")]
+        public ActionResult Detail(DateTime businessDate, long id)
+        {
+            var model = new ExportDetailViewModel();
+
+            model.BusinessDate = businessDate;
+            var fileExport = _exportService.FetchExport(id);
+            var history = _exportService.FetchExportsHistory(id, businessDate);
+
+            model.FileExport = fileExport;
+            model.FileExportsHistory = history;
+
+            return View(model);
+        }
+
+        [HttpGet]
         [Route("Update")]
         public ActionResult Update(long? id = null, bool copy = false)
         {
@@ -86,6 +102,13 @@ namespace Gateway.Web.Controllers
             _exportService.RunExport(id, businessDate, force);
         }
 
+        [HttpGet]
+        [Route("RerunByGroup/{groupName}/{businessDate}/{force}")]
+        public void RerunScheduleByGroup(string groupName, DateTime businessDate, bool force)
+        {
+            _exportService.RunExport(groupName, businessDate, force);
+        }
+
         [HttpPost]
         [Route("CreateOrUpdate")]
         public ActionResult CreateOrUpdate(ExportUpdateViewModel model)
@@ -109,6 +132,7 @@ namespace Gateway.Web.Controllers
                 DestinationInfo = Mapper.Map<CubeToCsvDestinationInformation>(model.DestinationInformation),
                 Schedule = model.Schedule,
                 Name = model.Name,
+                GroupName = model.GroupName,
                 IsDisabled = model.IsDisabled,
                 Type = (ExportType)Enum.Parse(typeof(ExportType), model.Type),
                 StartDateTime = model.StartDateTime,
