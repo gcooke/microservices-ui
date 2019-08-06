@@ -64,29 +64,23 @@ namespace Gateway.Web.Services.Schedule
                         riskBatchSchedule =
                             db.RiskBatchSchedules.FirstOrDefault(s =>
                                 s.RiskBatchScheduleId == entity.RiskBatchScheduleId);
-
-                        AssignSchedule(entity, riskBatchSchedule, parameters, tradeSourceParameter, config.ConfigurationId);
-
-                        if (parameters.ModifyParent) HandleParentSchedule(entity, parameters);
-
-                        if (parameters.ModifyChildren) HandleChildSchedules(entity, parameters);
                     }
                     else
                     {
                         entity.ScheduleKey = key;
 
                         riskBatchSchedule = new RiskBatchSchedule();
-
-                        AssignSchedule(entity, riskBatchSchedule, parameters, tradeSourceParameter, config.ConfigurationId);
-
-                        if (parameters.ModifyParent) HandleParentSchedule(entity, parameters);
-
-                        if (parameters.ModifyChildren) HandleChildSchedules(entity, parameters);
-
+                        
                         entity.RiskBatchSchedule = riskBatchSchedule;
 
                         db.Schedules.Add(entity);
                     }
+
+                    AssignSchedule(entity, riskBatchSchedule, parameters, tradeSourceParameter, config.ConfigurationId);
+
+                    if (parameters.ModifyParent) HandleParentSchedule(entity, parameters);
+
+                    if (parameters.ModifyChildren) HandleChildSchedules(entity, parameters);
 
                     schedules.Add(entity);
                 }
