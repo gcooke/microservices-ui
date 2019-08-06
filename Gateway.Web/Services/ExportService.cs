@@ -15,6 +15,11 @@ namespace Gateway.Web.Services
         private readonly ILogger _logger;
         private readonly string ControllerName = "Export";
 
+        private readonly string _succeeded = "Succeeded";
+        private readonly string _failed = "Failed";
+        private readonly string _notStarted = "Not Started";
+        private readonly string _processing = "Processing";
+
         public ExportService(IGateway gateway, ILoggingService loggingService)
         {
             _gateway = gateway;
@@ -228,7 +233,7 @@ namespace Gateway.Web.Services
         {
             var groups = new List<ExportCRONGroup>();
 
-            foreach (var exportCube in exportCubes.OrderBy(x => x.Schedule))
+            foreach (var exportCube in exportCubes.OrderBy(x => x.Schedule).ThenBy(x => x.GroupName))
             {
                 var group = groups.FirstOrDefault(x => x.Schedule == exportCube.Schedule);
                 if (group == null)
@@ -242,6 +247,8 @@ namespace Gateway.Web.Services
                     group = groups.FirstOrDefault(x => x.Schedule == exportCube.Schedule);
                 }
 
+                var status = GetStatus(exportCube.FileExportsHistoryId, exportCube.IsSuccessful, exportCube.EndTime);
+
                 group.FileExports.Add(new FileExportViewModel()
                 {
                     FileExportsHistoryId = exportCube.FileExportsHistoryId,
@@ -249,28 +256,67 @@ namespace Gateway.Web.Services
                     Schedule = exportCube.Schedule,
                     Name = exportCube.Name,
                     GroupName = exportCube.GroupName,
-                    Status = GetStatus(exportCube.FileExportsHistoryId, exportCube.IsSuccessful, exportCube.EndTime),
+                    Status = status,
                     IsDisabled = exportCube.IsDisabled,
                     Type = exportCube.Type,
                     StartDateTime = exportCube.StartDateTime,
                     EndTime = exportCube.EndTime,
                     StartTime = exportCube.EndTime
                 });
-                ;
             }
 
+            GetGroupNameStatuses(groups);
+
             return groups;
+        }
+
+        private void GetGroupNameStatuses(List<ExportCRONGroup> groups)
+        {
+            foreach (var group in groups)
+            {
+                var grouping = @group.FileExports.Select(x => x.GroupName).Distinct();
+
+                foreach (var item in grouping)
+                {
+                    var groupStatus = string.Empty;
+                    if (@group.FileExports.FirstOrDefault(x => x.GroupName == item && x.Status == _failed) != null)
+                    {
+                        @group.FileExports.Where(w => w.GroupName == item).ToList().ForEach(s => s.GroupNameStatus = _failed);
+                        continue;
+                    }
+
+                    if (@group.FileExports.FirstOrDefault(x => x.GroupName == item && x.Status == _processing) != null)
+                    {
+                        @group.FileExports.Where(w => w.GroupName == item).ToList()
+                            .ForEach(s => s.GroupNameStatus = _processing);
+                        continue;
+                    }
+
+                    if (@group.FileExports.FirstOrDefault(x => x.GroupName == item && x.Status == _notStarted) != null)
+                    {
+                        @group.FileExports.Where(w => w.GroupName == item).ToList()
+                            .ForEach(s => s.GroupNameStatus = _notStarted);
+                        continue;
+                    }
+
+                    if (@group.FileExports.FirstOrDefault(x => x.GroupName == item && x.Status == _succeeded) != null)
+                    {
+                        @group.FileExports.Where(w => w.GroupName == item).ToList().ForEach(s => s.GroupNameStatus = _succeeded);
+                        continue;
+                    }
+                }
+            }
         }
 
         private string GetStatus(long fileExportsHistoryId, bool? isSuccessful, DateTime? endTime)
         {
             if (fileExportsHistoryId == 0)
-                return "Not Started";
+                return _notStarted;
 
             if (isSuccessful.HasValue)
-                return isSuccessful.Value ? "Succeeded" : "Failed";
+                return isSuccessful.Value ? _succeeded : _failed;
 
-            return "Processing";
+            return _processing;
         }
     }
 }

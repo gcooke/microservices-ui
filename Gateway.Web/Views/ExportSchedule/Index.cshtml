@@ -117,19 +117,19 @@
                                                 <span>&nbsp;</span>
                                             </td>
                                             <td style="width: 20%;">
-                                                @if (@item.Status == "Succeeded")
+                                                @if (@item.GroupNameStatus == "Succeeded")
                                                 {
-                                                    <span class="glyphicon glyphicon-ok status-@item.Status.Replace(' ', '-')"></span>
+                                                    <span class="glyphicon glyphicon-ok status-@item.GroupNameStatus.Replace(' ', '-')"></span>
                                                 }
-                                                else if (@item.Status == "Failed")
+                                                else if (@item.GroupNameStatus == "Failed")
                                                 {
-                                                    <span class="glyphicon glyphicon-remove status-@item.Status.Replace(' ', '-')"></span>
+                                                    <span class="glyphicon glyphicon-remove status-@item.GroupNameStatus.Replace(' ', '-')"></span>
                                                 }
                                                 else
                                                 {
-                                                    <span class="glyphicon glyphicon-hourglass status-@item.Status.Replace(' ', '-')"></span>
+                                                    <span class="glyphicon glyphicon-hourglass status-@item.GroupNameStatus.Replace(' ', '-')"></span>
                                                 }
-                                                <span class="status-@item.Status.Replace(' ', '-')">@item.Status</span>
+                                                <span class="status-@item.GroupNameStatus.Replace(' ', '-')">@item.GroupNameStatus</span>
 
                                             </td>
                                             <td style="width: 10%;">
