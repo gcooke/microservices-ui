@@ -108,7 +108,9 @@
                                             </td>
                                             <td style="width: 39%;">
                                                 <span class="m-l-5" style="margin-top: 2px">
-                                                    @item.GroupName
+                                                    <a target="_blank" onclick="ToggleGroup('@item.GroupName')">
+                                                        @item.GroupName
+                                                    </a>
                                                 </span>
                                             </td>
                                             <td style="width: 20%;">
@@ -161,8 +163,9 @@
                                                     <span class="label label-info" style="padding: 2px !important;">@item.Type</span>
                                                 }
                                                 <span class="m-l-5" style="margin-top: 2px">
-                                                    <a href="~/ExportSchedule/Detail/?BusinessDate=@Model.BusinessDate.ToString("yyyy-MM-dd")&Id=@item.ExportId"></a>
-                                                    @item.Name.Truncate(45)
+                                                    <a href="~/ExportSchedule/Detail/?BusinessDate=@Model.BusinessDate.ToString("yyyy-MM-dd")&Id=@item.ExportId">
+                                                        @item.Name.Truncate(45)
+                                                    </a>
                                                 </span>
                                             </td>
                                             <td style="width: 20%;">

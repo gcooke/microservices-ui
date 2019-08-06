@@ -40,7 +40,7 @@ namespace Gateway.Web.Controllers
 
         [HttpGet]
         [Route("Detail")]
-        public ActionResult Detail(long? id = null, DateTime? businessDate)
+        public ActionResult Detail(DateTime? businessDate, long? id = null)
         {
             var model = new ExportDetailViewModel();
             if (id.HasValue && businessDate.HasValue)
