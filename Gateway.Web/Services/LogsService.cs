@@ -197,6 +197,10 @@ namespace Gateway.Web.Services
                         item.Content = data;
                         result.Add(item);
                     }
+                    if (found)
+                    {
+                        break;
+                    }
                 }
             }
             catch (Exception ex)
