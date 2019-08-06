@@ -189,16 +189,15 @@ namespace Gateway.Web.Services
                 var isRelevant = false;
                 foreach (var file in GetRelevantControllerLogFileNames(location))
                 {
-                    var item = new Log($"{location.Controller} logs");
-                    item.Location = file;
-                    item.Content = GetControllerLogRelevantContent(file, correlationId, ref isRelevant);
-                    if (!string.IsNullOrEmpty(item.Content))
+                    (string data, bool found) = GetControllerLogRelevantContent(file, correlationId, ref isRelevant);
+                    if (found && !string.IsNullOrEmpty(data))
+                    {
+                        var item = new Log($"{location.Controller} logs");
+                        item.Location = file;
+                        item.Content = data;
                         result.Add(item);
+                    }
                 }
-
-                // only take last result
-                while (result.Count > 1)
-                    result.RemoveAt(0);
             }
             catch (Exception ex)
             {
@@ -211,8 +210,9 @@ namespace Gateway.Web.Services
             return result;
         }
 
-        private string GetControllerLogRelevantContent(string file, string correlationId, ref bool isRelevant)
+        private (string logData, bool found) GetControllerLogRelevantContent(string file, string correlationId, ref bool isRelevant)
         {
+            bool found = false;
             var startLine = "Processing Request " + correlationId;
             var endLine = "Completed request: " + correlationId;
 
@@ -233,7 +233,8 @@ namespace Gateway.Web.Services
                             // Check for end
                             if (line != null && line.IndexOf(endLine, StringComparison.CurrentCultureIgnoreCase) >= 0)
                             {
-                                isRelevant = false;
+                                isRelevant = true;
+                                break;
                             }
                         }
                         else
@@ -242,6 +243,7 @@ namespace Gateway.Web.Services
                             if (line != null && line.IndexOf(startLine, StringComparison.CurrentCultureIgnoreCase) >= 0)
                             {
                                 isRelevant = true;
+                                found = true;
                                 lines.Add(line);
                             }
                         }
@@ -263,7 +265,7 @@ namespace Gateway.Web.Services
                 lines.Insert(0, "Only last 200 lines shown...");
                 lines.Insert(1, "");
             }
-            return string.Join("<br/>", lines);
+            return (string.Join("<br/>", lines), found);
         }
 
         private string GetGatewayLogRelevantContent(string file, string correlationId)
