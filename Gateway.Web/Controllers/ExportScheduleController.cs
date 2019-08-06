@@ -40,18 +40,16 @@ namespace Gateway.Web.Controllers
 
         [HttpGet]
         [Route("Detail")]
-        public ActionResult Detail(DateTime? businessDate, long? id = null)
+        public ActionResult Detail(DateTime businessDate, long id)
         {
             var model = new ExportDetailViewModel();
-            if (id.HasValue && businessDate.HasValue)
-            {
-                model.BusinessDate = businessDate.Value;
-                var fileExport = _exportService.FetchExport(id.Value);
-                var history = _exportService.FetchExportsHistory(id.Value, businessDate.Value);
 
-                model.FileExport = fileExport;
-                model.FileExportsHistory = history;
-            }
+            model.BusinessDate = businessDate;
+            var fileExport = _exportService.FetchExport(id);
+            var history = _exportService.FetchExportsHistory(id, businessDate);
+
+            model.FileExport = fileExport;
+            model.FileExportsHistory = history;
 
             return View(model);
         }

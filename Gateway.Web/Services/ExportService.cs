@@ -142,7 +142,7 @@ namespace Gateway.Web.Services
             if (!response.Successfull)
                 return new ExportResponse() { Message = response.Message, Successful = false };
             else
-                return new ExportResponse() { Message = response.Message, Successful = false };
+                return new ExportResponse() { Message = response.Message, Successful = true };
         }
 
         public ExportResponse RunExport(string groupName, DateTime time, bool force)
@@ -155,7 +155,7 @@ namespace Gateway.Web.Services
             if (!response.Successfull)
                 return new ExportResponse() { Message = response.Message, Successful = false };
             else
-                return new ExportResponse() { Message = response.Message, Successful = false };
+                return new ExportResponse() { Message = response.Message, Successful = true };
         }
 
         public ExportResponse RunScheduleExport(DateTime time)
@@ -166,7 +166,7 @@ namespace Gateway.Web.Services
             if (!response.Successfull)
                 return new ExportResponse() { Message = response.Message, Successful = false };
             else
-                return new ExportResponse() { Message = response.Message, Successful = false };
+                return new ExportResponse() { Message = response.Message, Successful = true };
         }
 
         public void UpdateExport(ExportSchedule update)
