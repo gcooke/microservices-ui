@@ -74,8 +74,8 @@ namespace Gateway.Web
 
             // Add handle error attribute and authorize attribute to entire site.
             GlobalFilters.Filters.Add(new HandleErrorAttribute());
-            GlobalFilters.Filters.Add(new RoleBasedAuthorizeAttribute());
-            GlobalFilters.Filters.Add(new GatewayAuthenticationFilter());
+            //GlobalFilters.Filters.Add(new RoleBasedAuthorizeAttribute());
+            //GlobalFilters.Filters.Add(new GatewayAuthenticationFilter());
 
             ModelBinders.Binders[typeof(ScheduleWebRequestModel)] = new ScheduleWebRequestModelBinder();
             ModelBinders.Binders[typeof(ScheduleBatchModel)] = new ScheduleBatchModelBinder();

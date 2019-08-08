@@ -19,7 +19,7 @@ using Gateway.Web.Models.Controllers;
 
 namespace Gateway.Web.Controllers
 {
-    [RoleBasedAuthorize(Roles = "Access")]
+    [Authorize(Roles = "Access")]
     public class HomeController : BaseController
     {
         private readonly IGatewayDatabaseService _dataService;
@@ -34,6 +34,8 @@ namespace Gateway.Web.Controllers
         [OutputCache(Duration = 60, VaryByParam = "none")]
         public async Task<ActionResult> Index(string sortOrder)
         {
+            var test = Request.LogonUserIdentity; 
+
             var controllers = _dataService.GetControllerNames();
             var model = new IndexModel();
             model.Controllers.AddRange(controllers.OrderBy(c => c));
