@@ -7,6 +7,7 @@ using Bagl.Cib.MIT.IoC.Service;
 using Bagl.Cib.MIT.Logging;
 using CommonServiceLocator;
 using Gateway.Web.Authorization;
+using Gateway.Web.Binders;
 using Gateway.Web.Controllers;
 using Gateway.Web.ModelBindersConverters;
 using Gateway.Web.Models.Export;
@@ -81,6 +82,7 @@ namespace Gateway.Web
             ModelBinders.Binders[typeof(ScheduleBatchModel)] = new ScheduleBatchModelBinder();
             ModelBinders.Binders[typeof(SourceInformationViewModel)] = new SourceInformationViewModelBinders();
             ModelBinders.Binders[typeof(DestinationInfoViewModel)] = new DestinationInformationViewModelBinders();
+            ModelBinders.Binders.Add(typeof(RequestedWorkers), new RequestWorkerModelBinder());
 
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);

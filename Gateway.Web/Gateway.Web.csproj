@@ -338,6 +338,7 @@
     <Compile Include="Authorization\GatewayAuthenticationFilter.cs" />
     <Compile Include="Authorization\HttpContainerProvider.cs" />
     <Compile Include="Authorization\RoleBasedAuthorizeAttribute.cs" />
+    <Compile Include="Binders\RequestWorkerModelBinder.cs" />
     <Compile Include="Controllers\DataFeedController.cs" />
     <Compile Include="Controllers\DataFeedsController.cs" />
     <Compile Include="Controllers\ExportScheduleController.cs" />
@@ -347,6 +348,7 @@
     <Compile Include="Controllers\BatchScheduleController.cs" />
     <Compile Include="Controllers\PdcController.cs" />
     <Compile Include="Controllers\RbhController.cs" />
+    <Compile Include="Controllers\RequestedWorkers.cs" />
     <Compile Include="Controllers\RequestScheduleController.cs" />
     <Compile Include="Database\BatchCommentDto.cs" />
     <Compile Include="Database\BatchHelper.cs" />

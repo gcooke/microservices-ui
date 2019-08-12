@@ -318,16 +318,12 @@ namespace Gateway.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> RequestWorkers(FormCollection collection)
+        public async Task<ActionResult> RequestWorkers([System.Web.Http.FromBody]RequestedWorkers requestedWorkers)
         {
             ModelState.Clear();
 
-            var controllerName = collection["_controllerName"];
-            var version = collection["_version"];
-            var instances = Convert.ToInt32(collection["_instances"]);
-
-            await _gateway.RequestWorkersAsync(controllerName, version, instances);
-            return Redirect($"~/Controller/Workers/{controllerName}");
+            await _gateway.RequestWorkersAsync(requestedWorkers);
+            return Redirect($"~/Controller/Workers/{requestedWorkers.ControllerName}");
         }
     }
 }
