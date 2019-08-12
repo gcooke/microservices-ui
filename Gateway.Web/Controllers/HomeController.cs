@@ -19,7 +19,7 @@ using Gateway.Web.Models.Controllers;
 
 namespace Gateway.Web.Controllers
 {
-    [Authorize(Roles = "Access")]
+    [RoleBasedAuthorize(Roles = "Access")]
     public class HomeController : BaseController
     {
         private readonly IGatewayDatabaseService _dataService;

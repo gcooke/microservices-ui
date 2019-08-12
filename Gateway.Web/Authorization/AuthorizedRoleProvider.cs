@@ -116,7 +116,7 @@ namespace Gateway.Web.Authorization
             }
 
             var authorize = container.Resolve<IAuthorizationProvider>();
-           // result.Username = authorize.GetClaims<string>(currenttoken, ClaimTypes.Username)?.FirstOrDefault();
+            result.Username = authorize.GetClaims<string>(currenttoken, ClaimTypes.Username)?.FirstOrDefault();
            // result.Roles = authorize.GetClaims<string>(currenttoken, ClaimTypes.Role) ?? new List<string>();
             return result;
         }
