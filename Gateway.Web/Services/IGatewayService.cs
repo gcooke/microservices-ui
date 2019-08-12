@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Bagl.Cib.MSF.ClientAPI.Model;
+using Gateway.Web.Controllers;
 using Gateway.Web.Models.AddIn;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Controllers;
@@ -206,7 +207,7 @@ namespace Gateway.Web.Services
 
         Task DeleteWorkerAsync(string controller, string version, string id);
 
-        Task RequestWorkersAsync(string controller, string version, int instances);
+        Task RequestWorkersAsync(RequestedWorkers requestedWorkers);
 
         Task ShutdownWorkersAsync(string controller);
 

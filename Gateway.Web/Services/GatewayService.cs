@@ -2,6 +2,7 @@
 using Bagl.Cib.MIT.Logging;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
 using Bagl.Cib.MSF.ClientAPI.Model;
+using Gateway.Web.Controllers;
 using Gateway.Web.Models.AddIn;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Controllers;
@@ -1223,10 +1224,10 @@ namespace Gateway.Web.Services
             }
         }
 
-        public async Task RequestWorkersAsync(string controller, string version, int instances)
+        public async Task RequestWorkersAsync(RequestedWorkers requestedWorkers)
         {
             var gateway = _gateways.FirstOrDefault();
-            var query = $"worker/requestworker/{controller}/{version}/{instances}";
+            var query = $"worker/requestworker/{requestedWorkers.ControllerName}/{requestedWorkers.Version}/{requestedWorkers.Priority}/{requestedWorkers.Instances}";
             var url = string.Format("https://{0}:{1}/{2}", gateway, _port, query);
 
             using (var client = new HttpClient(new HttpClientHandler
