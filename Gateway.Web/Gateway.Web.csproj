@@ -960,6 +960,7 @@
     <Content Include="Database\PnRFO.edmx.diagram">
       <DependentUpon>PnRFO.edmx</DependentUpon>
     </Content>
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\local.pubxml" />
     <None Include="Properties\PublishProfiles\remote.pubxml" />
     <Content Include="Views\Controller\_ControllerNav.cshtml" />

@@ -1,4 +1,5 @@
 ﻿using Absa.Cib.Authorization.Extensions;
+using Bagl.Cib.MIT.IoC;
 using Gateway.Web.Authorization;
 using Gateway.Web.Models;
 using System;
@@ -14,8 +15,12 @@ namespace Gateway.Web.Controllers
     public class AccountController : Controller
     {
         private string _autUrl = "http://localhost:59782";
+       
 
-
+        public AccountController(ISystemInformation information)
+        {
+            _autUrl = information.GetSetting<string>("AuthUrl");
+        }
 
 
         [AllowAnonymous]
