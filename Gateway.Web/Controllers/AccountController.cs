@@ -71,9 +71,7 @@ namespace Gateway.Web.Controllers
 
             foreach (var role in roles)
             {
-                if(role != "Access")
-
-                jwtIdentity.AddClaim(new Claim(System.Security.Claims.ClaimTypes.Role, role));
+                 jwtIdentity.AddClaim(new Claim(System.Security.Claims.ClaimTypes.Role, role));
             }
 
             authenticationManager.SignIn(jwtIdentity);
