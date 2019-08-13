@@ -25,7 +25,7 @@ namespace Gateway.Web.Database
         public string Name { get; set; }
         public Nullable<int> TimeToLiveSec { get; set; }
         public string Configuration { get; set; }
-        public int Weighting { get; set; }
+        public int MaxPriority { get; set; }
         public int MaxInstances { get; set; }
         public Nullable<int> TimeoutMilliSec { get; set; }
         public string Description { get; set; }

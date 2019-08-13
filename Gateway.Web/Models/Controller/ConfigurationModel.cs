@@ -45,9 +45,9 @@ namespace Gateway.Web.Models.Controller
 
         [XmlElement]
         [Required]
-        [Display(Name = "Weighting")]
-        [Range(1, int.MaxValue, ErrorMessage = "Please enter the weighting.")]
-        public int Weighting { get; set; }
+        [Display(Name = "MaxPriority")]
+        [Range(1, 20, ErrorMessage = "Please enter the maximum priority.")]
+        public int MaxPriority { get; set; }
 
         [XmlElement]
         [Required]

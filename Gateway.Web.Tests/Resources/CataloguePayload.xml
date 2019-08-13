@@ -4,7 +4,7 @@
       <TimeToLiveSec>600</TimeToLiveSec>
       <UserCallLimit>0</UserCallLimit>
       <ScalingStrategy>Local</ScalingStrategy>
-      <Weighting>13</Weighting>
+      <MaxPriority>13</MaxPriority>
       <MaxInstances>83</MaxInstances>
       <Type />
       <Configuration />
@@ -31,7 +31,7 @@
       <TimeToLiveSec>60</TimeToLiveSec>
       <UserCallLimit>0</UserCallLimit>
       <ScalingStrategy>Local</ScalingStrategy>
-      <Weighting>1</Weighting>
+      <MaxPriority>1</MaxPriority>
       <MaxInstances>5</MaxInstances>
       <Type>test</Type>
       <Configuration></Configuration>
@@ -44,7 +44,7 @@
       <TimeToLiveSec>3600</TimeToLiveSec>
       <UserCallLimit>0</UserCallLimit>
       <ScalingStrategy>Local</ScalingStrategy>
-      <Weighting>1</Weighting>
+      <MaxPriority>1</MaxPriority>
       <MaxInstances>9</MaxInstances>
       <Type />
       <Configuration />
@@ -72,7 +72,7 @@
       <TimeToLiveSec>360000</TimeToLiveSec>
       <UserCallLimit>0</UserCallLimit>
       <ScalingStrategy>Local</ScalingStrategy>
-      <Weighting>1</Weighting>
+      <MaxPriority>1</MaxPriority>
       <MaxInstances>3</MaxInstances>
       <Type>test</Type>
       <Configuration />
@@ -93,7 +93,7 @@
       <TimeToLiveSec>3600</TimeToLiveSec>
       <UserCallLimit>0</UserCallLimit>
       <ScalingStrategy>Local</ScalingStrategy>
-      <Weighting>1</Weighting>
+      <MaxPriority>1</MaxPriority>
       <MaxInstances>3</MaxInstances>
       <Type>test</Type>
       <Configuration>test</Configuration>
@@ -108,7 +108,7 @@
       <TimeToLiveSec>1000</TimeToLiveSec>
       <UserCallLimit>0</UserCallLimit>
       <ScalingStrategy>Local</ScalingStrategy>
-      <Weighting>1</Weighting>
+      <MaxPriority>1</MaxPriority>
       <MaxInstances>3</MaxInstances>
       <Type>test</Type>
       <Configuration>test</Configuration>
@@ -129,7 +129,7 @@
       <TimeToLiveSec>3600</TimeToLiveSec>
       <UserCallLimit>0</UserCallLimit>
       <ScalingStrategy>Local</ScalingStrategy>
-      <Weighting>1</Weighting>
+      <MaxPriority>1</MaxPriority>
       <MaxInstances>10</MaxInstances>
       <Type />
       <Configuration />
@@ -164,7 +164,7 @@
       <TimeToLiveSec>3600</TimeToLiveSec>
       <UserCallLimit>0</UserCallLimit>
       <ScalingStrategy>Local</ScalingStrategy>
-      <Weighting>3</Weighting>
+      <MaxPriority>3</MaxPriority>
       <MaxInstances>5</MaxInstances>
       <Type>Generic</Type>
       <Configuration />
@@ -178,7 +178,7 @@
       <TimeToLiveSec>3600</TimeToLiveSec>
       <UserCallLimit>0</UserCallLimit>
       <ScalingStrategy>Local</ScalingStrategy>
-      <Weighting>1</Weighting>
+      <MaxPriority>1</MaxPriority>
       <MaxInstances>1</MaxInstances>
       <Type>Generic</Type>
       <Configuration />
@@ -195,7 +195,7 @@
       <TimeToLiveSec>3600</TimeToLiveSec>
       <UserCallLimit>0</UserCallLimit>
       <ScalingStrategy>Local</ScalingStrategy>
-      <Weighting>1</Weighting>
+      <MaxPriority>1</MaxPriority>
       <MaxInstances>20</MaxInstances>
       <Type>Generic</Type>
       <Configuration />
@@ -237,7 +237,7 @@
       <TimeToLiveSec>3600</TimeToLiveSec>
       <UserCallLimit>0</UserCallLimit>
       <ScalingStrategy>Local</ScalingStrategy>
-      <Weighting>1</Weighting>
+      <MaxPriority>1</MaxPriority>
       <MaxInstances>5</MaxInstances>
       <Type>Generic</Type>
       <Configuration></Configuration>
@@ -253,7 +253,7 @@
       <TimeToLiveSec>3600</TimeToLiveSec>
       <UserCallLimit>0</UserCallLimit>
       <ScalingStrategy>Local</ScalingStrategy>
-      <Weighting>1</Weighting>
+      <MaxPriority>1</MaxPriority>
       <MaxInstances>3</MaxInstances>
       <Type>Generic</Type>
       <Configuration />
@@ -268,7 +268,7 @@
       <TimeToLiveSec>3600</TimeToLiveSec>
       <UserCallLimit>0</UserCallLimit>
       <ScalingStrategy>Local</ScalingStrategy>
-      <Weighting>1</Weighting>
+      <MaxPriority>1</MaxPriority>
       <MaxInstances>3</MaxInstances>
       <Type>Generic</Type>
       <Configuration />
@@ -285,7 +285,7 @@
       <TimeToLiveSec>3600</TimeToLiveSec>
       <UserCallLimit>0</UserCallLimit>
       <ScalingStrategy>Local</ScalingStrategy>
-      <Weighting>1</Weighting>
+      <MaxPriority>1</MaxPriority>
       <MaxInstances>1</MaxInstances>
       <Type>Generic</Type>
       <Configuration />
@@ -309,7 +309,7 @@
       <TimeToLiveSec>3600</TimeToLiveSec>
       <UserCallLimit>0</UserCallLimit>
       <ScalingStrategy>Local</ScalingStrategy>
-      <Weighting>1</Weighting>
+      <MaxPriority>1</MaxPriority>
       <MaxInstances>1</MaxInstances>
       <Type>Generic</Type>
       <Configuration />
@@ -322,7 +322,7 @@
       <TimeToLiveSec>3600</TimeToLiveSec>
       <UserCallLimit>0</UserCallLimit>
       <ScalingStrategy>Local</ScalingStrategy>
-      <Weighting>1</Weighting>
+      <MaxPriority>1</MaxPriority>
       <MaxInstances>1</MaxInstances>
       <Type>Generic</Type>
       <Configuration />
@@ -337,7 +337,7 @@
       <TimeToLiveSec>120</TimeToLiveSec>
       <UserCallLimit>0</UserCallLimit>
       <ScalingStrategy>Local</ScalingStrategy>
-      <Weighting>1</Weighting>
+      <MaxPriority>1</MaxPriority>
       <MaxInstances>1</MaxInstances>
       <Type>Test</Type>
       <Configuration />
@@ -357,7 +357,7 @@
       <TimeToLiveSec>3600</TimeToLiveSec>
       <UserCallLimit>0</UserCallLimit>
       <ScalingStrategy>Local</ScalingStrategy>
-      <Weighting>1</Weighting>
+      <MaxPriority>1</MaxPriority>
       <MaxInstances>1</MaxInstances>
       <Type>Generic</Type>
       <Configuration />
@@ -397,7 +397,7 @@
     <Controller Id="0" Name="Gateway">
       <TimeToLiveSec p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
       <UserCallLimit>0</UserCallLimit>
-      <Weighting>0</Weighting>
+      <MaxPriority>0</MaxPriority>
       <MaxInstances>0</MaxInstances>
       <Versions>
         <Version Name="1.0.1" Alias="" Status="Inactive" />

@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'C:\Sandbox\Sigma\mit\microservices-ui\Gateway.Web\Database\PnRFO_Gateway.edmx'. 
+﻿// T4 code generation is enabled for model 'C:\Development\Redstone\microservices-ui\Gateway.Web\Database\PnRFO_Gateway.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.
