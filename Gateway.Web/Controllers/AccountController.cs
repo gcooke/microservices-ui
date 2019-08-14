@@ -6,11 +6,11 @@ namespace Gateway.Web.Controllers
 {
     public class AccountController : Controller
     {
-        private string _autUrl = "http://localhost:59782";
+        private string _autUrl;
 
         public AccountController(ISystemInformation information)
         {
-            _autUrl = information.GetSetting<string>("AuthUrl");
+            _autUrl = information.GetSetting<string>("AuthUrl", "http://localhost:59782");
         }
 
         [AllowAnonymous]
