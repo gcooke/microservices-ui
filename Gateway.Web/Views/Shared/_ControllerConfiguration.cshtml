@@ -97,20 +97,20 @@
 
         <div class="row">
             <div class="col-md-3">
-                @Html.LabelFor(m => m.Weighting, new { @class = "control-label" })
+                @Html.LabelFor(m => m.MaxPriority, new { @class = "control-label" })
             </div>
             <div class="col-md-3">
                 <div class="input-group">
                     <span class="input-group-btn">
-                        <button type="button" class="btn btn-spinner btn-number" data-type="minus" data-field="Weighting">
+                        <button type="button" class="btn btn-spinner btn-number" data-type="minus" data-field="MaxPriority">
                             <span class="glyphicon glyphicon-minus"></span>
                         </button>
                     </span>
 
-                    @Html.TextBoxFor(m => m.Weighting, new { @name = "Weighting", @class = "number-spinner input-number", @min = "1", @max = "10000" })
+                    @Html.TextBoxFor(m => m.MaxPriority, new { @name = "Max Priority", @class = "number-spinner input-number", @min = "1", @max = "10000" })
 
                     <span class="input-group-btn">
-                        <button type="button" class="btn btn-spinner btn-number" data-type="plus" data-field="Weighting">
+                        <button type="button" class="btn btn-spinner btn-number" data-type="plus" data-field="MaxPriority">
                             <span class="glyphicon glyphicon-plus"></span>
                         </button>
                     </span>
