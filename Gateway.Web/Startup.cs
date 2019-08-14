@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.Owin;
+﻿using Microsoft.Owin;
 using Owin;
 
 [assembly: OwinStartup(typeof(Gateway.Web.Startup))]
@@ -15,7 +13,5 @@ namespace Gateway.Web
 
             ConfigureAuth(app);
         }
-
-
     }
 }
