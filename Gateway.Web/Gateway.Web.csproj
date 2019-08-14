@@ -343,6 +343,7 @@
     <Compile Include="Authorization\HttpContainerProvider.cs" />
     <Compile Include="Authorization\RoleBasedAuthorizeAttribute.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Binders\RequestWorkerModelBinder.cs" />
     <Compile Include="Controllers\DataFeedController.cs" />
     <Compile Include="Controllers\DataFeedsController.cs" />
     <Compile Include="Controllers\ExportScheduleController.cs" />
@@ -352,6 +353,7 @@
     <Compile Include="Controllers\BatchScheduleController.cs" />
     <Compile Include="Controllers\PdcController.cs" />
     <Compile Include="Controllers\RbhController.cs" />
+    <Compile Include="Controllers\RequestedWorkers.cs" />
     <Compile Include="Controllers\RequestScheduleController.cs" />
     <Compile Include="Database\BatchCommentDto.cs" />
     <Compile Include="Database\BatchHelper.cs" />
@@ -528,12 +530,14 @@
     <Compile Include="Models\Export\CubeToCsvDestinationInformation.cs" />
     <Compile Include="Models\Export\DestinationInfoViewModel.cs" />
     <Compile Include="Models\Export\ExportCRONGroup.cs" />
+    <Compile Include="Models\Export\ExportDetailViewModel.cs" />
     <Compile Include="Models\Export\ExportResponse.cs" />
     <Compile Include="Models\Export\ExportSchedularViewModel.cs" />
     <Compile Include="Models\Export\ExportSchedule.cs" />
     <Compile Include="Models\Export\ExportUpdateViewModel.cs" />
     <Compile Include="Models\Export\FetchExportCube.cs" />
     <Compile Include="Models\Export\FileExport.cs" />
+    <Compile Include="Models\Export\FileExportsHistory.cs" />
     <Compile Include="Models\Export\FileExportViewModel.cs" />
     <Compile Include="Models\Export\CubeToCsvSourceInformation.cs" />
     <Compile Include="Models\Export\SourceInformationViewModel.cs" />
@@ -1060,6 +1064,7 @@
     <Content Include="Views\ExportSchedule\Index.cshtml" />
     <Content Include="Views\Shared\_ExportConfigNav.cshtml" />
     <Content Include="Views\ExportSchedule\Update.cshtml" />
+    <Content Include="Views\ExportSchedule\Detail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />

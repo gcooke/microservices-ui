@@ -55,7 +55,7 @@
           <Property Name="TimeToLiveSec" Type="int" />
           <Property Name="Configuration" Type="nvarchar" MaxLength="200" Nullable="false" />
           <Property Name="ScalingStrategyId" Type="tinyint" />
-          <Property Name="Weighting" Type="int" Nullable="false" />
+          <Property Name="MaxPriority" Type="int" Nullable="false" />
           <Property Name="MaxInstances" Type="int" Nullable="false" />
           <Property Name="TimeoutMilliSec" Type="int" />
           <Property Name="Description" Type="varchar" MaxLength="500" />
@@ -1127,7 +1127,7 @@
           <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="TimeToLiveSec" Type="Int32" />
           <Property Name="Configuration" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="Weighting" Type="Int32" Nullable="false" />
+          <Property Name="MaxPriority" Type="Int32" Nullable="false" />
           <Property Name="MaxInstances" Type="Int32" Nullable="false" />
           <Property Name="TimeoutMilliSec" Type="Int32" />
           <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
@@ -1637,7 +1637,7 @@
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="TimeoutMilliSec" ColumnName="TimeoutMilliSec" />
                 <ScalarProperty Name="MaxInstances" ColumnName="MaxInstances" />
-                <ScalarProperty Name="Weighting" ColumnName="Weighting" />
+                <ScalarProperty Name="MaxPriority" ColumnName="MaxPriority" />
                 <ScalarProperty Name="Configuration" ColumnName="Configuration" />
                 <ScalarProperty Name="TimeToLiveSec" ColumnName="TimeToLiveSec" />
                 <ScalarProperty Name="Name" ColumnName="Name" />

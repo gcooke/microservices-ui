@@ -58,20 +58,29 @@ namespace Gateway.Web.Services.Schedule
 
                     jobKeys.Add(key);
 
-                    var riskBatchSchedule = GetRiskBatchSchedule(db, config.ConfigurationId, tradeSourceParameter, serializedProperties) ?? new RiskBatchSchedule();
-                    if (riskBatchSchedule.RiskBatchScheduleId == 0 && entity.ScheduleId != 0)
-                        entity = new Database.Schedule() { ScheduleKey = key };
+                    RiskBatchSchedule riskBatchSchedule = null;
+                    if (entity.ScheduleId != 0)
+                    {
+                        riskBatchSchedule =
+                            db.RiskBatchSchedules.FirstOrDefault(s =>
+                                s.RiskBatchScheduleId == entity.RiskBatchScheduleId);
+                    }
+                    else
+                    {
+                        entity.ScheduleKey = key;
+
+                        riskBatchSchedule = new RiskBatchSchedule();
+                        
+                        entity.RiskBatchSchedule = riskBatchSchedule;
+
+                        db.Schedules.Add(entity);
+                    }
 
                     AssignSchedule(entity, riskBatchSchedule, parameters, tradeSourceParameter, config.ConfigurationId);
 
                     if (parameters.ModifyParent) HandleParentSchedule(entity, parameters);
-                    if (parameters.ModifyChildren) HandleChildSchedules(entity, parameters);
 
-                    if (riskBatchSchedule.RiskBatchScheduleId == 0)
-                    {
-                        riskBatchSchedule.Schedules.Add(entity);
-                        db.RiskBatchSchedules.Add(riskBatchSchedule);
-                    }
+                    if (parameters.ModifyChildren) HandleChildSchedules(entity, parameters);
 
                     schedules.Add(entity);
                 }
