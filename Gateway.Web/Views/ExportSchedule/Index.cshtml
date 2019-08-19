@@ -32,7 +32,7 @@
     function ToggleGroup(groupName) {
         var chevronDown = groupName + "-chevronDown";
          
-        var chevronUp = groupName + "-chevronLeft";
+        var chevronUp = groupName + "-chevronRight";
         $("tr[name^='" + groupName + "']").toggleClass("child");
         $("span[name^='" + chevronDown + "']").toggleClass("child");
         $("span[name^='" + chevronUp + "']").toggleClass("child");
@@ -44,15 +44,15 @@
         <div class="row">
             <div class="col-sm-6">
                 <h3 class="text-lowercase">
-                    Schedule <small id="businessDate" data-date="@Model.BusinessDate.ToString("yyyy-MM-dd")">@Model.BusinessDate.ToString("yyyy-MM-dd")</small>
+                    Export Schedule <small id="businessDate" data-date="@Model.BusinessDate.ToString("yyyy-MM-dd")">@Model.BusinessDate.ToString("yyyy-MM-dd")</small>
                 </h3>
             </div>
-            <div class="col-sm-6">
-                <a href="~/ExportSchedule/Update"
+            @*<div class="col-sm-6">
+                <a href="#"
                    class="btn btn-default pull-right m-t-15">
-                    Create Export
+                    Edit
                 </a>
-            </div>
+            </div>*@
         </div>
         
         <div class="row">
@@ -104,7 +104,7 @@
                                         <tr title="@item.Name"  class="@child batch-schedule-container" style="padding: 20px !important;">
                                             <td style="width: 1%;">
                                                 <span onclick="ToggleGroup('@item.GroupName')" style="color:grey;font-size:smaller;cursor: pointer" name='@item.GroupName-chevronDown'   class="child glyphicon glyphicon-chevron-down"></span>
-                                                <span onclick="ToggleGroup('@item.GroupName')" style="color:grey;font-size:smaller;cursor: pointer" name='@item.GroupName-chevronLeft' class="glyphicon glyphicon-chevron-left"></span>
+                                                <span onclick="ToggleGroup('@item.GroupName')" style="color:grey;font-size:smaller;cursor: pointer" name='@item.GroupName-chevronRight' class="glyphicon glyphicon-chevron-right"></span>
                                             </td>
                                             <td style="width: 39%;">
                                                 <span class="m-l-5" style="margin-top: 2px">
