@@ -16,7 +16,11 @@
     </div>
 
     <ul class="sidebar-nav">
-        <li> 
+        <li>
+            <a href="~/ExportSchedule/Update"
+               class="@(ViewBag.Current == "Configure Export" ? "active" : "")">
+                <span class="glyphicon glyphicon-th-list"></span>&nbsp;&nbsp;Configure Export
+            </a>
             <a href="~/ExportSchedule"
                class="@(ViewBag.Current == "Schedule" ? "active" : "")">
                 <span class="glyphicon glyphicon-dashboard"></span>&nbsp;&nbsp;Schedule

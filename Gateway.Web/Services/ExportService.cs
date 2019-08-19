@@ -1,4 +1,4 @@
-﻿using Bagl.Cib.MIT.Cube;
+using Bagl.Cib.MIT.Cube;
 using Bagl.Cib.MIT.Logging;
 using Bagl.Cib.MIT.StatePublisher.Utils;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
@@ -6,6 +6,7 @@ using Gateway.Web.Models.Export;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NCrontab;
 
 namespace Gateway.Web.Services
 {
@@ -98,7 +99,7 @@ namespace Gateway.Web.Services
             var query = $@"Exports/Fetch/{date.ToString("yyyy-MM-dd")}";
             var cube = FetchCube(query);
 
-            var result = ConvertCubeToExportCRONGroup(cube).OrderBy(x => x.GroupName).ToList();
+            var result = ConvertCubeToExportCRONGroup(cube,date).OrderBy(x => x.GroupName).ToList();
 
             return result;
         }
@@ -197,9 +198,11 @@ namespace Gateway.Web.Services
             }
         }
 
-        private IList<ExportCRONGroup> ConvertCubeToExportCRONGroup(ICube cube)
+        private IList<ExportCRONGroup> ConvertCubeToExportCRONGroup(ICube cube, DateTime date)
         {
             var exportCubes = new List<FetchExportCube>();
+            var startDate = date.Date.AddMinutes(-1);
+            var endDate = startDate.AddHours(24);
             foreach (var row in cube.GetRows())
             {
                 var export = new FetchExportCube()
@@ -223,9 +226,14 @@ namespace Gateway.Web.Services
                 if (row["IsSuccessful"] != null)
                     export.IsSuccessful = bool.Parse(row["IsSuccessful"].ToString());
 
+                var crontabSchedule = CrontabSchedule.Parse(export.Schedule);
+                var occurrences = crontabSchedule
+                    .GetNextOccurrences(startDate, endDate)
+                    .ToList();
+                if (!occurrences.Any())
+                    continue;
                 exportCubes.Add(export);
-            }
-
+            }        
             return CreateGroupingForExports(exportCubes);
         }
 
