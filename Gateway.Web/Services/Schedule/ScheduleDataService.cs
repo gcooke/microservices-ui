@@ -262,7 +262,7 @@ namespace Gateway.Web.Services.Schedule
                 if (batch == null)
                     return;
 
-                if (businessDate.CompareTo(DateTime.Now.Date) == 0)
+                if (businessDate.CompareTo(DateTime.Now.Date) == 0 && !batch.Parent.HasValue)
                     _scheduler.TriggerScheduledWebRequest(batch.ScheduleKey);
                 else
                     _scheduler.EnqueueAsyncWebRequest(batch.ToRequest(batch.RiskBatchSchedule?.IsLive ?? false, businessDate, includeChildren));
@@ -289,7 +289,7 @@ namespace Gateway.Web.Services.Schedule
 
                 foreach (var schedule in batches)
                 {
-                    if (businessDate.CompareTo(DateTime.Now.Date) == 0)
+                    if (businessDate.CompareTo(DateTime.Now.Date) == 0 && !schedule.Parent.HasValue)
                         _scheduler.TriggerScheduledWebRequest(schedule.ScheduleKey);
                     else
                         _scheduler.EnqueueAsyncWebRequest(schedule.ToRequest(schedule.RiskBatchSchedule?.IsLive ?? false, businessDate));
