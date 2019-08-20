@@ -10,7 +10,7 @@ namespace Gateway.Web.Controllers
 
         public AccountController(ISystemInformation information)
         {
-            _autUrl = information.GetSetting<string>("AuthUrl", "http://localhost:59782");
+            _autUrl = information.GetSetting<string>("AuthUrl", "https://sigma-dev.absa.co.za/authorization/webauth");
         }
 
         [AllowAnonymous]
