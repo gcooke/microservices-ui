@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using Absa.Cib.MIT.TaskScheduling.Models;
+﻿using Absa.Cib.MIT.TaskScheduling.Models;
 using Gateway.Web.Models.Schedule.Input;
 using Gateway.Web.Services.Schedule.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web.Mvc;
 
 namespace Gateway.Web.ModelBindersConverters
 {
@@ -14,8 +13,8 @@ namespace Gateway.Web.ModelBindersConverters
         public object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
         {
             var request = controllerContext.HttpContext.Request;
-            var configurationIdList = request.Form["ConfigurationIdList"] == null ? 
-                new List<string>() : 
+            var configurationIdList = request.Form["ConfigurationIdList"] == null ?
+                new List<string>() :
                 request.Form["ConfigurationIdList"].Split(',').ToList();
             var tradeSourceType = request.Form["TradeSourceType"];
 
@@ -35,7 +34,9 @@ namespace Gateway.Web.ModelBindersConverters
                 var site = request.Form[$"TradeSources[{index}].Site"];
                 var marketDataMap = request.Form[$"TradeSources[{index}].MarketDataMap"];
                 var isLive = request.Form[$"TradeSources[{index}].IsLive"]?.Split(',')[0];
+                var isT0 = request.Form[$"TradeSources[{index}].IsT0"]?.Split(',')[0];
                 if (string.IsNullOrWhiteSpace(isLive)) isLive = "false";
+                if (string.IsNullOrWhiteSpace(isT0)) isT0 = "false";
 
                 bool isLiveValue;
                 if (!bool.TryParse(isLive, out isLiveValue))
@@ -43,7 +44,13 @@ namespace Gateway.Web.ModelBindersConverters
                     throw new Exception("Unable to parse value for 'Is Live'");
                 }
 
-                model.TradeSources.Add(new TradeSourceParameter(tradeSourceType, tradeSource, site, isLiveValue)
+                bool isT0Value;
+                if (!bool.TryParse(isT0, out isT0Value))
+                {
+                    throw new Exception("Unable to parse value for 'Is T0'");
+                }
+
+                model.TradeSources.Add(new TradeSourceParameter(tradeSourceType, tradeSource, site, isLiveValue, isT0Value)
                 {
                     MarketDataMap = marketDataMap
                 });

@@ -1,10 +1,9 @@
-﻿using System;
+﻿using Absa.Cib.MIT.TaskScheduling.Models;
+using Gateway.Web.Database;
+using Gateway.Web.Models.Schedule.Input;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Absa.Cib.MIT.TaskScheduling.Models;
-using Gateway.Web.Database;
-using Gateway.Web.Models.Schedule;
-using Gateway.Web.Models.Schedule.Input;
 
 namespace Gateway.Web.Services.Schedule.Models
 {
@@ -14,7 +13,7 @@ namespace Gateway.Web.Services.Schedule.Models
 
         public ISet<TradeSourceParameter> TradeSources { get; set; }
 
-        public IDictionary<string,string> Properties { get; set; }
+        public IDictionary<string, string> Properties { get; set; }
 
         public override void Populate(GatewayEntities db, BaseScheduleModel model)
         {
@@ -53,7 +52,7 @@ namespace Gateway.Web.Services.Schedule.Models
 
         private IDictionary<string, string> GetProperties(IEnumerable<Header> properties)
         {
-            var propertiesDict = new Dictionary<string,string>();
+            var propertiesDict = new Dictionary<string, string>();
 
             foreach (var property in properties)
             {
@@ -73,17 +72,19 @@ namespace Gateway.Web.Services.Schedule.Models
         public string FundingCurrency { get; set; }
         public string ReportingCurrency { get; set; }
         public bool IsLive { get; }
+        public bool IsT0 { get; }
 
         public TradeSourceParameter()
         {
         }
 
-        public TradeSourceParameter(string tradeSourceType, string tradeSource, string site, bool isLive)
+        public TradeSourceParameter(string tradeSourceType, string tradeSource, string site, bool isLive, bool isT0)
         {
             TradeSourceType = tradeSourceType;
             TradeSource = tradeSource;
             Site = site;
             IsLive = isLive;
+            IsT0 = isT0;
         }
 
         public override bool Equals(object obj)
@@ -95,7 +96,8 @@ namespace Gateway.Web.Services.Schedule.Models
             if (item.TradeSourceType == TradeSourceType &&
                 item.TradeSource == TradeSource &&
                 item.Site == Site &&
-                item.IsLive == IsLive)
+                item.IsLive == IsLive &&
+                item.IsT0 == IsT0)
                 return true;
 
             return false;
@@ -103,7 +105,7 @@ namespace Gateway.Web.Services.Schedule.Models
 
         public override int GetHashCode()
         {
-            return $"{TradeSourceType}{TradeSource}{Site}{IsLive}".GetHashCode();
+            return $"{TradeSourceType}{TradeSource}{Site}{IsLive}{IsT0}".GetHashCode();
         }
 
         public bool IsEmpty()

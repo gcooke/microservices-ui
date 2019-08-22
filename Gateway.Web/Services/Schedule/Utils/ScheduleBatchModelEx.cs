@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Mvc;
-using Absa.Cib.MIT.TaskScheduling.Models;
+﻿using Absa.Cib.MIT.TaskScheduling.Models;
 using Gateway.Web.Models.Schedule.Input;
 using Gateway.Web.Services.Batches.Interfaces;
 using Gateway.Web.Services.Schedule.Models;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web.Mvc;
 
 namespace Gateway.Web.Services.Schedule.Utils
 {
@@ -33,7 +33,7 @@ namespace Gateway.Web.Services.Schedule.Utils
 
             var tradeSources = new List<TradeSourceParameter>
             {
-                new TradeSourceParameter(schedule.RiskBatchSchedule?.TradeSourceType, schedule.RiskBatchSchedule?.TradeSource, schedule.RiskBatchSchedule?.Site, schedule.RiskBatchSchedule?.IsLive ?? false)
+                new TradeSourceParameter(schedule.RiskBatchSchedule?.TradeSourceType, schedule.RiskBatchSchedule?.TradeSource, schedule.RiskBatchSchedule?.Site, schedule.RiskBatchSchedule?.IsLive ?? false, schedule.RiskBatchSchedule?.IsT0 ?? false)
                 {
                     MarketDataMap = schedule.RiskBatchSchedule?.MarketDataMap
                 }
@@ -67,7 +67,7 @@ namespace Gateway.Web.Services.Schedule.Utils
             };
 
             var tradeSources = schedules
-                .Select(schedule => new TradeSourceParameter(schedule.RiskBatchSchedule?.TradeSourceType, schedule.RiskBatchSchedule?.TradeSource, schedule.RiskBatchSchedule?.Site, schedule.RiskBatchSchedule?.IsLive ?? false) {MarketDataMap = schedule.RiskBatchSchedule?.MarketDataMap})
+                .Select(schedule => new TradeSourceParameter(schedule.RiskBatchSchedule?.TradeSourceType, schedule.RiskBatchSchedule?.TradeSource, schedule.RiskBatchSchedule?.Site, schedule.RiskBatchSchedule?.IsLive ?? false, schedule.RiskBatchSchedule?.IsT0 ?? false) { MarketDataMap = schedule.RiskBatchSchedule?.MarketDataMap })
                 .Distinct()
                 .ToList();
 
