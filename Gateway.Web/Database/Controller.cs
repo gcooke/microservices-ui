@@ -25,16 +25,16 @@ namespace Gateway.Web.Database
         public string Name { get; set; }
         public Nullable<int> TimeToLiveSec { get; set; }
         public string Configuration { get; set; }
+        public byte ScalingStrategyId { get; set; }
         public int MaxPriority { get; set; }
         public int MaxInstances { get; set; }
         public Nullable<int> TimeoutMilliSec { get; set; }
         public string Description { get; set; }
-        public Nullable<byte> ScalingStrategyId { get; set; }
     
+        public virtual ScalingModel ScalingModel { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Version> Versions { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Server> Servers { get; set; }
-        public virtual ScalingModel ScalingModel { get; set; }
     }
 }

@@ -265,7 +265,7 @@ namespace Gateway.Web.Services.Schedule
                 if (businessDate.CompareTo(DateTime.Now.Date) == 0 && !batch.Parent.HasValue)
                     _scheduler.TriggerScheduledWebRequest(batch.ScheduleKey);
                 else
-                    _scheduler.EnqueueAsyncWebRequest(batch.ToRequest(batch.RiskBatchSchedule?.IsLive ?? false, businessDate, includeChildren));
+                    _scheduler.EnqueueAsyncWebRequest(batch.ToRequest(batch.RiskBatchSchedule?.IsLive ?? false, batch.RiskBatchSchedule?.IsT0 ?? false, businessDate, includeChildren));
             }
         }
 
@@ -292,7 +292,7 @@ namespace Gateway.Web.Services.Schedule
                     if (businessDate.CompareTo(DateTime.Now.Date) == 0 && !schedule.Parent.HasValue)
                         _scheduler.TriggerScheduledWebRequest(schedule.ScheduleKey);
                     else
-                        _scheduler.EnqueueAsyncWebRequest(schedule.ToRequest(schedule.RiskBatchSchedule?.IsLive ?? false, businessDate));
+                        _scheduler.EnqueueAsyncWebRequest(schedule.ToRequest(schedule.RiskBatchSchedule?.IsLive ?? false, schedule.RiskBatchSchedule?.IsT0 ?? false, businessDate));
                 }
             }
         }
@@ -363,13 +363,13 @@ namespace Gateway.Web.Services.Schedule
             if (group == null)
             {
                 _scheduler.RemoveScheduledWebRequest(entity.ParentSchedule.ScheduleKey);
-                var parent = entity.ParentSchedule.ToRequest(entity.RiskBatchSchedule?.IsLive ?? false);
+                var parent = entity.ParentSchedule.ToRequest(entity.RiskBatchSchedule?.IsLive ?? false, entity.RiskBatchSchedule?.IsT0 ?? false);
                 var cron = entity.ParentSchedule.ScheduleGroup.Schedule;
                 _scheduler.ScheduleAsyncWebRequest(parent, entity.ParentSchedule.ScheduleKey, cron);
             }
             else
             {
-                var request = entity.ToRequest(entity.RiskBatchSchedule?.IsLive ?? false);
+                var request = entity.ToRequest(entity.RiskBatchSchedule?.IsLive ?? false, entity.RiskBatchSchedule?.IsT0 ?? false);
                 var cron = group.Schedule;
                 _scheduler.ScheduleAsyncWebRequest(request, entity.ScheduleKey, cron);
             }

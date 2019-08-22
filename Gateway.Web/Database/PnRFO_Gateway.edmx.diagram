@@ -19,7 +19,7 @@
         <EntityTypeShape EntityType="GatewayModel.RequestConfiguration" Width="1.5" PointX="3" PointY="3.375" IsExpanded="false" />
         <EntityTypeShape EntityType="GatewayModel.ExecutableConfiguration" Width="1.5" PointX="3" PointY="2.25" IsExpanded="false" />
         <EntityTypeShape EntityType="GatewayModel.RiskBatchConfiguration" Width="1.5" PointX="0.75" PointY="0.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="GatewayModel.RiskBatchSchedule" Width="1.5" PointX="3" PointY="0.875" IsExpanded="false" />
+        <EntityTypeShape EntityType="GatewayModel.RiskBatchSchedule" Width="1.5" PointX="3" PointY="0.875" IsExpanded="true" />
         <EntityTypeShape EntityType="GatewayModel.Schedule" Width="1.5" PointX="5.25" PointY="0.875" IsExpanded="false" />
         <AssociationConnector Association="GatewayModel.FK_Schedule_ExecutableConfiguration" />
         <AssociationConnector Association="GatewayModel.FK_Schedule_RequestConfiguration" />
@@ -27,12 +27,12 @@
         <AssociationConnector Association="GatewayModel.FK_Schedule_RiskBatchSchedule" />
         <AssociationConnector Association="GatewayModel.FK_Schedule_Schedule" />
         <AssociationConnector Association="GatewayModel.FK_Schedule_ScheduleGroup" />
-        <EntityTypeShape EntityType="GatewayModel.Controller" Width="1.5" PointX="10.97482069347744" PointY="1.6209866263070081" />
-        <AssociationConnector Association="GatewayModel.FK_Version_Controller" />
-        <EntityTypeShape EntityType="GatewayModel.ScalingModel" Width="1.5" PointX="11.875" PointY="6.25" />
-        <AssociationConnector Association="GatewayModel.FK_Controller_ScalingModel" />
         <EntityTypeShape EntityType="GatewayModel.ScheduledJob" Width="1.5" PointX="3.6085518932009828" PointY="30.106656937909619" />
         <AssociationConnector Association="GatewayModel.FK_ScheduledJob_Schedule" />
+        <EntityTypeShape EntityType="GatewayModel.ScalingModel" Width="1.5" PointX="6.9516061763053782" PointY="8.21605585898089" />
+        <EntityTypeShape EntityType="GatewayModel.Controller" Width="1.5" PointX="10.771378587359273" PointY="9.7806513504035077" />
+        <AssociationConnector Association="GatewayModel.FK_Controller_ScalingModel" />
+        <AssociationConnector Association="GatewayModel.FK_Version_Controller" />
         </Diagram>
         <EntityTypeShape EntityType="GatewayModel.ControllerExternalResource" Width="1.5" PointX="13.625" PointY="3.25" />
         <EntityTypeShape EntityType="GatewayModel.ExternalResource" Width="1.5" PointX="11.375" PointY="3.875" />

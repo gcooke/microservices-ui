@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Mvc;
 using Absa.Cib.MIT.TaskScheduling.Client.Scheduler;
 using Absa.Cib.MIT.TaskScheduling.Models;
 using Bagl.Cib.MIT.IoC;
@@ -11,6 +7,10 @@ using Gateway.Web.Models.Schedule.Input;
 using Gateway.Web.Services.Schedule.Models;
 using Gateway.Web.Services.Schedule.Utils;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web.Mvc;
 
 namespace Gateway.Web.Services.Schedule
 {
@@ -18,9 +18,9 @@ namespace Gateway.Web.Services.Schedule
     {
         private readonly IRedstoneWebRequestScheduler _scheduler;
 
-        public RedstoneBatchScheduleService(IRedstoneWebRequestScheduler scheduler, 
+        public RedstoneBatchScheduleService(IRedstoneWebRequestScheduler scheduler,
             ILoggingService loggingService,
-            ISystemInformation systemInformation) : 
+            ISystemInformation systemInformation) :
             base(loggingService, systemInformation)
         {
             _scheduler = scheduler;
@@ -70,7 +70,7 @@ namespace Gateway.Web.Services.Schedule
                         entity.ScheduleKey = key;
 
                         riskBatchSchedule = new RiskBatchSchedule();
-                        
+
                         entity.RiskBatchSchedule = riskBatchSchedule;
 
                         db.Schedules.Add(entity);
@@ -102,7 +102,7 @@ namespace Gateway.Web.Services.Schedule
 
         protected override RedstoneRequest GetJob(Database.Schedule schedule, DateTime? businessDate = null)
         {
-            return schedule.ToRequest(schedule.RiskBatchSchedule?.IsLive ?? false, businessDate);
+            return schedule.ToRequest(schedule.RiskBatchSchedule?.IsLive ?? false, schedule.RiskBatchSchedule?.IsT0 ?? false, businessDate);
         }
 
         protected override void ScheduleTask(RedstoneRequest item, string key, string cron)
@@ -154,6 +154,7 @@ namespace Gateway.Web.Services.Schedule
             riskBatchSchedule.ReportingCurrency = tradeSourceParameter.ReportingCurrency?.Trim();
             riskBatchSchedule.AdditionalProperties = JsonConvert.SerializeObject(parameters.Properties);
             riskBatchSchedule.IsLive = tradeSourceParameter.IsLive;
+            riskBatchSchedule.IsT0 = tradeSourceParameter.IsT0;
         }
     }
 }
