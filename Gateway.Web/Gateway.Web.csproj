@@ -131,8 +131,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Owin, Version=4.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Owin.4.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
+    <Reference Include="Microsoft.Owin, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.3.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.Host.HttpListener, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.Host.HttpListener.3.1.0\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
@@ -140,11 +140,8 @@
     <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.3.0.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Security, Version=4.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Owin.Security.4.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Security.Cookies, Version=4.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.4.0.1\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    <Reference Include="Microsoft.Owin.Security, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.3.1.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.Security.Jwt, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.Security.Jwt.3.1.0\lib\net45\Microsoft.Owin.Security.Jwt.dll</HintPath>
@@ -337,12 +334,10 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Authorization\AuthorizedRoleProvider.cs" />
     <Compile Include="Authorization\GatewayAuthenticationFilter.cs" />
     <Compile Include="Authorization\HttpContainerProvider.cs" />
     <Compile Include="Authorization\RoleBasedAuthorizeAttribute.cs" />
-    <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Binders\RequestWorkerModelBinder.cs" />
     <Compile Include="Controllers\DataFeedController.cs" />
     <Compile Include="Controllers\DataFeedsController.cs" />
@@ -517,7 +512,6 @@
     <Compile Include="ModelBindersConverters\ScheduleBatchModelBinder.cs" />
     <Compile Include="ModelBindersConverters\SourceInformationViewModelBinders.cs" />
     <Compile Include="Models\AuthorizationModel.cs" />
-    <Compile Include="Models\Auth\JwtIdentity.cs" />
     <Compile Include="Models\Controller\ControllerServer.cs" />
     <Compile Include="Models\Controller\ControllerServersModel.cs" />
     <Compile Include="Models\DataFeeds\DataFeedDashboard.cs" />
@@ -783,7 +777,6 @@
     <Compile Include="Services\Schedule\Utils\ScheduleWebRequestModelEx.cs" />
     <Compile Include="Services\StatisticsService.cs" />
     <Compile Include="Services\VersionUpdate.cs" />
-    <Compile Include="Startup.cs" />
     <Compile Include="UnityDependencyResolver.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -964,7 +957,6 @@
     <Content Include="Database\PnRFO.edmx.diagram">
       <DependentUpon>PnRFO.edmx</DependentUpon>
     </Content>
-    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\local.pubxml" />
     <None Include="Properties\PublishProfiles\remote.pubxml" />
     <Content Include="Views\Controller\_ControllerNav.cshtml" />
@@ -1098,9 +1090,6 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\Account\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

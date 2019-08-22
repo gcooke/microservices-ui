@@ -160,8 +160,7 @@ namespace Gateway.Web
             Absa.Cib.JwtAuthentication.Registrations.RegisterCertificates(information);
             Bagl.Cib.MSF.ClientAPI.Registrations.Register(information);
 
-            Mapper.Initialize(cfg =>
-            {
+            Mapper.Initialize(cfg =>            {
                 cfg.AddProfile<ExportProfile>();
             });
         }
