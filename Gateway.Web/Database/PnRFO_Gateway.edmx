@@ -54,7 +54,7 @@
           <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="TimeToLiveSec" Type="int" />
           <Property Name="Configuration" Type="nvarchar" MaxLength="200" Nullable="false" />
-          <Property Name="ScalingStrategyId" Type="tinyint" />
+          <Property Name="ScalingStrategyId" Type="tinyint" Nullable="false" />
           <Property Name="MaxPriority" Type="int" Nullable="false" />
           <Property Name="MaxInstances" Type="int" Nullable="false" />
           <Property Name="TimeoutMilliSec" Type="int" />
@@ -173,6 +173,7 @@
           <Property Name="TradeSourceType" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="AdditionalProperties" Type="varchar(max)" />
           <Property Name="IsLive" Type="bit" Nullable="false" />
+          <Property Name="IsT0" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Schedule">
           <Key>
@@ -240,7 +241,7 @@
           <Property Name="TimeTakenMs" Type="bigint" />
         </EntityType>
         <Association Name="FK_Controller_ScalingModel">
-          <End Role="ScalingModel" Type="Self.ScalingModel" Multiplicity="0..1" />
+          <End Role="ScalingModel" Type="Self.ScalingModel" Multiplicity="1" />
           <End Role="Controller" Type="Self.Controller" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="ScalingModel">
@@ -661,7 +662,20 @@
             <Parameter Name="Controller" Mode="In" Type="String" />
             <Parameter Name="SearchString" Mode="In" Type="String" />
           </FunctionImport>
+          <EntitySet Name="ScheduledJobs" EntityType="GatewayModel.ScheduledJob" />
+          <AssociationSet Name="FK_ScheduledJob_Schedule" Association="GatewayModel.FK_ScheduledJob_Schedule">
+            <End Role="Schedule" EntitySet="Schedules" />
+            <End Role="ScheduledJob" EntitySet="ScheduledJobs" />
+          </AssociationSet>
+          <FunctionImport Name="spGetRequestChildrenPayloadDetails" ReturnType="Collection(GatewayModel.spGetRequestChildrenPayloadDetails_Result)">
+          <Parameter Name="correlationId" Mode="In" Type="Guid" />
+          </FunctionImport>
+          <EntitySet Name="ScalingModels" EntityType="GatewayModel.ScalingModel" />
           <EntitySet Name="Controllers" EntityType="GatewayModel.Controller" />
+          <AssociationSet Name="FK_Controller_ScalingModel" Association="GatewayModel.FK_Controller_ScalingModel">
+            <End Role="ScalingModel" EntitySet="ScalingModels" />
+            <End Role="Controller" EntitySet="Controllers" />
+          </AssociationSet>
           <AssociationSet Name="FK_Version_Controller" Association="GatewayModel.FK_Version_Controller">
             <End Role="Controller" EntitySet="Controllers" />
             <End Role="Version" EntitySet="Versions" />
@@ -670,19 +684,6 @@
             <End Role="Controller" EntitySet="Controllers" />
             <End Role="Server" EntitySet="Servers" />
           </AssociationSet>
-          <EntitySet Name="ScalingModels" EntityType="GatewayModel.ScalingModel" />
-          <AssociationSet Name="FK_Controller_ScalingModel" Association="GatewayModel.FK_Controller_ScalingModel">
-            <End Role="ScalingModel" EntitySet="ScalingModels" />
-            <End Role="Controller" EntitySet="Controllers" />
-          </AssociationSet>
-          <EntitySet Name="ScheduledJobs" EntityType="GatewayModel.ScheduledJob" />
-          <AssociationSet Name="FK_ScheduledJob_Schedule" Association="GatewayModel.FK_ScheduledJob_Schedule">
-            <End Role="Schedule" EntitySet="Schedules" />
-            <End Role="ScheduledJob" EntitySet="ScheduledJobs" />
-          </AssociationSet>
-          <FunctionImport Name="spGetRequestChildrenPayloadDetails" ReturnType="Collection(GatewayModel.spGetRequestChildrenPayloadDetails_Result)">
-            <Parameter Name="correlationId" Mode="In" Type="Guid" />
-          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="spGetJobStats_Result">
           <Property Type="DateTime" Name="Date" Nullable="true" />
@@ -997,6 +998,7 @@
           <NavigationProperty Name="RiskBatchConfiguration" Relationship="GatewayModel.FK_RiskBatchSchedule_RiskBatchConfiguration" FromRole="RiskBatchSchedule" ToRole="RiskBatchConfiguration" />
           <NavigationProperty Name="Schedules" Relationship="GatewayModel.FK_Schedule_RiskBatchSchedule" FromRole="RiskBatchSchedule" ToRole="Schedule" />
           <Property Name="IsLive" Type="Boolean" Nullable="false" />
+          <Property Name="IsT0" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="Schedule">
           <Key>
@@ -1119,59 +1121,6 @@
           <Property Type="DateTime" Name="UpdateTimeUtc" Nullable="false" Precision="23" />
           <Property Type="String" Name="Status" Nullable="true" MaxLength="250" />
         </ComplexType>
-        <EntityType Name="Controller">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="TimeToLiveSec" Type="Int32" />
-          <Property Name="Configuration" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="MaxPriority" Type="Int32" Nullable="false" />
-          <Property Name="MaxInstances" Type="Int32" Nullable="false" />
-          <Property Name="TimeoutMilliSec" Type="Int32" />
-          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Versions" Relationship="GatewayModel.FK_Version_Controller" FromRole="Controller" ToRole="Version" />
-          <NavigationProperty Name="Servers" Relationship="GatewayModel.ControllerServerRestriction" FromRole="Controller" ToRole="Server" />
-          <Property Name="ScalingStrategyId" Type="Byte" />
-          <NavigationProperty Name="ScalingModel" Relationship="GatewayModel.FK_Controller_ScalingModel" FromRole="Controller" ToRole="ScalingModel" />
-        </EntityType>
-        <Association Name="FK_Version_Controller">
-          <End Type="GatewayModel.Controller" Role="Controller" Multiplicity="1" />
-          <End Type="GatewayModel.Version" Role="Version" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Controller">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Version">
-              <PropertyRef Name="ControllerId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="ControllerServerRestriction">
-          <End Type="GatewayModel.Controller" Role="Controller" Multiplicity="*" />
-          <End Type="GatewayModel.Server" Role="Server" Multiplicity="*" />
-        </Association>
-        <EntityType Name="ScalingModel">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Byte" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Description" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Controllers" Relationship="GatewayModel.FK_Controller_ScalingModel" FromRole="ScalingModel" ToRole="Controller" />
-        </EntityType>
-        <Association Name="FK_Controller_ScalingModel">
-          <End Type="GatewayModel.ScalingModel" Role="ScalingModel" Multiplicity="0..1" />
-          <End Type="GatewayModel.Controller" Role="Controller" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ScalingModel">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Controller">
-              <PropertyRef Name="ScalingStrategyId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="ScheduledJob">
           <Key>
             <PropertyRef Name="Id" />
@@ -1198,6 +1147,59 @@
               <PropertyRef Name="ScheduleId" />
             </Dependent>
           </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ScalingModel">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Byte" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Controllers" Relationship="GatewayModel.FK_Controller_ScalingModel" FromRole="ScalingModel" ToRole="Controller" />
+        </EntityType>
+        <EntityType Name="Controller">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="TimeToLiveSec" Type="Int32" />
+          <Property Name="Configuration" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="ScalingStrategyId" Type="Byte" Nullable="false" />
+          <Property Name="MaxPriority" Type="Int32" Nullable="false" />
+          <Property Name="MaxInstances" Type="Int32" Nullable="false" />
+          <Property Name="TimeoutMilliSec" Type="Int32" />
+          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ScalingModel" Relationship="GatewayModel.FK_Controller_ScalingModel" FromRole="Controller" ToRole="ScalingModel" />
+          <NavigationProperty Name="Versions" Relationship="GatewayModel.FK_Version_Controller" FromRole="Controller" ToRole="Version" />
+          <NavigationProperty Name="Servers" Relationship="GatewayModel.ControllerServerRestriction" FromRole="Controller" ToRole="Server" />
+        </EntityType>
+        <Association Name="FK_Controller_ScalingModel">
+          <End Type="GatewayModel.ScalingModel" Role="ScalingModel" Multiplicity="1" />
+          <End Type="GatewayModel.Controller" Role="Controller" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ScalingModel">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Controller">
+              <PropertyRef Name="ScalingStrategyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Version_Controller">
+          <End Type="GatewayModel.Controller" Role="Controller" Multiplicity="1" />
+          <End Type="GatewayModel.Version" Role="Version" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Controller">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Version">
+              <PropertyRef Name="ControllerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ControllerServerRestriction">
+          <End Type="GatewayModel.Controller" Role="Controller" Multiplicity="*" />
+          <End Type="GatewayModel.Server" Role="Server" Multiplicity="*" />
         </Association>
         </Schema>
     </edmx:ConceptualModels>
@@ -1562,6 +1564,7 @@
           <EntitySetMapping Name="RiskBatchSchedules">
             <EntityTypeMapping TypeName="GatewayModel.RiskBatchSchedule">
               <MappingFragment StoreEntitySet="RiskBatchSchedule">
+                <ScalarProperty Name="IsT0" ColumnName="IsT0" />
                 <ScalarProperty Name="IsLive" ColumnName="IsLive" />
                 <ScalarProperty Name="AdditionalProperties" ColumnName="AdditionalProperties" />
                 <ScalarProperty Name="TradeSourceType" ColumnName="TradeSourceType" />
@@ -1630,37 +1633,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <EntitySetMapping Name="Controllers">
-            <EntityTypeMapping TypeName="GatewayModel.Controller">
-              <MappingFragment StoreEntitySet="Controller">
-                <ScalarProperty Name="ScalingStrategyId" ColumnName="ScalingStrategyId" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="TimeoutMilliSec" ColumnName="TimeoutMilliSec" />
-                <ScalarProperty Name="MaxInstances" ColumnName="MaxInstances" />
-                <ScalarProperty Name="MaxPriority" ColumnName="MaxPriority" />
-                <ScalarProperty Name="Configuration" ColumnName="Configuration" />
-                <ScalarProperty Name="TimeToLiveSec" ColumnName="TimeToLiveSec" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <AssociationSetMapping Name="ControllerServerRestriction" TypeName="GatewayModel.ControllerServerRestriction" StoreEntitySet="ControllerServerRestriction">
-            <EndProperty Name="Server">
-              <ScalarProperty Name="Id" ColumnName="ServerId" />
-            </EndProperty>
-            <EndProperty Name="Controller">
-              <ScalarProperty Name="Id" ColumnName="ControllerId" />
-            </EndProperty>
-          </AssociationSetMapping>
-          <EntitySetMapping Name="ScalingModels">
-            <EntityTypeMapping TypeName="GatewayModel.ScalingModel">
-              <MappingFragment StoreEntitySet="ScalingModel">
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="ScheduledJobs">
             <EntityTypeMapping TypeName="GatewayModel.ScheduledJob">
               <MappingFragment StoreEntitySet="ScheduledJob">
@@ -1693,6 +1665,37 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="ScalingModels">
+            <EntityTypeMapping TypeName="GatewayModel.ScalingModel">
+              <MappingFragment StoreEntitySet="ScalingModel">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Controllers">
+            <EntityTypeMapping TypeName="GatewayModel.Controller">
+              <MappingFragment StoreEntitySet="Controller">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="TimeoutMilliSec" ColumnName="TimeoutMilliSec" />
+                <ScalarProperty Name="MaxInstances" ColumnName="MaxInstances" />
+                <ScalarProperty Name="MaxPriority" ColumnName="MaxPriority" />
+                <ScalarProperty Name="ScalingStrategyId" ColumnName="ScalingStrategyId" />
+                <ScalarProperty Name="Configuration" ColumnName="Configuration" />
+                <ScalarProperty Name="TimeToLiveSec" ColumnName="TimeToLiveSec" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="ControllerServerRestriction" TypeName="GatewayModel.ControllerServerRestriction" StoreEntitySet="ControllerServerRestriction">
+            <EndProperty Name="Server">
+              <ScalarProperty Name="Id" ColumnName="ServerId" />
+            </EndProperty>
+            <EndProperty Name="Controller">
+              <ScalarProperty Name="Id" ColumnName="ControllerId" />
+            </EndProperty>
+          </AssociationSetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

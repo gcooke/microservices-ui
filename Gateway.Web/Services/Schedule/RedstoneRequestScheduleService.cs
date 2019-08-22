@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Mvc;
 using Absa.Cib.MIT.TaskScheduling.Client.Scheduler;
 using Absa.Cib.MIT.TaskScheduling.Models;
 using Bagl.Cib.MIT.IoC;
@@ -11,6 +7,10 @@ using Gateway.Web.Models.Schedule.Input;
 using Gateway.Web.Services.Schedule.Models;
 using Gateway.Web.Services.Schedule.Utils;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web.Mvc;
 
 namespace Gateway.Web.Services.Schedule
 {
@@ -18,8 +18,8 @@ namespace Gateway.Web.Services.Schedule
     {
         private readonly IRedstoneWebRequestScheduler _scheduler;
 
-        public RedstoneRequestScheduleService(IRedstoneWebRequestScheduler scheduler, 
-            ILoggingService loggingService, ISystemInformation systemInformation) : 
+        public RedstoneRequestScheduleService(IRedstoneWebRequestScheduler scheduler,
+            ILoggingService loggingService, ISystemInformation systemInformation) :
             base(loggingService, systemInformation)
         {
             _scheduler = scheduler;
@@ -103,7 +103,7 @@ namespace Gateway.Web.Services.Schedule
 
         protected override RedstoneRequest GetJob(Database.Schedule schedule, DateTime? businessDate = null)
         {
-            return schedule.ToRequest(false, businessDate);
+            return schedule.ToRequest(false, false, businessDate);
         }
 
         protected override void ScheduleTask(RedstoneRequest item, string key, string cron)
@@ -121,6 +121,5 @@ namespace Gateway.Web.Services.Schedule
             base.AssignSchedule(entity, parameters);
             entity.RequestConfiguration = configuration;
         }
-
     }
 }

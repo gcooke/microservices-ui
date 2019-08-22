@@ -1,11 +1,11 @@
+using Absa.Cib.MIT.TaskScheduling.Models;
+using Gateway.Web.Enums;
+using Gateway.Web.Services.Schedule.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Mvc;
-using Absa.Cib.MIT.TaskScheduling.Models;
-using Gateway.Web.Enums;
-using Gateway.Web.Services.Schedule.Models;
 
 namespace Gateway.Web.Models.Schedule.Input
 {
@@ -37,7 +37,7 @@ namespace Gateway.Web.Models.Schedule.Input
 
             foreach (var index in Enumerable.Range(0, 100))
             {
-                TradeSources.Add(new TradeSourceParameter(null, null, null, false)
+                TradeSources.Add(new TradeSourceParameter(null, null, null, false, false)
                 {
                     MarketDataMap = "Default"
                 });

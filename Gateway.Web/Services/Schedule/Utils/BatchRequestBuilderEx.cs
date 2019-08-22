@@ -1,24 +1,23 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Absa.Cib.MIT.TaskScheduling.Models;
 using Absa.Cib.MIT.TaskScheduling.Models.Builders.RedstoneRequest;
 using Absa.Cib.MIT.TaskScheduling.Models.Enum;
 using Absa.Cib.MIT.TaskScheduling.Server.Services.Executable;
-using Bagl.Cib.MSF.Contracts.Compression;
 using Newtonsoft.Json;
 using RestSharp;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Gateway.Web.Services.Schedule.Utils
 {
     public static class BatchRequestBuilderEx
     {
-        public  static string AuthUrl = String.Empty;
+        public static string AuthUrl = String.Empty;
         public static string BaseUrl = String.Empty;
-        public static string AuthQuery = String.Empty; 
+        public static string AuthQuery = String.Empty;
         private static string _query = "RiskBatch/Official/Batch/Run/%id%/%valuationDate%";
 
-        public static RedstoneRequest ToRequest(this Database.Schedule schedule, bool isLive, DateTime? businessDate = null, bool includeChildRequests = true)
+        public static RedstoneRequest ToRequest(this Database.Schedule schedule, bool isLive, bool isT0, DateTime? businessDate = null, bool includeChildRequests = true)
         {
             if (schedule.ScheduleId == 0)
                 throw new Exception("Unable to create request for scheduling - Schedule Id is set to 0.");
@@ -37,11 +36,11 @@ namespace Gateway.Web.Services.Schedule.Utils
                     .Build();
 
                 batchRequest.Arguments.Add(new Argument("id", ArgumentDataTypes.String.ToString(), schedule.ScheduleId.ToString()));
-                batchRequest.Arguments.Add(!isLive
-                    ? new Argument("valuationDate", ArgumentDataTypes.PreviousWeekDay.ToString(), "yyyy-MM-dd")
-                    : new Argument("valuationDate", ArgumentDataTypes.CurrentDateAndTime.ToString(), "yyyy-MM-dd"));
+                batchRequest.Arguments.Add(isLive || isT0
+                    ? new Argument("valuationDate", ArgumentDataTypes.CurrentDateAndTime.ToString(), "yyyy-MM-dd")
+                    : new Argument("valuationDate", ArgumentDataTypes.PreviousWeekDay.ToString(), "yyyy-MM-dd"));
 
-                if(includeChildRequests)
+                if (includeChildRequests)
                     AddChildRequest(batchRequest, schedule.Children.ToList());
 
                 return batchRequest;
@@ -53,7 +52,7 @@ namespace Gateway.Web.Services.Schedule.Utils
                 .SetAuthUrl(AuthUrl)
                 .SetQuery("")
                 .SetAuthQuery(AuthQuery)
-                .SetMethod((Method) Enum.Parse(typeof(Method), schedule.RequestConfiguration.Verb.ToUpper()))
+                .SetMethod((Method)Enum.Parse(typeof(Method), schedule.RequestConfiguration.Verb.ToUpper()))
                 .SetId(schedule.ScheduleId)
                 .SetBusinessDate(businessDate)
                 .SetBody(schedule.RequestConfiguration.Payload)
@@ -93,7 +92,7 @@ namespace Gateway.Web.Services.Schedule.Utils
 
             foreach (var child in children)
             {
-                var request = child.ToRequest(child.RiskBatchSchedule?.IsLive ?? false);
+                var request = child.ToRequest(child.RiskBatchSchedule?.IsLive ?? false, child.RiskBatchSchedule?.IsT0 ?? false);
                 if (parent.ContinueWith.Any(x => x.ScheduleId == request.ScheduleId)) continue;
                 parent.ContinueWith.Add(request);
                 AddChildRequest(request, child.Children.ToList());
