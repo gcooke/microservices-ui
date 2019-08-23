@@ -86,8 +86,8 @@
     <Reference Include="Bagl.Cib.MIT.ServiceBase, Version=1.1.84.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Bagl.Cib.MIT.ServiceBase.1.1.84\lib\net452\Bagl.Cib.MIT.ServiceBase.dll</HintPath>
     </Reference>
-    <Reference Include="Bagl.Cib.MIT.StatePublisher, Version=1.0.28.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Bagl.Cib.MIT.StatePublisher.1.0.28\lib\net452\Bagl.Cib.MIT.StatePublisher.dll</HintPath>
+    <Reference Include="Bagl.Cib.MIT.StatePublisher, Version=1.0.30.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bagl.Cib.MIT.StatePublisher.1.0.30\lib\net452\Bagl.Cib.MIT.StatePublisher.dll</HintPath>
     </Reference>
     <Reference Include="Bagl.Cib.MSF.ClientAPI, Version=1.1.447.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Bagl.Cib.MSF.ClientAPI.1.1.447\lib\net452\Bagl.Cib.MSF.ClientAPI.dll</HintPath>
