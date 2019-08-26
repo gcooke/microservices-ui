@@ -1,5 +1,4 @@
-﻿using System;
-using Gateway.Web.Models.Schedule.Output;
+﻿using Gateway.Web.Models.Schedule.Output;
 
 namespace Gateway.Web.Services.Schedule.Utils
 {
@@ -23,9 +22,10 @@ namespace Gateway.Web.Services.Schedule.Utils
                 IsEnabled = schedule.IsEnabled ?? true,
                 IsBatch = schedule.RiskBatchScheduleId != null,
                 IsExe = schedule.ExecutableConfigurationId != null,
-                IsLive = schedule.RiskBatchSchedule?.IsLive ?? false
+                IsLive = schedule.RiskBatchSchedule?.IsLive ?? false,
+                IsT0 = schedule.RiskBatchSchedule?.IsT0 ?? false
             };
-            
+
             return task;
         }
     }

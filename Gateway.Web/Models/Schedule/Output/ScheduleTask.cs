@@ -40,6 +40,8 @@ namespace Gateway.Web.Models.Schedule.Output
 
         public bool IsLive { get; set; }
 
+        public bool IsT0 { get; set; }
+
         public bool HasChildren => ChildrenCount > 0;
 
         public int TimeTakenMs => (int)((FinishedAt ?? DateTime.MinValue) - (StartedAt ?? DateTime.MinValue)).TotalMilliseconds;
@@ -69,9 +71,9 @@ namespace Gateway.Web.Models.Schedule.Output
                 var end = url.IndexOf("/");
                 url = url.Substring(0, end);
                 return url;
-
             }
         }
+
         public string RequestSearchString
         {
             get

@@ -222,9 +222,9 @@ namespace Gateway.Web.Controllers
         public ActionResult RunCustom(long id, DateTime businessDate)
         {
             var schedule = _scheduleDataService.GetScheduleTask(id);
-            var previousBusinessDay = businessDate.AddDays(-1);
-            while (previousBusinessDay.DayOfWeek == DayOfWeek.Saturday ||
-                   previousBusinessDay.DayOfWeek == DayOfWeek.Sunday)
+            var previousBusinessDay = !schedule.IsT0 ? businessDate.AddDays(-1) : businessDate;
+            while (!schedule.IsT0 && (previousBusinessDay.DayOfWeek == DayOfWeek.Saturday ||
+                   previousBusinessDay.DayOfWeek == DayOfWeek.Sunday))
             {
                 previousBusinessDay = previousBusinessDay.AddDays(-1);
             }
