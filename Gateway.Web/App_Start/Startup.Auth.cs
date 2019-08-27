@@ -1,4 +1,6 @@
-﻿using Microsoft.Owin;
+﻿using System.Security.Claims;
+using System.Web.Helpers;
+using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
 
@@ -8,6 +10,8 @@ namespace Gateway.Web
     {
         public void ConfigureAuth(IAppBuilder app)
         {
+            AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimsIdentity.DefaultNameClaimType;
+
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 AuthenticationType = "ApplicationCookie",
