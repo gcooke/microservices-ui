@@ -201,16 +201,16 @@ namespace Gateway.Web.Services
 
         Task<string> GetAsync(string gateway, string query);
 
-        Task DeleteWorkersAsync();
+        Task KillWorkersAsync();
 
-        Task DeleteWorkersAsync(string controller);
+        Task KillWorkersAsync(string controller);
 
-        Task DeleteWorkerAsync(string controller, string version, string id);
+        Task KillWorkerAsync(string queuename, string id);
 
         Task RequestWorkersAsync(RequestedWorkers requestedWorkers);
 
         Task ShutdownWorkersAsync(string controller);
 
-        Task ShutdownWorkerAsync(string controller, string version, string pid);
+        Task ShutdownWorkerAsync(string queuename, string id);
     }
 }
