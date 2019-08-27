@@ -18,7 +18,6 @@ namespace Gateway.Web.Models.Controller
         public string Version { get; set; }
         public int Timeout { get; set; }
         public DateTime Created { get; set; }
-        public string Priority { get; set; }
     }
 
     public enum WorkerStatus
