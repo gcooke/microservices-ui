@@ -34,7 +34,7 @@
                 <div class="col-sm-2 text-center">@item.LastUpdate.AddHours(2)</div>
                 <div class="col-sm-2 text-center">@item.InProgressId</div>
                 <div class="col-sm-offset-1">
-                    <a href="~/Controllers/KillWorker/?controllername=@item.Controller&version=@item.Version&pid=@item.PID">
+                    <a href="~/Controllers/KillWorker/?controllername=@item.Controller&queuename=@Url.Encode(item.QueueName)&id=@item.Id" title="Kill">
                         <small class="btn btn-danger btn-xs glyphicon glyphicon-remove pull-right"></small>
                     </a>
                 </div>

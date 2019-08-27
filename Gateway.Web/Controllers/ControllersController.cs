@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web.Http.Results;
 using System.Web.Mvc;
 using System.Xml.Linq;
 using Bagl.Cib.MIT.IoC;
@@ -199,7 +200,7 @@ namespace Gateway.Web.Controllers
         [RoleBasedAuthorize(Roles = "Security.Delete")]
         public async Task<ActionResult> KillAll()
         {
-            await _gateway.DeleteWorkersAsync();
+            await _gateway.KillWorkersAsync();
             return RedirectToAction("Workers");
         }
 
@@ -211,25 +212,24 @@ namespace Gateway.Web.Controllers
             return Redirect($"~/Controller/Workers/{controllername}");
         }
 
-        public async Task<ActionResult> ShutdownWorker(string controllername, string version, string id)
+        public async Task<ActionResult> ShutdownWorker(string controllername, string queuename, string id)
         {
-            await _gateway.ShutdownWorkerAsync(controllername, version, id);
+            await _gateway.ShutdownWorkerAsync(queuename, id);
             return Redirect($"~/Controller/Workers/{controllername}");
         }
 
+        //[RoleBasedAuthorize(Roles = "Security.Delete")]
+        public async Task<ActionResult> KillWorker(string controllername, string queuename, string id)
+        {
+            await _gateway.KillWorkerAsync(queuename, id);
+            return Redirect($"~/Controller/Workers/{controllername}");
+        }
 
         [RoleBasedAuthorize(Roles = "Security.Delete")]
         public async Task<ActionResult> KillWorkers(string controllername)
         {
-            await _gateway.DeleteWorkersAsync(controllername);
+            await _gateway.KillWorkersAsync(controllername);
             return Redirect($"~/Controller/Workers/{controllername}");
-        }
-
-        [RoleBasedAuthorize(Roles = "Security.Delete")]
-        public async Task<ActionResult> KillWorker(string controllername, string version, string id)
-        {
-            await _gateway.DeleteWorkerAsync(controllername, version,id);
-             return Redirect($"~/Controller/Workers/{controllername}");
         }
 
         [HttpGet]

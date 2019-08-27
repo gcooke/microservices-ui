@@ -20,7 +20,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Policy;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
 using System.Xml.Linq;
 using WebGrease.Css.Extensions;
@@ -1437,14 +1439,14 @@ namespace Gateway.Web.Services
             await GetAsync(gateway, $"worker/retry/{correlationId}");
         }
 
-        public async Task DeleteWorkersAsync()
+        public async Task KillWorkersAsync()
         {
             await Delete($"worker/kill/all");
         }
 
-        public async Task DeleteWorkersAsync(string controller)
+        public async Task KillWorkersAsync(string controller)
         {
-            await Delete($"worker/kill/{controller}");
+            await Delete($"worker/kill/controllers/{controller}");
         }
 
         public async Task ShutdownWorkersAsync(string controller)
@@ -1452,18 +1454,34 @@ namespace Gateway.Web.Services
             await Delete($"worker/shutdown/{controller}");
         }
 
-
-
-        public async Task DeleteWorkerAsync(string controller, string version, string pid)
+        public async Task ShutdownWorkerAsync(string queuename, string id)
         {
-            await Delete($"worker/kill/{controller}/{version}/{pid}");
+            await Post($"worker/shutdown/{id}", queuename);
         }
 
-        public async Task ShutdownWorkerAsync(string controller, string version, string id)
+        private async Task Post(string query,string content)
         {
-            await Delete($"worker/shutdown/{controller}/{version}/{id}");
+            var gateway = _gateways.FirstOrDefault();
+
+            var url = string.Format("https://{0}:{1}/{2}", gateway, _port, query);
+
+            using (var client = new HttpClient(new HttpClientHandler
+            {
+                UseDefaultCredentials = true,
+                AllowAutoRedirect = true
+            }))
+            {
+                client.Timeout = _defaultRequestTimeout;
+                var response = await client.PostAsync(url,new StringContent(content));
+                response.EnsureSuccessStatusCode();
+            }
         }
 
+        public async Task KillWorkerAsync(string queuename, string id)
+        {
+            await Post($"worker/kill/{id}", queuename);
+        }
+        
         private class ServerResponse
         {
             public ServerResponse(string server, XDocument document)
