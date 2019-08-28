@@ -24,10 +24,10 @@ namespace Gateway.Web.Models.Controller
     {
         Idle,
         Starting,
+        Started,
         Processing,
         Shuttingdown,
         Shutdown,
-        Parked,
         StartupError
     }
 }
