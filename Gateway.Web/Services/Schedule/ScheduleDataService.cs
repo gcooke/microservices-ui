@@ -199,6 +199,15 @@ namespace Gateway.Web.Services.Schedule
             }
         }
 
+        public Database.ScheduleGroup GetScheduleGroup(long id)
+        {
+            using (var db = new GatewayEntities(ConnectionString))
+            {
+                var entity = db.ScheduleGroups.SingleOrDefault(x => x.GroupId == id);
+                return entity;
+            }
+        }
+
         public IList<Database.Schedule> GetSchedules(IEnumerable<long> scheduleIdList)
         {
             using (var db = new GatewayEntities(ConnectionString))

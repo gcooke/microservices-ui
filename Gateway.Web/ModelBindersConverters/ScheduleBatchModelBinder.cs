@@ -25,7 +25,8 @@ namespace Gateway.Web.ModelBindersConverters
                 Parent = request.Form["Parent"],
                 GroupName = request.Form["GroupName"],
                 BulkUpdate = bool.Parse(request.Form["BulkUpdate"]),
-                ConfigurationIdList = configurationIdList
+                ConfigurationIdList = configurationIdList,
+                T0ValidationConfirmation = bool.Parse(request.Form["T0ValidationConfirmation"])
             };
 
             foreach (var index in Enumerable.Range(0, model.TradeSources.Count))
