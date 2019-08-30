@@ -23,6 +23,8 @@ namespace Gateway.Web.Models.Schedule.Input
 
         public IList<SelectListItem> Types { get; set; }
 
+        public bool T0ValidationConfirmation { get; set; }
+
         [Required]
         [Display(Name = "Trade Source Types")]
         [StringLength(100, ErrorMessage = "Trade Source Type cannot be longer than 100 characters.")]

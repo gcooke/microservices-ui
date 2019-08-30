@@ -103,7 +103,9 @@ namespace Gateway.Web.Services.Schedule
 
         protected override RedstoneRequest GetJob(Database.Schedule schedule, DateTime? businessDate = null)
         {
-            return schedule.ToRequest(false, false, businessDate);
+            var isTo = schedule?.RiskBatchSchedule?.IsT0 ?? false;
+
+            return schedule.ToRequest(false,isTo,  businessDate);
         }
 
         protected override void ScheduleTask(RedstoneRequest item, string key, string cron)
