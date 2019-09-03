@@ -136,16 +136,16 @@ function updateView(data) {
 }
 
 function getStatusHtml(value) {
-    var html = "";
+    var html = "<span style='white-space:nowrap;'>";
     var color = getColor(value.Status);
     var icon = getIcon(value);
 
     if (value.RequestId !== null) {
-        html =
+        html +=
             "<span class='" + icon + "' style='color: " + color + "'></span>" +
-            " <a target='_blank' href='Request/Summary?correlationId=" + value.RequestId + "' style='color: " + color + "'>" + value.Status + "</a>";
+            " <a target='_blank' href='Request/Summary?correlationId=" + value.RequestId + "' style='color: " + color + "'>" + value.Status + "</a> ";
     } else {
-        html = "<span style='color: " + color + "'>" +
+        html += "<span style='color: " + color + "'>" +
             "<span class='" + icon + "' style='padding-left: 0 !important;'></span> " +
             value.Status +
             "</span>";
@@ -154,6 +154,8 @@ function getStatusHtml(value) {
     if ((value.Status === 'Succeeded' || value.Status === 'Failed') && value.Retries !== null && value.Retries > 0) {
         html += " <span class='glyphicon glyphicon-retweet' style='padding: 0 !important; margin-left: 5px; color: " + color + ";' title='This item has been rerun one or more times.'></span>";
     }
+
+    html += "</span>";
 
     return html;
 }
@@ -188,7 +190,7 @@ function getColor(status) {
     if (status === "Succeeded") {
         color = "green";
     }
-    else if (status === "Failed") {
+    else if (status === "Failed" || status.includes("cancelled")) {
         color = "red";
     }
     else {
@@ -202,7 +204,7 @@ function getIcon(value) {
     if (value.Status === "Succeeded") {
         icon = "glyphicon glyphicon-ok";
     }
-    else if (value.Status === "Failed") {
+    else if (value.Status === "Failed" || value.Status.includes("cancelled")) {
         icon = "glyphicon glyphicon-remove";
     }
     else {
