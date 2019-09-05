@@ -15,7 +15,8 @@ namespace Gateway.Web
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 AuthenticationType = "ApplicationCookie",
-                LoginPath = new PathString("/Account/LogOn")
+                LoginPath = new PathString("/Account/LogOn"),
+                CookieName = "SIGMA_OWIN_AUTH"
             });
         }
     }
