@@ -7,6 +7,7 @@ using Gateway.Web.Services.Schedule.Utils;
 using System;
 using System.Linq;
 using System.Web.Mvc;
+using Gateway.Web.Enums;
 
 namespace Gateway.Web.Controllers
 {
@@ -110,6 +111,7 @@ namespace Gateway.Web.Controllers
 
             ViewBag.T0ValidationMessage = t0ValidationMessage;
             model.SetData(_batchConfigDataService);
+            model.TradeSourceType = model?.TradeSources?.Count() > 0 ? model.TradeSources[0]?.TradeSourceType : null ;
             return View("Create", model);
         }
 

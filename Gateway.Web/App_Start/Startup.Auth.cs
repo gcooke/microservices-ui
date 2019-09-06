@@ -10,7 +10,7 @@ namespace Gateway.Web
     {
         public void ConfigureAuth(IAppBuilder app)
         {
-            AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimsIdentity.DefaultNameClaimType;
+            AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.NameIdentifier;
 
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
