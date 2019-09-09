@@ -541,6 +541,7 @@
     <Compile Include="Models\Export\CubeToCsvSourceInformation.cs" />
     <Compile Include="Models\Export\SourceInformationViewModel.cs" />
     <Compile Include="Models\Interrogation\InterrogationModel.cs" />
+    <Compile Include="Models\JwtIdentity.cs" />
     <Compile Include="Models\Pdc\PdcServiceModel.cs" />
     <Compile Include="Models\Pdc\PdcServicesModel.cs" />
     <Compile Include="Models\Pdc\PdcTradeModel.cs" />
