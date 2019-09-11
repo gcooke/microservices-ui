@@ -40,6 +40,7 @@ namespace Gateway.Web.Controllers
             _restService = restService;
             _systemInformation = systemInformation;
             _baseURL = $"https://{DefaultKnownGateways.Get(systemInformation)}:7010/";
+            _logger.Debug($"_baseURL:{_baseURL}");
         }
 
         public ActionResult Index()
@@ -74,6 +75,8 @@ namespace Gateway.Web.Controllers
             try
             {
                 _databaseService.UpdateServerControllers(model);
+
+                _logger.Debug($"_databaseService.UpdateServerController called Successfully.");
 
                 try
                 {
