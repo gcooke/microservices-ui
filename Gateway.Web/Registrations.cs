@@ -26,6 +26,7 @@ using Gateway.Web.Services.Schedule;
 using Gateway.Web.Services.Schedule.Interfaces;
 using StackExchange.Redis;
 using System;
+using Gateway.Web.Services.PortfolioProfile;
 using Unity.Injection;
 
 namespace Gateway.Web
@@ -153,6 +154,7 @@ namespace Gateway.Web
             information.RegisterType<IBatchHelper, BatchHelper>(Scope.ContainerSingleton);
             information.RegisterType<IManifestService, ManifestService>(Scope.ContainerSingleton);
             information.RegisterType<IPdcService, PdcService>(Scope.ContainerSingleton);
+            information.RegisterType<IPortfolioProfileMonitoringService, PortfolioProfileMonitoringService>(Scope.ContainerSingleton);
 
             Absa.Cib.Authorization.Extensions.Registration.Register(information);
             Absa.Cib.Authorization.Extensions.Registration.RegisterCertificates(information);

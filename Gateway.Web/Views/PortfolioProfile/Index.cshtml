@@ -1,0 +1,133 @@
+﻿@using Gateway.Web.Utils
+@model Gateway.Web.Services.PortfolioProfile.PortfolioProfileReportStates
+
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "Portfolio Profile";
+    ViewBag.Current = "FX";
+}
+@{ Html.RenderPartial("_PortfolioProfileConfigNav"); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <h3 class="text-lowercase">
+                    Portfolio Profile Monitoring <small>@Model.Site - @Model.BusinessDate.ToString("yyyy-MM-dd")</small>
+                </h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="containerx bulk m-t-15">
+        <div class="row">
+            <div class="col-sm-12">
+                <div id="profile-paginator" data-current-date="@Model.BusinessDate.ToString("yyyy-MM-dd")"></div>
+            </div>
+        </div>
+
+        <div class="row m-t-15">
+            <div class="col-sm-12">
+                @foreach (var item in @Model.States.GroupBy(x => new { x.Report }))
+                {
+                    <table style="width: 100%; white-space: wrap" class="datatable table" id="searchable-table">
+                        <thead>
+                            <tr>
+                                <td colspan="6">@item.Key.Report</td>
+                            </tr>
+                            <tr style="background-color: #990505">
+                                <td>Portfolio</td>
+                                <td>Batch</td>
+                                <td>Latest Risks At</td>
+                                <td>Latest Report At</td>
+                                <td>Status</td>
+                                <td>Actions</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var report in item.GroupBy(x => x.Portfolio))
+                            {
+                                foreach (var batchIndex in Enumerable.Range(0, report.Count()))
+                                {
+                                    var batch = report.ToList()[batchIndex];
+
+                                    if (batchIndex == 0)
+                                    {
+                                        <tr>
+                                            <td rowspan="@report.Count()">
+                                                @Html.ActionLink(@batch.Portfolio, "Report", "PortfolioProfile", new {site=@Model.Site, @valuationDate=@Model.BusinessDate, @portfolio=@batch.Portfolio, @report=@item.Key.Report}, new {target="_blank"})
+                                            </td>
+                                            <td>@batch.Batch</td>
+                                            <td>@batch.LatestRisksAvailable</td>
+                                            <td>@batch.LastGeneratedAt</td>
+                                            @if (@batch.Status.ToLower() == "okay")
+                                            {
+                                                <td style="color: green; font-weight: bold;">@batch.Status</td>
+                                            }
+                                            else if (@batch.Status.ToLower() == "no risks")
+                                            {
+                                                <td style="color: red; font-weight: bold;">@batch.Status</td>
+                                            }
+                                            else if (@batch.Status.ToLower() == "no report")
+                                            {
+                                                <td style="color: orange; font-weight: bold;">@batch.Status</td>
+                                            }
+                                            else if (@batch.Status.ToLower() == "stale")
+                                            {
+                                                <td style="color: orange; font-weight: bold;">@batch.Status</td>
+                                            }
+                                            else
+                                            {
+                                                <td style="font-weight: bold;">@batch.Status</td>
+                                            }
+                                            <td>
+                                                @Html.ActionLink("Regenerate", "Regenerate", "PortfolioProfile", new {site=@Model.Site, @valuationDate=@Model.BusinessDate, @portfolio=@batch.Portfolio, @report=@item.Key.Report}, new {@class="btn btn-default btn-xs"})
+                                            </td>
+                                        </tr>
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td>@batch.Batch</td>
+                                            <td>@batch.LatestRisksAvailable</td>
+                                            <td>@batch.LastGeneratedAt</td>
+                                            @if (@batch.Status.ToLower() == "okay")
+                                            {
+                                                <td style="color: green; font-weight: bold;">@batch.Status</td>
+                                            }
+                                            else if (@batch.Status.ToLower() == "no risks")
+                                            {
+                                                <td style="color: red; font-weight: bold;">@batch.Status</td>
+                                            }
+                                            else if (@batch.Status.ToLower() == "no report")
+                                            {
+                                                <td style="color: orange; font-weight: bold;">@batch.Status</td>
+                                            }
+                                            else if (@batch.Status.ToLower() == "stale")
+                                            {
+                                                <td style="color: orange; font-weight: bold;">@batch.Status</td>
+                                            }
+                                            else
+                                            {
+                                                <td style="font-weight: bold;">@batch.Status</td>
+                                            }
+                                            <td>
+                                                <a href="" class="btn btn-default btn-xs">Regenerate</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            }
+
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+
+    </div>
+
+
+</div>

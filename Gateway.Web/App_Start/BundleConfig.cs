@@ -100,6 +100,9 @@ namespace Gateway.Web
 
             bundles.Add(new ScriptBundle("~/bundles/toastr").Include(
                 "~/Content/js/toastr.min.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/portfolioprofile").Include(
+                "~/Scripts/PortfolioProfile/portfolioprofile.js"));
         }
     }
 }
