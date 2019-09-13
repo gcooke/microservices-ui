@@ -1,0 +1,17 @@
+﻿@using Gateway.Web.Utils
+@model Gateway.Web.Services.PortfolioProfile.PortfolioProfileReport
+
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "Configuration";
+    ViewBag.Current = "Schedule";
+}
+<div class="container">
+    <div>
+        <div class="row m-t-15">
+            <div class="col-sm-12">
+                <pre style="width: 100%" class="prewrap" id="portfolio-profile-data">@Model.Data</pre>
+            </div>
+        </div>
+    </div>
+</div>

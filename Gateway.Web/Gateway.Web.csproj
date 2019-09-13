@@ -351,7 +351,13 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ExecutableScheduleController.cs" />
     <Compile Include="Controllers\BatchScheduleController.cs" />
+    <Compile Include="Services\PortfolioProfile\IPortfolioProfileMonitoringService.cs" />
     <Compile Include="Controllers\PdcController.cs" />
+    <Compile Include="Controllers\PortfolioProfileController.cs" />
+    <Compile Include="Services\PortfolioProfile\PortfolioProfileMonitoringService.cs" />
+    <Compile Include="Services\PortfolioProfile\PortfolioProfileReport.cs" />
+    <Compile Include="Services\PortfolioProfile\PortfolioProfileReportState.cs" />
+    <Compile Include="Services\PortfolioProfile\PortfolioProfileReportStates.cs" />
     <Compile Include="Controllers\RbhController.cs" />
     <Compile Include="Controllers\RequestedWorkers.cs" />
     <Compile Include="Controllers\RequestScheduleController.cs" />
@@ -920,6 +926,7 @@
     <Content Include="Content\js\respond.js" />
     <Content Include="Content\js\respond.min.js" />
     <Content Include="Content\js\_references.js" />
+    <Content Include="Scripts\PortfolioProfile\portfolioprofile.js" />
     <Content Include="Scripts\Schedule\Schedule.js" />
     <Content Include="Scripts\ServerResources\ServerResources.js" />
     <Content Include="Scripts\Monitoring\Monitoring.js" />
@@ -1064,6 +1071,9 @@
     <Content Include="Views\Shared\_ExportConfigNav.cshtml" />
     <Content Include="Views\ExportSchedule\Update.cshtml" />
     <Content Include="Views\ExportSchedule\Detail.cshtml" />
+    <Content Include="Views\PortfolioProfile\Index.cshtml" />
+    <Content Include="Views\PortfolioProfile\Report.cshtml" />
+    <Content Include="Views\PortfolioProfile\_PortfolioProfileConfigNav.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />
