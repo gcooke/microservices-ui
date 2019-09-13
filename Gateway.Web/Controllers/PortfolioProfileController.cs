@@ -8,7 +8,7 @@ using Gateway.Web.Services.PortfolioProfile;
 
 namespace Gateway.Web.Controllers
 {
-    [RoleBasedAuthorize(Roles = "Security.View")]
+    [RoleBasedAuthorize(Roles = "PortfolioProfile.Monitoring")]
     public class PortfolioProfileController : BaseController
     {
         private readonly ISystemInformation _systemInformation;
