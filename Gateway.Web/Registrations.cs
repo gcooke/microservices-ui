@@ -170,7 +170,7 @@ namespace Gateway.Web
         {
             LogLevel level;
 
-            var retLevel = (Enum.TryParse(logLevel, out level)) ? level : LogLevel.INFO;
+            var retLevel = (Enum.TryParse(logLevel, out level)) ? level : LogLevel.DEBUG;
 
             return retLevel;
         }

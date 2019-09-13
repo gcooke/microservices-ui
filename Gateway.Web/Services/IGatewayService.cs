@@ -212,5 +212,7 @@ namespace Gateway.Web.Services
         Task ShutdownWorkersAsync(string controller);
 
         Task ShutdownWorkerAsync(string queuename, string id);
+
+        void NotifyResourceUpdate();
     }
 }
