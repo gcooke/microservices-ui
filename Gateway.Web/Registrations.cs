@@ -60,9 +60,9 @@ namespace Gateway.Web
 
             // Setup Logging
             information.LoggingInformation.LogPath = information.GetSetting("LogLocation");
-            information.LoggingInformation.FileLogLevel.SetLogLevel(information.GetSetting("ConsoleLogLevel"));
-            information.LoggingInformation.FileLogLevel.SetLogLevel(information.GetSetting("FileLogLevel"));
-            information.LoggingInformation.ImportantLogLevel.SetLogLevel(information.GetSetting("ImportantLogLevel"));
+            information.LoggingInformation.ConsoleLogLevel = GetLogLevel(information.GetSetting("ConsoleLogLevel"));
+            information.LoggingInformation.FileLogLevel = GetLogLevel(information.GetSetting("FileLogLevel"));
+            information.LoggingInformation.ImportantLogLevel = GetLogLevel( information.GetSetting("ImportantLogLevel"));
 
             information.RegisterType<ILogsService, LogsService>(Scope.Singleton);
 
@@ -167,15 +167,14 @@ namespace Gateway.Web
                 cfg.AddProfile<ExportProfile>();
             });
         }
-
-        private static void SetupLogging(ISystemInformation information)
-        {
-        }
-
-        private static void SetLogLevel(this LogLevel value, string logLevel)
+      
+        private static LogLevel GetLogLevel(string logLevel)
         {
             LogLevel level;
-            value = (Enum.TryParse(logLevel, out level)) ? level : value;
+
+            var retLevel = (Enum.TryParse(logLevel, out level)) ? level : LogLevel.DEBUG;
+
+            return retLevel;
         }
     }
 }

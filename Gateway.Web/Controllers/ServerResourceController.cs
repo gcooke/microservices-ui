@@ -1,21 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
-using Bagl.Cib.MIT.IoC;
-using Bagl.Cib.MIT.Logging;
-using Bagl.Cib.MIT.Redis;
-using Bagl.Cib.MSF.ClientAPI.Gateway;
-using Bagl.Cib.MSF.ClientAPI.Model;
-using Bagl.Cib.MSF.ClientAPI.Utils;
+﻿using Bagl.Cib.MIT.Logging;
 using Gateway.Web.Database;
 using Gateway.Web.Models.ServerResource;
-using Controller = System.Web.Mvc.Controller;
+using Gateway.Web.Services;
+using System;
+using System.Linq;
+using System.Web.Mvc;
 using Gateway.Web.Authorization;
-using Bagl.Cib.MSF.ClientAPI.Utils;
 
 namespace Gateway.Web.Controllers
 {
@@ -23,23 +13,16 @@ namespace Gateway.Web.Controllers
     public class ServerResourceController : BaseController
     {
         private readonly IGatewayDatabaseService _databaseService;
-        private ISimpleRestService _restService;
-        private readonly ISystemInformation _systemInformation;
-        private readonly IGateway _gateway;
-        private string _baseURL;
+        private readonly IGatewayService _gatewayService;
 
         public ServerResourceController(
             IGatewayDatabaseService databaseService,
-            ILoggingService loggingService,
-            ISimpleRestService restService,
-            ISystemInformation systemInformation
-            )
-            :base(loggingService)
+            IGatewayService gatewayService,
+            ILoggingService loggingService
+            ) : base(loggingService)
         {
             _databaseService = databaseService;
-            _restService = restService;
-            _systemInformation = systemInformation;
-            _baseURL = $"https://{DefaultKnownGateways.Get(systemInformation)}:7010/";
+            _gatewayService = gatewayService;
         }
 
         public ActionResult Index()
@@ -64,21 +47,21 @@ namespace Gateway.Web.Controllers
             var model = _databaseService.GetSeverControllers(serverid);
 
             return View("ServerControllers", model);
-
         }
 
-        [HttpPost]
-        [RoleBasedAuthorize(Roles = "Security.Modify")]
-        public async Task<ActionResult> SaveServerControllers(ServerControllerModel model, CancellationToken token)
+         [HttpPost]
+         [RoleBasedAuthorize(Roles = "Security.Modify")]
+        public ActionResult SaveServerControllers(ServerControllerModel model)
         {
             try
             {
                 _databaseService.UpdateServerControllers(model);
 
+                _logger.Info($"_databaseService.UpdateServerController called Successfully.");
+
                 try
                 {
-                    var result = await _restService.Get(_baseURL + "resources/notify", token);
-                    _logger.Info($"ServerController Resources updated. : Server Response :{result}");
+                    _gatewayService.NotifyResourceUpdate();
                 }
                 catch (Exception ex)
                 {
@@ -87,15 +70,13 @@ namespace Gateway.Web.Controllers
 
                 return RedirectToAction("Index");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ModelState.AddModelError(string.Empty, ex.Message);
+                _logger.Error(ex, "Error saving Server Controllers.");
             }
 
             return View("ServerControllers", model);
         }
-
     }
-
-
 }

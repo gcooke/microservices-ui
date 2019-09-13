@@ -25,6 +25,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Xml.Linq;
+using Gateway.Web.Models.Export;
 using WebGrease.Css.Extensions;
 using ApplicationsModel = Gateway.Web.Models.Security.ApplicationsModel;
 using GroupsModel = Gateway.Web.Models.Security.GroupsModel;
@@ -1506,6 +1507,32 @@ namespace Gateway.Web.Services
             // Return the error message (either in body or message).
             return new[] { response.Body ?? response.Message };
         }
+
+
+        public void NotifyResourceUpdate()
+        {
+            var gateway = _gateways.FirstOrDefault();
+
+            var uri = string.Format("https://{0}:{1}/{2}", gateway, _port, "resources/notify");
+
+            using (var client = new HttpClient(new HttpClientHandler
+            {
+                UseDefaultCredentials = true,
+                AllowAutoRedirect = true
+            }))
+            {
+                client.DefaultRequestHeaders.Add("Accept", "application/xml");
+
+                client.Timeout = _defaultRequestTimeout;
+                var response = client.GetAsync(uri);
+                response.Wait(_defaultRequestTimeout);
+
+                if (response.Result.StatusCode != HttpStatusCode.OK)
+                {
+                    throw new RemoteGatewayException(response.Result.ReasonPhrase);
+                }
+            }
+        }
     }
 
     public class RemoteGatewayException : Exception
@@ -1515,4 +1542,6 @@ namespace Gateway.Web.Services
         {
         }
     }
+
+
 }
