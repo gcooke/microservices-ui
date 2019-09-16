@@ -1,4 +1,8 @@
-﻿function setupCalendar() {
+﻿$(document).ready(function () {
+    setupProfileCalendar()
+});
+
+function setupProfileCalendar() {
     var options = {
         selectedDate: $("#profile-paginator").data("current-date"),
         endDate: moment(),
