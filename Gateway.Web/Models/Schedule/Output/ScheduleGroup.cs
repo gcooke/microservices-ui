@@ -1,6 +1,7 @@
+using CronExpressionDescriptor;
+using Gateway.Web.Models.Schedule.Input;
 using System;
 using System.Collections.Generic;
-using Gateway.Web.Models.Schedule.Input;
 
 namespace Gateway.Web.Models.Schedule.Output
 {
@@ -12,7 +13,7 @@ namespace Gateway.Web.Models.Schedule.Output
 
         public string FriendlyScheduleDescription => string.IsNullOrWhiteSpace(Schedule)
             ? string.Empty
-            : CronExpressionDescriptor.ExpressionDescriptor.GetDescription(Schedule);
+            : CronExpressionDescriptor.ExpressionDescriptor.GetDescription(Schedule, new Options() { Use24HourTimeFormat = true });
 
         public string FriendScheduledTime { get; set; }
 

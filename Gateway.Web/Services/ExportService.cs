@@ -2,11 +2,12 @@ using Bagl.Cib.MIT.Cube;
 using Bagl.Cib.MIT.Logging;
 using Bagl.Cib.MIT.StatePublisher.Utils;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
+using CronExpressionDescriptor;
 using Gateway.Web.Models.Export;
+using NCrontab;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NCrontab;
 
 namespace Gateway.Web.Services
 {
@@ -99,7 +100,7 @@ namespace Gateway.Web.Services
             var query = $@"Exports/Fetch/{date.ToString("yyyy-MM-dd")}";
             var cube = FetchCube(query);
 
-            var result = ConvertCubeToExportCRONGroup(cube,date).OrderBy(x => x.GroupName).ToList();
+            var result = ConvertCubeToExportCRONGroup(cube, date).OrderBy(x => x.GroupName).ToList();
 
             return result;
         }
@@ -233,7 +234,7 @@ namespace Gateway.Web.Services
                 if (!occurrences.Any())
                     continue;
                 exportCubes.Add(export);
-            }        
+            }
             return CreateGroupingForExports(exportCubes);
         }
 
@@ -249,7 +250,7 @@ namespace Gateway.Web.Services
                     groups.Add(new ExportCRONGroup()
                     {
                         Schedule = exportCube.Schedule,
-                        GroupName = string.IsNullOrEmpty(exportCube.Schedule) ? "Manual" : CronExpressionDescriptor.ExpressionDescriptor.GetDescription(exportCube.Schedule),
+                        GroupName = string.IsNullOrEmpty(exportCube.Schedule) ? "Manual" : CronExpressionDescriptor.ExpressionDescriptor.GetDescription(exportCube.Schedule, new Options() { Use24HourTimeFormat = true }),
                         FileExports = new List<FileExportViewModel>()
                     });
                     group = groups.FirstOrDefault(x => x.Schedule == exportCube.Schedule);
