@@ -1,3 +1,4 @@
+using CronExpressionDescriptor;
 using Gateway.Web.Utils;
 using System;
 using System.Collections.Generic;
@@ -50,7 +51,7 @@ namespace Gateway.Web.Models.Schedule.Output
 
         public string FriendlyScheduleDescription => string.IsNullOrWhiteSpace(Schedule)
             ? string.Empty
-            : CronExpressionDescriptor.ExpressionDescriptor.GetDescription(Schedule);
+            : CronExpressionDescriptor.ExpressionDescriptor.GetDescription(Schedule, new Options() { Use24HourTimeFormat = true });
 
         public string Name { get; set; }
 
