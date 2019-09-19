@@ -351,6 +351,7 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ExecutableScheduleController.cs" />
     <Compile Include="Controllers\BatchScheduleController.cs" />
+    <Compile Include="Models\Schedule\Output\HistoryTimingViewModel.cs" />
     <Compile Include="Services\PortfolioProfile\IPortfolioProfileMonitoringService.cs" />
     <Compile Include="Controllers\PdcController.cs" />
     <Compile Include="Controllers\PortfolioProfileController.cs" />
@@ -1074,6 +1075,7 @@
     <Content Include="Views\PortfolioProfile\Index.cshtml" />
     <Content Include="Views\PortfolioProfile\Report.cshtml" />
     <Content Include="Views\PortfolioProfile\_PortfolioProfileConfigNav.cshtml" />
+    <Content Include="Views\Schedule\History.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />
@@ -1102,7 +1104,9 @@
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="packages.config" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Content\js\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
@@ -1129,7 +1133,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>9895</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:9895/</IISUrl>
+          <IISUrl>http://localhost:9895/Schedule</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

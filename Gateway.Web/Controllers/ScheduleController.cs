@@ -113,6 +113,14 @@ namespace Gateway.Web.Controllers
         }
 
         [HttpGet]
+        [Route("History")]
+        public ActionResult History(int sid)
+        {
+            return View();
+        }
+
+
+        [HttpGet]
         [Route("Delete/Bulk/Confirmation")]
         public ActionResult DeleteSchedulesBulkConfirmation(string items)
         {
@@ -133,6 +141,8 @@ namespace Gateway.Web.Controllers
             _scheduleDataService.DisableSchedule(id);
             return RedirectToAction("Update");
         }
+
+    
 
         [HttpGet]
         [Route("Status")]

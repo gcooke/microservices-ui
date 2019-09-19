@@ -675,6 +675,14 @@ namespace Gateway.Web.Database
             }
         }
 
+        public void GetHistoryTimingsForSchedule(long scheduleId, int days)
+        {
+            using (var database = new GatewayEntities(_connectionString))
+            {
+              
+            }
+        }
+
         public void UpdateControllerServers(ControllerServersModel controllerServers)
         {
             using (var database = new GatewayEntities(_connectionString))
