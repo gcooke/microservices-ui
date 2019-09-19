@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic; 
 
 namespace Gateway.Web.Models.Schedule.Output
 {
     public class HistoryTimingViewModel
     {
-        public DateTime RunDate { get; set; }
-        public long WallClockTime { get; set; }
-        public long TotalQueueTime { get; set; }
-        public long TotalProcessTime { get; set; }
-        public long ScheduleId { get; set; }
+        public List<HistoryTimingForScheduleViewModel> HistoryTimingForSchedule { get; set; }
+        public string ScheduleName { get; set; }
     }
 }

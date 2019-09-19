@@ -1,5 +1,5 @@
 ﻿@using Gateway.Web.Utils
-@model Gateway.Web.Models.Schedule.Output.ScheduleViewModel
+@model Gateway.Web.Models.Schedule.Output.HistoryTimingViewModel
 
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
@@ -7,3 +7,46 @@
     ViewBag.Current = "Timming History";
 }
 @{ Html.RenderPartial("_BatchConfigNav"); }
+
+<div id="page-content-wrapper">
+
+    @{
+        var rowBackgroundStyle = "div_row_white";
+       
+        
+    }
+    <div class="hero-unit">
+        <div class="container-fluid">
+
+            <h3 class="row text-lowercase">Timing History</h3>
+            <div class="row h5">All timings history relating to schedule @Model.ScheduleName</div>
+            <br />
+             
+
+            <br />
+            <h4 class="row">Schedule History</h4>
+            <table style="width: 100%; white-space: nowrap;" class="row datatable">
+                <thead>
+                    <tr>
+                       
+                        <td class="">Run Date</td>
+                        <td class="">Wall Clock Time</td>
+                        <td class="">Total Queue Time</td>
+                        <td class="">Total Process Time</td>
+                    </tr>
+                </thead>
+                @foreach (var item in Model.HistoryTimingForSchedule)
+                {
+                    <tr>
+                        <td>@item.RunDate</td>
+                        <td style="text-align: right;">@item.WallClockTime</td>
+                        <td style="text-align: right;">@item.TotalQueueTime</td>
+                        <td style="text-align: right;">@item.TotalQueueTime</td>
+                    </tr>
+                }
+            </table>
+
+        </div>
+    </div>
+
+</div>

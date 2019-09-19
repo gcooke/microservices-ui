@@ -79,12 +79,24 @@ namespace Gateway.Web.Database
             return result;
         }
 
+        public IList<spGetHistoryTimingForSchedule_Result> GetHistoryTimingForSchedule(long scheduleId,int days)
+        {
+        
+            using (var database = new GatewayEntities(_connectionString))
+            {
+                var results = database.spGetHistoryTimingForSchedule(scheduleId, days);
+                return results.ToList();
+
+            }
+           
+        }
+
         public List<HistoryItem> GetRecentRequests(string controller, DateTime start, string search = null)
         {
             var result = new List<HistoryItem>();
             using (var database = new GatewayEntities(_connectionString))
             {
-                var items = database.spGetRecentRequests(start, controller, search).ToList();
+                var items = database.spGetRecentRequests(start, controller, search,null).ToList();
 
                 if (!string.IsNullOrWhiteSpace(search))
                 {

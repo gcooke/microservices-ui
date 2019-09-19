@@ -165,6 +165,7 @@ namespace Gateway.Web
             Mapper.Initialize(cfg =>
             {
                 cfg.AddProfile<ExportProfile>();
+                cfg.AddProfile<ScheduleProfile>();
             });
         }
       
