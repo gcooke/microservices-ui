@@ -344,6 +344,7 @@
     <Compile Include="Authorization\RoleBasedAuthorizeAttribute.cs" />
     <Compile Include="Binders\RequestWorkerModelBinder.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\BatchCostsController.cs" />
     <Compile Include="Controllers\DataFeedController.cs" />
     <Compile Include="Controllers\DataFeedsController.cs" />
     <Compile Include="Controllers\ExportScheduleController.cs" />
@@ -351,6 +352,10 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ExecutableScheduleController.cs" />
     <Compile Include="Controllers\BatchScheduleController.cs" />
+    <Compile Include="Models\Batches\CostGroupBatchCost.cs" />
+    <Compile Include="Models\Batches\CostGroupMonthlyBatchCost.cs" />
+    <Compile Include="Services\Batches\BatchCosts\BatchCostsService.cs" />
+    <Compile Include="Services\Batches\BatchCosts\IBatchCostsService.cs" />
     <Compile Include="Services\PortfolioProfile\IPortfolioProfileMonitoringService.cs" />
     <Compile Include="Controllers\PdcController.cs" />
     <Compile Include="Controllers\PortfolioProfileController.cs" />
@@ -1110,6 +1115,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Account\" />
+    <Folder Include="Views\BatchCosts\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
