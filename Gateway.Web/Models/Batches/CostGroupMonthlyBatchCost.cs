@@ -17,5 +17,6 @@
         public string October { get; set; }
         public string November { get; set; }
         public string December { get; set; }
+        public string EstimatedAnnualTotal { get; set; }
     }
 }
