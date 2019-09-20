@@ -58,17 +58,20 @@ namespace Gateway.Web.Services.Batches.BatchCosts
                                                                         g.BatchType.Equals(costItem.GetStringValue("BatchType")) &&
                                                                         g.CostType.Equals(costItem.GetStringValue("CostType")));
 
-                monthlyCostGroup = monthlyCostGroup ?? new CostGroupMonthlyBatchCost
+                if (monthlyCostGroup==null)
                 {
-                    CostGroup = costItem.GetStringValue("CostGroup"),
-                    BatchType = costItem.GetStringValue("BatchType"),
-                    CostType = costItem.GetStringValue("CostType")
-                };
+                    monthlyCostGroup = new CostGroupMonthlyBatchCost
+                    {
+                        CostGroup = costItem.GetStringValue("CostGroup"),
+                        BatchType = costItem.GetStringValue("BatchType"),
+                        CostType = costItem.GetStringValue("CostType")
+                    };
+
+                    monthlyCostGroups.Add(monthlyCostGroup);
+                }
 
                 monthlyCostGroup.GetType().GetProperty(costItem.GetStringValue("Month"))
                     .SetValue(monthlyCostGroup, costItem.GetStringValue("TotalCost"));
-
-                monthlyCostGroups.Add(monthlyCostGroup);
             }
 
             SetAnnualTotalEstimates(monthlyCostGroups);
