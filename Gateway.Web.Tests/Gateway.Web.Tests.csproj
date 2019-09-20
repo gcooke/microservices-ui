@@ -46,8 +46,8 @@
     <Reference Include="Bagl.Cib.MIT.IoC, Version=1.0.64.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Bagl.Cib.MIT.IoC.1.0.64\lib\net452\Bagl.Cib.MIT.IoC.dll</HintPath>
     </Reference>
-    <Reference Include="Bagl.Cib.MIT.Logging, Version=1.0.29.0, Culture=neutral, PublicKeyToken=6d1ad0679d79c706, processorArchitecture=MSIL">
-      <HintPath>..\packages\Bagl.Cib.MIT.Logging.1.0.29\lib\net452\Bagl.Cib.MIT.Logging.dll</HintPath>
+    <Reference Include="Bagl.Cib.MIT.Logging, Version=1.0.38.0, Culture=neutral, PublicKeyToken=6d1ad0679d79c706, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bagl.Cib.MIT.Logging.1.0.38\lib\net452\Bagl.Cib.MIT.Logging.dll</HintPath>
     </Reference>
     <Reference Include="Bagl.Cib.MIT.RedisCore, Version=1.0.37.0, Culture=neutral, PublicKeyToken=null" />
     <Reference Include="Bagl.Cib.MIT.Scheduling, Version=1.0.8.0, Culture=neutral, processorArchitecture=MSIL">
