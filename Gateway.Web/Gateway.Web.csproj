@@ -1079,6 +1079,7 @@
     <Content Include="Views\PortfolioProfile\Index.cshtml" />
     <Content Include="Views\PortfolioProfile\Report.cshtml" />
     <Content Include="Views\PortfolioProfile\_PortfolioProfileConfigNav.cshtml" />
+    <Content Include="Views\BatchCosts\GetBatchCosts.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />
@@ -1115,7 +1116,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Account\" />
-    <Folder Include="Views\BatchCosts\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
