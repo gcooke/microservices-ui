@@ -18,6 +18,8 @@ namespace Gateway.Web
                 LoginPath = new PathString("/Account/LogOn"),
                 CookieName = "SIGMA_OWIN_AUTH"
             });
+
+            app.Use<Gateway.Web.Utils.PostAuthComponent>();
         }
     }
 }
