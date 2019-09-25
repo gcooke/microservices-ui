@@ -6,6 +6,7 @@ namespace Gateway.Web.Services.Batches.BatchCosts
 {
     public interface IBatchCostsService
     {
+        string[] MonthNames { get; }
         ICube GetBatchCosts();
         List<CostGroupMonthlyBatchCost> GetBatchMonthlyCosts(ICube costsCube);
     }

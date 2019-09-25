@@ -18,6 +18,8 @@ namespace Gateway.Web.Services.Batches.BatchCosts
         private readonly ILogger _logger;
         private readonly string _maintenanceControllerName = "Maintenance";
 
+        public string[] MonthNames => _monthNames;
+
         public BatchCostsService(
                                 IGateway gateway,
                                 ISystemInformation information,

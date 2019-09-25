@@ -6,6 +6,7 @@ using Gateway.Web.Services.Batches.BatchCosts;
 using Moq;
 using NUnit.Framework;
 using System.IO;
+using System.Linq;
 using Bagl.Cib.MIT.Cube;
 using Bagl.Cib.MIT.Cube.Impl;
 
@@ -51,6 +52,27 @@ namespace Gateway.Web.Tests.Services.Batches.BatchCosts
         {
             var batchMonthlyCosts = _batchCostsService.GetBatchMonthlyCosts(_cube);
             Assert.AreEqual(54, batchMonthlyCosts.Count);
+        }
+
+        [Test]
+        public void Gets_Correct_Total_Cost_For_All_Batches_And_Costs()
+        {
+            var batchMonthlyCosts = _batchCostsService.GetBatchMonthlyCosts(_cube);
+
+            var sumOfAllCosts = 0m;
+            foreach (var batchMonthlyCost in batchMonthlyCosts)
+            {
+                var propertiesOfInterest = batchMonthlyCost.GetType().GetProperties().Where(p =>
+                    _batchCostsService.MonthNames.Any(m => m.Equals(p.Name)));
+
+                foreach (var propertyInfo in propertiesOfInterest)
+                {
+                    sumOfAllCosts += Convert.ToDecimal(propertyInfo.GetValue(batchMonthlyCost));
+                }
+            }
+
+            Assert.AreEqual(Math.Round(3274190.384,2,MidpointRounding.AwayFromZero),
+                Math.Round(sumOfAllCosts,2,MidpointRounding.AwayFromZero));
         }
 
         private string GetEmbeddedContent(string content)
