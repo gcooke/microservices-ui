@@ -212,6 +212,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CultureSet.cs" />
     <Compile Include="Extensions\TimeSpanTests.cs" />
     <Compile Include="Models\Controllers\CatalogueTest.cs" />
     <Compile Include="Models\Controllers\GatewayInfoTests.cs" />
@@ -225,6 +226,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Models\Security\UserSecurityTest.cs" />
+    <Compile Include="Services\Batches\BatchCosts\BatchCostsServiceTests.cs" />
     <Compile Include="Services\LogsServiceTests.cs" />
     <Compile Include="Utils\ReportsModelExTests.cs" />
     <Compile Include="Utils\XmlSortTests.cs" />
@@ -232,6 +234,7 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <EmbeddedResource Include="Services\Batches\BatchCosts\CostGroupMonthlyCostBatches.csv" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Gateway.Web\Gateway.Web.csproj">
