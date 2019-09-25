@@ -123,6 +123,17 @@ namespace Gateway.Web.Tests.Services.Batches.BatchCosts
                 Math.Round(sumOfPricingNodeCosts, 2, MidpointRounding.AwayFromZero));
         }
 
+        [Test]
+        public void Get_Correct_Computation_Cost_For_Trades_Attribution_For_August()
+        {
+            var batchMonthlyCosts = _batchCostsService.GetBatchMonthlyCosts(_cube)
+                .Where(b => b.BatchType.Equals("Trades.Attribution") &&
+                            b.CostType.Equals("Computation"));
+
+            Assert.AreEqual(Math.Round(982.7781,2,MidpointRounding.AwayFromZero),
+                            Math.Round(Convert.ToDecimal(batchMonthlyCosts.First().August),2,MidpointRounding.AwayFromZero));
+        }
+
         private string GetEmbeddedContent(string content)
         {
             var assembly = this.GetType().Assembly;
