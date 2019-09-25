@@ -75,6 +75,54 @@ namespace Gateway.Web.Tests.Services.Batches.BatchCosts
                 Math.Round(sumOfAllCosts,2,MidpointRounding.AwayFromZero));
         }
 
+        [Test]
+        public void Gets_Correct_Counterparty_XVA_FXGreeks_Costs_For_Unassigned()
+        {
+            var batchMonthlyCosts = _batchCostsService.GetBatchMonthlyCosts(_cube)
+                                                      .Where(b=>b.BatchType.Equals("Counterparty.XVA.FXGreeks"));
+
+            var sumOfAllCosts = 0m;
+            var sumOfComputationCosts = 0m;
+            var sumOfRiskDataStorageCosts = 0m;
+            var sumOfPricingNodeCosts = 0m;
+
+            foreach (var batchMonthlyCost in batchMonthlyCosts)
+            {
+                var propertiesOfInterest = batchMonthlyCost.GetType().GetProperties().Where(p =>
+                    _batchCostsService.MonthNames.Any(m => m.Equals(p.Name)));
+
+                foreach (var propertyInfo in propertiesOfInterest)
+                {
+                    sumOfAllCosts += Convert.ToDecimal(propertyInfo.GetValue(batchMonthlyCost));
+
+                    switch (batchMonthlyCost.CostType)
+                    {
+                        case "Computation":
+                            sumOfComputationCosts += Convert.ToDecimal(propertyInfo.GetValue(batchMonthlyCost));
+                            break;
+                        case "Risk Data Storage":
+                            sumOfRiskDataStorageCosts += Convert.ToDecimal(propertyInfo.GetValue(batchMonthlyCost));
+                            break;
+                        case "Pricing Node":
+                            sumOfPricingNodeCosts += Convert.ToDecimal(propertyInfo.GetValue(batchMonthlyCost));
+                            break;
+                    }
+                }
+            }
+
+            Assert.AreEqual(Math.Round(487.7845, 2, MidpointRounding.AwayFromZero),
+                Math.Round(sumOfAllCosts, 2, MidpointRounding.AwayFromZero));
+
+            Assert.AreEqual(Math.Round(42.7845, 2, MidpointRounding.AwayFromZero),
+                Math.Round(sumOfComputationCosts, 2, MidpointRounding.AwayFromZero));
+
+            Assert.AreEqual(Math.Round(256.00, 2, MidpointRounding.AwayFromZero),
+                Math.Round(sumOfRiskDataStorageCosts, 2, MidpointRounding.AwayFromZero));
+
+            Assert.AreEqual(Math.Round(189.00, 2, MidpointRounding.AwayFromZero),
+                Math.Round(sumOfPricingNodeCosts, 2, MidpointRounding.AwayFromZero));
+        }
+
         private string GetEmbeddedContent(string content)
         {
             var assembly = this.GetType().Assembly;
