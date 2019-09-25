@@ -23,7 +23,7 @@ namespace Gateway.Web.Controllers
 
             var costsMonthlyItems = _batchCostsService.GetBatchMonthlyCosts(costsCube);
 
-            return View("GetBatchCosts", costsMonthlyItems);
+            return View("Index", costsMonthlyItems);
         }
     }
 }

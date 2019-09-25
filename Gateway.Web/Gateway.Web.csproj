@@ -1079,7 +1079,7 @@
     <Content Include="Views\PortfolioProfile\Index.cshtml" />
     <Content Include="Views\PortfolioProfile\Report.cshtml" />
     <Content Include="Views\PortfolioProfile\_PortfolioProfileConfigNav.cshtml" />
-    <Content Include="Views\BatchCosts\GetBatchCosts.cshtml" />
+    <Content Include="Views\BatchCosts\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />

@@ -70,7 +70,8 @@ namespace Gateway.Web.Services.Batches.BatchCosts
                     monthlyCostGroups.Add(monthlyCostGroup);
                 }
 
-                monthlyCostGroup.GetType().GetProperty(costItem.GetStringValue("Month"))
+                monthlyCostGroup.GetType()
+                    .GetProperty(costItem.GetStringValue("Month"))
                     .SetValue(monthlyCostGroup, costItem.GetStringValue("TotalCost"));
             }
 

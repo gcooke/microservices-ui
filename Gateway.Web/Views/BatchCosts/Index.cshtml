@@ -1,0 +1,56 @@
+﻿@model IEnumerable<Gateway.Web.Models.Batches.CostGroupMonthlyBatchCost>
+
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+}
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+        <div class="row">
+            <div class="col-sm-6">
+                <h3 class="text-lowercase">Monthly Batch Capacity Utilization</h3>
+            </div>
+        </div>
+
+        <div class="row m-t-15">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <table class="datatable table report-table">
+                    <thead>
+                        <tr style="background: #990505;">
+                            <td>@Html.CheckBox("select-all", new { @class = "select-all-trigger", @data_children = "select-config" })</td>
+                            <td>Cost Group</td>
+                            <td>Batch Type</td>
+                            <td>Cost Type</td>
+                            <td>Jan</td>
+                            <td>Feb</td>
+                            <td>Mar</td>
+                            <td>Apr</td>
+                            <td>May</td>
+                            <td>Jun</td>
+                            <td>Jul</td>
+                            <td>Aug</td>
+                            <td>Sep</td>
+                            <td>Oct</td>
+                            <td>Nov</td>
+                            <td>Dec</td>
+                            <td>Annual Estimate</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="10" class="center-text">
+                                    No batch capacity utilization data found
+                                </td>
+                            </tr>
+                        }
+                    
+                        
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
