@@ -29,17 +29,17 @@ namespace Gateway.Web.Services.Batches.BatchCosts
             _systemInformation = information;
             _logger = loggingService.GetLogger(this);
 
-            _gateway.SetGatewayUrlForService(_maintenanceControllerName, "http://localhost:7000");
+            //_gateway.SetGatewayUrlForService(_maintenanceControllerName, "http://localhost:7000");
         }
 
         public ICube GetBatchCosts()
         {
-            var query = "BatchReporting/GetBatchCosts";
             var currentDate = DateTime.Now.ToString("yyyy-MM-dd");
+            var query = $"BatchReporting/Batch/Costs/{currentDate}";
             _logger.Info($"Date passed as '{currentDate}'.");
 
             _logger.Info($"Starting request to {query}.");
-            var response = _gateway.Post<ICube, string>(_maintenanceControllerName, query, currentDate).GetAwaiter().GetResult();
+            var response = _gateway.Get<ICube>(_maintenanceControllerName, query).GetAwaiter().GetResult();
             _logger.Info($"{(response.Successfull ? "(Successful)" : "(Unsuccessful)")} Response received from '{query}'.");
 
             if (!response.Successfull)
