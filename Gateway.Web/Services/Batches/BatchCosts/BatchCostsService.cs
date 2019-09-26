@@ -71,9 +71,13 @@ namespace Gateway.Web.Services.Batches.BatchCosts
                     monthlyCostGroups.Add(monthlyCostGroup);
                 }
 
+                var totalCost = costItem.GetStringValue("TotalCost");
+                if (!string.IsNullOrWhiteSpace(totalCost))
+                    totalCost = Convert.ToDecimal(totalCost).ToString("N2");
+
                 monthlyCostGroup.GetType()
                     .GetProperty(costItem.GetStringValue("Month"))
-                    .SetValue(monthlyCostGroup, costItem.GetStringValue("TotalCost"));
+                    .SetValue(monthlyCostGroup, totalCost);
             }
 
             SetAnnualTotalEstimates(monthlyCostGroups);

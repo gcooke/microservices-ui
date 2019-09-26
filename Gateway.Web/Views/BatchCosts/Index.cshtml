@@ -3,6 +3,7 @@
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
 }
+@{ Html.RenderPartial("_BatchConfigNav"); }
 
 <div id="page-content-wrapper">
     <div class="hero-unit">
@@ -17,7 +18,6 @@
                 <table class="datatable table report-table">
                     <thead>
                         <tr style="background: #990505;">
-                            <td>@Html.CheckBox("select-all", new { @class = "select-all-trigger", @data_children = "select-config" })</td>
                             <td>Cost Group</td>
                             <td>Batch Type</td>
                             <td>Cost Type</td>
@@ -45,8 +45,32 @@
                                 </td>
                             </tr>
                         }
-                    
-                        
+                        else
+                        {
+                            foreach (var costGroupMonthlyBatchCost in Model)
+                            {
+                                <tr>
+                                    <td>@costGroupMonthlyBatchCost.CostGroup</td>
+                                    <td>@costGroupMonthlyBatchCost.BatchType</td>
+                                    <td>@costGroupMonthlyBatchCost.CostType</td>
+                                    <td>@costGroupMonthlyBatchCost.January</td>
+                                    <td>@costGroupMonthlyBatchCost.February</td>
+                                    <td>@costGroupMonthlyBatchCost.March</td>
+                                    <td>@costGroupMonthlyBatchCost.April</td>
+                                    <td>@costGroupMonthlyBatchCost.May</td>
+                                    <td>@costGroupMonthlyBatchCost.June</td>
+                                    <td>@costGroupMonthlyBatchCost.July</td>
+                                    <td>@costGroupMonthlyBatchCost.August</td>
+                                    <td>@costGroupMonthlyBatchCost.September</td>
+                                    <td>@costGroupMonthlyBatchCost.October</td>
+                                    <td>@costGroupMonthlyBatchCost.November</td>
+                                    <td>@costGroupMonthlyBatchCost.December</td>
+                                    <td>@costGroupMonthlyBatchCost.EstimatedAnnualTotal</td>
+                                </tr>
+                            }
+                        }
+
+
                     </tbody>
 
                 </table>
