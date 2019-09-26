@@ -119,15 +119,20 @@ namespace Gateway.Web.Controllers
 
         [HttpGet]
         [Route("History")]
-        public ActionResult History(int sid)
+        public ActionResult History(int sid, string name)
         {
             var model = new HistoryTimingViewModel();
-            model.ScheduleName = "Test";
+            model.ScheduleName = name;
             var results = _databaseService.GetHistoryTimingForSchedule(sid, 180);
-            model.HistoryTimingForSchedule = Mapper.Map<List<HistoryTimingForScheduleViewModel>>(results) ;
+            model.HistoryTimingForSchedule = Mapper.Map<List<HistoryTimingForScheduleViewModel>>(results);
+
+            model.GraphLabels = string.Join(",", results.Select(x => $"'{x.RunDate:dd-MM-yyyy}'"));
+            model.WallClockTimeTaken = string.Join(",", results.Select(x => x.WallClockTime / 100));
+            model.QueueTimeTaken = string.Join(",", results.Select(x => x.TotalQueueTime / 100));
+            model.ProcessTimeTaken = string.Join(",", results.Select(x => x.TotalProcessTime / 100));
+
             return View(model);
         }
-
 
         [HttpGet]
         [Route("Delete/Bulk/Confirmation")]
@@ -150,8 +155,6 @@ namespace Gateway.Web.Controllers
             _scheduleDataService.DisableSchedule(id);
             return RedirectToAction("Update");
         }
-
-    
 
         [HttpGet]
         [Route("Status")]

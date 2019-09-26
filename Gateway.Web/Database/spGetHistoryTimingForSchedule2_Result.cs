@@ -11,12 +11,12 @@ namespace Gateway.Web.Database
 {
     using System;
     
-    public partial class spGetHistoryTimingForSchedule_Result
+    public partial class spGetHistoryTimingForSchedule2_Result
     {
         public System.DateTime RunDate { get; set; }
-        public long WallClockTime { get; set; }
-        public long TotalQueueTime { get; set; }
-        public long TotalProcessTime { get; set; }
-        public long ScheduleId { get; set; }
+        public Nullable<long> WallClockTime { get; set; }
+        public Nullable<long> TotalQueueTime { get; set; }
+        public Nullable<long> TotalProcessTime { get; set; }
+        public Nullable<long> ScheduleId { get; set; }
     }
 }

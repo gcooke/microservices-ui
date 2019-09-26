@@ -7,46 +7,115 @@
     ViewBag.Current = "Timming History";
 }
 @{ Html.RenderPartial("_BatchConfigNav"); }
+<script src="~/Scripts/Chart.min.js"></script>
+<script>
 
+        var LineChartData =
+            {
+                labels: [@Html.Raw(@Model.GraphLabels)],
+                datasets: [{
+                    label: 'WallClock Timings in seconds',
+                    backgroundColor: "rgba(166,13,20,0.4)",
+                    borderWidth: 2,
+                    data: [@Model.WallClockTimeTaken]
+                },
+                {
+                    label: 'Queue Timings in seconds',
+                    backgroundColor: "rgba(255,201,14,0.4)",
+                    borderWidth: 2,
+                    data: [@Model.QueueTimeTaken]
+                    },
+                    {
+                        label: 'Process Timings in seconds',
+                        backgroundColor: "rgba(16,135,254,0.4)",
+                        borderWidth: 2,
+                        data: [@Model.ProcessTimeTaken]
+                    }
+                ]
+            };
+
+            window.onload = function () {
+                var ctx1 = document.getElementById("Linecanvas").getContext("2d");
+                window.myBar = new Chart(ctx1,
+                    {
+                        type: 'line',
+                        data: LineChartData,
+                        options:
+                            {
+                                title:
+                                {
+                                    display: true,
+                                    text: ""
+                                },
+                                responsive: true,
+                                maintainAspectRatio: true
+                            }
+                    });
+    }
+
+    function ToggleGraph()
+    {
+        document.getElementById('graph').style.display = 'none';
+        document.getElementById('table').style.display = '';
+        document.getElementById('btGraph').style.display = '';
+        document.getElementById('btTable').style.display = 'none';
+    }
+
+    function ToggleTable()
+    {
+        document.getElementById('graph').style.display = '';
+        document.getElementById('table').style.display = 'none';
+        document.getElementById('btGraph').style.display = 'none';
+        document.getElementById('btTable').style.display = '';
+    }
+
+</script>
 <div id="page-content-wrapper">
 
     @{
         var rowBackgroundStyle = "div_row_white";
-       
-        
+
+
     }
     <div class="hero-unit">
         <div class="container-fluid">
-
-            <h3 class="row text-lowercase">Timing History</h3>
-            <div class="row h5">All timings history relating to schedule @Model.ScheduleName</div>
-            <br />
-             
-
-            <br />
-            <h4 class="row">Schedule History</h4>
-            <table style="width: 100%; white-space: nowrap;" class="row datatable">
+            <div class="row">
+                <div class="col-md-10">
+                    <h3 class="row text-lowercase">Timing History</h3>
+                </div>
+                <div class="col-md-2" style="padding: 15px">
+                    <button id="btGraph" onclick="ToggleTable()">Display Graph</button>
+                    <button id="btTable" style="display: none" onclick="ToggleGraph()">Display Table</button>
+                </div>
+            </div>
+            <div class="row h5">All timing history relating to schedules for @Model.ScheduleName</div>
+            
+            <table id="table" style="width: 100%; white-space: nowrap;" class="row datatable">
                 <thead>
-                    <tr>
-                       
-                        <td class="">Run Date</td>
-                        <td class="">Wall Clock Time</td>
-                        <td class="">Total Queue Time</td>
-                        <td class="">Total Process Time</td>
-                    </tr>
+                <tr>
+
+                    <td class="">Run Date</td>
+                    <td class="">Wall Clock Time</td>
+                    <td class="">Total Queue Time</td>
+                    <td class="">Total Process Time</td>
+                </tr>
                 </thead>
                 @foreach (var item in Model.HistoryTimingForSchedule)
                 {
                     <tr>
                         <td>@item.RunDate</td>
-                        <td style="text-align: right;">@item.WallClockTime</td>
-                        <td style="text-align: right;">@item.TotalQueueTime</td>
-                        <td style="text-align: right;">@item.TotalQueueTime</td>
+                        <td style="text-align: right;">@item.WallClockTimeHumanize</td>
+                        <td style="text-align: right;">@item.TotalQueueTimeHumanize</td>
+                        <td style="text-align: right;">@item.TotalProcessTimeHumanize</td>
                     </tr>
                 }
             </table>
 
         </div>
     </div>
-
+    <div id="graph" style="display:none">
+        <div style="text-align: center">
+            <canvas id="Linecanvas"></canvas>
+        </div>
+    </div>
 </div>

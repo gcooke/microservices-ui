@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
-using Bagl.Cib.MIT.Cube;
+﻿using Bagl.Cib.MIT.Cube;
 using Bagl.Cib.MIT.IoC;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Controllers;
@@ -12,6 +7,11 @@ using Gateway.Web.Models.Monitoring;
 using Gateway.Web.Models.Request;
 using Gateway.Web.Models.Security;
 using Gateway.Web.Models.ServerResource;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 using QueueChartModel = Gateway.Web.Models.Controller.QueueChartModel;
 
 namespace Gateway.Web.Database
@@ -79,16 +79,13 @@ namespace Gateway.Web.Database
             return result;
         }
 
-        public IList<spGetHistoryTimingForSchedule_Result> GetHistoryTimingForSchedule(long scheduleId,int days)
+        public IList<spGetHistoryTimingForSchedule_Result> GetHistoryTimingForSchedule(long scheduleId, int days)
         {
-        
-            using (var database = new GatewayEntities(_connectionString))
+            using (var database = new GatewayEntities(_connectionString, 300))
             {
                 var results = database.spGetHistoryTimingForSchedule(scheduleId, days);
                 return results.ToList();
-
             }
-           
         }
 
         public List<HistoryItem> GetRecentRequests(string controller, DateTime start, string search = null)
@@ -96,7 +93,7 @@ namespace Gateway.Web.Database
             var result = new List<HistoryItem>();
             using (var database = new GatewayEntities(_connectionString))
             {
-                var items = database.spGetRecentRequests(start, controller, search,null).ToList();
+                var items = database.spGetRecentRequests(start, controller, search, null).ToList();
 
                 if (!string.IsNullOrWhiteSpace(search))
                 {
@@ -691,7 +688,6 @@ namespace Gateway.Web.Database
         {
             using (var database = new GatewayEntities(_connectionString))
             {
-              
             }
         }
 

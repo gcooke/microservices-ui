@@ -262,5 +262,31 @@ namespace Gateway.Web.Database
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetHistoryTimingForSchedule_Result>("spGetHistoryTimingForSchedule", scheduleParameter, daysParameter);
         }
+    
+        public virtual ObjectResult<spGetHistoryTimingForSchedule1_Result> spGetHistoryTimingForSchedule1(Nullable<long> schedule, Nullable<int> days)
+        {
+            var scheduleParameter = schedule.HasValue ?
+                new ObjectParameter("Schedule", schedule) :
+                new ObjectParameter("Schedule", typeof(long));
+    
+            var daysParameter = days.HasValue ?
+                new ObjectParameter("Days", days) :
+                new ObjectParameter("Days", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetHistoryTimingForSchedule1_Result>("spGetHistoryTimingForSchedule1", scheduleParameter, daysParameter);
+        }
+    
+        public virtual ObjectResult<spGetHistoryTimingForSchedule2_Result> spGetHistoryTimingForSchedule2(Nullable<long> schedule, Nullable<int> days)
+        {
+            var scheduleParameter = schedule.HasValue ?
+                new ObjectParameter("Schedule", schedule) :
+                new ObjectParameter("Schedule", typeof(long));
+    
+            var daysParameter = days.HasValue ?
+                new ObjectParameter("Days", days) :
+                new ObjectParameter("Days", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetHistoryTimingForSchedule2_Result>("spGetHistoryTimingForSchedule2", scheduleParameter, daysParameter);
+        }
     }
 }

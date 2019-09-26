@@ -351,7 +351,18 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ExecutableScheduleController.cs" />
     <Compile Include="Controllers\BatchScheduleController.cs" />
+    <Compile Include="Database\spGetHistoryTimingForSchedule1_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\spGetHistoryTimingForSchedule2_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\spGetHistoryTimingForSchedule_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Schedule\Output\HistoryTimingForScheduleViewModel.cs" />
     <Compile Include="Models\Schedule\Output\HistoryTimingViewModel.cs" />
+    <Compile Include="Profiles\ScheduleProfile.cs" />
     <Compile Include="Services\PortfolioProfile\IPortfolioProfileMonitoringService.cs" />
     <Compile Include="Controllers\PdcController.cs" />
     <Compile Include="Controllers\PortfolioProfileController.cs" />
@@ -927,6 +938,8 @@
     <Content Include="Content\js\respond.js" />
     <Content Include="Content\js\respond.min.js" />
     <Content Include="Content\js\_references.js" />
+    <Content Include="Scripts\Chart.js" />
+    <Content Include="Scripts\Chart.min.js" />
     <Content Include="Scripts\PortfolioProfile\portfolioprofile.js" />
     <Content Include="Scripts\Schedule\Schedule.js" />
     <Content Include="Scripts\ServerResources\ServerResources.js" />
@@ -937,7 +950,9 @@
     <Content Include="Scripts\Queues\Shared\SelectionFilter.js" />
     <Content Include="Scripts\Shared\SelectAllTable.js" />
     <Content Include="Views\Controllers\Create.cshtml" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -1104,9 +1119,7 @@
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="packages.config">
-      <SubType>Designer</SubType>
-    </Content>
+    <Content Include="packages.config" />
     <Content Include="Content\js\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
@@ -1129,16 +1142,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
-          <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>9895</DevelopmentServerPort>
-          <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:9895/Schedule</IISUrl>
-          <NTLMAuthentication>False</NTLMAuthentication>
-          <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
-          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+          <SaveServerSettingsInUserFile>True</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
     </VisualStudio>

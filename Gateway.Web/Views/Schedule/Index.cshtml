@@ -135,7 +135,7 @@
                                                                         <a target="_blank" href="~/Controller/History/RiskBatch?search=@item.ScheduleId&searchResultsText=@item.Name">View History</a>
                                                                     </li>
                                                                     <li>
-                                                                        <a target="_blank" href="~/Schedule/History?sid=@item.ScheduleId">View Timming History</a>
+                                                                        <a target="_blank" href="~/Schedule/History?sid=@item.ScheduleId&name=@item.Name">View Timming History</a>
                                                                     </li>
                                                                     <li>
                                                                         <a target="_blank" href="@metricsUrl">View Metrics</a>
@@ -147,7 +147,7 @@
                                                                         <a target="_blank" href="~/Controller/History/@item.RequestSearchController?search=@item.RequestSearchString">View History</a>
                                                                     </li>
                                                                     <li>
-                                                                        <a target="_blank" href="~/Schedule/History?sid=@item.ScheduleId">View Timming History</a>
+                                                                        <a target="_blank" href="~/Schedule/History?sid=@item.ScheduleId&name=@item.Name">View Timming History</a>
                                                                     </li>
                                                                     <li>
                                                                         <a onclick="rerunTask('@taskUrlNoChildren')">Run (Ignore Child Tasks)</a>
