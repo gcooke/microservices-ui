@@ -71,13 +71,9 @@ namespace Gateway.Web.Services.Batches.BatchCosts
                     monthlyCostGroups.Add(monthlyCostGroup);
                 }
 
-                var totalCost = costItem.GetStringValue("TotalCost");
-                if (!string.IsNullOrWhiteSpace(totalCost))
-                    totalCost = Convert.ToDecimal(totalCost).ToString("N2");
-
                 monthlyCostGroup.GetType()
                     .GetProperty(costItem.GetStringValue("Month"))
-                    .SetValue(monthlyCostGroup, totalCost);
+                    .SetValue(monthlyCostGroup, costItem.GetValue<decimal>("TotalCost"));
             }
 
             SetAnnualTotalEstimates(monthlyCostGroups);
@@ -100,7 +96,7 @@ namespace Gateway.Web.Services.Batches.BatchCosts
                     runningTotal += string.IsNullOrWhiteSpace(Convert.ToString(value))?0:Convert.ToDecimal(value);
                 }
 
-                item.EstimatedAnnualTotal = (runningTotal/DateTime.Now.Month*12).ToString("N2");
+                item.EstimatedAnnualTotal = Math.Round(runningTotal/DateTime.Now.Month*12,2,MidpointRounding.AwayFromZero);
             }
         }
     }

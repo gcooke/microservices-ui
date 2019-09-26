@@ -809,6 +809,7 @@
     <Compile Include="Utils\DashboardEx.cs" />
     <Compile Include="Utils\DataContractSerializationEx.cs" />
     <Compile Include="Utils\DataMeasurementUtils.cs" />
+    <Compile Include="Utils\DecimalExtensions.cs" />
     <Compile Include="Utils\ExceptionEx.cs" />
     <Compile Include="Utils\LegacyCompession.cs" />
     <Compile Include="Utils\MonitoringHtmlEx.cs" />
@@ -932,6 +933,7 @@
     <Content Include="Content\js\respond.js" />
     <Content Include="Content\js\respond.min.js" />
     <Content Include="Content\js\_references.js" />
+    <Content Include="Scripts\Batches\BatchCosts.js" />
     <Content Include="Scripts\PortfolioProfile\portfolioprofile.js" />
     <Content Include="Scripts\Schedule\Schedule.js" />
     <Content Include="Scripts\ServerResources\ServerResources.js" />

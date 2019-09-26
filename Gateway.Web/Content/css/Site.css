@@ -447,6 +447,10 @@ progress::-webkit-progress-value {
     cursor: pointer;
 }
 
+.cost-detail-trigger {
+    cursor: pointer;
+}
+
 .batch-schedule-container {
     background: #F5F5F5;
     padding: 20px;
