@@ -4,7 +4,7 @@
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
     ViewBag.Title = "Configuration";
-    ViewBag.Current = "Timming History";
+    ViewBag.Current = "Timing History";
 }
 @{ Html.RenderPartial("_BatchConfigNav"); }
 <script src="~/Scripts/Chart.min.js"></script>
@@ -106,7 +106,7 @@
                         <td>@item.RunDate</td>
                         <td style="text-align: right;">@item.WallClockTimeHumanize</td>
                         <td style="text-align: right;">@item.TotalQueueTimeHumanize</td>
-                        <td style="text-align: right;">@item.TotalProcessTimeHumanize</td>
+                        <td style="text-align: right;">@item.TotalP</td>
                     </tr>
                 }
             </table>
