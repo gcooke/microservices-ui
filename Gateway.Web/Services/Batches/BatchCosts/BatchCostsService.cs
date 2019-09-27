@@ -11,14 +11,12 @@ namespace Gateway.Web.Services.Batches.BatchCosts
 {
     public class BatchCostsService : IBatchCostsService
     {
-        private string[] _monthNames = {"January","February", "March","April","May","June","July","August","September","October","November","December"};
-
         private readonly IGateway _gateway;
         private readonly ISystemInformation _systemInformation;
         private readonly ILogger _logger;
         private readonly string _maintenanceControllerName = "Maintenance";
 
-        public string[] MonthNames => _monthNames;
+        public string[] MonthNames { get; } = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
 
         public BatchCostsService(
                                 IGateway gateway,
@@ -59,7 +57,7 @@ namespace Gateway.Web.Services.Batches.BatchCosts
                                                                         g.BatchType.Equals(costItem.GetStringValue("BatchType")) &&
                                                                         g.CostType.Equals(costItem.GetStringValue("CostType")));
 
-                if (monthlyCostGroup==null)
+                if (monthlyCostGroup == null)
                 {
                     monthlyCostGroup = new CostGroupMonthlyBatchCost
                     {
@@ -87,16 +85,16 @@ namespace Gateway.Web.Services.Batches.BatchCosts
             {
                 decimal runningTotal = 0;
 
-                var monthlyValueProperties = item.GetType().GetProperties().Where(p => _monthNames.Any(m=>m.Equals(p.Name))).ToList();
+                var monthlyValueProperties = item.GetType().GetProperties().Where(p => MonthNames.Any(m => m.Equals(p.Name))).ToList();
 
                 foreach (var property in monthlyValueProperties)
                 {
                     var value = property.GetValue(item);
 
-                    runningTotal += string.IsNullOrWhiteSpace(Convert.ToString(value))?0:Convert.ToDecimal(value);
+                    runningTotal += string.IsNullOrWhiteSpace(Convert.ToString(value)) ? 0 : Convert.ToDecimal(value);
                 }
 
-                item.EstimatedAnnualTotal = Math.Round(runningTotal/DateTime.Now.Month*12,2,MidpointRounding.AwayFromZero);
+                item.EstimatedAnnualTotal = Math.Round(runningTotal / DateTime.Now.Month * 12, 2, MidpointRounding.AwayFromZero);
             }
         }
     }
