@@ -91,7 +91,7 @@ namespace Gateway.Web.Services.Batches.BatchCosts
                 {
                     var value = property.GetValue(item);
 
-                    runningTotal += string.IsNullOrWhiteSpace(Convert.ToString(value)) ? 0 : Convert.ToDecimal(value);
+                    runningTotal += (value==null) ? 0 : Convert.ToDecimal(value);
                 }
 
                 item.EstimatedAnnualTotal = Math.Round(runningTotal / DateTime.Now.Month * 12, 2, MidpointRounding.AwayFromZero);
