@@ -1,0 +1,104 @@
+﻿@using Gateway.Web.Utils
+@model IEnumerable<Gateway.Web.Models.Batches.CostGroupMonthlyBatchCost>
+
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+}
+@{ Html.RenderPartial("_BatchConfigNav"); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+        <div class="row">
+            <div class="col-sm-6">
+                <h3 class="text-lowercase">Monthly Batch Capacity Utilization</h3>
+            </div>
+        </div>
+
+        <div class="row m-t-15">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <table class="datatable table report-table">
+                    <thead>
+                    <tr style="background: #990505;">
+                        <td style="width: 40px;"></td>
+                        <td>Cost Group</td>
+                        <td>Batch Type</td>
+                        <td>Cost Type</td>
+                        <td>Jan</td>
+                        <td>Feb</td>
+                        <td>Mar</td>
+                        <td>Apr</td>
+                        <td>May</td>
+                        <td>Jun</td>
+                        <td>Jul</td>
+                        <td>Aug</td>
+                        <td>Sep</td>
+                        <td>Oct</td>
+                        <td>Nov</td>
+                        <td>Dec</td>
+                        <td>Annual Estimate</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="10" class="center-text">
+                                    No batch capacity utilization data found
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            foreach (var group in Model.GroupBy(m => new { m.CostGroup, m.BatchType }))
+                            {
+                                <tr class="report-table-summary-row">
+                                    <td><a class="cost-detail-trigger" data-group-trigger="@group.Key.CostGroup@group.Key.BatchType.Replace(".","")">[+]</a></td>
+                                    <td>@group.Key.CostGroup</td>
+                                    <td>@group.Key.BatchType</td>
+                                    <td></td>
+                                    <td>@group.Sum(g => g.January).StringValue()</td>
+                                    <td>@group.Sum(g => g.February).StringValue()</td>
+                                    <td>@group.Sum(g => g.March).StringValue()</td>
+                                    <td>@group.Sum(g => g.April).StringValue()</td>
+                                    <td>@group.Sum(g => g.May).StringValue()</td>
+                                    <td>@group.Sum(g => g.June).StringValue()</td>
+                                    <td>@group.Sum(g => g.July).StringValue()</td>
+                                    <td>@group.Sum(g => g.August).StringValue()</td>
+                                    <td>@group.Sum(g => g.September).StringValue()</td>
+                                    <td>@group.Sum(g => g.October).StringValue()</td>
+                                    <td>@group.Sum(g => g.November).StringValue()</td>
+                                    <td>@group.Sum(g => g.December).StringValue()</td>
+                                    <td>@group.Sum(g => g.EstimatedAnnualTotal).StringValue()</td>
+                                </tr>
+
+                                foreach (var item in group)
+                                {
+                                    <tr class="report-table-detail-row report-table-detail-row-hidden @group.Key.CostGroup@group.Key.BatchType.Replace(".","")">
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>@item.CostType</td>
+                                        <td>@item.January.StringValue()</td>
+                                        <td>@item.February.StringValue()</td>
+                                        <td>@item.March.StringValue()</td>
+                                        <td>@item.April.StringValue()</td>
+                                        <td>@item.May.StringValue()</td>
+                                        <td>@item.June.StringValue()</td>
+                                        <td>@item.July.StringValue()</td>
+                                        <td>@item.August.StringValue()</td>
+                                        <td>@item.September.StringValue()</td>
+                                        <td>@item.October.StringValue()</td>
+                                        <td>@item.November.StringValue()</td>
+                                        <td>@item.December.StringValue()</td>
+                                        <td>@item.EstimatedAnnualTotal.StringValue()</td>
+                                    </tr>
+                                }
+                            }
+                        }
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

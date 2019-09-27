@@ -1,0 +1,90 @@
+Unassigned,Counterparty.PFE,Computation,August,463.2002
+Unassigned,Counterparty.PFE,Computation,September,531.6469
+Unassigned,Counterparty.PFE,Pricing Node,August,1851
+Unassigned,Counterparty.PFE,Pricing Node,September,8420
+Unassigned,Counterparty.PFE,Risk Data Storage,August,6682
+Unassigned,Counterparty.PFE,Risk Data Storage,September,24700
+Unassigned,Counterparty.Settlement,Computation,September,0.7528
+Unassigned,Counterparty.Settlement,Pricing Node,September,2204
+Unassigned,Counterparty.Settlement,Risk Data Storage,September,3642
+Unassigned,Counterparty.XVA.AssetVega,Computation,September,226.2873
+Unassigned,Counterparty.XVA.AssetVega,Pricing Node,September,1639
+Unassigned,Counterparty.XVA.AssetVega,Risk Data Storage,September,248
+Unassigned,Counterparty.XVA.BenchmarkRisk,Computation,September,232.2983
+Unassigned,Counterparty.XVA.BenchmarkRisk,Pricing Node,September,4786
+Unassigned,Counterparty.XVA.BenchmarkRisk,Risk Data Storage,September,383
+Unassigned,Counterparty.XVA.FXGreeks,Computation,September,42.7845
+Unassigned,Counterparty.XVA.FXGreeks,Pricing Node,September,189
+Unassigned,Counterparty.XVA.FXGreeks,Risk Data Storage,September,256
+Unassigned,Counterparty.XVA.Theta,Computation,September,220.2174
+Unassigned,Counterparty.XVA.Theta,Pricing Node,September,216
+Unassigned,Counterparty.XVA.Theta,Risk Data Storage,September,460
+Unassigned,Trades.Attribution,Computation,August,982.7781
+Unassigned,Trades.Attribution,Computation,September,305.449
+Unassigned,Trades.Attribution,Pricing Node,August,1738
+Unassigned,Trades.Attribution,Pricing Node,September,23913
+Unassigned,Trades.Attribution,Risk Data Storage,August,86016
+Unassigned,Trades.Attribution,Risk Data Storage,September,57936
+Unassigned,Trades.BenchmarkRisk,Computation,August,1847.3023
+Unassigned,Trades.BenchmarkRisk,Computation,September,3428.7028
+Unassigned,Trades.BenchmarkRisk,Pricing Node,August,2180
+Unassigned,Trades.BenchmarkRisk,Pricing Node,September,5425
+Unassigned,Trades.BenchmarkRisk,Risk Data Storage,August,125454
+Unassigned,Trades.BenchmarkRisk,Risk Data Storage,September,57962
+Unassigned,Trades.Cashflows,Computation,August,96.0587
+Unassigned,Trades.Cashflows,Computation,September,15.5603
+Unassigned,Trades.Cashflows,Pricing Node,August,246
+Unassigned,Trades.Cashflows,Pricing Node,September,250
+Unassigned,Trades.Cashflows,Risk Data Storage,August,55517
+Unassigned,Trades.Cashflows,Risk Data Storage,September,35663
+Unassigned,Trades.EQDeskRiskReport,Computation,August,15.4886
+Unassigned,Trades.EQDeskRiskReport,Computation,September,7.6526
+Unassigned,Trades.EQDeskRiskReport,Pricing Node,August,71
+Unassigned,Trades.EQDeskRiskReport,Pricing Node,September,20
+Unassigned,Trades.EQDeskRiskReport,Risk Data Storage,August,516
+Unassigned,Trades.EQDeskRiskReport,Risk Data Storage,September,168
+Unassigned,Trades.FXDeskDeltaGap,Computation,August,75.1161
+Unassigned,Trades.FXDeskDeltaGap,Computation,September,11.9791
+Unassigned,Trades.FXDeskDeltaGap,Pricing Node,August,94
+Unassigned,Trades.FXDeskDeltaGap,Pricing Node,September,87
+Unassigned,Trades.FXDeskDeltaGap,Risk Data Storage,August,642
+Unassigned,Trades.FXDeskDeltaGap,Risk Data Storage,September,293
+Unassigned,Trades.FXDeskRiskReport,Computation,August,1398.4962
+Unassigned,Trades.FXDeskRiskReport,Computation,September,608.7345
+Unassigned,Trades.FXDeskRiskReport,Pricing Node,August,3346
+Unassigned,Trades.FXDeskRiskReport,Pricing Node,September,2398
+Unassigned,Trades.FXDeskRiskReport,Risk Data Storage,August,303066
+Unassigned,Trades.FXDeskRiskReport,Risk Data Storage,September,156634
+Unassigned,Trades.FXDeskSpotVolRiskMatrixAllMetrics,Computation,August,1102.2738
+Unassigned,Trades.FXDeskSpotVolRiskMatrixAllMetrics,Computation,September,3013.2831
+Unassigned,Trades.FXDeskSpotVolRiskMatrixAllMetrics,Pricing Node,August,4916
+Unassigned,Trades.FXDeskSpotVolRiskMatrixAllMetrics,Pricing Node,September,83446
+Unassigned,Trades.FXDeskSpotVolRiskMatrixAllMetrics,Risk Data Storage,August,15513
+Unassigned,Trades.FXDeskSpotVolRiskMatrixAllMetrics,Risk Data Storage,September,1928
+Unassigned,Trades.FXSpotLadder,Computation,August,3085.921
+Unassigned,Trades.FXSpotLadder,Computation,September,1689.6887
+Unassigned,Trades.FXSpotLadder,Pricing Node,August,53705
+Unassigned,Trades.FXSpotLadder,Pricing Node,September,54191
+Unassigned,Trades.FXSpotLadder,Risk Data Storage,August,246
+Unassigned,Trades.FXSpotLadder,Risk Data Storage,September,343
+Unassigned,Trades.MarketRiskSpotVolRiskMatrix,Computation,August,15.6402
+Unassigned,Trades.MarketRiskSpotVolRiskMatrix,Pricing Node,August,182
+Unassigned,Trades.MarketRiskSpotVolRiskMatrix,Risk Data Storage,August,6574
+Unassigned,Trades.PV,Computation,August,1588.7488
+Unassigned,Trades.PV,Computation,September,143.3812
+Unassigned,Trades.PV,Pricing Node,August,7094
+Unassigned,Trades.PV,Pricing Node,September,5336
+Unassigned,Trades.PV,Risk Data Storage,August,1174712
+Unassigned,Trades.PV,Risk Data Storage,September,426189
+Unassigned,Trades.PV.AttributionSimpleRevalFX,Computation,August,43.5496
+Unassigned,Trades.PV.AttributionSimpleRevalFX,Computation,September,70.1631
+Unassigned,Trades.PV.AttributionSimpleRevalFX,Pricing Node,August,49
+Unassigned,Trades.PV.AttributionSimpleRevalFX,Pricing Node,September,72
+Unassigned,Trades.PV.AttributionSimpleRevalFX,Risk Data Storage,August,50007
+Unassigned,Trades.PV.AttributionSimpleRevalFX,Risk Data Storage,September,3734
+Unassigned,Trades.SabrRisks,Computation,August,476.9966
+Unassigned,Trades.SabrRisks,Computation,September,49.2323
+Unassigned,Trades.SabrRisks,Pricing Node,August,1295
+Unassigned,Trades.SabrRisks,Pricing Node,September,1406
+Unassigned,Trades.SabrRisks,Risk Data Storage,August,306768
+Unassigned,Trades.SabrRisks,Risk Data Storage,September,79384

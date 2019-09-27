@@ -49,6 +49,9 @@ namespace Gateway.Web
                 "~/Scripts/Monitoring/Monitoring.js"
             ));
 
+            bundles.Add(new ScriptBundle("~/bundles/batchcosts").Include(
+                "~/Scripts/Batches/BatchCosts.js"
+            ));
 
             bundles.Add(new ScriptBundle("~/bundles/schedule").Include(
                 "~/Scripts/Schedule/Schedule.js"
