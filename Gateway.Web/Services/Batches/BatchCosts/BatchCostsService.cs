@@ -6,6 +6,7 @@ using Bagl.Cib.MIT.IoC;
 using Bagl.Cib.MIT.Logging;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
 using Gateway.Web.Models.Batches;
+using Gateway.Web.Utils;
 
 namespace Gateway.Web.Services.Batches.BatchCosts
 {
@@ -71,7 +72,7 @@ namespace Gateway.Web.Services.Batches.BatchCosts
 
                 monthlyCostGroup.GetType()
                     .GetProperty(costItem.GetStringValue("Month"))
-                    .SetValue(monthlyCostGroup, costItem.GetValue<decimal>("TotalCost"));
+                    .SetValue(monthlyCostGroup, costItem.GetStringValue("TotalCost").ToCultureAwareDecimal());
             }
 
             SetAnnualTotalEstimates(monthlyCostGroups);
