@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace Gateway.Web.Utils
@@ -60,6 +61,20 @@ namespace Gateway.Web.Utils
                 value += "...";
 
             return value;
+        }
+
+        public static decimal ToCultureAwareDecimal(this string stringValue)
+        {
+            if (string.IsNullOrWhiteSpace(stringValue))
+                return 0;
+
+            var culture = CultureInfo.CurrentCulture;
+            var cultureDecimalSeparator = culture.NumberFormat.NumberDecimalSeparator;
+
+            stringValue = stringValue.Replace(".", cultureDecimalSeparator);
+            stringValue = stringValue.Replace(",", cultureDecimalSeparator);
+
+            return decimal.Parse(stringValue, culture);
         }
     }
 }
