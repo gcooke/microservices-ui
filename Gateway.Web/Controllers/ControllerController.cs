@@ -226,6 +226,18 @@ namespace Gateway.Web.Controllers
         public ActionResult Configuration(string id)
         {
             var model = _gateway.GetControllerConfiguration(id);
+
+            if(model.PriorityLimits == null)
+                model.PriorityLimits = new List<PriorityLimit>();
+
+            if (model.PriorityLimits.Count <= 0)
+            {
+                for (int x = 0; x <= model.MaxPriority; x++)
+                {
+                    model.PriorityLimits.Add(new PriorityLimit() {Enabled =  false, Instances = model.MaxInstances, Priority =  x} );
+                }
+            }
+
             return View(model);
         }
 

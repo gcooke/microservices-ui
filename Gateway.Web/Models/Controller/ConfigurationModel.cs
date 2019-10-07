@@ -16,6 +16,11 @@ namespace Gateway.Web.Models.Controller
             Dynamic =2 
         }
 
+        public ConfigurationModel()
+        {
+            PriorityLimits = new List<PriorityLimit>();
+        }
+
         public bool IsUpdate { get { return ControllerId != 0; } }
 
         [XmlAttribute(AttributeName = "Id")]
@@ -70,6 +75,33 @@ namespace Gateway.Web.Models.Controller
 
         [Display(Name = "Controller Server Restrictions")]
         public List<ControllerServer> ControllerServerRestrictions { get; set; }
-        
+
+        [XmlIgnore]
+        //[XmlElement] 
+        [Display(Name = "Priority Limits")]
+        public List<PriorityLimit> PriorityLimits { get; set; }
+
+    }
+
+    public class PriorityLimit
+    {
+
+        [XmlAttribute(AttributeName = "Id")]
+        public int? Id { get; set; }
+
+        [Display(Name = "Enabled")]
+        public bool Enabled { get; set; }
+
+        [XmlElement]
+        [Required]
+        [Display(Name = "Priority")]
+        [Range(0, 20, ErrorMessage = "Invalid Priority")]
+        public int Priority { get; set; }
+
+        [XmlElement]
+        [Required]
+        [Display(Name = "Instances")]
+        [Range(1, 2000, ErrorMessage = "Please enter the maximum priority.")]
+        public int Instances { get; set; }
     }
 }
