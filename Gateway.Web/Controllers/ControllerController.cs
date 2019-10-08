@@ -1,6 +1,5 @@
 ﻿using Bagl.Cib.MIT.IoC;
 using Bagl.Cib.MIT.Logging;
-using Bagl.Cib.MSF.ClientAPI.Gateway;
 using Gateway.Web.Authorization;
 using Gateway.Web.Database;
 using Gateway.Web.Models.Controller;
@@ -227,23 +226,24 @@ namespace Gateway.Web.Controllers
         {
             var model = _gateway.GetControllerConfiguration(id);
 
-            if(model.PriorityLimits == null)
+            if (model.PriorityLimits == null)
                 model.PriorityLimits = new List<PriorityLimit>();
 
-            if (model.PriorityLimits.Count <= 0)
+            for (int x = 0; x <= model.MaxPriority; x++)
             {
-                for (int x = 0; x <= model.MaxPriority; x++)
-                {
-                    model.PriorityLimits.Add(new PriorityLimit() {Enabled =  false, Instances = model.MaxInstances, Priority =  x} );
-                }
+                if (model.PriorityLimits.Any(e => e.Priority == x))
+                    continue;
+
+                model.PriorityLimits.Add(new PriorityLimit() { Enabled = false, Instances = model.MaxInstances, Priority = x });
             }
+
+            model.PriorityLimits = model.PriorityLimits.OrderBy(e => e.Priority).ToList();
 
             return View(model);
         }
 
         public ActionResult Servers(string id)
         {
-
             var model = _dataService.GetControllerServers(id);
 
             return View(model);
