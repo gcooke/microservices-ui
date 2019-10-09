@@ -25,9 +25,11 @@ namespace Gateway.Web.Services
             var original = resource;
             resource = resource.Substring(10);
             resource = resource.Substring(0, resource.IndexOf("/", StringComparison.Ordinal));
+            var date = resource.Substring(resource.LastIndexOf("/", StringComparison.Ordinal) + 1);
             if (!int.TryParse(resource, out var id)) return original;
 
-            return _databaseService.GetBatchName(id) ?? original;
+            var result = _databaseService.GetBatchName(id);
+            return result == null ? original : $"{result} ({date})";
         }
     }
 }
