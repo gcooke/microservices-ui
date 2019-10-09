@@ -48,6 +48,8 @@ namespace Gateway.Web.Database
 
         PayloadData GetPayload(long id);
 
+        string GetBatchName(long scheduleId);
+
         ReportsModel GetUsage();
 
         QueueChartModel GetQueueChartModel(DateTime startDateUtc);

@@ -9,7 +9,7 @@
 @model Gateway.Web.Models.User.SitesModel
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
-    ViewBag.Title = "User: " + @Model.Login;
+    ViewBag.Title = @Model.FullName;
     ViewBag.Current = "Sites";
 }
 @{ Html.RenderPartial("_UserNav", @Model); }

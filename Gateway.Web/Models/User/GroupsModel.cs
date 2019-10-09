@@ -19,5 +19,7 @@ namespace Gateway.Web.Models.User
         public List<GroupModel> Groups { get; set; }
 
         public string Login { get; set; }
+
+        public string FullName { get; set; }
     }
 }

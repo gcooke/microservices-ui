@@ -3,7 +3,7 @@
 @model UserModel
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
-    ViewBag.Title = "User: " + @Model.Login;
+    ViewBag.Title = @Model.FullName;
     ViewBag.Current = "Groups";
 }
 @{ Html.RenderPartial("_UserNav", (UserModel)@Model); }

@@ -5,11 +5,12 @@ namespace Gateway.Web.Models.User
 {
     public class HistoryModel : BaseControllerModel, IUserModel
     {
-        public HistoryModel(long id, string name, string domain) : base(name)
+        public HistoryModel(long id, string name, string domain, string fullName) : base(name)
         {
             Id = id;
             Domain = domain;
             Requests = new List<HistoryItem>();
+            FullName = fullName;
         }
         public long Id { get; set; }
 
@@ -21,5 +22,7 @@ namespace Gateway.Web.Models.User
         {
             get { return Name; }
         }
+
+        public string FullName { get; set; }
     }
 }

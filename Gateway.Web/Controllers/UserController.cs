@@ -16,22 +16,27 @@ namespace Gateway.Web.Controllers
     {
         private readonly IGatewayDatabaseService _dataService;
         private readonly IGatewayService _gateway;
+        private readonly IUsernameService _usernameService;
+        private readonly IBatchNameService _batchNameService;
 
         public UserController(
             IGatewayDatabaseService dataService,
             IGatewayService gateway,
+            IUsernameService usernameService,
+            IBatchNameService batchNameService,
             ILoggingService loggingService)
             : base(loggingService)
         {
             _dataService = dataService;
             _gateway = gateway;
+            _usernameService = usernameService;
+            _batchNameService = batchNameService;
         }
 
         #region User
         public ActionResult Details(long id)
         {
             var model = _gateway.GetUser(id.ToString());
-
             return View("Details", model);
         }
 
@@ -49,6 +54,7 @@ namespace Gateway.Web.Controllers
 
             //Call AD and get domain and details
             //var Nonuser = _gateway.GetNonUser(id);
+            Nonuser.FullName = _usernameService.GetFullName(Nonuser.FullName);
 
             return View("Details", Nonuser);
         }
@@ -284,6 +290,7 @@ namespace Gateway.Web.Controllers
         public ActionResult AddIns(string id)
         {
             var model = _gateway.GetUserAddInVersions(id.ToLongOrDefault());
+            model.FullName = _usernameService.GetFullName(model.Login);
             return View("AddIns", model);
         }
 
@@ -452,15 +459,17 @@ namespace Gateway.Web.Controllers
                     item.Id = id;
                 }
 
+            var fullName = _usernameService.GetFullName(login);
             if (login.Contains("\\"))
             {
                 domain = login.Substring(0, (login.IndexOf("\\")));
                 login = login.Substring(login.IndexOf("\\") + 1);
             }
-
-            var model = new HistoryModel(id, login, domain);
+            
+            var model = new HistoryModel(id, login, domain, fullName);
             model.Requests.AddRange(items, sortOrder);
             model.Requests.SetRelativePercentages();
+            model.Requests.ReplaceResourceNames(_batchNameService);
             return View("History", model);
         }
     }

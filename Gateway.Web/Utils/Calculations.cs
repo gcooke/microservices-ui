@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Gateway.Web.Models.Controller;
+using Gateway.Web.Services;
 
 namespace Gateway.Web.Utils
 {
@@ -53,6 +54,13 @@ namespace Gateway.Web.Utils
                     target.AddRange(items.OrderByDescending(i => i.TimeTakeMs));
                     break;
 
+                case "queuetime":
+                    target.AddRange(items.OrderBy(i => i.QueueTimeMs));
+                    break;
+                case "queuetime_desc":
+                    target.AddRange(items.OrderByDescending(i => i.QueueTimeMs));
+                    break;
+
                 case "result":
                     target.AddRange(items.OrderBy(i => i.ResultFormatted));
                     break;
@@ -65,14 +73,30 @@ namespace Gateway.Web.Utils
         public static void SetRelativePercentages(this List<HistoryItem> items)
         {
             var values = items.Where(i => i.TimeTakeMs.HasValue).ToArray();
-            var max = Math.Abs(values.Length > 0 ? values.Max(i => (long)(i.ActualTimeTakenMs ?? 0)) : 0);
+            var maxp = Math.Abs(values.Length > 0 ? values.Max(i => (long)(i.ActualTimeTakenMs ?? 0)) : 0);
+            var maxq = Math.Abs(values.Length > 0 ? values.Max(i => (long)(i.QueueTimeMs ?? 0)) : 0);
 
             foreach (var item in items)
             {
-                if (item.ActualTimeTakenMs.HasValue && max > 0)
+                if (item.ActualTimeTakenMs.HasValue && maxp > 0)
                 {
-                    item.RelativePercentage = Math.Abs((int)((long)item.ActualTimeTakenMs.Value * 100 / max));
+                    item.RelativePercentageP = Math.Abs((int)((long)item.ActualTimeTakenMs.Value * 100 / maxp));
                 }
+
+                if (item.QueueTimeMs.HasValue && maxq > 0)
+                {
+                    item.RelativePercentageQ = Math.Abs((int)((long)item.QueueTimeMs.Value * 100 / maxq));
+                }
+            }
+        }
+
+        public static void ReplaceResourceNames(this List<HistoryItem> items, IBatchNameService batchNameService)
+        {
+            foreach (var item in items)
+            {
+                if (string.Equals(item.Controller, "RiskBatch", StringComparison.CurrentCultureIgnoreCase))
+                    if (item.Resource.StartsWith("Batch/Run/"))
+                        item.Resource = batchNameService.GetName(item.Resource);
             }
         }
     }

@@ -25,5 +25,6 @@ namespace Gateway.Web.Models.User
 
         public string Login { get; set; }
         public string Domain { get; set; }
+        public string FullName { get; set; }
     }
 }

@@ -23,24 +23,31 @@ namespace Gateway.Web.Controllers
         private readonly IGatewayDatabaseService _dataService;
         private readonly IGatewayService _gateway;
         private readonly ILogsService _logsService;
+        private readonly IBatchNameService _batchNameService;
         private readonly IStatisticsService _statisticsService;
 
         public RequestController(IGatewayDatabaseService dataService,
             IGatewayService gateway,
             ILogsService logsService,
             ILoggingService loggingService,
+            IBatchNameService batchNameService,
             IStatisticsService statisticsService)
             : base(loggingService)
         {
             _dataService = dataService;
             _gateway = gateway;
             _logsService = logsService;
+            _batchNameService = batchNameService;
             _statisticsService = statisticsService;
         }
 
         public ActionResult Summary(string correlationId)
         {
             var model = _dataService.GetRequestSummary(correlationId);
+            if (string.Equals(model.Controller, "RiskBatch", StringComparison.CurrentCultureIgnoreCase))
+                if (model.Resource.StartsWith("Batch/Run/"))
+                    model.AdditionalInfo = _batchNameService.GetName(model.Resource);
+
             return View(model);
         }
 
@@ -86,8 +93,7 @@ namespace Gateway.Web.Controllers
 
             model.Requests.AddRange(items, sortOrder);
             model.Requests.SetRelativePercentages();
-
-            model.Requests.SetRelativePercentages();
+            model.Requests.ReplaceResourceNames(_batchNameService);
             return View(model);
         }
 

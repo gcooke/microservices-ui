@@ -145,6 +145,8 @@ namespace Gateway.Web
             information.RegisterType<IHttpClientProvider, HttpClientProvider>(Scope.Singleton);
             information.RegisterType<IBatchService, BatchService>(Scope.Singleton);
             information.RegisterType<IIssueTrackerService, IssueTrackerService>(Scope.Singleton);
+            information.RegisterType<IUsernameService, UsernameService>(Scope.Singleton);
+            information.RegisterType<IBatchNameService, BatchNameService>(Scope.Singleton);
 
             //Reset Services Registrations
             information.RegisterType<IGatewayService, GatewayService>(Scope.ContainerSingleton);

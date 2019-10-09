@@ -30,7 +30,20 @@ namespace Gateway.Web.Models.Controller
             get { return ResultCode == 1; }
         }
 
-        public int RelativePercentage { get; set; }
+        public int RelativePercentageQ { get; set; }
+        public int RelativePercentageP { get; set; }
+
+        public string QueueTimeFormatted
+        {
+            get
+            {
+                if (QueueTimeMs.HasValue)
+                {
+                    return (QueueTimeMs ?? 0).FormatTimeTaken();
+                }
+                return string.Empty;
+            }
+        }
 
         public string TimeTakenFormatted
         {
@@ -71,6 +84,14 @@ namespace Gateway.Web.Models.Controller
         public string StartFormatted
         {
             get { return StartUtc.ToLocalTime().ToString("dd MMM HH:mm:ss"); }
+        }
+
+        public string ControllerFormatted
+        {
+            get
+            {
+                return $"{Controller} ({Version})";
+            }
         }
 
         public string UserFormatted

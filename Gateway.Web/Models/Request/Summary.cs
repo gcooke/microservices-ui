@@ -21,6 +21,7 @@ namespace Gateway.Web.Models.Request
         public string Controller { get; set; }
         public string Version { get; set; }
         public string Resource { get; set; }
+        public string AdditionalInfo { get; set; }
         public string RequestType { get; set; }
         public int Priority { get; set; }
         public bool IsAsync { get; set; }

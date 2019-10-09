@@ -28,6 +28,7 @@ namespace Gateway.Web.Controllers
         private readonly IGatewayDatabaseService _dataService;
         private readonly IGatewayService _gateway;
         private readonly IGateway _gatewayRestService;
+        private readonly IBatchNameService _batchNameService;
         private readonly IBasicRestService _basicRestService;
         private readonly int _refreshPeriodInSeconds;
 
@@ -37,6 +38,7 @@ namespace Gateway.Web.Controllers
             IGatewayService gateway,
             IGateway gatewayRestService,
             ILoggingService loggingService,
+            IBatchNameService batchNameService,
             IBasicRestService basicRestService
             )
             : base(loggingService)
@@ -44,6 +46,7 @@ namespace Gateway.Web.Controllers
             _dataService = dataService;
             _gateway = gateway;
             _gatewayRestService = gatewayRestService;
+            _batchNameService = batchNameService;
             _basicRestService = basicRestService;
 
             var refreshPeriodInSeconds = information.GetSetting("ControllerActionRefresh");
@@ -91,6 +94,7 @@ namespace Gateway.Web.Controllers
             var model = new HistoryModel();
             model.Requests.AddRange(items, sortOrder);
             model.Requests.SetRelativePercentages();
+            model.Requests.ReplaceResourceNames(_batchNameService);
             return View(model);
         }
 

@@ -21,6 +21,8 @@ namespace Gateway.Web.Models.User
 
         public string Domain { get; set; }
 
+        public string FullName { get; set; }
+
         public List<SiteModel> Sites { get; set; }
 
         public List<SiteModel> InheritedSites { get; set; }

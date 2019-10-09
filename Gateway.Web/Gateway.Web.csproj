@@ -356,6 +356,9 @@
     <Compile Include="Models\Batches\CostGroupMonthlyBatchCost.cs" />
     <Compile Include="Services\Batches\BatchCosts\BatchCostsService.cs" />
     <Compile Include="Services\Batches\BatchCosts\IBatchCostsService.cs" />
+    <Compile Include="Services\BatchNameService.cs" />
+    <Compile Include="Services\IBatchNameService.cs" />
+    <Compile Include="Services\IUsernameService.cs" />
     <Compile Include="Services\PortfolioProfile\IPortfolioProfileMonitoringService.cs" />
     <Compile Include="Controllers\PdcController.cs" />
     <Compile Include="Controllers\PortfolioProfileController.cs" />
@@ -793,6 +796,7 @@
     <Compile Include="Services\Schedule\Utils\ScheduleTaskEx.cs" />
     <Compile Include="Services\Schedule\Utils\ScheduleWebRequestModelEx.cs" />
     <Compile Include="Services\StatisticsService.cs" />
+    <Compile Include="Services\UsernameService.cs" />
     <Compile Include="Services\VersionUpdate.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="UnityDependencyResolver.cs" />

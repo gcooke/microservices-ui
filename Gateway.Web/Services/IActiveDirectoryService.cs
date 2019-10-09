@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.DirectoryServices.AccountManagement;
 using System.Linq;
@@ -13,10 +14,12 @@ namespace Gateway.Web.Services
     public interface IActiveDirectoryService
     {
         UsersModel GetUsers(ADGroupsModel adgroups);
+        UserPrincipal FindUser(string domain, string name);
     }
 
     public class ActiveDirectoryService : IActiveDirectoryService
     {
+        private readonly ConcurrentDictionary<string, PrincipalContext> _contexts;
         private readonly string[] _trustedDomains;
         private readonly string _fallbackDomain;
         private ILogger _logger;
@@ -26,6 +29,7 @@ namespace Gateway.Web.Services
             _trustedDomains = new[] { "D_ABSA", "INTRANET", "CLIENT" };
             _fallbackDomain = "D_ABSA";
             _logger = loggingService.GetLogger(this);
+            _contexts = new ConcurrentDictionary<string, PrincipalContext>(StringComparer.CurrentCultureIgnoreCase);
         }
 
         public UsersModel GetUsers(ADGroupsModel adgroups)
@@ -48,6 +52,21 @@ namespace Gateway.Web.Services
             return result;
         }
 
+        public UserPrincipal FindUser(string domain, string name)
+        {
+            var context = GetDomainContext(domain);
+            return GetUserPrincipal(context, name);
+        }
+
+        private UserPrincipal GetUserPrincipal(PrincipalContext groupCtx, string userName, string userSid = null)
+        {
+            if (string.IsNullOrEmpty(userSid))
+            {
+                return UserPrincipal.FindByIdentity(groupCtx, IdentityType.SamAccountName, userName);
+            }
+            return UserPrincipal.FindByIdentity(groupCtx, IdentityType.Sid, userSid);
+        }
+
         private IEnumerable<UserPrincipal> ResolveUsers(string groupDomain, string groupName)
         {
             var result = new List<UserPrincipal>();
@@ -56,7 +75,7 @@ namespace Gateway.Web.Services
                 var fallbackDomain = _trustedDomains.Contains(groupDomain) ? groupDomain : _fallbackDomain;
 
                 // set up domain context
-                var groupCtx = new PrincipalContext(ContextType.Domain, fallbackDomain);
+                var groupCtx = GetDomainContext(fallbackDomain);
 
                 // find the group in question
                 GroupPrincipal group = GroupPrincipal.FindByIdentity(groupCtx, groupName);
@@ -89,6 +108,11 @@ namespace Gateway.Web.Services
             }
 
             return result;
+        }
+
+        private PrincipalContext GetDomainContext(string domain)
+        {
+            return _contexts.GetOrAdd(domain, s => new PrincipalContext(ContextType.Domain, s));
         }
     }
 }
