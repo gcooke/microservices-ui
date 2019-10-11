@@ -1,8 +1,9 @@
-﻿using System.Linq;
-using System.Web.Mvc;
+﻿using CronExpressionDescriptor;
 using Gateway.Web.Models.Schedule.Input;
 using Gateway.Web.Services.Batches.Interfaces;
 using Gateway.Web.Utils;
+using System.Linq;
+using System.Web.Mvc;
 
 namespace Gateway.Web.Services.Schedule.Utils
 {
@@ -11,13 +12,14 @@ namespace Gateway.Web.Services.Schedule.Utils
         public static void SetGroups(this BaseScheduleModel model, IBatchConfigDataService service, string[] selectedValues)
         {
             model.Groups = service
-                .GetGroups()
-                .Select(x => new SelectListItem
-                {
-                    Value = x.GroupId.ToString(),
-                    Text = CronExpressionDescriptor.ExpressionDescriptor.GetDescription(CronTabExpression.Parse(x.Schedule).ToString())
-                })
-                .ToList();
+                    .GetGroups()
+                    .Select(x => new SelectListItem
+                    {
+                        Value = x.GroupId.ToString(),
+                        Text = CronExpressionDescriptor.ExpressionDescriptor.GetDescription(CronTabExpression.Parse(x.Schedule).ToString(), new Options() { Use24HourTimeFormat = true })
+                    })
+                    .OrderBy(g => g.Text)
+                    .ToList();
 
             model.Groups.Insert(0, new SelectListItem { Text = null, Value = null });
             var selectListItems = model.Groups.Where(x => selectedValues.Contains(x.Value)).ToList();

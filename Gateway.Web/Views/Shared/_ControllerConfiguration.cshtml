@@ -141,17 +141,66 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-md-3">
-                @Html.LabelFor(m => m.Description, new {@class = "control-label"})
-            </div>
+    <div class="row">
+        <div class="col-md-3">
+            @Html.LabelFor(m => m.Description, new {@class = "control-label"})
+        </div>
 
-            <div class="col-md-3">
-                <div class="input-group">
-                    @Html.TextAreaFor(m => m.Description, new {@name = "Description"})
+        <div class="col-md-3">
+            <div class="input-group">
+                @Html.TextAreaFor(m => m.Description, new {@name = "Description"})
+            </div>
+        </div>
+
+    </div>
+    
+    <div class="row">
+        <div class="col-md-6">
+            @Html.LabelFor(m => m.PriorityLimits, new {@class = "control-label"})
+        </div>
+    </div>
+        
+    <div class="form-group">
+
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-6 ">
+                        <table class="datatable table report-table select-all-table" id="ControllerRestriction-table">
+                            <thead>
+                            <tr style="background: #990505;">
+                                <th style="background: #990505;">
+                                    @Html.CheckBox("select-all")
+                                </th>
+                                <th style="background: #990505;">Priority</th>
+                                <th style="background: #990505;">Instances</th>
+
+                            </tr>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @for (var i = 0; i < Model.PriorityLimits.Count(); i++)
+                            {
+                                <tr>
+                                    <td  style="text-align: center; vertical-align: middle">
+                                        @Html.CheckBoxFor(x => Model.PriorityLimits[i].Enabled)
+                                        @Html.HiddenFor(x => Model.PriorityLimits[i].Id)
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        <strong style="font-size: 1.5em;">
+                                                @Html.HiddenFor(x => Model.PriorityLimits[i].Priority)
+                                                @Model.PriorityLimits[i].Priority
+                                        </strong>
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(e => Model.PriorityLimits[i].Instances)
+                                    </td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-
         </div>
         
         
@@ -162,6 +211,5 @@
                 Save
             </button>
         </div>
-
     </div>
 </div>

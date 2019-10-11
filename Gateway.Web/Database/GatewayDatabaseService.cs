@@ -341,6 +341,20 @@ namespace Gateway.Web.Database
             }
         }
 
+        public string GetBatchName(long scheduleId)
+        {
+            using (var database = new GatewayEntities(_connectionString))
+            {
+                var schedule = database.Schedules.FirstOrDefault(s => s.ScheduleId == scheduleId);
+                if (schedule?.RiskBatchSchedule == null) return null;
+
+                var name = schedule.RiskBatchSchedule.RiskBatchConfiguration.Type;
+                var tradeSource = schedule.RiskBatchSchedule.TradeSource;
+
+                return $"{name} - {tradeSource}";
+            }
+        }
+
         public ReportsModel GetUsage()
         {
             var result = new ReportsModel("Usage Report");

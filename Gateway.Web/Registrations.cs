@@ -28,6 +28,7 @@ using StackExchange.Redis;
 using System;
 using Gateway.Web.Services.PortfolioProfile;
 using Unity.Injection;
+using Gateway.Web.Services.Batches.BatchCosts;
 
 namespace Gateway.Web
 {
@@ -57,6 +58,7 @@ namespace Gateway.Web
             information.RegisterType<ServerResourceController>(Scope.ContainerSingleton);
             information.RegisterType<UserController>(Scope.ContainerSingleton);
             information.RegisterType<UtilsController>(Scope.ContainerSingleton);
+            information.RegisterType<BatchCostsController>(Scope.ContainerSingleton);
 
             // Setup Logging
             information.LoggingInformation.LogPath = information.GetSetting("LogLocation");
@@ -143,6 +145,8 @@ namespace Gateway.Web
             information.RegisterType<IHttpClientProvider, HttpClientProvider>(Scope.Singleton);
             information.RegisterType<IBatchService, BatchService>(Scope.Singleton);
             information.RegisterType<IIssueTrackerService, IssueTrackerService>(Scope.Singleton);
+            information.RegisterType<IUsernameService, UsernameService>(Scope.Singleton);
+            information.RegisterType<IBatchNameService, BatchNameService>(Scope.Singleton);
 
             //Reset Services Registrations
             information.RegisterType<IGatewayService, GatewayService>(Scope.ContainerSingleton);
@@ -155,6 +159,7 @@ namespace Gateway.Web
             information.RegisterType<IManifestService, ManifestService>(Scope.ContainerSingleton);
             information.RegisterType<IPdcService, PdcService>(Scope.ContainerSingleton);
             information.RegisterType<IPortfolioProfileMonitoringService, PortfolioProfileMonitoringService>(Scope.ContainerSingleton);
+            information.RegisterType<IBatchCostsService, BatchCostsService>(Scope.ContainerSingleton);
 
             Absa.Cib.Authorization.Extensions.Registration.Register(information);
             Absa.Cib.Authorization.Extensions.Registration.RegisterCertificates(information);

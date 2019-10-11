@@ -1,5 +1,7 @@
 ﻿using Bagl.Cib.MIT.IoC;
+using CronExpressionDescriptor;
 using Gateway.Web.Database;
+using Gateway.Web.Models.Schedule.Output;
 using Gateway.Web.Services.Schedule.Interfaces;
 using Gateway.Web.Services.Schedule.Utils;
 using Gateway.Web.Utils;
@@ -8,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using Gateway.Web.Models.Schedule.Output;
 using ScheduleGroup = Gateway.Web.Models.Schedule.Output.ScheduleGroup;
 
 namespace Gateway.Web.Services.Schedule
@@ -91,7 +92,6 @@ namespace Gateway.Web.Services.Schedule
                 return runGroups.OrderBy(x => x.NextOccurrence).ToList();
             }
         }
-
 
         public IList<ScheduleGroup> GetGroups(DateTime startDate, DateTime endDate, string searchTerm = null)
         {
@@ -202,7 +202,6 @@ namespace Gateway.Web.Services.Schedule
             }
         }
 
-
         private void AddChildren(Database.Schedule parent, ScheduleGroup groupQuick, string searchTerm)
         {
             var children = parent.Children
@@ -225,8 +224,8 @@ namespace Gateway.Web.Services.Schedule
             {
                 var entity = db.ScheduleGroups.SingleOrDefault(x => x.Schedule == cron);
 
-                if(name == null)
-                    name = CronExpressionDescriptor.ExpressionDescriptor.GetDescription(cron);
+                if (name == null)
+                    name = ExpressionDescriptor.GetDescription(cron, new Options() { Use24HourTimeFormat = true });
 
                 cron = CronTabExpression.Parse(cron).ToString();
 

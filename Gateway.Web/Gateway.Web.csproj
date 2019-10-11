@@ -49,8 +49,8 @@
     <Reference Include="Absa.Cib.Authorization.Extensions, Version=1.0.55.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Absa.Cib.Authorization.Extensions.1.0.55\lib\net452\Absa.Cib.Authorization.Extensions.dll</HintPath>
     </Reference>
-    <Reference Include="Absa.Cib.JwtAuthentication, Version=1.1.448.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Absa.Cib.JwtAuthentication.1.1.448\lib\net461\Absa.Cib.JwtAuthentication.dll</HintPath>
+    <Reference Include="Absa.Cib.JwtAuthentication, Version=1.1.632.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Absa.Cib.JwtAuthentication.1.1.632\lib\net461\Absa.Cib.JwtAuthentication.dll</HintPath>
     </Reference>
     <Reference Include="Absa.Cib.MIT.Redis.IoC, Version=1.0.37.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Bagl.Cib.MIT.Redis.IoC.1.0.37\lib\net461\Absa.Cib.MIT.Redis.IoC.dll</HintPath>
@@ -64,27 +64,27 @@
     <Reference Include="Bagl.Cib.MIT.Cube, Version=1.0.43.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Bagl.Cib.MIT.Cube.1.0.43\lib\net452\Bagl.Cib.MIT.Cube.dll</HintPath>
     </Reference>
-    <Reference Include="Bagl.Cib.MIT.IO, Version=1.0.18.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Bagl.Cib.MIT.IO.1.0.18\lib\net452\Bagl.Cib.MIT.IO.dll</HintPath>
+    <Reference Include="Bagl.Cib.MIT.IO, Version=1.0.19.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bagl.Cib.MIT.IO.1.0.19\lib\net452\Bagl.Cib.MIT.IO.dll</HintPath>
     </Reference>
     <Reference Include="Bagl.Cib.MIT.IoC, Version=1.0.64.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Bagl.Cib.MIT.IoC.1.0.64\lib\net452\Bagl.Cib.MIT.IoC.dll</HintPath>
     </Reference>
-    <Reference Include="Bagl.Cib.MIT.Logging, Version=1.0.29.0, Culture=neutral, PublicKeyToken=6d1ad0679d79c706, processorArchitecture=MSIL">
-      <HintPath>..\packages\Bagl.Cib.MIT.Logging.1.0.29\lib\net452\Bagl.Cib.MIT.Logging.dll</HintPath>
+    <Reference Include="Bagl.Cib.MIT.Logging, Version=1.0.38.0, Culture=neutral, PublicKeyToken=6d1ad0679d79c706, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bagl.Cib.MIT.Logging.1.0.38\lib\net452\Bagl.Cib.MIT.Logging.dll</HintPath>
     </Reference>
     <Reference Include="Bagl.Cib.MIT.Redis.Serialization, Version=1.0.37.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Bagl.Cib.MIT.Redis.Serialization.1.0.37\lib\net461\Bagl.Cib.MIT.Redis.Serialization.dll</HintPath>
     </Reference>
-    <Reference Include="Bagl.Cib.MIT.RedisCore, Version=1.0.37.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Bagl.Cib.MIT.Redis.1.0.37\lib\net461\Bagl.Cib.MIT.RedisCore.dll</HintPath>
+    <Reference Include="Bagl.Cib.MIT.RedisCore, Version=1.0.42.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bagl.Cib.MIT.Redis.1.0.42\lib\net461\Bagl.Cib.MIT.RedisCore.dll</HintPath>
     </Reference>
     <Reference Include="Bagl.Cib.MIT.Scheduling, Version=1.0.8.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Bagl.Cib.MIT.Scheduling.1.0.8\lib\net452\Bagl.Cib.MIT.Scheduling.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Bagl.Cib.MIT.ServiceBase, Version=1.1.84.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Bagl.Cib.MIT.ServiceBase.1.1.84\lib\net452\Bagl.Cib.MIT.ServiceBase.dll</HintPath>
+    <Reference Include="Bagl.Cib.MIT.ServiceBase, Version=1.1.88.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bagl.Cib.MIT.ServiceBase.1.1.88\lib\net452\Bagl.Cib.MIT.ServiceBase.dll</HintPath>
     </Reference>
     <Reference Include="Bagl.Cib.MIT.StatePublisher, Version=1.0.30.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Bagl.Cib.MIT.StatePublisher.1.0.30\lib\net452\Bagl.Cib.MIT.StatePublisher.dll</HintPath>
@@ -98,8 +98,8 @@
     <Reference Include="CommonServiceLocator, Version=2.0.4.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
       <HintPath>..\packages\Unity.5.8.11\lib\net46\CommonServiceLocator.dll</HintPath>
     </Reference>
-    <Reference Include="CronExpressionDescriptor, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CronExpressionDescriptor.2.5.0\lib\netstandard2.0\CronExpressionDescriptor.dll</HintPath>
+    <Reference Include="CronExpressionDescriptor, Version=2.13.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CronExpressionDescriptor.2.13.0\lib\netstandard2.0\CronExpressionDescriptor.dll</HintPath>
     </Reference>
     <Reference Include="CsvHelper, Version=7.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
       <HintPath>..\packages\CsvHelper.7.1.1\lib\net45\CsvHelper.dll</HintPath>
@@ -166,7 +166,7 @@
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
     <Reference Include="Pipelines.Sockets.Unofficial, Version=1.0.0.0, Culture=neutral, PublicKeyToken=42ea0a778e13fbe2, processorArchitecture=MSIL">
-      <HintPath>..\packages\Pipelines.Sockets.Unofficial.1.0.7\lib\net461\Pipelines.Sockets.Unofficial.dll</HintPath>
+      <HintPath>..\packages\Pipelines.Sockets.Unofficial.2.0.22\lib\net461\Pipelines.Sockets.Unofficial.dll</HintPath>
     </Reference>
     <Reference Include="RabbitMQ.Client, Version=3.5.6.0, Culture=neutral, PublicKeyToken=89e7d7c5feba84ce, processorArchitecture=MSIL">
       <HintPath>..\packages\RabbitMQ.Client.3.5.6\lib\net40\RabbitMQ.Client.dll</HintPath>
@@ -176,7 +176,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="StackExchange.Redis, Version=2.0.0.0, Culture=neutral, PublicKeyToken=c219ff1ca8c2ce46, processorArchitecture=MSIL">
-      <HintPath>..\packages\StackExchange.Redis.2.0.519\lib\net461\StackExchange.Redis.dll</HintPath>
+      <HintPath>..\packages\StackExchange.Redis.2.0.601\lib\net461\StackExchange.Redis.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -230,8 +230,8 @@
     <Reference Include="System.Reactive.Windows.Threading, Version=3.0.3000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Reactive.Windows.Threading.4.0.0\lib\net46\System.Reactive.Windows.Threading.dll</HintPath>
     </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.0\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.2\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
@@ -344,6 +344,7 @@
     <Compile Include="Authorization\RoleBasedAuthorizeAttribute.cs" />
     <Compile Include="Binders\RequestWorkerModelBinder.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\BatchCostsController.cs" />
     <Compile Include="Controllers\DataFeedController.cs" />
     <Compile Include="Controllers\DataFeedsController.cs" />
     <Compile Include="Controllers\ExportScheduleController.cs" />
@@ -351,6 +352,13 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ExecutableScheduleController.cs" />
     <Compile Include="Controllers\BatchScheduleController.cs" />
+    <Compile Include="Models\Batches\CostGroupBatchCost.cs" />
+    <Compile Include="Models\Batches\CostGroupMonthlyBatchCost.cs" />
+    <Compile Include="Services\Batches\BatchCosts\BatchCostsService.cs" />
+    <Compile Include="Services\Batches\BatchCosts\IBatchCostsService.cs" />
+    <Compile Include="Services\BatchNameService.cs" />
+    <Compile Include="Services\IBatchNameService.cs" />
+    <Compile Include="Services\IUsernameService.cs" />
     <Compile Include="Database\spGetHistoryTimingForSchedule1_Result.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
@@ -800,6 +808,7 @@
     <Compile Include="Services\Schedule\Utils\ScheduleTaskEx.cs" />
     <Compile Include="Services\Schedule\Utils\ScheduleWebRequestModelEx.cs" />
     <Compile Include="Services\StatisticsService.cs" />
+    <Compile Include="Services\UsernameService.cs" />
     <Compile Include="Services\VersionUpdate.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="UnityDependencyResolver.cs" />
@@ -816,9 +825,11 @@
     <Compile Include="Utils\DashboardEx.cs" />
     <Compile Include="Utils\DataContractSerializationEx.cs" />
     <Compile Include="Utils\DataMeasurementUtils.cs" />
+    <Compile Include="Utils\DecimalExtensions.cs" />
     <Compile Include="Utils\ExceptionEx.cs" />
     <Compile Include="Utils\LegacyCompession.cs" />
     <Compile Include="Utils\MonitoringHtmlEx.cs" />
+    <Compile Include="Utils\PostAuthComponent.cs" />
     <Compile Include="Utils\ReportsModelEx.cs" />
     <Compile Include="Utils\RestResponseEx.cs" />
     <Compile Include="Utils\SelectItemListEx.cs" />
@@ -938,6 +949,7 @@
     <Content Include="Content\js\respond.js" />
     <Content Include="Content\js\respond.min.js" />
     <Content Include="Content\js\_references.js" />
+    <Content Include="Scripts\Batches\BatchCosts.js" />
     <Content Include="Scripts\Chart.js" />
     <Content Include="Scripts\Chart.min.js" />
     <Content Include="Scripts\PortfolioProfile\portfolioprofile.js" />
@@ -1090,6 +1102,7 @@
     <Content Include="Views\PortfolioProfile\Index.cshtml" />
     <Content Include="Views\PortfolioProfile\Report.cshtml" />
     <Content Include="Views\PortfolioProfile\_PortfolioProfileConfigNav.cshtml" />
+    <Content Include="Views\BatchCosts\Index.cshtml" />
     <Content Include="Views\Schedule\History.cshtml" />
   </ItemGroup>
   <ItemGroup>

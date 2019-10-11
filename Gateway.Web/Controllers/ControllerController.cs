@@ -1,6 +1,5 @@
 ﻿using Bagl.Cib.MIT.IoC;
 using Bagl.Cib.MIT.Logging;
-using Bagl.Cib.MSF.ClientAPI.Gateway;
 using Gateway.Web.Authorization;
 using Gateway.Web.Database;
 using Gateway.Web.Models.Controller;
@@ -22,17 +21,23 @@ namespace Gateway.Web.Controllers
     {
         private readonly IGatewayDatabaseService _dataService;
         private readonly IGatewayService _gateway;
+        private readonly IBatchNameService _batchNamesService;
+        private readonly IUsernameService _usernameService;
         private readonly ISystemInformation _information;
 
         public ControllerController(
             IGatewayDatabaseService dataService,
             IGatewayService gateway,
             ILoggingService loggingService,
+            IBatchNameService batchNamesService,
+            IUsernameService usernameService,
             ISystemInformation information)
             : base(loggingService)
         {
             _dataService = dataService;
             _gateway = gateway;
+            _batchNamesService = batchNamesService;
+            _usernameService = usernameService;
             _information = information;
         }
 
@@ -218,7 +223,7 @@ namespace Gateway.Web.Controllers
 
             var model = new HistoryModel(id);
             model.Requests.AddRange(items, sortOrder);
-            model.Requests.SetRelativePercentages();
+            model.Requests.EnrichHistoryResults(_batchNamesService, _usernameService);
             model.SearchText = search == null ? null : $"Showing results for '{searchResultsText ?? search}'";
             return View(model);
         }
@@ -226,12 +231,25 @@ namespace Gateway.Web.Controllers
         public ActionResult Configuration(string id)
         {
             var model = _gateway.GetControllerConfiguration(id);
+
+            if (model.PriorityLimits == null)
+                model.PriorityLimits = new List<PriorityLimit>();
+
+            for (int x = 0; x <= model.MaxPriority; x++)
+            {
+                if (model.PriorityLimits.Any(e => e.Priority == x))
+                    continue;
+
+                model.PriorityLimits.Add(new PriorityLimit() { Enabled = false, Instances = model.MaxInstances, Priority = x });
+            }
+
+            model.PriorityLimits = model.PriorityLimits.OrderBy(e => e.Priority).ToList();
+
             return View(model);
         }
 
         public ActionResult Servers(string id)
         {
-
             var model = _dataService.GetControllerServers(id);
 
             return View(model);

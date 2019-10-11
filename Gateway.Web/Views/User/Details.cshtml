@@ -10,7 +10,7 @@
 @using Version = Gateway.Web.Models.Controller.Version
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
-    ViewBag.Title = "User: " + @Model.Login;
+    ViewBag.Title = @Model.FullName;
     ViewBag.Current = "Details";
 }
 @{ Html.RenderPartial("_UserNav", (IUserModel)@Model); }

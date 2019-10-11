@@ -25,19 +25,6 @@
             </td>
             <td>
                 <b>
-                    @Html.ActionLink("Version", action, controller, new { sortOrder = "version" + direction }, new { @class = "clickableheader" })
-                    @if (ViewBag.SortColumn == "version")
-                    {
-                        <span class="glyphicon glyphicon-arrow-up"></span>
-                    }
-                    @if (ViewBag.SortColumn == "version_desc")
-                    {
-                        <span class="glyphicon glyphicon-arrow-down"></span>
-                    }
-                </b>
-            </td>
-            <td>
-                <b>
                     @Html.ActionLink("User", action, controller, new { sortOrder = "user" + direction }, new { @class = "clickableheader" })
                     @if (ViewBag.SortColumn == "user")
                     {
@@ -70,6 +57,19 @@
                         <span class="glyphicon glyphicon-arrow-up"></span>
                     }
                     @if (ViewBag.SortColumn == "time_desc")
+                    {
+                        <span class="glyphicon glyphicon-arrow-down"></span>
+                    }
+                </b>
+            </td>
+            <td>
+                <b>
+                    @Html.ActionLink("Queue Time", action, controller, new { sortOrder = "queuetime" + direction }, new { @class = "clickableheader" })
+                    @if (ViewBag.SortColumn == "queuetime")
+                    {
+                        <span class="glyphicon glyphicon-arrow-up"></span>
+                    }
+                    @if (ViewBag.SortColumn == "queuetime_desc")
                     {
                         <span class="glyphicon glyphicon-arrow-down"></span>
                     }
@@ -122,22 +122,34 @@
         {
             <tr data-href="@(Url.Action("Summary", "Request", new { correlationId = history.CorrelationId }))">
                 <td>
-                    <a href="~/Controller/History/@history.Controller" class="hoverlink">@history.Controller</a>
-                </td>
-                <td>
-                    <a href="~/Controller/Versions/@history.Controller" class="hoverlink">@history.Version</a>
+                    <a href="~/Controller/History/@history.Controller" class="hoverlink">@history.ControllerFormatted</a>
+                    <small style="color: #E09088">P@(history.Priority)</small>
                 </td>
                 <td style="max-width: 100px; overflow: hidden; text-overflow: ellipsis;">
-                    <a href="~/User/History?id=@history.Id&login=@history.User" class="hoverlink">@history.UserFormatted</a>
+                    <a href="~/User/History?id=@history.Id&login=@history.User" class="hoverlink" data-toggle="tooltip" title="@history.UserFormatted">
+                        @if (history.IsSystemUser)
+                        {
+                            <small style="color: #E09088">@history.UserFormatted</small>
+                        }
+                        else
+                        {
+                            @history.UserFormatted
+                        }
+                    </a>
                 </td>
                 <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
-                    <a href="@(Url.Action("Summary", "Request", new { correlationId = history.CorrelationId }))" data-toggle="tooltip" title="@history.Resource">
+                    <a href="@(Url.Action("Summary", "Request", new {correlationId = history.CorrelationId}))" data-toggle="tooltip" title="@history.Resource">
                         @history.Resource
                     </a>
                 </td>
                 <td>@history.StartFormatted</td>
                 <td>
-                    <div style="width: @history.RelativePercentage%; background: rgb(128, 177, 133); overflow: visible;">
+                    <div style="width: @history.RelativePercentageQ%; background: rgb(250, 187, 110); overflow: visible;">
+                        @history.QueueTimeFormatted
+                    </div>
+                </td>
+                <td>
+                    <div style="width: @history.RelativePercentageP%; background: rgb(128, 177, 133); overflow: visible;">
                         @history.TimeTakenFormatted
                     </div>
                 </td>

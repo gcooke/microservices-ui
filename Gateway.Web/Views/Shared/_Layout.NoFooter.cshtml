@@ -15,11 +15,9 @@
 </head>
 <body ng-app="app">
     @{ Html.RenderPartial("_NavigationBar"); }
-
     <div class="container body-content">
         @RenderBody()
     </div>
-
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/bootstrap")
@@ -28,11 +26,12 @@
     @Scripts.Render("~/bundles/datetime")
     @Scripts.Render("~/bundles/customQueueCharts")
     @Scripts.Render("~/bundles/monitoring")
+    @Scripts.Render("~/bundles/batchcosts")
     @Scripts.Render("~/bundles/schedule")
     @Scripts.Render("~/bundles/treetable")
     @Scripts.Render("~/bundles/calendar")
     @Scripts.Render("~/bundles/server-resources")
-    @Scripts.Render("~/bundles/toastr") 
+    @Scripts.Render("~/bundles/toastr")
     @Scripts.Render("~/bundles/selectAllTable")
     @Scripts.Render("~/bundles/portfolioprofile")
     @RenderSection("scripts", false)

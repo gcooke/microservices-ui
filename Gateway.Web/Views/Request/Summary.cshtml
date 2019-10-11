@@ -66,7 +66,14 @@
                 <td class="columnheader">Resource</td>
                 <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
                     <div data-toggle="tooltip" title="@Model.Resource">
-                        @Model.Resource
+                        @if (string.IsNullOrEmpty(@Model.AdditionalInfo))
+                        {
+                            @Model.Resource
+                        }
+                        else
+                        {
+                            @Model.AdditionalInfo
+                        }
                     </div>
                 </td>
                 <td class="columnheader">Request Type</td>
@@ -125,15 +132,15 @@
 
             <table style="width: 100%; white-space: nowrap" class="datatable">
                 <thead>
-                <tr>
-                    <!--TODO: Click through to child requests-->
-                    <td>Controller</td>
-                    <td>Requests</td>
-                    <td>Successful</td>
-                    <td>Items</td>
-                    <td>Min Start</td>
-                    <td>Max End</td>
-                </tr>
+                    <tr>
+                        <!--TODO: Click through to child requests-->
+                        <td>Controller</td>
+                        <td>Requests</td>
+                        <td>Successful</td>
+                        <td>Items</td>
+                        <td>Min Start</td>
+                        <td>Max End</td>
+                    </tr>
                 </thead>
                 @foreach (DetailRow row in Model.Items)
                 {
