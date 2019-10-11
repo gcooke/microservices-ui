@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Web;
+﻿using System.Data.Entity;
 
 namespace Gateway.Web.Database
 {
     public partial class GatewayEntities : DbContext
     {
-        public GatewayEntities(string connectionString)
+        public GatewayEntities(string connectionString, int timeoutInSeconds = 60)
             : base(connectionString)
         {
-            this.Database.CommandTimeout = 60;
+            this.Database.CommandTimeout = timeoutInSeconds;
         }
     }
 }

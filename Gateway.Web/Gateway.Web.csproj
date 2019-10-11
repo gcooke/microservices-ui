@@ -359,6 +359,18 @@
     <Compile Include="Services\BatchNameService.cs" />
     <Compile Include="Services\IBatchNameService.cs" />
     <Compile Include="Services\IUsernameService.cs" />
+    <Compile Include="Database\spGetHistoryTimingForSchedule1_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\spGetHistoryTimingForSchedule2_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\spGetHistoryTimingForSchedule_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Schedule\Output\HistoryTimingForScheduleViewModel.cs" />
+    <Compile Include="Models\Schedule\Output\HistoryTimingViewModel.cs" />
+    <Compile Include="Profiles\ScheduleProfile.cs" />
     <Compile Include="Services\PortfolioProfile\IPortfolioProfileMonitoringService.cs" />
     <Compile Include="Controllers\PdcController.cs" />
     <Compile Include="Controllers\PortfolioProfileController.cs" />
@@ -938,6 +950,8 @@
     <Content Include="Content\js\respond.min.js" />
     <Content Include="Content\js\_references.js" />
     <Content Include="Scripts\Batches\BatchCosts.js" />
+    <Content Include="Scripts\Chart.js" />
+    <Content Include="Scripts\Chart.min.js" />
     <Content Include="Scripts\PortfolioProfile\portfolioprofile.js" />
     <Content Include="Scripts\Schedule\Schedule.js" />
     <Content Include="Scripts\ServerResources\ServerResources.js" />
@@ -948,7 +962,9 @@
     <Content Include="Scripts\Queues\Shared\SelectionFilter.js" />
     <Content Include="Scripts\Shared\SelectAllTable.js" />
     <Content Include="Views\Controllers\Create.cshtml" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -1087,6 +1103,7 @@
     <Content Include="Views\PortfolioProfile\Report.cshtml" />
     <Content Include="Views\PortfolioProfile\_PortfolioProfileConfigNav.cshtml" />
     <Content Include="Views\BatchCosts\Index.cshtml" />
+    <Content Include="Views\Schedule\History.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />
@@ -1138,16 +1155,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
-          <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>9895</DevelopmentServerPort>
-          <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:9895/</IISUrl>
-          <NTLMAuthentication>False</NTLMAuthentication>
-          <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
-          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+          <SaveServerSettingsInUserFile>True</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
     </VisualStudio>

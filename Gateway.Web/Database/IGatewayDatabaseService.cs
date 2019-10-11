@@ -14,6 +14,7 @@ namespace Gateway.Web.Database
 {
     public interface IGatewayDatabaseService
     {
+        IList<spGetHistoryTimingForSchedule_Result> GetHistoryTimingForSchedule(long scheduleId, int days);
         List<ControllerStats> GetControllerStatistics(DateTime start);
 
         List<string> GetControllerNames();

@@ -388,6 +388,10 @@
           <Parameter Name="correlationId" Type="uniqueidentifier" Mode="In" />
         </Function>
         <Function Name="spGetControllerStates" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="spGetHistoryTimingForSchedule" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Schedule" Type="bigint" Mode="In" />
+          <Parameter Name="Days" Type="int" Mode="In" />
+        </Function>
         <Function Name="spGetIncompleteRequestCount" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="time" Type="datetime" Mode="In" />
         </Function>
@@ -405,6 +409,7 @@
           <Parameter Name="Start" Type="datetime" Mode="In" />
           <Parameter Name="Controller" Type="nvarchar" Mode="In" />
           <Parameter Name="SearchString" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="End" Type="datetime" Mode="In" />
         </Function>
         <Function Name="spGetRecentRequestsAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Start" Type="datetime" Mode="In" />
@@ -661,6 +666,7 @@
             <Parameter Name="Start" Mode="In" Type="DateTime" />
             <Parameter Name="Controller" Mode="In" Type="String" />
             <Parameter Name="SearchString" Mode="In" Type="String" />
+            <Parameter Name="End" Mode="In" Type="DateTime" />
           </FunctionImport>
           <EntitySet Name="ScheduledJobs" EntityType="GatewayModel.ScheduledJob" />
           <AssociationSet Name="FK_ScheduledJob_Schedule" Association="GatewayModel.FK_ScheduledJob_Schedule">
@@ -684,6 +690,18 @@
             <End Role="Controller" EntitySet="Controllers" />
             <End Role="Server" EntitySet="Servers" />
           </AssociationSet>
+          <FunctionImport Name="spGetHistoryTimingForSchedule" ReturnType="Collection(GatewayModel.spGetHistoryTimingForSchedule_Result)">
+            <Parameter Name="Schedule" Mode="In" Type="Int64" />
+            <Parameter Name="Days" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="spGetHistoryTimingForSchedule1" ReturnType="Collection(GatewayModel.spGetHistoryTimingForSchedule1_Result)">
+            <Parameter Name="Schedule" Mode="In" Type="Int64" />
+            <Parameter Name="Days" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="spGetHistoryTimingForSchedule2" ReturnType="Collection(GatewayModel.spGetHistoryTimingForSchedule2_Result)">
+            <Parameter Name="Schedule" Mode="In" Type="Int64" />
+            <Parameter Name="Days" Mode="In" Type="Int32" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="spGetJobStats_Result">
           <Property Type="DateTime" Name="Date" Nullable="true" />
@@ -1201,6 +1219,27 @@
           <End Type="GatewayModel.Controller" Role="Controller" Multiplicity="*" />
           <End Type="GatewayModel.Server" Role="Server" Multiplicity="*" />
         </Association>
+        <ComplexType Name="spGetHistoryTimingForSchedule_Result">
+          <Property Type="DateTime" Name="RunDate" Nullable="false" Precision="23" />
+          <Property Type="Int64" Name="WallClockTime" Nullable="false" />
+          <Property Type="Int64" Name="TotalQueueTime" Nullable="false" />
+          <Property Type="Int64" Name="TotalProcessTime" Nullable="false" />
+          <Property Type="Int64" Name="ScheduleId" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="spGetHistoryTimingForSchedule1_Result">
+          <Property Type="DateTime" Name="RunDate" Nullable="false" Precision="23" />
+          <Property Type="Int32" Name="WallClockTime" Nullable="false" />
+          <Property Type="Int32" Name="TotalQueueTime" Nullable="false" />
+          <Property Type="Int32" Name="TotalProcessTime" Nullable="false" />
+          <Property Type="Int32" Name="ScheduleId" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="spGetHistoryTimingForSchedule2_Result">
+          <Property Type="DateTime" Name="RunDate" Nullable="false" Precision="23" />
+          <Property Type="Int64" Name="WallClockTime" Nullable="true" />
+          <Property Type="Int64" Name="TotalQueueTime" Nullable="true" />
+          <Property Type="Int64" Name="TotalProcessTime" Nullable="true" />
+          <Property Type="Int64" Name="ScheduleId" Nullable="true" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1696,6 +1735,18 @@
               <ScalarProperty Name="Id" ColumnName="ControllerId" />
             </EndProperty>
           </AssociationSetMapping>
+          <FunctionImportMapping FunctionImportName="spGetHistoryTimingForSchedule2" FunctionName="GatewayModel.Store.spGetHistoryTimingForSchedule">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GatewayModel.spGetHistoryTimingForSchedule2_Result">
+                <ScalarProperty Name="RunDate" ColumnName="RunDate" />
+                <ScalarProperty Name="WallClockTime" ColumnName="WallClockTime" />
+                <ScalarProperty Name="TotalQueueTime" ColumnName="TotalQueueTime" />
+                <ScalarProperty Name="TotalProcessTime" ColumnName="TotalProcessTime" />
+                <ScalarProperty Name="ScheduleId" ColumnName="ScheduleId" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetHistoryTimingForSchedule" FunctionName="GatewayModel.Store.spGetHistoryTimingForSchedule" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -1710,8 +1761,8 @@
     <Options>
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
-        <DesignerProperty Name="EnablePluralization" Value="true" />
-        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="False" />
         <DesignerProperty Name="UseLegacyProvider" Value="false" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
       </DesignerInfoPropertySet>
