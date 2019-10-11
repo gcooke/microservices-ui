@@ -23,7 +23,7 @@ namespace Gateway.Web.Services
             result = GetUserNameFromActiveDirectory(name, true);
             if (result != name)
                 _lookup.TryAdd(name, result);
-            return result;
+            return result.ToLower();
         }
 
         public string GetFullName(string name)
