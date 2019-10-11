@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.DirectoryServices.AccountManagement;
 using System.Linq;
 
 namespace Gateway.Web.Services
@@ -16,12 +15,23 @@ namespace Gateway.Web.Services
             _lookup = new ConcurrentDictionary<string, string>(StringComparer.CurrentCultureIgnoreCase);
         }
 
-        public string GetFullName(string name)
+        public string GetFullNameFast(string name)
         {
-            return _lookup.GetOrAdd(name, GetUserNameFromActiveDirectory);
+            if (_lookup.TryGetValue(name, out var result))
+                return result;
+
+            result = GetUserNameFromActiveDirectory(name, true);
+            if (result != name)
+                _lookup.TryAdd(name, result);
+            return result;
         }
 
-        private string GetUserNameFromActiveDirectory(string username)
+        public string GetFullName(string name)
+        {
+            return _lookup.GetOrAdd(name, (n) => GetUserNameFromActiveDirectory(n, false));
+        }
+
+        private string GetUserNameFromActiveDirectory(string username, bool fast)
         {
             if (string.IsNullOrEmpty(username)) return username;
             if (!username.Contains("\\")) return username;
@@ -29,6 +39,9 @@ namespace Gateway.Web.Services
             var parts = username.Split('\\');
             var domain = parts.First();
             var account = parts.Skip(1).Take(1).FirstOrDefault();
+
+            // Do not lookup user if fast lookup is requested and domain is not default domain
+            if (fast && !string.Equals(domain, ActiveDirectoryService.DefaultDomain)) return username;
 
             var result = _activeDirectoryService.FindUser(domain, account);
             if (result == null) return username;

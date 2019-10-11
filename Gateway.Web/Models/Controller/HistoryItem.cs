@@ -94,12 +94,28 @@ namespace Gateway.Web.Models.Controller
             }
         }
 
+        public string UserDisplayName { get; set; }
+
+        public bool IsSystemUser
+        {
+            get
+            {
+                if (User == null) return false;
+                if (User.StartsWith("CORP\\svc", StringComparison.CurrentCultureIgnoreCase))
+                    return true;
+                if (User.StartsWith("INTRANET\\sys", StringComparison.CurrentCultureIgnoreCase))
+                    return true;
+                return false;
+            }
+        }
+
         public string UserFormatted
         {
             get
             {
-                if (string.IsNullOrEmpty(User) || !User.Contains("\\")) return User;
-                return User.Substring(User.IndexOf('\\') + 1);
+                var name = UserDisplayName ?? User;
+                if (string.IsNullOrEmpty(name) || !name.Contains("\\")) return name;
+                return name.Substring(name.IndexOf('\\') + 1);
             }
         }
     }

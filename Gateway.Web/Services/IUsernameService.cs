@@ -2,6 +2,7 @@
 {
     public interface IUsernameService
     {
+        string GetFullNameFast(string name);
         string GetFullName(string name);
     }
 }

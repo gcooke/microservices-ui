@@ -19,15 +19,14 @@ namespace Gateway.Web.Services
 
     public class ActiveDirectoryService : IActiveDirectoryService
     {
+        public const string DefaultDomain = "D_ABSA";
         private readonly ConcurrentDictionary<string, PrincipalContext> _contexts;
         private readonly string[] _trustedDomains;
-        private readonly string _fallbackDomain;
         private ILogger _logger;
 
         public ActiveDirectoryService(ILoggingService loggingService)
         {
             _trustedDomains = new[] { "D_ABSA", "INTRANET", "CLIENT" };
-            _fallbackDomain = "D_ABSA";
             _logger = loggingService.GetLogger(this);
             _contexts = new ConcurrentDictionary<string, PrincipalContext>(StringComparer.CurrentCultureIgnoreCase);
         }
@@ -72,7 +71,7 @@ namespace Gateway.Web.Services
             var result = new List<UserPrincipal>();
             try
             {
-                var fallbackDomain = _trustedDomains.Contains(groupDomain) ? groupDomain : _fallbackDomain;
+                var fallbackDomain = _trustedDomains.Contains(groupDomain) ? groupDomain : DefaultDomain;
 
                 // set up domain context
                 var groupCtx = GetDomainContext(fallbackDomain);

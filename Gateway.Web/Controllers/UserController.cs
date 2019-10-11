@@ -468,8 +468,7 @@ namespace Gateway.Web.Controllers
             
             var model = new HistoryModel(id, login, domain, fullName);
             model.Requests.AddRange(items, sortOrder);
-            model.Requests.SetRelativePercentages();
-            model.Requests.ReplaceResourceNames(_batchNameService);
+            model.Requests.EnrichHistoryResults(_batchNameService, _usernameService);
             return View("History", model);
         }
     }

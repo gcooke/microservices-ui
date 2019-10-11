@@ -24,6 +24,7 @@ namespace Gateway.Web.Controllers
         private readonly IGatewayService _gateway;
         private readonly ILogsService _logsService;
         private readonly IBatchNameService _batchNameService;
+        private readonly IUsernameService _usernameService;
         private readonly IStatisticsService _statisticsService;
 
         public RequestController(IGatewayDatabaseService dataService,
@@ -31,6 +32,7 @@ namespace Gateway.Web.Controllers
             ILogsService logsService,
             ILoggingService loggingService,
             IBatchNameService batchNameService,
+            IUsernameService usernameService,
             IStatisticsService statisticsService)
             : base(loggingService)
         {
@@ -38,6 +40,7 @@ namespace Gateway.Web.Controllers
             _gateway = gateway;
             _logsService = logsService;
             _batchNameService = batchNameService;
+            _usernameService = usernameService;
             _statisticsService = statisticsService;
         }
 
@@ -92,8 +95,7 @@ namespace Gateway.Web.Controllers
             }
 
             model.Requests.AddRange(items, sortOrder);
-            model.Requests.SetRelativePercentages();
-            model.Requests.ReplaceResourceNames(_batchNameService);
+            model.Requests.EnrichHistoryResults(_batchNameService, _usernameService);
             return View(model);
         }
 

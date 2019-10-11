@@ -22,6 +22,7 @@ namespace Gateway.Web.Controllers
         private readonly IGatewayDatabaseService _dataService;
         private readonly IGatewayService _gateway;
         private readonly IBatchNameService _batchNamesService;
+        private readonly IUsernameService _usernameService;
         private readonly ISystemInformation _information;
 
         public ControllerController(
@@ -29,12 +30,14 @@ namespace Gateway.Web.Controllers
             IGatewayService gateway,
             ILoggingService loggingService,
             IBatchNameService batchNamesService,
+            IUsernameService usernameService,
             ISystemInformation information)
             : base(loggingService)
         {
             _dataService = dataService;
             _gateway = gateway;
             _batchNamesService = batchNamesService;
+            _usernameService = usernameService;
             _information = information;
         }
 
@@ -220,8 +223,7 @@ namespace Gateway.Web.Controllers
 
             var model = new HistoryModel(id);
             model.Requests.AddRange(items, sortOrder);
-            model.Requests.SetRelativePercentages();
-            model.Requests.ReplaceResourceNames(_batchNamesService);
+            model.Requests.EnrichHistoryResults(_batchNamesService, _usernameService);
             model.SearchText = search == null ? null : $"Showing results for '{searchResultsText ?? search}'";
             return View(model);
         }
