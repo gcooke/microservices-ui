@@ -1,7 +1,9 @@
-﻿using Bagl.Cib.MIT.Logging;
+﻿using AutoMapper;
+using Bagl.Cib.MIT.Logging;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
 using Bagl.Cib.MSF.ClientAPI.Model;
 using Gateway.Web.Authorization;
+using Gateway.Web.Database;
 using Gateway.Web.Models.Schedule.Input;
 using Gateway.Web.Models.Schedule.Output;
 using Gateway.Web.Services.Batches.Interfaces;
@@ -25,6 +27,7 @@ namespace Gateway.Web.Controllers
         private readonly IScheduleDataService _scheduleDataService;
         private readonly IScheduleGroupService _scheduleGroupService;
         private readonly IScheduleService<ScheduleWebRequestModel> _scheduleWebRequestService;
+        private readonly IGatewayDatabaseService _databaseService;
 
         public ScheduleController(IScheduleDataService scheduleDataService,
             IBatchConfigDataService batchConfigDataService,
@@ -32,7 +35,8 @@ namespace Gateway.Web.Controllers
             IScheduleService<ScheduleWebRequestModel> scheduleWebRequestService,
             IScheduleGroupService scheduleGroupService,
             IGateway gateway,
-            ILoggingService loggingService)
+            ILoggingService loggingService,
+            IGatewayDatabaseService databaseService)
             : base(loggingService)
         {
             _scheduleDataService = scheduleDataService;
@@ -41,6 +45,7 @@ namespace Gateway.Web.Controllers
             _scheduleWebRequestService = scheduleWebRequestService;
             _scheduleGroupService = scheduleGroupService;
             _gateway = gateway;
+            _databaseService = databaseService;
         }
 
         [HttpGet]
@@ -110,6 +115,23 @@ namespace Gateway.Web.Controllers
         {
             _scheduleDataService.DeleteSchedule(id);
             return RedirectToAction("Update");
+        }
+
+        [HttpGet]
+        [Route("History")]
+        public ActionResult History(int sid, string name)
+        {
+            var model = new HistoryTimingViewModel();
+            model.ScheduleName = name;
+            var results = _databaseService.GetHistoryTimingForSchedule(sid, 180);
+            model.HistoryTimingForSchedule = Mapper.Map<List<HistoryTimingForScheduleViewModel>>(results);
+
+            model.GraphLabels = string.Join(",", results.Select(x => $"'{x.RunDate:dd-MM-yyyy}'"));
+            model.WallClockTimeTaken = string.Join(",", results.Select(x => x.WallClockTime / 100));
+            model.QueueTimeTaken = string.Join(",", results.Select(x => x.TotalQueueTime / 100));
+            model.ProcessTimeTaken = string.Join(",", results.Select(x => x.TotalProcessTime / 100));
+
+            return View(model);
         }
 
         [HttpGet]

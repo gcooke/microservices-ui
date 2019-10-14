@@ -220,7 +220,7 @@ namespace Gateway.Web.Database
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetRequestStats_Result>("spGetRequestStats", startParameter, controllerParameter);
         }
     
-        public virtual ObjectResult<spGetRecentRequests_Result> spGetRecentRequests(Nullable<System.DateTime> start, string controller, string searchString)
+        public virtual ObjectResult<spGetRecentRequests_Result> spGetRecentRequests(Nullable<System.DateTime> start, string controller, string searchString, Nullable<System.DateTime> end)
         {
             var startParameter = start.HasValue ?
                 new ObjectParameter("Start", start) :
@@ -234,7 +234,11 @@ namespace Gateway.Web.Database
                 new ObjectParameter("SearchString", searchString) :
                 new ObjectParameter("SearchString", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetRecentRequests_Result>("spGetRecentRequests", startParameter, controllerParameter, searchStringParameter);
+            var endParameter = end.HasValue ?
+                new ObjectParameter("End", end) :
+                new ObjectParameter("End", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetRecentRequests_Result>("spGetRecentRequests", startParameter, controllerParameter, searchStringParameter, endParameter);
         }
     
         public virtual ObjectResult<spGetRequestChildrenPayloadDetails_Result> spGetRequestChildrenPayloadDetails(Nullable<System.Guid> correlationId)
@@ -244,6 +248,45 @@ namespace Gateway.Web.Database
                 new ObjectParameter("correlationId", typeof(System.Guid));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetRequestChildrenPayloadDetails_Result>("spGetRequestChildrenPayloadDetails", correlationIdParameter);
+        }
+    
+        public virtual ObjectResult<spGetHistoryTimingForSchedule_Result> spGetHistoryTimingForSchedule(Nullable<long> schedule, Nullable<int> days)
+        {
+            var scheduleParameter = schedule.HasValue ?
+                new ObjectParameter("Schedule", schedule) :
+                new ObjectParameter("Schedule", typeof(long));
+    
+            var daysParameter = days.HasValue ?
+                new ObjectParameter("Days", days) :
+                new ObjectParameter("Days", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetHistoryTimingForSchedule_Result>("spGetHistoryTimingForSchedule", scheduleParameter, daysParameter);
+        }
+    
+        public virtual ObjectResult<spGetHistoryTimingForSchedule1_Result> spGetHistoryTimingForSchedule1(Nullable<long> schedule, Nullable<int> days)
+        {
+            var scheduleParameter = schedule.HasValue ?
+                new ObjectParameter("Schedule", schedule) :
+                new ObjectParameter("Schedule", typeof(long));
+    
+            var daysParameter = days.HasValue ?
+                new ObjectParameter("Days", days) :
+                new ObjectParameter("Days", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetHistoryTimingForSchedule1_Result>("spGetHistoryTimingForSchedule1", scheduleParameter, daysParameter);
+        }
+    
+        public virtual ObjectResult<spGetHistoryTimingForSchedule2_Result> spGetHistoryTimingForSchedule2(Nullable<long> schedule, Nullable<int> days)
+        {
+            var scheduleParameter = schedule.HasValue ?
+                new ObjectParameter("Schedule", schedule) :
+                new ObjectParameter("Schedule", typeof(long));
+    
+            var daysParameter = days.HasValue ?
+                new ObjectParameter("Days", days) :
+                new ObjectParameter("Days", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetHistoryTimingForSchedule2_Result>("spGetHistoryTimingForSchedule2", scheduleParameter, daysParameter);
         }
     }
 }
