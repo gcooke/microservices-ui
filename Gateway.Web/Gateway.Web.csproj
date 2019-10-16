@@ -55,8 +55,8 @@
     <Reference Include="Absa.Cib.MIT.Redis.IoC, Version=1.0.37.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Bagl.Cib.MIT.Redis.IoC.1.0.37\lib\net461\Absa.Cib.MIT.Redis.IoC.dll</HintPath>
     </Reference>
-    <Reference Include="Absa.Cib.MIT.TaskScheduling, Version=1.1.128.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Absa.Cib.MIT.TaskScheduling.1.1.128\lib\net46\Absa.Cib.MIT.TaskScheduling.dll</HintPath>
+    <Reference Include="Absa.Cib.MIT.TaskScheduling, Version=1.1.115.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Absa.Cib.MIT.TaskScheduling.1.1.115\lib\net46\Absa.Cib.MIT.TaskScheduling.dll</HintPath>
     </Reference>
     <Reference Include="AutoMapper, Version=8.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoMapper.8.1.1\lib\net461\AutoMapper.dll</HintPath>
