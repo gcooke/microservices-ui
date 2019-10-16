@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Bagl.Cib.MSF.ClientAPI.Model;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Controllers;
 using Gateway.Web.Models.Home;
@@ -38,6 +39,8 @@ namespace Gateway.Web.Database
         void DeleteLink(long id);
 
         void AddLink(LinkModel link);
+
+        GatewayRequest GetRequestClone(string correlationId);
 
         Summary GetRequestSummary(string correlationId);
 

@@ -11,7 +11,12 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using Bagl.Cib.MIT.Cube.Impl;
+using Bagl.Cib.MSF.ClientAPI.Model;
+using Bagl.Cib.MSF.Contracts.Converters;
+using Bagl.Cib.MSF.Contracts.Model;
 using QueueChartModel = Gateway.Web.Models.Controller.QueueChartModel;
 
 namespace Gateway.Web.Database
@@ -245,6 +250,46 @@ namespace Gateway.Web.Database
                 target.Permission = link.Permission;
                 database.Links.Add(target);
                 database.SaveChanges();
+            }
+        }
+
+        public GatewayRequest GetRequestClone(string correlationId)
+        {
+            var id = Guid.Parse(correlationId);
+            using (var database = new GatewayEntities(_connectionString))
+            {
+                var original = database.Requests.FirstOrDefault(r => r.CorrelationId == id);
+                var result = GetRequest(original);
+                result.ParentCorrelationId = original.ParentCorrelationId;
+                result.Query = original.Resource;
+                if (!string.Equals(original.RequestType, "GET", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    var originalPayload = database.Payloads.FirstOrDefault(r => r.CorrelationId == id && r.Direction == "Request");
+                    if (originalPayload != null)
+                    {
+                        var comp = (CompressionType)Enum.Parse(typeof(CompressionType), originalPayload.CompressionType);
+                        result.SetBody(originalPayload.Data, comp, originalPayload.PayloadType);
+                    }
+                }
+
+                return result;
+            }
+        }
+
+        private GatewayRequest GetRequest(Request model)
+        {
+            switch (model.RequestType.ToUpper())
+            {
+                case "GET":
+                    return new Get(model.Controller, model.Version);
+                case "PUT":
+                    return new Put(model.Controller, model.Version);
+                case "POST":
+                    return new Post(model.Controller, model.Version);
+                case "DELETE":
+                    return new Delete(model.Controller, model.Version);
+                default:
+                    throw new InvalidOperationException("Unknown request type " + model.RequestType);
             }
         }
 

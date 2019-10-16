@@ -214,5 +214,7 @@ namespace Gateway.Web.Services
         Task ShutdownWorkerAsync(string queuename, string id);
 
         void NotifyResourceUpdate();
+
+        Task<GatewayResponse<TResponse>> Send<TResponse>(GatewayRequest request);
     }
 }

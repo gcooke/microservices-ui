@@ -1533,6 +1533,11 @@ namespace Gateway.Web.Services
                 }
             }
         }
+
+        public async Task<GatewayResponse<TResponse>> Send<TResponse>(GatewayRequest request)
+        {
+            return await _gateway.Invoke<TResponse>(request);
+        }
     }
 
     public class RemoteGatewayException : Exception

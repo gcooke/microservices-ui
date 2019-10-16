@@ -93,18 +93,6 @@
             </tr>
         </table>
 
-        @if (Model.IsBusy)
-        {
-            <br />
-            <h3>Actions</h3>
-            <br />
-            @Html.ActionLink("Cancel", "Cancel", "Request", new { correlationId = Model.CorrelationId }, new { @class = "hoverlink" })
-            <br />
-            <br />
-            @Html.ActionLink("Retry", "Retry", "Request", new { correlationId = Model.CorrelationId }, new { @class = "hoverlink" })
-            <br />
-        }
-
         @if (!Model.IsBusy)
         {
             <br />
@@ -121,6 +109,28 @@
                     <td style="word-wrap: break-word">@Model.ResultMessage</td>
                 </tr>
             </table>
+            <br />
+        }
+
+        <br />
+        <h3 class="text-lowercase">Actions</h3>
+        @if (Model.IsBusy)
+        {
+            @Html.ActionLink("Cancel", "Cancel", "Request", 
+                new { correlationId = Model.CorrelationId }, 
+                new { @class = "hoverlink", onclick = "return confirm('Are you sure you want to cancel this request?');" })
+            <br />
+            <br />
+            @Html.ActionLink("Retry", "Retry", "Request", 
+                new { correlationId = Model.CorrelationId }, 
+                new { @class = "hoverlink", onclick = "return confirm('Are you sure you want to retry this running request?');" })
+            <br />
+        }
+        else
+        {
+            @Html.ActionLink("Rerun", "Rerun", "Request", 
+                new { correlationId = Model.CorrelationId }, 
+                new { @class = "hoverlink", onclick = "return confirm('Are you sure you want to re-enqueue a copy of this request?');" })
             <br />
         }
 

@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Xml.Linq;
 using Bagl.Cib.MIT.Cube;
 using Bagl.Cib.MIT.Logging;
+using Bagl.Cib.MSF.ClientAPI.Model;
+using Bagl.Cib.MSF.Contracts.Model;
 using Gateway.Web.Authorization;
 using Gateway.Web.Database;
 using Gateway.Web.Helpers;
@@ -111,6 +114,38 @@ namespace Gateway.Web.Controllers
         {
             await _gateway.RetryWorkItemAsync(correlationId);
             return Redirect("~/Request/Summary?correlationId=" + correlationId);
+        }
+
+        [RoleBasedAuthorize(Roles = "Security.Modify")]
+        public async Task<ActionResult> Rerun(string correlationId)
+        {
+            var request = _dataService.GetRequestClone(correlationId);
+            request.AddHeader("ClientID", "Redstone Dashboard");
+
+            // This is intentionally done in another thread.
+            ThreadPool.QueueUserWorkItem(new WaitCallback(RerunRequest), request);
+
+            // Wait for gateway to start and audit request so the user sees it in the next page loaded.
+            Thread.Sleep(500);
+
+            return Redirect($"~/Controller/History/{request.Controller}");
+        }
+
+        private void RerunRequest(object state)
+        {
+            try
+            {
+                var request = (GatewayRequest)state;
+
+                _logger.InfoFormat("Sending same request back through gateways");
+                var task = _gateway.Send<string>(request);
+                var result = task.Result;
+                _logger.InfoFormat("Completed rerun of request. Result {0}", result.Successfull ? "was successful" : "failed: " + result.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.WarnFormat("Failed to rerun request: {0}", ex.Message);
+            }
         }
 
         public ActionResult Download(string correlationId, long payloadId)
