@@ -6,6 +6,7 @@ using Gateway.Web.Models.User;
 using Gateway.Web.Services;
 using Gateway.Web.Utils;
 using System.Globalization;
+using System.Threading.Tasks;
 using Bagl.Cib.MIT.Logging;
 using Gateway.Web.Authorization;
 
@@ -34,9 +35,9 @@ namespace Gateway.Web.Controllers
         }
 
         #region User
-        public ActionResult Details(long id)
+        public async Task<ActionResult> Details(long id)
         {
-            var model = _gateway.GetUser(id.ToString());
+            var model = await _gateway.GetUser(id.ToString());
             return View("Details", model);
         }
 
@@ -60,14 +61,14 @@ namespace Gateway.Web.Controllers
         }
 
         [RoleBasedAuthorize(Roles = "Security.Delete")]
-        public ActionResult RemoveUser(long id)
+        public async Task<ActionResult> RemoveUser(long id)
         {
             ModelState.Clear();
 
             // Post instruction to security controller
             if (ModelState.IsValid)
             {
-                var result = _gateway.RemoveUser(id);
+                var result = await _gateway.RemoveUser(id);
                 if (result != null)
                     foreach (var item in result)
                     {
@@ -79,19 +80,19 @@ namespace Gateway.Web.Controllers
             if (ModelState.IsValid)
                 return Redirect("~/Security/Users");
 
-            return Details(id);
+            return await Details(id);
         }
         #endregion
 
         #region Groups
-        public ActionResult Groups(long id)
+        public async Task<ActionResult> Groups(long id)
         {
-            var model = _gateway.GetUserGroups(id);
+            var model = await _gateway.GetUserGroups(id);
             return View("Groups", model);
         }
 
         [RoleBasedAuthorize(Roles = "Security.Delete")]
-        public ActionResult RemoveGroup(string userId, string groupId)
+        public async Task<ActionResult> RemoveGroup(string userId, string groupId)
         {
             ModelState.Clear();
 
@@ -105,7 +106,7 @@ namespace Gateway.Web.Controllers
             // Post instruction to security controller
             if (ModelState.IsValid)
             {
-                var result = _gateway.RemoveUserGroup(userId.ToLongOrDefault(), groupId.ToLongOrDefault());
+                var result = await _gateway.RemoveUserGroup(userId.ToLongOrDefault(), groupId.ToLongOrDefault());
 
                 if (result != null)
                     foreach (var item in result)
@@ -118,13 +119,13 @@ namespace Gateway.Web.Controllers
             if (ModelState.IsValid)
                 return Redirect(string.Format("~/User/Groups/{0}", userId));
 
-            return Groups(groupId.ToLongOrDefault());
+            return await Groups(groupId.ToLongOrDefault());
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [RoleBasedAuthorize(Roles = "Security.Modify")]
-        public ActionResult Groups(FormCollection collection)
+        public async Task<ActionResult> Groups(FormCollection collection)
         {
             ModelState.Clear();
 
@@ -137,7 +138,7 @@ namespace Gateway.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var result = _gateway.InsertUserGroup(userId.ToLongOrDefault(), groupId.ToLongOrDefault());
+                var result = await _gateway.InsertUserGroup(userId.ToLongOrDefault(), groupId.ToLongOrDefault());
                 if (result != null)
                     foreach (var item in result)
                     {
@@ -149,14 +150,14 @@ namespace Gateway.Web.Controllers
             if (ModelState.IsValid)
                 return Redirect(string.Format("~/User/Groups/{0}", userId));
 
-            return Groups(groupId.ToLongOrDefault());
+            return await Groups(groupId.ToLongOrDefault());
         }
         #endregion
 
         #region Portfolios
-        public ActionResult Portfolios(long id)
+        public async Task<ActionResult> Portfolios(long id)
         {
-            var model = _gateway.GetUserPortfolios(id);
+            var model = await _gateway.GetUserPortfolios(id);
             return View("Portfolios", model);
         }
 
@@ -164,7 +165,7 @@ namespace Gateway.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [RoleBasedAuthorize(Roles = "Security.Modify")]
-        public ActionResult Portfolios(FormCollection collection)
+        public async Task<ActionResult> Portfolios(FormCollection collection)
         {
             ModelState.Clear();
 
@@ -178,7 +179,7 @@ namespace Gateway.Web.Controllers
             // Post instruction to security controller
             if (ModelState.IsValid)
             {
-                var result = _gateway.InsertUserPortfolio(userId.ToLongOrDefault(), portfolioId.ToLongOrDefault());
+                var result = await _gateway.InsertUserPortfolio(userId.ToLongOrDefault(), portfolioId.ToLongOrDefault());
                 if (result != null)
                     foreach (var item in result)
                     {
@@ -190,11 +191,11 @@ namespace Gateway.Web.Controllers
             if (ModelState.IsValid)
                 return Redirect(string.Format("~/User/Portfolios/{0}", userId));
 
-            return Portfolios(userId.ToLongOrDefault());
+            return await Portfolios(userId.ToLongOrDefault());
         }
 
         [RoleBasedAuthorize(Roles = "Security.Delete")]
-        public ActionResult RemovePortfolio(string userId, string portfolioId)
+        public async Task<ActionResult> RemovePortfolio(string userId, string portfolioId)
         {
             ModelState.Clear();
 
@@ -204,7 +205,7 @@ namespace Gateway.Web.Controllers
             // Post instruction to security controller
             if (ModelState.IsValid)
             {
-                var result = _gateway.RemoveUserPortfolio(userId.ToLongOrDefault(), portfolioId.ToLongOrDefault());
+                var result = await _gateway.RemoveUserPortfolio(userId.ToLongOrDefault(), portfolioId.ToLongOrDefault());
                 if (result != null)
                     foreach (var item in result)
                     {
@@ -216,21 +217,21 @@ namespace Gateway.Web.Controllers
             if (ModelState.IsValid)
                 return Redirect(string.Format("~/User/Portfolios/{0}", userId));
 
-            return Portfolios(userId.ToLongOrDefault());
+            return await Portfolios(userId.ToLongOrDefault());
         }
         #endregion
 
         #region Sites
-        public ActionResult Sites(string id)
+        public async Task<ActionResult> Sites(string id)
         {
-            var model = _gateway.GetUserSites(id.ToLongOrDefault());
+            var model = await _gateway.GetUserSites(id.ToLongOrDefault());
             return View("Sites", model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [RoleBasedAuthorize(Roles = "Security.Modify")]
-        public ActionResult Sites(FormCollection collection)
+        public async Task<ActionResult> Sites(FormCollection collection)
         {
             ModelState.Clear();
 
@@ -244,7 +245,7 @@ namespace Gateway.Web.Controllers
             // Post instruction to security controller
             if (ModelState.IsValid)
             {
-                var result = _gateway.InsertUserSite(userId.ToLongOrDefault(), siteId.ToLongOrDefault());
+                var result = await _gateway.InsertUserSite(userId.ToLongOrDefault(), siteId.ToLongOrDefault());
                 if (result != null)
                     foreach (var item in result)
                     {
@@ -256,11 +257,11 @@ namespace Gateway.Web.Controllers
             if (ModelState.IsValid)
                 return Redirect(string.Format("~/User/Sites/{0}", userId));
 
-            return Sites(userId);
+            return await Sites(userId);
         }
 
         [RoleBasedAuthorize(Roles = "Security.Delete")]
-        public ActionResult RemoveSite(string userId, string siteId)
+        public async Task<ActionResult> RemoveSite(string userId, string siteId)
         {
             ModelState.Clear();
 
@@ -270,7 +271,7 @@ namespace Gateway.Web.Controllers
             // Post instruction to security controller
             if (ModelState.IsValid)
             {
-                var result = _gateway.RemoveUserSite(userId.ToLongOrDefault(), siteId.ToLongOrDefault());
+                var result = await _gateway.RemoveUserSite(userId.ToLongOrDefault(), siteId.ToLongOrDefault());
                 if (result != null)
                     foreach (var item in result)
                     {
@@ -282,14 +283,14 @@ namespace Gateway.Web.Controllers
             if (ModelState.IsValid)
                 return Redirect(string.Format("~/User/Sites/{0}", userId));
 
-            return Sites(userId);
+            return await Sites(userId);
         }
         #endregion
 
         #region AddIns
-        public ActionResult AddIns(string id)
+        public async Task<ActionResult> AddIns(string id)
         {
-            var model = _gateway.GetUserAddInVersions(id.ToLongOrDefault());
+            var model = await _gateway.GetUserAddInVersions(id.ToLongOrDefault());
             model.FullName = _usernameService.GetFullName(model.Login);
             return View("AddIns", model);
         }
@@ -297,7 +298,7 @@ namespace Gateway.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [RoleBasedAuthorize(Roles = "Security.Modify")]
-        public ActionResult AddIns(FormCollection collection)
+        public async Task<ActionResult> AddIns(FormCollection collection)
         {
             ModelState.Clear();
 
@@ -315,7 +316,7 @@ namespace Gateway.Web.Controllers
             if (ModelState.IsValid)
             {
                 var addInVersion = new AddInVersionModel() { AddIn = addInName, Version = versionName };
-                var result = _gateway.InsertUserAddInVersions(userId.ToLongOrDefault(), addInVersion);
+                var result = await _gateway.InsertUserAddInVersions(userId.ToLongOrDefault(), addInVersion);
                 if (result != null)
                     foreach (var item in result)
                     {
@@ -327,13 +328,13 @@ namespace Gateway.Web.Controllers
             if (ModelState.IsValid)
                 return Redirect(string.Format("~/User/AddIns/{0}", userId));
 
-            return AddIns(userId);
+            return await AddIns(userId);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [RoleBasedAuthorize(Roles = "Security.Modify")]
-        public ActionResult Applications(FormCollection collection)
+        public async Task<ActionResult> Applications(FormCollection collection)
         {
             ModelState.Clear();
 
@@ -351,7 +352,7 @@ namespace Gateway.Web.Controllers
             if (ModelState.IsValid)
             {
                 var addInVersion = new ApplicationVersionModel() { Application = application, Version = versionName };
-                var result = _gateway.InsertUserApplicationVersions(userId.ToLongOrDefault(), addInVersion);
+                var result = await _gateway.InsertUserApplicationVersions(userId.ToLongOrDefault(), addInVersion);
                 if (result != null)
                     foreach (var item in result)
                     {
@@ -363,11 +364,11 @@ namespace Gateway.Web.Controllers
             if (ModelState.IsValid)
                 return Redirect(string.Format("~/User/AddIns/{0}", userId));
 
-            return AddIns(userId);
+            return await AddIns(userId);
         }
 
         [RoleBasedAuthorize(Roles = "Security.Delete")]
-        public ActionResult RemoveAddInVersion(string id, string userId)
+        public async Task<ActionResult> RemoveAddInVersion(string id, string userId)
         {
             ModelState.Clear();
 
@@ -377,7 +378,7 @@ namespace Gateway.Web.Controllers
             // Post instruction to security controller
             if (ModelState.IsValid)
             {
-                var result = _gateway.DeleteUserAddInVersions(userId.ToLongOrDefault(), id.ToLongOrDefault());
+                var result = await _gateway.DeleteUserAddInVersions(userId.ToLongOrDefault(), id.ToLongOrDefault());
                 if (result != null)
                     foreach (var item in result)
                     {
@@ -389,11 +390,11 @@ namespace Gateway.Web.Controllers
             if (ModelState.IsValid)
                 return Redirect(string.Format("~/User/AddIns/{0}", userId));
 
-            return AddIns(userId);
+            return await AddIns(userId);
         }
 
         [RoleBasedAuthorize(Roles = "Security.Delete")]
-        public ActionResult RemoveApplicationVersion(string id, string userId)
+        public async Task<ActionResult> RemoveApplicationVersion(string id, string userId)
         {
             ModelState.Clear();
 
@@ -403,7 +404,7 @@ namespace Gateway.Web.Controllers
             // Post instruction to security controller
             if (ModelState.IsValid)
             {
-                var result = _gateway.DeleteUserApplicationVersions(userId.ToLongOrDefault(), id.ToLongOrDefault());
+                var result = await _gateway.DeleteUserApplicationVersions(userId.ToLongOrDefault(), id.ToLongOrDefault());
                 if (result != null)
                     foreach (var item in result)
                     {
@@ -415,11 +416,11 @@ namespace Gateway.Web.Controllers
             if (ModelState.IsValid)
                 return Redirect(string.Format("~/User/AddIns/{0}", userId));
 
-            return AddIns(userId);
+            return await AddIns(userId);
         }
         #endregion
 
-        public ActionResult History(long id, string login, string sortOrder)
+        public async Task<ActionResult> History(long id, string login, string sortOrder)
         {
             if (string.IsNullOrEmpty(login))
                 throw new Exception("Insufficient details received to resolve login.");
@@ -435,14 +436,14 @@ namespace Gateway.Web.Controllers
 
             if (id > 0)
             {
-                user = _gateway.GetUser(id.ToString());
+                user = await _gateway.GetUser(id.ToString());
                 login = user.Login;
                 domain = user.Domain;
                 login = user.Domain + "\\" + user.Login;
             }
             else
             {
-                //user = _gateway.GetNonUser(login);
+                //user = await _gateway.GetNonUser(login);
                 //login = user.Login;
                 //login = user.Domain + "\\" + user.Login;
             }

@@ -68,10 +68,10 @@ namespace Gateway.Web.Controllers
             return View(model);
         }
 
-        public ActionResult Servers()
+        public async Task<ActionResult> Servers()
         {
             Response.AddHeader("Refresh", _refreshPeriodInSeconds.ToString());
-            var model = _gateway.GetServers();
+            var model = await _gateway.GetServers();
             return View(model);
         }
 
@@ -131,13 +131,13 @@ namespace Gateway.Web.Controllers
 
         [HttpPost]
         [RoleBasedAuthorize(Roles = "Security.Modify")]
-        public ActionResult Create(ConfigurationModel model)
+        public async Task<ActionResult> Create(ConfigurationModel model)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    var response = _gateway.UpdateControllerConfiguration(model);
+                    var response = await _gateway.UpdateControllerConfiguration(model);
 
                     if (response.Successfull)
                         return Redirect($"~/Controller/Servers/{model.Name}");

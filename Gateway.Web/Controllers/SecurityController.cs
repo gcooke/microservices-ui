@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 namespace Gateway.Web.Controllers
 {
@@ -33,50 +34,50 @@ namespace Gateway.Web.Controllers
             _manifestService = manifestService;
         }
 
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            return Groups();
+            return await Groups();
         }
 
-        public ActionResult Groups()
+        public async Task<ActionResult> Groups()
         {
-            var model = _gateway.GetGroups();
+            var model = await _gateway.GetGroups();
             return View("Groups", model);
         }
 
-        public ActionResult Users()
+        public async Task<ActionResult> Users()
         {
-            var model = _gateway.GetUsers();
+            var model = await _gateway.GetUsers();
             return View("Users", model);
         }
 
-        public ActionResult AddIns()
+        public async Task<ActionResult> AddIns()
         {
-            var model = _gateway.GetApplications();
+            var model = await _gateway.GetApplications();
             return View("Applications", model);
         }
 
-        public ActionResult Permissions()
+        public async Task<ActionResult> Permissions()
         {
-            var model = _gateway.GetPermissions();
+            var model = await _gateway.GetPermissions();
             return View("Permissions", model);
         }
 
-        public ActionResult BusinessFunctions()
+        public async Task<ActionResult> BusinessFunctions()
         {
             var model = new BusinessFunctionsModel
             {
-                BusinessFunctions = _gateway.GetBusinessFunctions().ToList(),
-                GroupTypes = _gateway.GetGroupTypes().ToSelectListItems().ToList()
+                BusinessFunctions = (await _gateway.GetBusinessFunctions()).ToList(),
+                GroupTypes = (await _gateway.GetGroupTypes()).ToSelectListItems().ToList()
             };
             return View("BusinessFunctions", model);
         }
 
-        public ActionResult GroupTypes()
+        public async Task<ActionResult> GroupTypes()
         {
             var model = new GroupTypesModel
             {
-                GroupTypes = _gateway.GetGroupTypes().ToList()
+                GroupTypes = (await _gateway.GetGroupTypes()).ToList()
             };
             return View("GroupTypes", model);
         }
@@ -101,17 +102,17 @@ namespace Gateway.Web.Controllers
         }
 
         [Route("Security/Reports/{report}")]
-        public ActionResult Reports(string report)
+        public async Task<ActionResult> Reports(string report)
         {
-            var model = _gateway.GetSecurityReport(report);
+            var model = await _gateway.GetSecurityReport(report);
             return View(model);
         }
 
         [Route("Security/Reports/{report}/{name}/{*parameter}")]
-        public ActionResult Reports(string report, string name, string parameter)
+        public async Task<ActionResult> Reports(string report, string name, string parameter)
         {
             if (parameter == "null") parameter = null;
-            var model = _gateway.GetSecurityReport(report, name, parameter);
+            var model = await _gateway.GetSecurityReport(report, name, parameter);
             return View(model);
         }
 
@@ -130,7 +131,7 @@ namespace Gateway.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [RoleBasedAuthorize(Roles = "Security.Modify")]
-        public ActionResult InsertAddIn(FormCollection collection)
+        public async Task<ActionResult> InsertAddIn(FormCollection collection)
         {
             ModelState.Clear();
 
@@ -154,18 +155,18 @@ namespace Gateway.Web.Controllers
 
             // Post instruction to security controller
             if (string.Equals("Application", type, StringComparison.CurrentCultureIgnoreCase))
-                AddApplication(name, friendly, description);
+                await AddApplication(name, friendly, description);
             else
-                AddAddIn(name, friendly, description);
+                await AddAddIn(name, friendly, description);
 
             //Setup next view
             if (ModelState.IsValid)
                 return Redirect("~/Security/AddIns/");
 
-            return AddIns();
+            return await AddIns();
         }
 
-        private void AddApplication(string name, string friendlyName, string description)
+        private async Task AddApplication(string name, string friendlyName, string description)
         {
             var model = new ApplicationModel()
             {
@@ -175,7 +176,7 @@ namespace Gateway.Web.Controllers
             };
             if (ModelState.IsValid)
             {
-                var result = _gateway.Create(model);
+                var result = await _gateway.Create(model);
                 if (result != null)
                     foreach (var item in result)
                     {
@@ -184,7 +185,7 @@ namespace Gateway.Web.Controllers
             }
         }
 
-        private void AddAddIn(string name, string friendlyName, string description)
+        private async Task AddAddIn(string name, string friendlyName, string description)
         {
             var model = new AddInModel()
             {
@@ -194,7 +195,7 @@ namespace Gateway.Web.Controllers
             };
             if (ModelState.IsValid)
             {
-                var result = _gateway.Create(model);
+                var result = await _gateway.Create(model);
                 if (result != null)
                     foreach (var item in result)
                     {
@@ -206,7 +207,7 @@ namespace Gateway.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [RoleBasedAuthorize(Roles = "Security.Modify")]
-        public ActionResult InsertGroup(FormCollection collection)
+        public async Task<ActionResult> InsertGroup(FormCollection collection)
         {
             ModelState.Clear();
 
@@ -228,7 +229,7 @@ namespace Gateway.Web.Controllers
             };
             if (ModelState.IsValid)
             {
-                var result = _gateway.Create(model);
+                var result = await _gateway.Create(model);
                 if (result != null)
                     foreach (var item in result)
                     {
@@ -240,13 +241,13 @@ namespace Gateway.Web.Controllers
             if (ModelState.IsValid)
                 return Redirect("~/Security/Groups/");
 
-            return Groups();
+            return await Groups();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [RoleBasedAuthorize(Roles = "Security.Modify")]
-        public ActionResult InsertPermission(FormCollection collection)
+        public async Task<ActionResult> InsertPermission(FormCollection collection)
         {
             ModelState.Clear();
 
@@ -268,7 +269,7 @@ namespace Gateway.Web.Controllers
             };
             if (ModelState.IsValid)
             {
-                var result = _gateway.Create(model);
+                var result = await _gateway.Create(model);
                 if (result != null)
                     foreach (var item in result)
                     {
@@ -280,13 +281,13 @@ namespace Gateway.Web.Controllers
             if (ModelState.IsValid)
                 return Redirect("~/Security/Permissions/");
 
-            return Permissions();
+            return await Permissions();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [RoleBasedAuthorize(Roles = "Security.Modify")]
-        public ActionResult InsertUser(FormCollection collection)
+        public async Task<ActionResult> InsertUser(FormCollection collection)
         {
             ModelState.Clear();
 
@@ -314,7 +315,7 @@ namespace Gateway.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var result = _gateway.Create(model);
+                var result = await _gateway.Create(model);
                 if (result != null)
                     foreach (var item in result)
                     {
@@ -326,13 +327,13 @@ namespace Gateway.Web.Controllers
             if (ModelState.IsValid)
                 return Redirect("~/Security/Users");
 
-            return Users();
+            return await Users();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [RoleBasedAuthorize(Roles = "Security.Modify")]
-        public ActionResult UpgradeAddIn(FormCollection collection)
+        public async Task<ActionResult> UpgradeAddIn(FormCollection collection)
         {
             ModelState.Clear();
 
@@ -358,9 +359,9 @@ namespace Gateway.Web.Controllers
             {
                 string[] result;
                 if (fromType == "Application")
-                    result = _gateway.UpdateAssignedApplicationVersions(fromVersion, toVersion);
+                    result = await _gateway.UpdateAssignedApplicationVersions(fromVersion, toVersion);
                 else
-                    result = _gateway.UpdateAssignedAddInVersions(fromVersion, toVersion);
+                    result = await _gateway.UpdateAssignedAddInVersions(fromVersion, toVersion);
 
                 if (result != null)
                 {
@@ -373,7 +374,7 @@ namespace Gateway.Web.Controllers
             if (ModelState.IsValid)
                 return Redirect("~/Security/AddIns/");
 
-            return AddIns();
+            return await AddIns();
         }
 
         [HttpPost]
@@ -454,7 +455,7 @@ namespace Gateway.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [RoleBasedAuthorize(Roles = "Security.Modify")]
-        public ActionResult InsertBusinessFunction(FormCollection collection)
+        public async Task<ActionResult> InsertBusinessFunction(FormCollection collection)
         {
             ModelState.Clear();
 
@@ -477,7 +478,7 @@ namespace Gateway.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var result = _gateway.Create(model);
+                var result = await _gateway.Create(model);
                 if (result != null)
                 {
                     foreach (var item in result)
@@ -490,13 +491,13 @@ namespace Gateway.Web.Controllers
             if (ModelState.IsValid)
                 return Redirect("~/Security/BusinessFunctions/");
 
-            return BusinessFunctions();
+            return await BusinessFunctions();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [RoleBasedAuthorize(Roles = "Security.Modify")]
-        public ActionResult InsertGroupType(FormCollection collection)
+        public async Task<ActionResult> InsertGroupType(FormCollection collection)
         {
             ModelState.Clear();
 
@@ -515,7 +516,7 @@ namespace Gateway.Web.Controllers
             if (ModelState.IsValid)
             {
                 //post to security controller
-                var result = _gateway.Create(model);
+                var result = await _gateway.Create(model);
                 if (result != null)
                 {
                     foreach (var item in result)
@@ -528,11 +529,11 @@ namespace Gateway.Web.Controllers
             if (ModelState.IsValid)
                 return Redirect("~/Security/GroupTypes/");
 
-            return GroupTypes();
+            return await GroupTypes();
         }
 
         [RoleBasedAuthorize(Roles = "Security.Delete")]
-        public ActionResult RemoveBusinessFunction(string id)
+        public async Task<ActionResult> RemoveBusinessFunction(string id)
         {
             ModelState.Clear();
 
@@ -543,7 +544,7 @@ namespace Gateway.Web.Controllers
             // Post instruction to security controller
             if (ModelState.IsValid)
             {
-                var result = _gateway.DeleteBusinessFunction(id.ToIntOrDefault());
+                var result = await _gateway.DeleteBusinessFunction(id.ToIntOrDefault());
                 if (result != null)
                 {
                     foreach (var item in result)
@@ -555,11 +556,11 @@ namespace Gateway.Web.Controllers
             if (ModelState.IsValid)
                 return Redirect("~/Security/BusinessFunctions");
 
-            return BusinessFunctions();
+            return await BusinessFunctions();
         }
 
         [RoleBasedAuthorize(Roles = "Security.Delete")]
-        public ActionResult RemoveGroupType(string id)
+        public async Task<ActionResult> RemoveGroupType(string id)
         {
             ModelState.Clear();
 
@@ -570,7 +571,7 @@ namespace Gateway.Web.Controllers
             // Post instruction to security controller
             if (ModelState.IsValid)
             {
-                var result = _gateway.DeleteGroupType(id.ToIntOrDefault());
+                var result = await _gateway.DeleteGroupType(id.ToIntOrDefault());
                 if (result != null)
                 {
                     foreach (var item in result)
@@ -582,7 +583,7 @@ namespace Gateway.Web.Controllers
             if (ModelState.IsValid)
                 return Redirect("~/Security/GroupTypes");
 
-            return GroupTypes();
+            return await GroupTypes();
         }
     }
 }

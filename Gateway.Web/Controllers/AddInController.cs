@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System.Threading.Tasks;
+using System.Web.Mvc;
 using Bagl.Cib.MIT.Logging;
 using Gateway.Web.Authorization;
 using Gateway.Web.Services;
@@ -18,25 +19,25 @@ namespace Gateway.Web.Controllers
             _gateway = gateway;
         }
 
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            return Details(0);
+            return await Details(0);
         }
 
-        public ActionResult Details(long id)
+        public async Task<ActionResult> Details(long id)
         {
-            var model = _gateway.GetAddIn(id);
+            var model = await _gateway.GetAddIn(id);
             return View("Details", model);
         }
 
-        public ActionResult Versions(long id)
+        public async Task<ActionResult> Versions(long id)
         {
-            var model = _gateway.GetAddInVersions();
+            var model = await _gateway.GetAddInVersions();
             return View(model);
         }
 
         [RoleBasedAuthorize(Roles = "Security.Delete")]
-        public ActionResult RemoveAddIn(string id)
+        public async Task<ActionResult> RemoveAddIn(string id)
         {
             ModelState.Clear();
 
@@ -47,7 +48,7 @@ namespace Gateway.Web.Controllers
             // Post instruction to security controller
             if (ModelState.IsValid)
             {
-                var result = _gateway.DeleteAddIn(id.ToLongOrDefault());
+                var result = await _gateway.DeleteAddIn(id.ToLongOrDefault());
                 if (result != null)
                     foreach (var item in result)
                     {
@@ -59,7 +60,7 @@ namespace Gateway.Web.Controllers
             if (ModelState.IsValid)
                 return Redirect("~/Security/AddIns");
 
-            return Details(id.ToLongOrDefault());
+            return await Details(id.ToLongOrDefault());
         }
     }
 }

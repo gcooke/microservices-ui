@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System.Threading.Tasks;
+using System.Web.Mvc;
 using Bagl.Cib.MIT.Logging;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
 using Gateway.Web.Authorization;
@@ -23,26 +24,26 @@ namespace Gateway.Web.Controllers
             _gateway = gateway;
         }
 
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            return Details(0);
+            return await Details(0);
         }
 
-        public ActionResult Details(long id)
+        public async Task<ActionResult> Details(long id)
         {
-            var model = _gateway.GetPermission(id);
+            var model = await _gateway.GetPermission(id);
             return View("Details", model);
         }
 
         [RoleBasedAuthorize(Roles = "Security.Delete")]
-        public ActionResult RemovePermission(long id)
+        public async Task<ActionResult> RemovePermission(long id)
         {
             ModelState.Clear();
 
             if (ModelState.IsValid)
             {
                 var query = string.Format("permissions/{0}", id);
-                var response = _gatewayRestService.Delete<string>("Security", query).Result;
+                var response = await _gatewayRestService.Delete<string>("Security", query);
                 if (!response.Successfull)
                 {
                     ModelState.AddModelError("Remote", response.Message);

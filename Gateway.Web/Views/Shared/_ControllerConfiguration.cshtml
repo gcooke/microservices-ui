@@ -1,4 +1,17 @@
 ﻿@model Gateway.Web.Models.Controller.ConfigurationModel
+@section scripts{ <script type="text/javascript">
+    $(function () {
+        $('#scaling').change(function () {
+            var value = $(this).val();
+            if (value == '1') {
+                $('#lblInstances').show();
+                $('#lblRatio').hide();
+            } else {
+                $('#lblInstances').hide();
+                $('#lblRatio').show();
+            }
+        });
+    });</script>}
 <div class="form-group">
     @Html.AntiForgeryToken()
     <div class="container-fluid">
@@ -91,7 +104,7 @@
                 @Html.LabelFor(m => m.ScalingStrategyId, new { @class = "control-label" })
             </div>
             <div class="col-md-4">
-                @Html.EnumDropDownListFor(model => model.ScalingStrategyId, new { @class = "form-control" })
+                @Html.EnumDropDownListFor(model => model.ScalingStrategyId, new { @class = "form-control", id="scaling" })
             </div>
         </div>
 
@@ -172,9 +185,11 @@
                                     @Html.CheckBox("select-all")
                                 </th>
                                 <th style="background: #990505;">Priority</th>
-                                <th style="background: #990505;">Instances</th>
+                                <th style="background: #990505;">
+                                    <div id="lblInstances">Instances</div>
+                                    <div id="lblRatio">Ratio</div>
+                                </th>
 
-                            </tr>
                             </tr>
                             </thead>
                             <tbody>

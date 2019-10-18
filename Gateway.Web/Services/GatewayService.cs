@@ -9,7 +9,6 @@ using Gateway.Web.Models.Controllers;
 using Gateway.Web.Models.Group;
 using Gateway.Web.Models.MarketData;
 using Gateway.Web.Models.Permission;
-using Gateway.Web.Models.Request;
 using Gateway.Web.Models.Security;
 using Gateway.Web.Models.Shared;
 using Gateway.Web.Models.User;
@@ -20,12 +19,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Security.Policy;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 using System.Xml.Linq;
-using Gateway.Web.Models.Export;
 using WebGrease.Css.Extensions;
 using ApplicationsModel = Gateway.Web.Models.Security.ApplicationsModel;
 using GroupsModel = Gateway.Web.Models.Security.GroupsModel;
@@ -77,9 +73,9 @@ namespace Gateway.Web.Services
             });
         }
 
-        public ServersModel GetServers()
+        public async Task<ServersModel> GetServers()
         {
-            var gatewayInfo = GetGatewayInfo();
+            var gatewayInfo = await GetGatewayInfo();
             return new Models.Controllers.ServersModel(gatewayInfo);
         }
 
@@ -97,22 +93,22 @@ namespace Gateway.Web.Services
             return JsonConvert.DeserializeObject<List<ServiceInfoModel>>(model);
         }
 
-        public IEnumerable<QueueModel> GetCurrentQueues(string controller)
+        public async Task<IEnumerable<QueueModel>> GetCurrentQueues(string controller)
         {
-            var docs = FetchAll("health/queues/{0}", controller);
+            var docs = await FetchAll("health/queues/{0}", controller);
             return GetCurrentQueues(docs);
         }
 
-        public IEnumerable<QueueModel> GetCurrentQueues()
+        public async Task<IEnumerable<QueueModel>> GetCurrentQueues()
         {
-            var docs = FetchAll("health/queues");
+            var docs = await FetchAll("health/queues");
             return GetCurrentQueues(docs);
         }
 
-        public XElement[] GetReport(string report)
+        public async Task<XElement[]> GetReport(string report)
         {
             //var doc = Fetch("api/riskdata/latest/{0}", report);
-            var response = _gateway.Get<XElement>("riskdata", report).GetAwaiter().GetResult();
+            var response = await _gateway.Get<XElement>("riskdata", report);
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
@@ -120,9 +116,9 @@ namespace Gateway.Web.Services
             return response.Body.Descendants("xVAReturnResult").ToArray();
         }
 
-        public List<SiteModel> GetSites()
+        public async Task<List<SiteModel>> GetSites()
         {
-            var response = _gateway.Get<XElement>("Security", "sites").GetAwaiter().GetResult();
+            var response = await _gateway.Get<XElement>("Security", "sites");
             var result = new List<SiteModel>();
 
             if (!response.Successfull)
@@ -140,10 +136,10 @@ namespace Gateway.Web.Services
             result.Wait(2000);
         }
 
-        public VersionsModel GetControllerVersions(string name)
+        public async Task<VersionsModel> GetControllerVersions(string name)
         {
             var query = string.Format("controllers/{0}", name);
-            var response = _gateway.Get<XElement>("Catalogue", query).GetAwaiter().GetResult();
+            var response = await _gateway.Get<XElement>("Catalogue", query);
 
             var result = new VersionsModel(name);
             if (!response.Successfull)
@@ -161,7 +157,7 @@ namespace Gateway.Web.Services
             return result;
         }
 
-        public string[] UpdateControllerVersionStatuses(List<VersionUpdate> versionStatusUpdates)
+        public async Task<string[]> UpdateControllerVersionStatuses(List<VersionUpdate> versionStatusUpdates)
         {
             var result = new List<string>();
             foreach (var item in versionStatusUpdates.OrderBy(s => s.Status))
@@ -170,7 +166,7 @@ namespace Gateway.Web.Services
                     item.Controller, item.Version, item.Status, item.Alias);
                 var query = string.Format("controllers/{0}/versions/{1}", item.Controller, item.Version);
                 var content = string.Format("{0}|{1}", item.Status, item.Alias);
-                var response = _gateway.Put<string, string>("Catalogue", query, content).GetAwaiter().GetResult();
+                var response = await _gateway.Put<string, string>("Catalogue", query, content);
 
                 if (response.Successfull)
                     result.Add(string.Format("Successfully updated version {0} to {1} {2}", item.Version, item.Status,
@@ -184,9 +180,9 @@ namespace Gateway.Web.Services
             return result.ToArray();
         }
 
-        public ConfigurationModel GetControllerConfiguration(string name)
+        public async Task<ConfigurationModel> GetControllerConfiguration(string name)
         {
-            var response = _gateway.Get<XElement>("Catalogue", string.Format("controllers/{0}", name)).GetAwaiter().GetResult();
+            var response = await _gateway.Get<XElement>("Catalogue", string.Format("controllers/{0}", name));
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
@@ -201,15 +197,15 @@ namespace Gateway.Web.Services
             return null;
         }
 
-        public GatewayResponse<string> UpdateControllerConfiguration(ConfigurationModel model)
+        public async Task<GatewayResponse<string>> UpdateControllerConfiguration(ConfigurationModel model)
         {
             var query = "/controllers/configuration";
-            return _gateway.Put<string, string>("Catalogue", query, model.Serialize()).GetAwaiter().GetResult();
+            return await _gateway.Put<string, string>("Catalogue", query, model.Serialize());
         }
 
-        public GroupsModel GetGroups()
+        public async Task<GroupsModel> GetGroups()
         {
-            var response = _gateway.Get<XElement>("Security", "groups").GetAwaiter().GetResult();
+            var response = await _gateway.Get<XElement>("Security", "groups");
 
             var result = new GroupsModel();
             if (!response.Successfull)
@@ -226,10 +222,10 @@ namespace Gateway.Web.Services
             return result;
         }
 
-        public ReportsModel GetSecurityReport(string name)
+        public async Task<ReportsModel> GetSecurityReport(string name)
         {
             var query = string.Format("reports/{0}", name);
-            var response = _gateway.Get<XElement>("Security", query).GetAwaiter().GetResult();
+            var response = await _gateway.Get<XElement>("Security", query);
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
@@ -251,12 +247,12 @@ namespace Gateway.Web.Services
             return result;
         }
 
-        public ReportsModel GetSecurityReport(string name, string parameterName, string parameter)
+        public async Task<ReportsModel> GetSecurityReport(string name, string parameterName, string parameter)
         {
             if (!string.IsNullOrEmpty(parameter))
             {
                 var query = string.Format("reports/{0}/{1}", name, parameter);
-                var response = _gateway.Get<XElement>("Security", query).GetAwaiter().GetResult();
+                var response = await _gateway.Get<XElement>("Security", query);
 
                 if (!response.Successfull)
                     throw new RemoteGatewayException(response.Message);
@@ -285,10 +281,10 @@ namespace Gateway.Web.Services
             return result;
         }
 
-        public GroupModel GetGroup(long id)
+        public async Task<GroupModel> GetGroup(long id)
         {
             var query = string.Format("groups/{0}", id);
-            var response = _gateway.Get<XElement>("Security", query).GetAwaiter().GetResult();
+            var response = await _gateway.Get<XElement>("Security", query);
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
@@ -298,25 +294,25 @@ namespace Gateway.Web.Services
             return result;
         }
 
-        public string[] Create(GroupModel model)
+        public async Task<string[]> Create(GroupModel model)
         {
             var query = "groups";
-            var response = _gateway.Put<string, string>("Security", query, model.Serialize()).GetAwaiter().GetResult();
+            var response = await _gateway.Put<string, string>("Security", query, model.Serialize());
 
             return SuccessOrMessage(response);
         }
 
-        public string[] DeleteGroup(long id)
+        public async Task<string[]> DeleteGroup(long id)
         {
             var query = string.Format("groups/{0}", id);
-            var response = _gateway.Delete<string>("Security", query).GetAwaiter().GetResult();
+            var response = await _gateway.Delete<string>("Security", query);
 
             return SuccessOrMessage(response);
         }
 
-        public UsersModel GetUsers()
+        public async Task<UsersModel> GetUsers()
         {
-            var response = _gateway.Get<XElement>("Security", "users").GetAwaiter().GetResult();
+            var response = await _gateway.Get<XElement>("Security", "users");
 
             var result = new UsersModel();
             if (!response.Successfull)
@@ -333,10 +329,10 @@ namespace Gateway.Web.Services
             return result;
         }
 
-        public UserModel GetUser(string id)
+        public async Task<UserModel> GetUser(string id)
         {
             var query = string.Format("Users/{0}", id);
-            var response = _gateway.Get<XElement>("Security", query).GetAwaiter().GetResult();
+            var response = await _gateway.Get<XElement>("Security", query);
 
             if (!response.Successfull)
                 return new UserModel();
@@ -347,10 +343,10 @@ namespace Gateway.Web.Services
             return result;
         }
 
-        public UserModel GetNonUser(string domain, string login)
+        public async Task<UserModel> GetNonUser(string domain, string login)
         {
             var query = string.Format("Users/{0}", login);
-            var response = _gateway.Get<XElement>("Security", query).GetAwaiter().GetResult();
+            var response = await _gateway.Get<XElement>("Security", query);
 
             if (!response.Successfull)
                 return new UserModel();
@@ -361,10 +357,10 @@ namespace Gateway.Web.Services
             return result;
         }
 
-        public UserModel GetUserGroups(long id)
+        public async Task<UserModel> GetUserGroups(long id)
         {
             var query = string.Format("Users/{0}/Groups", id);
-            var response = _gateway.Get<XElement>("Security", query).GetAwaiter().GetResult();
+            var response = await _gateway.Get<XElement>("Security", query);
 
             if (!response.Successfull)
                 return new UserModel(id);
@@ -372,30 +368,35 @@ namespace Gateway.Web.Services
             var element = response.Body;
             var result = element.Deserialize<UserModel>();
 
-            var model = GetGroups();
+            var model = await GetGroups();
             result.Items.AddRange(
                 model.Items.Select(item => new SelectListItem { Value = item.Id.ToString(), Text = item.Name }));
             return result;
         }
 
-        public ApplicationsModel GetApplications()
+        public async Task<ApplicationsModel> GetApplications()
         {
             var result = new ApplicationsModel();
 
-            PopulateAddIns(result);
-            PopulateApplications(result);
+            await PopulateAddIns(result);
+            await PopulateApplications(result);
+
+            var versions1 = await GetAvailableReferencedAddInVersions();
+            var versions2 = await GetAvailableReferencedApplicationVersions();
+            var versions3 = await GetAvailableAddInVersions();
+            var versions4 = await GetAvailableApplicationVersions();
 
             // Get active add-ins
-            result.From = GetAvailableReferencedAddInVersions().Union(GetAvailableReferencedApplicationVersions()).ToList();
-            result.To = GetAvailableAddInVersions().Union(GetAvailableApplicationVersions()).ToList();
+            result.From = versions1.Union(versions2).ToList();
+            result.To = versions3.Union(versions4).ToList();
             result.ActiveItems = result.From.ConvertToReportTable();
 
             return result;
         }
 
-        private void PopulateAddIns(ApplicationsModel target)
+        private async Task PopulateAddIns(ApplicationsModel target)
         {
-            var response = _gateway.Get<XElement>("Security", "addins").GetAwaiter().GetResult();
+            var response = await _gateway.Get<XElement>("Security", "addins");
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
 
@@ -408,9 +409,9 @@ namespace Gateway.Web.Services
             target.Items.AddRange(interim.OrderBy(v => v.Name));
         }
 
-        private void PopulateApplications(ApplicationsModel target)
+        private async Task PopulateApplications(ApplicationsModel target)
         {
-            var response = _gateway.Get<XElement>("Security", "applications").GetAwaiter().GetResult();
+            var response = await _gateway.Get<XElement>("Security", "applications");
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
 
@@ -423,10 +424,10 @@ namespace Gateway.Web.Services
             target.Items.AddRange(interim.OrderBy(v => v.Name));
         }
 
-        public AddInModel GetAddIn(long id)
+        public async Task<AddInModel> GetAddIn(long id)
         {
             var query = string.Format("addins/{0}", id);
-            var response = _gateway.Get<XElement>("Security", query).GetAwaiter().GetResult();
+            var response = await _gateway.Get<XElement>("Security", query);
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
@@ -437,10 +438,10 @@ namespace Gateway.Web.Services
             return result;
         }
 
-        public IEnumerable<ApplicationVersionModel> GetApplicationVersions()
+        public async Task<IEnumerable<ApplicationVersionModel>> GetApplicationVersions()
         {
             var query = "applications/versions";
-            var response = _gateway.Get<XElement>("Security", query).GetAwaiter().GetResult();
+            var response = await _gateway.Get<XElement>("Security", query);
 
             var result = new List<ApplicationVersionModel>();
             if (!response.Successfull)
@@ -455,10 +456,10 @@ namespace Gateway.Web.Services
             return result;
         }
 
-        public IEnumerable<AddInVersionModel> GetAddInVersions()
+        public async Task<IEnumerable<AddInVersionModel>> GetAddInVersions()
         {
             var query = "addins/versions";
-            var response = _gateway.Get<XElement>("Security", query).GetAwaiter().GetResult();
+            var response = await _gateway.Get<XElement>("Security", query);
 
             var result = new List<AddInVersionModel>();
             if (!response.Successfull)
@@ -473,33 +474,33 @@ namespace Gateway.Web.Services
             return result;
         }
 
-        public string[] Create(ApplicationModel model)
+        public async Task<string[]> Create(ApplicationModel model)
         {
             var query = "applications";
-            var response = _gateway.Put<string, string>("Security", query, model.Serialize()).GetAwaiter().GetResult();
+            var response = await _gateway.Put<string, string>("Security", query, model.Serialize());
 
             return SuccessOrMessage(response);
         }
 
-        public string[] Create(AddInModel model)
+        public async Task<string[]> Create(AddInModel model)
         {
             var query = "addins";
-            var response = _gateway.Put<string, string>("Security", query, model.Serialize()).GetAwaiter().GetResult();
+            var response = await _gateway.Put<string, string>("Security", query, model.Serialize());
 
             return SuccessOrMessage(response);
         }
 
-        public string[] DeleteAddIn(long id)
+        public async Task<string[]> DeleteAddIn(long id)
         {
-            var query = string.Format("addins/{0}", id);
-            var response = _gateway.Delete<string>("Security", query).GetAwaiter().GetResult();
+            var query = $"addins/{id}";
+            var response = await _gateway.Delete<string>("Security", query);
 
             return SuccessOrMessage(response);
         }
 
-        public PermissionsModel GetPermissions()
+        public async Task<PermissionsModel> GetPermissions()
         {
-            var response = _gateway.Get<XElement>("Security", "permissions").GetAwaiter().GetResult();
+            var response = await _gateway.Get<XElement>("Security", "permissions");
 
             var result = new PermissionsModel();
             if (!response.Successfull)
@@ -518,13 +519,13 @@ namespace Gateway.Web.Services
                 result.Items.Add(sys);
             }
 
-            PopulateAvailableSystems(result);
+            await PopulateAvailableSystems(result);
             return result;
         }
 
-        public List<PortfolioModel> GetPortfolios()
+        public async Task<List<PortfolioModel>> GetPortfolios()
         {
-            var response = _gateway.Get<XElement>("Security", "portfolios").GetAwaiter().GetResult();
+            var response = await _gateway.Get<XElement>("Security", "portfolios");
             var result = new List<PortfolioModel>();
 
             if (!response.Successfull)
@@ -536,10 +537,10 @@ namespace Gateway.Web.Services
             return result;
         }
 
-        public PermissionModel GetPermission(long id)
+        public async Task<PermissionModel> GetPermission(long id)
         {
             var query = string.Format("permissions/{0}", id);
-            var response = _gateway.Get<XElement>("Security", query).GetAwaiter().GetResult();
+            var response = await _gateway.Get<XElement>("Security", query);
 
             var result = new PermissionModel();
             if (!response.Successfull)
@@ -551,50 +552,50 @@ namespace Gateway.Web.Services
             return result;
         }
 
-        public string[] DeletePermission(long id)
+        public async Task<string[]> DeletePermission(long id)
         {
             var query = string.Format("permissions/{1}", id);
-            var response = _gateway.Delete<string>("Security", query).GetAwaiter().GetResult();
+            var response = await _gateway.Delete<string>("Security", query);
 
             return SuccessOrMessage(response);
         }
 
-        public string[] DeleteGroupPortfolio(long id, long groupId)
+        public async Task<string[]> DeleteGroupPortfolio(long id, long groupId)
         {
-            var query = string.Format("groups/{0}/portfolios/{1}", groupId, id);
-            var response = _gateway.Delete<string>("Security", query).GetAwaiter().GetResult();
+            var query = $"groups/{groupId}/portfolios/{id}";
+            var response = await _gateway.Delete<string>("Security", query);
 
             return SuccessOrMessage(response);
         }
 
-        public string[] DeleteGroupPermission(long id, long groupId)
+        public async Task<string[]> DeleteGroupPermission(long id, long groupId)
         {
             var query = $"groups/{groupId}/permissions/{id}";
-            var response = _gateway.Delete<string>("Security", query).GetAwaiter().GetResult();
+            var response = await _gateway.Delete<string>("Security", query);
 
             return SuccessOrMessage(response);
         }
 
-        public string[] Create(PermissionModel model)
+        public async Task<string[]> Create(PermissionModel model)
         {
             var query = "permissions";
-            var response = _gateway.Put<string, string>("Security", query, model.Serialize()).GetAwaiter().GetResult();
+            var response = await _gateway.Put<string, string>("Security", query, model.Serialize());
 
             return SuccessOrMessage(response);
         }
 
-        public string[] InsertGroupPermission(long groupId, long permissionId)
+        public async Task<string[]> InsertGroupPermission(long groupId, long permissionId)
         {
-            var query = string.Format("groups/{0}/permissions/{1}", groupId, permissionId);
-            var response = _gateway.Put<string, string>("Security", query, string.Empty).GetAwaiter().GetResult();
+            var query = $"groups/{groupId}/permissions/{permissionId}";
+            var response = await _gateway.Put<string, string>("Security", query, string.Empty);
 
             return SuccessOrMessage(response);
         }
 
-        public ADGroupsModel GetGroupADGroups(long groupId)
+        public async Task<ADGroupsModel> GetGroupADGroups(long groupId)
         {
-            var query = string.Format("groups/{0}/adgroups", groupId);
-            var response = _gateway.Get<XElement>("Security", query).GetAwaiter().GetResult();
+            var query = $"groups/{groupId}/adgroups";
+            var response = await _gateway.Get<XElement>("Security", query);
 
             var result = new ADGroupsModel(groupId);
             if (!response.Successfull)
@@ -611,27 +612,27 @@ namespace Gateway.Web.Services
             return result;
         }
 
-        public string[] DeleteGroupADGroup(long id, long groupId)
+        public async Task<string[]> DeleteGroupADGroup(long id, long groupId)
         {
-            var query = string.Format("groups/{0}/adgroups/{1}", groupId, id);
-            var response = _gateway.Delete<string>("Security", query).GetAwaiter().GetResult();
+            var query = $"groups/{groupId}/adgroups/{id}";
+            var response = await _gateway.Delete<string>("Security", query);
 
             return SuccessOrMessage(response);
         }
 
-        public string[] Create(GroupActiveDirectory model)
+        public async Task<string[]> Create(GroupActiveDirectory model)
         {
-            var query = string.Format("groups/{0}/adgroups", model.GroupId);
+            var query = $"groups/{model.GroupId}/adgroups";
             var payload = model.Serialize();
-            var response = _gateway.Put<string, string>("Security", query, payload).GetAwaiter().GetResult();
+            var response = await _gateway.Put<string, string>("Security", query, payload);
 
             return SuccessOrMessage(response);
         }
 
-        public Models.Group.PermissionsModel GetGroupPermisions(long groupId)
+        public async Task<Models.Group.PermissionsModel> GetGroupPermisions(long groupId)
         {
-            var query = string.Format("groups/{0}/permissions", groupId);
-            var response = _gateway.Get<XElement>("Security", query).GetAwaiter().GetResult();
+            var query = $"groups/{groupId}/permissions";
+            var response = await _gateway.Get<XElement>("Security", query);
 
             var result = new Models.Group.PermissionsModel(groupId);
             if (!response.Successfull)
@@ -645,14 +646,14 @@ namespace Gateway.Web.Services
             }
             result.Items.AddRange(interim.OrderBy(v => v.SystemName).ThenBy(v => v.Name));
 
-            PopulateAvailablePermissions(result);
+            await PopulateAvailablePermissions(result);
             return result;
         }
 
-        public PortfoliosModel GetGroupPortfolios(long groupId)
+        public async Task<PortfoliosModel> GetGroupPortfolios(long groupId)
         {
-            var query = string.Format("groups/{0}/portfolios", groupId);
-            var response = _gateway.Get<XElement>("Security", query).GetAwaiter().GetResult();
+            var query = $"groups/{groupId}/portfolios";
+            var response = await _gateway.Get<XElement>("Security", query);
 
             var result = new PortfoliosModel(groupId);
             if (!response.Successfull)
@@ -669,10 +670,10 @@ namespace Gateway.Web.Services
             return result;
         }
 
-        public SitesModel GetGroupSites(long groupId)
+        public async Task<SitesModel> GetGroupSites(long groupId)
         {
-            var query = string.Format("groups/{0}/sites", groupId);
-            var response = _gateway.Get<XElement>("Security", query).GetAwaiter().GetResult();
+            var query = $"groups/{groupId}/sites";
+            var response = await _gateway.Get<XElement>("Security", query);
 
             var result = new SitesModel(groupId);
             if (!response.Successfull)
@@ -686,14 +687,14 @@ namespace Gateway.Web.Services
             }
             result.Items.AddRange(interim.OrderBy(v => v.Name));
 
-            PopulateAvailableSites(result);
+            await PopulateAvailableSites(result);
             return result;
         }
 
-        public Models.Group.UsersModel GetGroupUsers(long groupId)
+        public async Task<Models.Group.UsersModel> GetGroupUsers(long groupId)
         {
-            var query = string.Format("groups/{0}/users", groupId);
-            var response = _gateway.Get<XElement>("Security", query).GetAwaiter().GetResult();
+            var query = $"groups/{groupId}/users";
+            var response = await _gateway.Get<XElement>("Security", query);
 
             var result = new Models.Group.UsersModel(groupId);
             if (!response.Successfull)
@@ -710,39 +711,42 @@ namespace Gateway.Web.Services
             return result;
         }
 
-        public string[] DeleteGroupSite(long id, long groupId)
+        public async Task<string[]> DeleteGroupSite(long id, long groupId)
         {
-            var query = string.Format("groups/{0}/sites/{1}", groupId, id);
-            var response = _gateway.Delete<string>("Security", query).GetAwaiter().GetResult();
+            var query = $"groups/{groupId}/sites/{id}";
+            var response = await _gateway.Delete<string>("Security", query);
 
             return SuccessOrMessage(response);
         }
 
-        public string[] InsertGroupSite(long groupId, long siteId)
+        public async Task<string[]> InsertGroupSite(long groupId, long siteId)
         {
-            var query = string.Format("groups/{0}/sites/{1}", groupId, siteId);
-            var response = _gateway.Put<string, string>("Security", query, string.Empty).GetAwaiter().GetResult();
+            var query = $"groups/{groupId}/sites/{siteId}";
+            var response =  await _gateway.Put<string, string>("Security", query, string.Empty);
 
             return SuccessOrMessage(response);
         }
 
-        public Models.Group.AddInsModel GetGroupAddIns(long groupId)
+        public async Task<Models.Group.AddInsModel> GetGroupAddIns(long groupId)
         {
             var result = new Models.Group.AddInsModel(groupId);
 
-            PopulateAddInVersions(result, groupId);
-            PopulateApplicationVersions(result, groupId);
+            await PopulateAddInVersions(result, groupId);
+            await PopulateApplicationVersions(result, groupId);
 
-            result.AvailableAddInVersions.AddRange(GetAvailableAddInVersions().OrderBy(v => v.Text));
-            result.AvailableApplicationVersions.AddRange(GetAvailableApplicationVersions().OrderBy(v => v.Text));
+            var versions1 = await GetAvailableAddInVersions();
+            var versions2 = await GetAvailableApplicationVersions();
+
+            result.AvailableAddInVersions.AddRange(versions1.OrderBy(v => v.Text));
+            result.AvailableApplicationVersions.AddRange(versions2.OrderBy(v => v.Text));
 
             return result;
         }
 
-        private void PopulateAddInVersions(Models.Group.AddInsModel target, long groupId)
+        private async Task PopulateAddInVersions(Models.Group.AddInsModel target, long groupId)
         {
-            var query = string.Format("groups/{0}/addins", groupId);
-            var response = _gateway.Get<XElement>("Security", query).GetAwaiter().GetResult();
+            var query = $"groups/{groupId}/addins";
+            var response = await _gateway.Get<XElement>("Security", query);
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
@@ -756,10 +760,10 @@ namespace Gateway.Web.Services
             target.AddIns.AddRange(interim.OrderBy(v => v.Name));
         }
 
-        private void PopulateApplicationVersions(Models.Group.AddInsModel target, long groupId)
+        private async Task PopulateApplicationVersions(Models.Group.AddInsModel target, long groupId)
         {
-            var query = string.Format("groups/{0}/applications", groupId);
-            var response = _gateway.Get<XElement>("Security", query).GetAwaiter().GetResult();
+            var query = $"groups/{groupId}/applications";
+            var response = await _gateway.Get<XElement>("Security", query);
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
@@ -773,83 +777,83 @@ namespace Gateway.Web.Services
             target.Applications.AddRange(interim.OrderBy(v => v.Name));
         }
 
-        public string[] InsertGroupAddInVersion(long groupId, AddInVersionModel addInVersion)
+        public async Task<string[]> InsertGroupAddInVersion(long groupId, AddInVersionModel addInVersion)
         {
-            var query = string.Format("groups/{0}/addins", groupId);
-            var response = _gateway.Put<string, string>("Security", query, addInVersion.Serialize()).GetAwaiter().GetResult();
+            var query = $"groups/{groupId}/addins";
+            var response = await _gateway.Put<string, string>("Security", query, addInVersion.Serialize());
 
             return SuccessOrMessage(response);
         }
 
-        public string[] InsertGroupApplicationVersion(long groupId, ApplicationVersionModel addInVersion)
+        public async Task<string[]> InsertGroupApplicationVersion(long groupId, ApplicationVersionModel addInVersion)
         {
-            var query = string.Format("groups/{0}/applications", groupId);
-            var response = _gateway.Put<string, string>("Security", query, addInVersion.Serialize()).GetAwaiter().GetResult();
+            var query = $"groups/{groupId}/applications";
+            var response = await _gateway.Put<string, string>("Security", query, addInVersion.Serialize());
 
             return SuccessOrMessage(response);
         }
 
-        public string[] DeleteGroupAddInVersion(long id, long groupId)
+        public async Task<string[]> DeleteGroupAddInVersion(long id, long groupId)
         {
-            var query = string.Format("groups/{0}/addins/{1}", groupId, id);
-            var response = _gateway.Delete<string>("Security", query).GetAwaiter().GetResult();
+            var query = $"groups/{groupId}/addins/{id}";
+            var response = await _gateway.Delete<string>("Security", query);
 
             return SuccessOrMessage(response);
         }
 
-        public string[] DeleteGroupApplicationVersion(long id, long groupId)
+        public async Task<string[]> DeleteGroupApplicationVersion(long id, long groupId)
         {
-            var query = string.Format("groups/{0}/applications/{1}", groupId, id);
-            var response = _gateway.Delete<string>("Security", query).GetAwaiter().GetResult();
+            var query = $"groups/{groupId}/applications/{id}";
+            var response = await _gateway.Delete<string>("Security", query);
 
             return SuccessOrMessage(response);
         }
 
-        public string[] UpdateAssignedApplicationVersions(string @from, string to)
+        public async Task<string[]> UpdateAssignedApplicationVersions(string @from, string to)
         {
             var query = "applications/reassign";
-            var payload = string.Format("{0}|{1}", @from, @to);
-            var response = _gateway.Put<string, string>("Security", query, payload).GetAwaiter().GetResult();
+            var payload = $"{@from}|{@to}";
+            var response = await _gateway.Put<string, string>("Security", query, payload);
 
             return SuccessOrMessage(response);
         }
 
-        public string[] UpdateAssignedAddInVersions(string @from, string to)
+        public async Task<string[]> UpdateAssignedAddInVersions(string @from, string to)
         {
             var query = "addins/reassign";
-            var payload = string.Format("{0}|{1}", @from, @to);
-            var response = _gateway.Put<string, string>("Security", query, payload).GetAwaiter().GetResult();
+            var payload = $"{@from}|{@to}";
+            var response = await _gateway.Put<string, string>("Security", query, payload);
 
             return SuccessOrMessage(response);
         }
 
-        public string[] RemoveUser(long id)
+        public async Task<string[]> RemoveUser(long id)
         {
-            var query = string.Format("users/{0}", id);
-            var response = _gateway.Delete<string>("Security", query).GetAwaiter().GetResult();
+            var query = $"users/{id}";
+            var response = await _gateway.Delete<string>("Security", query);
 
             return SuccessOrMessage(response);
         }
 
-        public string[] Create(UserModel model)
+        public async Task<string[]> Create(UserModel model)
         {
-            var response = _gateway.Put<string, string>("Security", "users", model.Serialize()).GetAwaiter().GetResult();
+            var response = await _gateway.Put<string, string>("Security", "users", model.Serialize());
 
             return SuccessOrMessage(response);
         }
 
-        public string[] InsertUserPortfolio(long userId, long portfolioId)
+        public async Task<string[]> InsertUserPortfolio(long userId, long portfolioId)
         {
-            var query = string.Format("users/{0}/portfolios/{1}", userId, portfolioId);
-            var response = _gateway.Put<string, string>("Security", query, string.Empty).GetAwaiter().GetResult();
+            var query = $"users/{userId}/portfolios/{portfolioId}";
+            var response = await _gateway.Put<string, string>("Security", query, string.Empty);
 
             return SuccessOrMessage(response);
         }
 
-        public Models.User.PortfoliosModel GetUserPortfolios(long userId)
+        public async Task<Models.User.PortfoliosModel> GetUserPortfolios(long userId)
         {
-            var query = string.Format("users/{0}/portfolios", userId);
-            var response = _gateway.Get<XElement>("Security", query).GetAwaiter().GetResult();
+            var query = $"users/{userId}/portfolios";
+            var response = await _gateway.Get<XElement>("Security", query);
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
@@ -857,7 +861,7 @@ namespace Gateway.Web.Services
             var element = response.Body;
             var model = element.Deserialize<Models.User.PortfoliosModel>();
 
-            var portfolios = GetPortfolios();
+            var portfolios = await GetPortfolios();
 
             model.AvailablePortfolios.AddRange(
                 portfolios.Select(item => new SelectListItem { Value = item.Id.ToString(), Text = item.Name }));
@@ -865,26 +869,26 @@ namespace Gateway.Web.Services
             return model;
         }
 
-        public string[] RemoveUserPortfolio(long userId, long portfolioId)
+        public async Task<string[]> RemoveUserPortfolio(long userId, long portfolioId)
         {
-            var query = string.Format("users/{0}/portfolios/{1}", userId, portfolioId);
-            var response = _gateway.Delete<string>("Security", query).GetAwaiter().GetResult();
+            var query = $"users/{userId}/portfolios/{portfolioId}";
+            var response = await _gateway.Delete<string>("Security", query);
 
             return SuccessOrMessage(response);
         }
 
-        public string[] InsertUserSite(long userId, long siteId)
+        public async Task<string[]> InsertUserSite(long userId, long siteId)
         {
-            var query = string.Format("users/{0}/sites/{1}", userId, siteId);
-            var response = _gateway.Put<string, string>("Security", query, string.Empty).GetAwaiter().GetResult();
+            var query = $"users/{userId}/sites/{siteId}";
+            var response = await _gateway.Put<string, string>("Security", query, string.Empty);
 
             return SuccessOrMessage(response);
         }
 
-        public Models.User.SitesModel GetUserSites(long userId)
+        public async Task<Models.User.SitesModel> GetUserSites(long userId)
         {
-            var query = string.Format("users/{0}/sites", userId);
-            var response = _gateway.Get<XElement>("Security", query).GetAwaiter().GetResult();
+            var query = $"users/{userId}/sites";
+            var response = await _gateway.Get<XElement>("Security", query);
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
@@ -892,54 +896,57 @@ namespace Gateway.Web.Services
             var element = response.Body;
             var model = element.Deserialize<Models.User.SitesModel>();
 
-            var sites = GetSites();
+            var sites = await GetSites();
             model.AvailableSites.AddRange(
                 sites.Select(item => new SelectListItem { Value = item.Id.ToString(), Text = item.Name }));
 
             return model;
         }
 
-        public string[] RemoveUserSite(long userId, long siteId)
+        public async Task<string[]> RemoveUserSite(long userId, long siteId)
         {
             var query = string.Format("users/{0}/sites/{1}", userId, siteId);
-            var response = _gateway.Delete<string>("Security", query).GetAwaiter().GetResult();
+            var response = await _gateway.Delete<string>("Security", query);
 
             return SuccessOrMessage(response);
         }
 
-        public string[] InsertUserGroup(long userId, long groupId)
+        public async Task<string[]> InsertUserGroup(long userId, long groupId)
         {
             var query = string.Format("users/{0}/groups/{1}", userId, groupId);
-            var response = _gateway.Put<string, string>("Security", query, string.Empty).GetAwaiter().GetResult();
+            var response = await _gateway.Put<string, string>("Security", query, string.Empty);
 
             return SuccessOrMessage(response);
         }
 
-        public string[] RemoveUserGroup(long userId, long groupId)
+        public async Task<string[]> RemoveUserGroup(long userId, long groupId)
         {
             var query = string.Format("users/{0}/groups/{1}", userId, groupId);
-            var response = _gateway.Delete<string>("Security", query).GetAwaiter().GetResult();
+            var response = await _gateway.Delete<string>("Security", query);
 
             return SuccessOrMessage(response);
         }
 
-        public Models.User.AddInsModel GetUserAddInVersions(long userId)
+        public async Task<Models.User.AddInsModel> GetUserAddInVersions(long userId)
         {
             var result = new Models.User.AddInsModel(userId);
 
-            PopulateAddInVersions(result, userId);
-            PopulateApplicationVersions(result, userId);
+            await PopulateAddInVersions(result, userId);
+            await PopulateApplicationVersions(result, userId);
 
-            result.AvailableAddInVersions.AddRange(GetAvailableAddInVersions().OrderBy(v => v.Text));
-            result.AvailableApplicationVersions.AddRange(GetAvailableApplicationVersions().OrderBy(v => v.Text));
+            var versions1 = await GetAvailableAddInVersions();
+            var versions2 = await GetAvailableApplicationVersions();
+
+            result.AvailableAddInVersions.AddRange(versions1.OrderBy(v => v.Text));
+            result.AvailableApplicationVersions.AddRange(versions2.OrderBy(v => v.Text));
 
             return result;
         }
 
-        private void PopulateAddInVersions(Models.User.AddInsModel target, long userId)
+        private async Task PopulateAddInVersions(Models.User.AddInsModel target, long userId)
         {
             var query = string.Format("users/{0}/addins", userId);
-            var response = _gateway.Get<XElement>("Security", query).GetAwaiter().GetResult();
+            var response = await _gateway.Get<XElement>("Security", query);
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
@@ -962,10 +969,10 @@ namespace Gateway.Web.Services
             target.GroupExcelAddInVersions.AddRange(groupValues.OrderBy(v => v.Name));
         }
 
-        private void PopulateApplicationVersions(Models.User.AddInsModel target, long userId)
+        private async Task PopulateApplicationVersions(Models.User.AddInsModel target, long userId)
         {
             var query = string.Format("users/{0}/applications", userId);
-            var response = _gateway.Get<XElement>("Security", query).GetAwaiter().GetResult();
+            var response = await _gateway.Get<XElement>("Security", query);
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
@@ -986,42 +993,42 @@ namespace Gateway.Web.Services
             target.GroupApplicationVersions.AddRange(groupValues.OrderBy(v => v.Name));
         }
 
-        public string[] DeleteUserAddInVersions(long userId, long addInVersionId)
+        public async Task<string[]> DeleteUserAddInVersions(long userId, long addInVersionId)
         {
             var query = string.Format("users/{0}/addins/{1}", userId, addInVersionId);
-            var response = _gateway.Delete<string>("Security", query).GetAwaiter().GetResult();
+            var response = await _gateway.Delete<string>("Security", query);
 
             return SuccessOrMessage(response);
         }
 
-        public string[] DeleteUserApplicationVersions(long userId, long applicationVersionId)
+        public async Task<string[]> DeleteUserApplicationVersions(long userId, long applicationVersionId)
         {
             var query = string.Format("users/{0}/applications/{1}", userId, applicationVersionId);
-            var response = _gateway.Delete<string>("Security", query).GetAwaiter().GetResult();
+            var response = await _gateway.Delete<string>("Security", query);
 
             return SuccessOrMessage(response);
         }
 
-        public string[] InsertUserAddInVersions(long groupId, AddInVersionModel addInVersion)
+        public async Task<string[]> InsertUserAddInVersions(long groupId, AddInVersionModel addInVersion)
         {
             var query = string.Format("users/{0}/addins", groupId);
-            var response = _gateway.Put<string, string>("Security", query, addInVersion.Serialize()).GetAwaiter().GetResult();
+            var response = await _gateway.Put<string, string>("Security", query, addInVersion.Serialize());
 
             return SuccessOrMessage(response);
         }
 
-        public string[] InsertUserApplicationVersions(long groupId, ApplicationVersionModel version)
+        public async Task<string[]> InsertUserApplicationVersions(long groupId, ApplicationVersionModel version)
         {
             var query = string.Format("users/{0}/applications", groupId);
-            var response = _gateway.Put<string, string>("Security", query, version.Serialize()).GetAwaiter().GetResult();
+            var response = await _gateway.Put<string, string>("Security", query, version.Serialize());
 
             return SuccessOrMessage(response);
         }
 
-        public IEnumerable<BusinessFunction> GetBusinessFunctions()
+        public async Task<IEnumerable<BusinessFunction>> GetBusinessFunctions()
         {
             var query = "businessfunctions";
-            var response = _gateway.Get<XElement>("security", query).GetAwaiter().GetResult();
+            var response = await _gateway.Get<XElement>("security", query);
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
@@ -1033,26 +1040,26 @@ namespace Gateway.Web.Services
                 .ToList();
         }
 
-        public string[] Create(BusinessFunction model)
+        public async Task<string[]> Create(BusinessFunction model)
         {
             var query = "businessfunctions";
-            var response = _gateway.Post<string, string>("security", query, model.Serialize()).GetAwaiter().GetResult();
+            var response = await _gateway.Post<string, string>("security", query, model.Serialize());
 
             return SuccessOrMessage(response);
         }
 
-        public string[] DeleteBusinessFunction(int id)
+        public async Task<string[]> DeleteBusinessFunction(int id)
         {
             var query = string.Format("businessfunctions/{0}", id);
-            var response = _gateway.Delete<string>("security", query).GetAwaiter().GetResult();
+            var response = await _gateway.Delete<string>("security", query);
 
             return SuccessOrMessage(response);
         }
 
-        public IEnumerable<GroupType> GetGroupTypes()
+        public async Task<IEnumerable<GroupType>> GetGroupTypes()
         {
             var query = "grouptypes";
-            var response = _gateway.Get<XElement>("security", query).GetAwaiter().GetResult();
+            var response = await _gateway.Get<XElement>("security", query);
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
@@ -1064,26 +1071,26 @@ namespace Gateway.Web.Services
                 .ToList();
         }
 
-        public string[] Create(GroupType model)
+        public async Task<string[]> Create(GroupType model)
         {
             var query = "grouptypes";
-            var response = _gateway.Post<String, string>("security", query, model.Serialize()).GetAwaiter().GetResult();
+            var response = await _gateway.Post<String, string>("security", query, model.Serialize());
 
             return SuccessOrMessage(response);
         }
 
-        public string[] DeleteGroupType(int id)
+        public async Task<string[]> DeleteGroupType(int id)
         {
             var query = string.Format("grouptypes/{0}", id);
-            var response = _gateway.Delete<string>("security", query).GetAwaiter().GetResult();
+            var response = await _gateway.Delete<string>("security", query);
 
             return SuccessOrMessage(response);
         }
 
-        public bool GenerateDocumentation(string id, string version)
+        public async Task<bool> GenerateDocumentation(string id, string version)
         {
             var query = string.Format("controllers/{0}/versions/{1}/documentation", id, version);
-            var response = _gateway.Put<string, string>("Catalogue", query, string.Empty).GetAwaiter().GetResult();
+            var response = await _gateway.Put<string, string>("Catalogue", query, string.Empty);
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
@@ -1091,10 +1098,10 @@ namespace Gateway.Web.Services
             return true;
         }
 
-        public string[] UpdateGroupBusinessFunction(string groupId, string businessFunctionId)
+        public async Task<string[]> UpdateGroupBusinessFunction(string groupId, string businessFunctionId)
         {
             var query = string.Format("groups/{0}/businessfunction/{1}", groupId, businessFunctionId);
-            var response = _gateway.Put<string, string>("security", query, null).GetAwaiter().GetResult();
+            var response = await _gateway.Put<string, string>("security", query, null);
 
             return SuccessOrMessage(response);
         }
@@ -1142,31 +1149,34 @@ namespace Gateway.Web.Services
             }
         }
 
-        private ServerResponse Fetch(string query, params string[] args)
+        private async Task<ServerResponse> Fetch(string query, params string[] args)
         {
             var url = args != null && args.Length > 0 ? string.Format(query, args) : query;
 
             foreach (var gateway in _gateways)
             {
-                var document = Get(gateway, url);
+                var document = await Get(gateway, url);
                 return new ServerResponse(gateway, document);
             }
             return null;
         }
 
-        private IEnumerable<ServerResponse> FetchAll(string query, params string[] args)
+        private async Task<IEnumerable<ServerResponse>> FetchAll(string query, params string[] args)
         {
             var url = args != null && args.Length > 0 ? string.Format(query, args) : query;
+            var results = new List<ServerResponse>();
             //TODO: Update gateway endpoints to return results for all gateways then remove this method.
             foreach (var gateway in _gateways)
             {
-                var document = Get(gateway, url);
+                var document = await Get(gateway, url);
                 if (document != null)
-                    yield return new ServerResponse(gateway, document);
+                    results.Add(new ServerResponse(gateway, document));
             }
+
+            return results;
         }
 
-        private XDocument Get(string gateway, string query)
+        private async Task<XDocument> Get(string gateway, string query)
         {
             var uri = string.Format("https://{0}:{1}/{2}", gateway, _port, query);
 
@@ -1179,15 +1189,14 @@ namespace Gateway.Web.Services
                 client.DefaultRequestHeaders.Add("Accept", "application/xml");
 
                 client.Timeout = _defaultRequestTimeout;
-                var response = client.GetAsync(uri);
-                response.Wait(_defaultRequestTimeout);
+                var response = await client.GetAsync(uri);
 
-                if (response.Result.StatusCode != HttpStatusCode.OK)
+                if (response.StatusCode != HttpStatusCode.OK)
                 {
-                    throw new RemoteGatewayException(response.Result.ReasonPhrase);
+                    throw new RemoteGatewayException(response.ReasonPhrase);
                 }
 
-                var responseContent = response.Result.Content.ReadAsStringAsync();
+                var responseContent = response.Content.ReadAsStringAsync();
                 responseContent.Wait();
 
                 return XDocument.Parse(responseContent.Result);
@@ -1244,9 +1253,9 @@ namespace Gateway.Web.Services
             }
         }
 
-        private void PopulateAvailableSystems(PermissionsModel target)
+        private async Task PopulateAvailableSystems(PermissionsModel target)
         {
-            var response = _gateway.Get<XElement>("Security", "systems").GetAwaiter().GetResult();
+            var response = await _gateway.Get<XElement>("Security", "systems");
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
@@ -1263,9 +1272,9 @@ namespace Gateway.Web.Services
             target.AvailableSystems.AddRange(interim.OrderBy(v => v.Text));
         }
 
-        private void PopulateAvailablePermissions(Models.Group.PermissionsModel target)
+        private async Task PopulateAvailablePermissions(Models.Group.PermissionsModel target)
         {
-            var response = _gateway.Get<XElement>("Security", "permissions").GetAwaiter().GetResult();
+            var response = await _gateway.Get<XElement>("Security", "permissions");
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
@@ -1277,7 +1286,7 @@ namespace Gateway.Web.Services
                 var model = item.Deserialize<PermissionModel>();
                 var foo = new SelectListItem
                 {
-                    Text = string.Format("{0} - {1}", model.SystemName, model.Name),
+                    Text = $"{model.SystemName} - {model.Name}",
                     Value = model.Id.ToString()
                 };
                 interim.Add(foo);
@@ -1286,9 +1295,9 @@ namespace Gateway.Web.Services
             target.AvailablePermissions.AddRange(interim.OrderBy(v => v.Text));
         }
 
-        private void PopulateAvailableSites(SitesModel target)
+        private async Task PopulateAvailableSites(SitesModel target)
         {
-            var response = _gateway.Get<XElement>("Security", "sites").GetAwaiter().GetResult();
+            var response = await _gateway.Get<XElement>("Security", "sites");
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
@@ -1305,76 +1314,73 @@ namespace Gateway.Web.Services
             target.AvailableSites.AddRange(interim.OrderBy(v => v.Text));
         }
 
-        private IEnumerable<SelectListItem> GetAvailableApplicationVersions()
+        private async Task<IEnumerable<SelectListItem>> GetAvailableApplicationVersions()
         {
-            var response = _gateway.Get<XElement>("Security", "applications/versions").GetAwaiter().GetResult();
+            var response = await _gateway.Get<XElement>("Security", "applications/versions");
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
 
             var element = response.Body;
-            foreach (var model in DeserializeApplicationVersionItems(element).OrderByDescending(v => v.ActualVersion))
-            {
-                yield return new SelectListItem
+            return DeserializeApplicationVersionItems(element)
+                .OrderByDescending(v => v.ActualVersion)
+                .Select(model => new SelectListItem
                 {
-                    Text = string.Format("{0} - {1}", model.Application, model.Version),
-                    Value = string.Format("{0}|{1}|Application", model.Application, model.Version)
-                };
-            }
+                    Text = $"{model.Application} - {model.Version}",
+                    Value = $"{model.Application}|{model.Version}|Application"
+                }).ToList();
         }
 
-        private IEnumerable<SelectListItem> GetAvailableReferencedApplicationVersions()
+        private async Task<IEnumerable<SelectListItem>> GetAvailableReferencedApplicationVersions()
         {
-            var response = _gateway.Get<XElement>("Security", "applications/versions/referenced").GetAwaiter().GetResult();
+            var response = await _gateway.Get<XElement>("Security", "applications/versions/referenced");
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
 
             var element = response.Body;
-            foreach (var model in DeserializeApplicationVersionItems(element).OrderByDescending(v => v.ActualVersion))
-            {
-                yield return new SelectListItem
+            return DeserializeApplicationVersionItems(element)
+                .OrderByDescending(v => v.ActualVersion)
+                .Select(model => new SelectListItem
                 {
-                    Text = string.Format("{0} - {1}", model.Application, model.Version),
-                    Value = string.Format("{0}|{1}", model.Application, model.Version)
-                };
-            }
+                    Text = $"{model.Application} - {model.Version}",
+                    Value = $"{model.Application}|{model.Version}"
+                }).ToList();
         }
 
-        private IEnumerable<SelectListItem> GetAvailableAddInVersions()
+        private async Task<IEnumerable<SelectListItem>> GetAvailableAddInVersions()
         {
-            var response = _gateway.Get<XElement>("Security", "addins/versions").GetAwaiter().GetResult();
+            var response = await _gateway.Get<XElement>("Security", "addins/versions");
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
 
             var element = response.Body;
-            foreach (var model in DeserializeVersionItems(element).OrderByDescending(v => v.ActualVersion))
-            {
-                yield return new SelectListItem
+
+            return DeserializeVersionItems(element)
+                .OrderByDescending(v => v.ActualVersion)
+                .Select(model => new SelectListItem
                 {
-                    Text = string.Format("{0} - {1}", model.AddIn, model.Version),
-                    Value = string.Format("{0}|{1}|Add-In", model.AddIn, model.Version)
-                };
-            }
+                    Text = $"{model.AddIn} - {model.Version}",
+                    Value = $"{model.AddIn}|{model.Version}|Add-In"
+                }).ToList();
         }
 
-        private IEnumerable<SelectListItem> GetAvailableReferencedAddInVersions()
+        private async Task<IEnumerable<SelectListItem>> GetAvailableReferencedAddInVersions()
         {
-            var response = _gateway.Get<XElement>("Security", "addins/versions/referenced").GetAwaiter().GetResult();
+            var response = await _gateway.Get<XElement>("Security", "addins/versions/referenced");
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
 
             var element = response.Body;
-            foreach (var model in DeserializeVersionItems(element).OrderByDescending(v => v.ActualVersion))
-            {
-                yield return new SelectListItem
+            return DeserializeVersionItems(element)
+                .OrderByDescending(v => v.ActualVersion)
+                .Select(model => new SelectListItem
                 {
-                    Text = string.Format("{0} - {1}", model.AddIn, model.Version),
-                    Value = string.Format("{0}|{1}", model.AddIn, model.Version)
-                };
-            }
+                    Text = $"{model.AddIn} - {model.Version}",
+                    Value = $"{model.AddIn}|{model.Version}"
+                }).ToList();
         }
 
         private IEnumerable<AddInVersionModel> DeserializeVersionItems(XElement element)
@@ -1397,9 +1403,9 @@ namespace Gateway.Web.Services
             }
         }
 
-        private GatewayInfo GetGatewayInfo()
+        private async Task<GatewayInfo> GetGatewayInfo()
         {
-            var serverResponse = Fetch("health/info");
+            var serverResponse = await Fetch("health/info");
 
             if (serverResponse == null ||
                 serverResponse.Document == null ||
@@ -1410,9 +1416,9 @@ namespace Gateway.Web.Services
             return xmlElement.Deserialize<GatewayInfo>();
         }
 
-        public List<MonikerCheckResult> GetMonikers(string server, string query)
+        public async Task<List<MonikerCheckResult>> GetMonikers(string server, string query)
         {
-            var response = _gateway.Get<XElement>("marketdata", query).GetAwaiter().GetResult();
+            var response = await _gateway.Get<XElement>("marketdata", query);
 
             var result = new List<MonikerCheckResult>();
 

@@ -51,19 +51,19 @@ namespace Gateway.Web.Controllers
             return View("Dashboard", model);
         }
 
-        public ActionResult Queues(string id)
+        public async Task<ActionResult> Queues(string id)
         {
             var model = new QueuesModel(id) { Versions = _dataService.GetActiveVersions(id).ToList() };
-            foreach (var item in _gateway.GetCurrentQueues(id))
+            foreach (var item in await _gateway.GetCurrentQueues(id))
             {
                 model.Current.Add(item);
             }
             return View(model);
         }
 
-        public ActionResult Versions(string id, string[] updateResults = null)
+        public async Task<ActionResult> Versions(string id, string[] updateResults = null)
         {
-            var model = _gateway.GetControllerVersions(id);
+            var model = await _gateway.GetControllerVersions(id);
             model.UpdateResults = updateResults;
 
             var versionStatuses = _dataService.GetVersionStatuses().ToArray();
@@ -81,9 +81,9 @@ namespace Gateway.Web.Controllers
             return View("Versions", model);
         }
 
-        public ActionResult Documentation(string id)
+        public async Task<ActionResult> Documentation(string id)
         {
-            var versions = _gateway.GetControllerVersions(id);
+            var versions = await _gateway.GetControllerVersions(id);
             var model = new DocumentationModel(id);
 
             var apiModels = GetDocumentationModels(versions, id, _information.GetSetting("ApiDocumentationPath"));
@@ -116,9 +116,9 @@ namespace Gateway.Web.Controllers
             return models;
         }
 
-        public ActionResult Generate(string id, string version)
+        public async Task<ActionResult> Generate(string id, string version)
         {
-            var result = _gateway.GenerateDocumentation(id, version);
+            var result = await _gateway.GenerateDocumentation(id, version);
             return Redirect("~/Controller/Documentation/" + id);
         }
 
@@ -151,7 +151,7 @@ namespace Gateway.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [RoleBasedAuthorize(Roles = "Security.Versions")]
-        public ActionResult UpdateVersionStatuses(FormCollection collection)
+        public async Task<ActionResult> UpdateVersionStatuses(FormCollection collection)
         {
             var controllerName = collection["_id"];
             var statusUpdates = new List<VersionUpdate>();
@@ -192,11 +192,11 @@ namespace Gateway.Web.Controllers
             }
             else
             {
-                results = _gateway.UpdateControllerVersionStatuses(statusUpdates);
+                results = await _gateway.UpdateControllerVersionStatuses(statusUpdates);
             }
 
             //Setup next view
-            return Versions(controllerName, results);
+            return await Versions(controllerName, results);
         }
 
         public async Task<ActionResult> Workers(string id)
@@ -228,9 +228,9 @@ namespace Gateway.Web.Controllers
             return View(model);
         }
 
-        public ActionResult Configuration(string id)
+        public async Task<ActionResult> Configuration(string id)
         {
-            var model = _gateway.GetControllerConfiguration(id);
+            var model = await _gateway.GetControllerConfiguration(id);
 
             if (model.PriorityLimits == null)
                 model.PriorityLimits = new List<PriorityLimit>();
@@ -274,13 +274,13 @@ namespace Gateway.Web.Controllers
 
         [HttpPost]
         [RoleBasedAuthorize(Roles = "Security.Modify")]
-        public ActionResult Configuration(ConfigurationModel model)
+        public async Task<ActionResult> Configuration(ConfigurationModel model)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    var response = _gateway.UpdateControllerConfiguration(model);
+                    var response = await _gateway.UpdateControllerConfiguration(model);
 
                     if (response.Successfull)
                         return RedirectToAction("Dashboard", new { id = model.Name });

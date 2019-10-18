@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Bagl.Cib.MIT.Logging;
 using Gateway.Web.Models.MarketData;
@@ -19,12 +20,12 @@ namespace Gateway.Web.Controllers
 
         }
 
-        public ActionResult MissingMonikersAction(DateTime? rundate)
+        public async Task<ActionResult> MissingMonikersAction(DateTime? rundate)
         {
             if (rundate == DateTime.MinValue || rundate == null)
                 rundate = DateTime.Now.Date;
 
-            List<MonikerCheckResult> result = _gateway.GetMonikers("marketdata", "verifydefaultlist/" + rundate.Value.ToString("yyyy-MM-dd"));
+            List<MonikerCheckResult> result = await _gateway.GetMonikers("marketdata", "verifydefaultlist/" + rundate.Value.ToString("yyyy-MM-dd"));
 
             var model = new MissingMonikerModel("MissingMonikers")
             {

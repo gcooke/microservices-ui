@@ -17,187 +17,187 @@ namespace Gateway.Web.Services
 {
     public interface IGatewayService
     {
-        ServersModel GetServers();
+        Task<ServersModel> GetServers();
 
         Task<List<ServiceInfoModel>> GetWorkersAsync();
 
         Task<List<ServiceInfoModel>> GetWorkersAsync(string controller);
 
-        IEnumerable<QueueModel> GetCurrentQueues(string controller);
+        Task<IEnumerable<QueueModel>> GetCurrentQueues(string controller);
 
-        IEnumerable<QueueModel> GetCurrentQueues();
+        Task<IEnumerable<QueueModel>> GetCurrentQueues();
 
-        XElement[] GetReport(string url);
+        Task<XElement[]> GetReport(string url);
 
-        List<SiteModel> GetSites();
+        Task<List<SiteModel>> GetSites();
 
-        VersionsModel GetControllerVersions(string name);
+        Task<VersionsModel> GetControllerVersions(string name);
 
         void ExpireWorkItem(string id);
 
-        string[] UpdateControllerVersionStatuses(List<VersionUpdate> versionStatusUpdates);
+        Task<string[]> UpdateControllerVersionStatuses(List<VersionUpdate> versionStatusUpdates);
 
-        ConfigurationModel GetControllerConfiguration(string name);
+        Task<ConfigurationModel> GetControllerConfiguration(string name);
 
-        GatewayResponse<string> UpdateControllerConfiguration(ConfigurationModel model);
+        Task<GatewayResponse<string>> UpdateControllerConfiguration(ConfigurationModel model);
 
-        Models.Security.GroupsModel GetGroups();
+        Task<Models.Security.GroupsModel> GetGroups();
 
-        List<PortfolioModel> GetPortfolios();
+        Task<List<PortfolioModel>> GetPortfolios();
 
-        Models.Security.ReportsModel GetSecurityReport(string name);
+        Task<Models.Security.ReportsModel> GetSecurityReport(string name);
 
-        Models.Security.ReportsModel GetSecurityReport(string name, string parameterName, string parameter);
+        Task<Models.Security.ReportsModel> GetSecurityReport(string name, string parameterName, string parameter);
 
-        Models.Group.GroupModel GetGroup(long id);
+        Task<Models.Group.GroupModel> GetGroup(long id);
 
-        string[] Create(Models.Group.GroupModel model);
+        Task<string[]> Create(Models.Group.GroupModel model);
 
-        string[] DeleteGroup(long id);
+        Task<string[]> DeleteGroup(long id);
 
-        Models.Security.UsersModel GetUsers();
+        Task<Models.Security.UsersModel> GetUsers();
 
-        Models.User.UserModel GetUser(string id);
+        Task<Models.User.UserModel> GetUser(string id);
 
-        Models.Security.ApplicationsModel GetApplications();
+        Task<Models.Security.ApplicationsModel> GetApplications();
 
-        AddInModel GetAddIn(long id);
+        Task<AddInModel> GetAddIn(long id);
 
-        IEnumerable<ApplicationVersionModel> GetApplicationVersions();
+        Task<IEnumerable<ApplicationVersionModel>> GetApplicationVersions();
 
-        IEnumerable<AddInVersionModel> GetAddInVersions();
+        Task<IEnumerable<AddInVersionModel>> GetAddInVersions();
 
-        string[] Create(ApplicationModel model);
+        Task<string[]> Create(ApplicationModel model);
 
-        string[] Create(AddInModel model);
+        Task<string[]> Create(AddInModel model);
 
-        string[] DeleteAddIn(long id);
+        Task<string[]> DeleteAddIn(long id);
 
-        Models.Security.PermissionsModel GetPermissions();
+        Task<Models.Security.PermissionsModel> GetPermissions();
 
-        Models.Permission.PermissionModel GetPermission(long id);
+        Task<Models.Permission.PermissionModel> GetPermission(long id);
 
-        string[] DeleteGroupPermission(long id, long groupId);
+        Task<string[]> DeleteGroupPermission(long id, long groupId);
 
-        string[] DeleteGroupPortfolio(long id, long groupId);
+        Task<string[]> DeleteGroupPortfolio(long id, long groupId);
 
-        string[] Create(Models.Permission.PermissionModel model);
+        Task<string[]> Create(Models.Permission.PermissionModel model);
 
-        string[] InsertGroupPermission(long groupId, long permissionId);
+        Task<string[]> InsertGroupPermission(long groupId, long permissionId);
 
-        ADGroupsModel GetGroupADGroups(long groupId);
+        Task<ADGroupsModel> GetGroupADGroups(long groupId);
 
-        string[] DeleteGroupADGroup(long id, long groupId);
+        Task<string[]> DeleteGroupADGroup(long id, long groupId);
 
-        string[] Create(GroupActiveDirectory model);
+        Task<string[]> Create(GroupActiveDirectory model);
 
-        Models.Group.PermissionsModel GetGroupPermisions(long groupId);
+        Task<Models.Group.PermissionsModel> GetGroupPermisions(long groupId);
 
-        Models.Group.PortfoliosModel GetGroupPortfolios(long groupId);
+        Task<Models.Group.PortfoliosModel> GetGroupPortfolios(long groupId);
 
-        Models.Group.SitesModel GetGroupSites(long groupId);
+        Task<Models.Group.SitesModel> GetGroupSites(long groupId);
 
-        Models.Group.UsersModel GetGroupUsers(long groupId);
+        Task<Models.Group.UsersModel> GetGroupUsers(long groupId);
 
-        string[] DeleteGroupSite(long id, long groupId);
+        Task<string[]> DeleteGroupSite(long id, long groupId);
 
-        string[] InsertGroupSite(long groupId, long siteId);
+        Task<string[]> InsertGroupSite(long groupId, long siteId);
 
         Task RetryWorkItemAsync(string correlationId);
 
-        Models.Group.AddInsModel GetGroupAddIns(long groupId);
+        Task<Models.Group.AddInsModel> GetGroupAddIns(long groupId);
 
-        string[] InsertGroupAddInVersion(long groupId, AddInVersionModel addInVersion);
+        Task<string[]> InsertGroupAddInVersion(long groupId, AddInVersionModel addInVersion);
 
-        string[] InsertGroupApplicationVersion(long groupId, ApplicationVersionModel addInVersion);
+        Task<string[]> InsertGroupApplicationVersion(long groupId, ApplicationVersionModel addInVersion);
 
-        string[] DeleteGroupAddInVersion(long id, long groupId);
+        Task<string[]> DeleteGroupAddInVersion(long id, long groupId);
 
-        string[] DeleteGroupApplicationVersion(long id, long groupId);
+        Task<string[]> DeleteGroupApplicationVersion(long id, long groupId);
 
-        string[] UpdateAssignedApplicationVersions(string from, string to);
+        Task<string[]> UpdateAssignedApplicationVersions(string from, string to);
 
-        string[] UpdateAssignedAddInVersions(string from, string to);
+        Task<string[]> UpdateAssignedAddInVersions(string from, string to);
 
-        string[] UpdateGroupBusinessFunction(string groupId, string businessFunctionId);
+        Task<string[]> UpdateGroupBusinessFunction(string groupId, string businessFunctionId);
 
         #region User Security Configuration
 
-        string[] RemoveUser(long id);
+        Task<string[]> RemoveUser(long id);
 
-        string[] Create(UserModel model);
+        Task<string[]> Create(UserModel model);
 
         #endregion User Security Configuration
 
         #region User Group Security Configuration
 
-        Models.User.UserModel GetUserGroups(long id);
+        Task<Models.User.UserModel> GetUserGroups(long id);
 
-        string[] InsertUserGroup(long userId, long groupId);
+        Task<string[]> InsertUserGroup(long userId, long groupId);
 
-        string[] RemoveUserGroup(long userId, long groupId);
+        Task<string[]> RemoveUserGroup(long userId, long groupId);
 
         #endregion User Group Security Configuration
 
         #region User Portfolio Security Configuration
 
-        Models.User.PortfoliosModel GetUserPortfolios(long userId);
+        Task<Models.User.PortfoliosModel> GetUserPortfolios(long userId);
 
-        string[] InsertUserPortfolio(long userId, long portfolioId);
+        Task<string[]> InsertUserPortfolio(long userId, long portfolioId);
 
-        string[] RemoveUserPortfolio(long userId, long portfolioId);
+        Task<string[]> RemoveUserPortfolio(long userId, long portfolioId);
 
         #endregion User Portfolio Security Configuration
 
         #region User Sites Security Configuration
 
-        Models.User.SitesModel GetUserSites(long userId);
+        Task<Models.User.SitesModel> GetUserSites(long userId);
 
-        string[] InsertUserSite(long userId, long siteId);
+        Task<string[]> InsertUserSite(long userId, long siteId);
 
-        string[] RemoveUserSite(long userId, long siteId);
+        Task<string[]> RemoveUserSite(long userId, long siteId);
 
         #endregion User Sites Security Configuration
 
         #region User Add In Version Security Configuration
 
-        Models.User.AddInsModel GetUserAddInVersions(long userId);
+        Task<Models.User.AddInsModel> GetUserAddInVersions(long userId);
 
-        string[] DeleteUserAddInVersions(long userId, long addInVersionId);
+        Task<string[]> DeleteUserAddInVersions(long userId, long addInVersionId);
 
-        string[] DeleteUserApplicationVersions(long userId, long applicationVersionId);
+        Task<string[]> DeleteUserApplicationVersions(long userId, long applicationVersionId);
 
-        string[] InsertUserAddInVersions(long groupId, AddInVersionModel addInVersion);
+        Task<string[]> InsertUserAddInVersions(long groupId, AddInVersionModel addInVersion);
 
-        string[] InsertUserApplicationVersions(long groupId, ApplicationVersionModel version);
+        Task<string[]> InsertUserApplicationVersions(long groupId, ApplicationVersionModel version);
 
         #endregion User Add In Version Security Configuration
 
         #region Business Functions
 
-        IEnumerable<BusinessFunction> GetBusinessFunctions();
+        Task<IEnumerable<BusinessFunction>> GetBusinessFunctions();
 
-        string[] Create(BusinessFunction model);
+        Task<string[]> Create(BusinessFunction model);
 
-        string[] DeleteBusinessFunction(int id);
+        Task<string[]> DeleteBusinessFunction(int id);
 
         #endregion Business Functions
 
         #region GroupTypes
 
-        IEnumerable<GroupType> GetGroupTypes();
+        Task<IEnumerable<GroupType>> GetGroupTypes();
 
-        string[] Create(GroupType model);
+        Task<string[]> Create(GroupType model);
 
-        string[] DeleteGroupType(int id);
+        Task<string[]> DeleteGroupType(int id);
 
         #endregion GroupTypes
 
-        bool GenerateDocumentation(string id, string version);
+        Task<bool> GenerateDocumentation(string id, string version);
 
         Task CancelWorkItemAsync(string correlationId);
 
-        List<MonikerCheckResult> GetMonikers(string server, string query);
+        Task<List<MonikerCheckResult>> GetMonikers(string server, string query);
 
         Task<string> GetAsync(string gateway, string query);
 
