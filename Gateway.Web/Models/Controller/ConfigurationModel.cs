@@ -10,10 +10,10 @@ namespace Gateway.Web.Models.Controller
         public enum ScalingStrategies
         {
             [XmlEnum(Name = "1")]
-            Static = 1,
+            Dynamic = 1,
 
             [XmlEnum(Name = "2")]
-            Dynamic =2 
+            Static =2 
         }
         
         public bool IsUpdate { get { return ControllerId != 0; } }
