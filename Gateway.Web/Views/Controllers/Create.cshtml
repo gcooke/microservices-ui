@@ -7,6 +7,11 @@
     ViewBag.Current = "Create";
 }
 
+@section Scripts
+{
+    <script src="@Url.Content("~/Content/js/ControllerConfigurationScript.js")"></script>
+}
+
 @{ Html.RenderPartial("_ControllersNav"); }
 <div id="page-content-wrapper">
     <div class="hero-unit">

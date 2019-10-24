@@ -1,17 +1,4 @@
 ﻿@model Gateway.Web.Models.Controller.ConfigurationModel
-@section scripts{ <script type="text/javascript">
-    $(function () {
-        $('#scaling').change(function () {
-            var value = $(this).val();
-            if (value == '1') {
-                $('#lblInstances').show();
-                $('#lblRatio').hide();
-            } else {
-                $('#lblInstances').hide();
-                $('#lblRatio').show();
-            }
-        });
-    });</script>}
 <div class="form-group">
     @Html.AntiForgeryToken()
     <div class="container-fluid">
@@ -186,8 +173,8 @@
                                 </th>
                                 <th style="background: #990505;">Priority</th>
                                 <th style="background: #990505;">
-                                    <div id="lblInstances">Instances</div>
-                                    <div id="lblRatio">Ratio</div>
+                                    <div id="lblInstances">Max Instances</div>
+                                    <div id="lblRunning">Running instances per Host</div>
                                 </th>
 
                             </tr>

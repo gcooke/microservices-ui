@@ -968,6 +968,7 @@
     <Content Include="Content\js\bootstrap-quick-search.min.js" />
     <Content Include="Content\js\c3.js" />
     <Content Include="Content\js\checkall.js" />
+    <Content Include="Content\js\ControllerConfigurationScript.js" />
     <Content Include="Content\js\d3.js" />
     <Content Include="Content\js\loading.js" />
     <Content Include="Content\js\moment.js" />
