@@ -58,11 +58,11 @@
     <Reference Include="Bagl.Cib.MIT.Scheduling, Version=1.0.8.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Bagl.Cib.MIT.Scheduling.1.0.8\lib\net452\Bagl.Cib.MIT.Scheduling.dll</HintPath>
     </Reference>
-    <Reference Include="Bagl.Cib.MSF.ClientAPI, Version=1.1.638.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Bagl.Cib.MSF.ClientAPI.1.1.638\lib\net452\Bagl.Cib.MSF.ClientAPI.dll</HintPath>
+    <Reference Include="Bagl.Cib.MSF.ClientAPI, Version=1.1.647.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bagl.Cib.MSF.ClientAPI.1.1.647\lib\net452\Bagl.Cib.MSF.ClientAPI.dll</HintPath>
     </Reference>
-    <Reference Include="Bagl.Cib.MSF.Contracts, Version=1.1.638.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Bagl.Cib.MSF.ClientAPI.1.1.638\lib\net452\Bagl.Cib.MSF.Contracts.dll</HintPath>
+    <Reference Include="Bagl.Cib.MSF.Contracts, Version=1.1.647.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bagl.Cib.MSF.ClientAPI.1.1.647\lib\net452\Bagl.Cib.MSF.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="CommonServiceLocator, Version=2.0.4.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
       <HintPath>..\packages\Unity.5.8.11\lib\net46\CommonServiceLocator.dll</HintPath>
