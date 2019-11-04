@@ -58,6 +58,7 @@ namespace Gateway.Web.Services
             _gateways = gateways.Split(';');
 
             //_gateway.SetGatewayUrlForService("Security", "http://localhost:7000/");
+            //_gateway.SetGatewayUrlForService("Catalogue", "http://localhost:7000/");
 
             _defaultClient = new Lazy<HttpClient>(() =>
             {
