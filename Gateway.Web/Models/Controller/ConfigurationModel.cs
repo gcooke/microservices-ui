@@ -75,6 +75,9 @@ namespace Gateway.Web.Models.Controller
         [Display(Name = "Priority Limits")]
         public List<PriorityLimit> PriorityLimits { get; set; }
 
+        [XmlElement]
+        [Display(Name = "Caching Enabled")]
+        public bool CachingEnabled { get; set; }
     }
 
     public class PriorityLimit

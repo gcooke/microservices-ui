@@ -2,17 +2,14 @@
 <div class="form-group">
     @Html.AntiForgeryToken()
     <div class="container-fluid">
-
         <div class="row col-md-12">
             @Html.ValidationSummary(false, "", new { @class = "text-danger" })
             @Html.HiddenFor(m => m.ControllerId)
         </div>
-
         <div class="row" hidden="@Model.IsUpdate">
             <div class="col-md-3">
                 @Html.LabelFor(m => m.Name, new { @class = "control-label" })
             </div>
-
             <div class="col-md-4">
                 <div class="input-group spinner">
                     <div class="input-group">
@@ -21,12 +18,10 @@
                 </div>
             </div>
         </div>
-
         <div class="row" hidden="@Model.IsUpdate">
             <div class="col-md-3">
                 @Html.LabelFor(m => m.Configuration, new { @class = "control-label" })
             </div>
-
             <div class="col-md-4">
                 <div class="input-group spinner">
                     <div class="input-group">
@@ -35,7 +30,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="row">
             <div class="col-md-3">
                 @Html.LabelFor(m => m.TimeToLiveSec, new { @class = "control-label" })
@@ -48,9 +43,7 @@
                                 <span class="glyphicon glyphicon-minus"></span>
                             </button>
                         </span>
-
                         @Html.TextBoxFor(m => m.TimeToLiveSec, new { @name = "TimeToLiveSec", @class = "number-spinner input-number", @min = "1", @max = "100000" })
-
                         <span class="input-group-btn">
                             <button type="button" class="btn btn-spinner btn-number" data-type="plus" data-field="TimeToLiveSec">
                                 <span class="glyphicon glyphicon-plus"></span>
@@ -60,7 +53,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="row">
             <div class="col-md-3">
                 @Html.LabelFor(m => m.TimeoutMilliSec, new { @class = "control-label" })
@@ -73,9 +66,7 @@
                                 <span class="glyphicon glyphicon-minus"></span>
                             </button>
                         </span>
-
                         @Html.TextBoxFor(m => m.TimeoutMilliSec, new { @name = "TimeoutMilliSec", @class = "number-spinner input-number", @min = "1", @max = int.MaxValue })
-
                         <span class="input-group-btn">
                             <button type="button" class="btn btn-spinner btn-number" data-type="plus" data-field="TimeoutMilliSec">
                                 <span class="glyphicon glyphicon-plus"></span>
@@ -85,16 +76,14 @@
                 </div>
             </div>
         </div>
-
         <div class="row">
             <div class="col-md-3">
                 @Html.LabelFor(m => m.ScalingStrategyId, new { @class = "control-label" })
             </div>
             <div class="col-md-4">
-                @Html.EnumDropDownListFor(model => model.ScalingStrategyId, new { @class = "form-control", id="scaling" })
+                @Html.EnumDropDownListFor(model => model.ScalingStrategyId, new { @class = "form-control", id = "scaling" })
             </div>
         </div>
-
         <div class="row">
             <div class="col-md-3">
                 @Html.LabelFor(m => m.MaxPriority, new { @class = "control-label" })
@@ -106,9 +95,7 @@
                             <span class="glyphicon glyphicon-minus"></span>
                         </button>
                     </span>
-
                     @Html.TextBoxFor(m => m.MaxPriority, new { @name = "Max Priority", @class = "number-spinner input-number", @min = "1", @max = "10000" })
-
                     <span class="input-group-btn">
                         <button type="button" class="btn btn-spinner btn-number" data-type="plus" data-field="MaxPriority">
                             <span class="glyphicon glyphicon-plus"></span>
@@ -117,7 +104,6 @@
                 </div>
             </div>
         </div>
-
         <div class="row">
             <div class="col-md-3">
                 @Html.LabelFor(m => m.MaxInstances, new { @class = "control-label" })
@@ -129,9 +115,7 @@
                             <span class="glyphicon glyphicon-minus"></span>
                         </button>
                     </span>
-
                     @Html.TextBoxFor(m => m.MaxInstances, new { @name = "MaxInstances", @class = "number-spinner input-number", @min = "1", @max = "10000" })
-
                     <span class="input-group-btn">
                         <button type="button" class="btn btn-spinner btn-number" data-type="plus" data-field="MaxInstances">
                             <span class="glyphicon glyphicon-plus"></span>
@@ -140,75 +124,82 @@
                 </div>
             </div>
         </div>
-
-    <div class="row">
-        <div class="col-md-3">
-            @Html.LabelFor(m => m.Description, new {@class = "control-label"})
-        </div>
-
-        <div class="col-md-3">
-            <div class="input-group">
-                @Html.TextAreaFor(m => m.Description, new {@name = "Description"})
+        <div class="row">
+            <div class="col-md-3">
+                @Html.LabelFor(m => m.Description, new { @class = "control-label" })
+            </div>
+            <div class="col-md-3">
+                <div class="input-group">
+                    @Html.TextAreaFor(m => m.Description, new { @name = "Description" })
+                </div>
             </div>
         </div>
 
-    </div>
-    
-    <div class="row">
-        <div class="col-md-6">
-            @Html.LabelFor(m => m.PriorityLimits, new {@class = "control-label"})
+        <div class="row">
+            <div class="col-md-3">
+                @Html.LabelFor(m => m.CachingEnabled, new { @class = "control-label" })
+            </div>
+            <div class="col-md-3">
+                <div class="input-group">
+                    @Html.CheckBoxFor(m => m.CachingEnabled, new { @name = "CachingEnabled" })
+                </div>
+            </div>
         </div>
-    </div>
-        
-    <div class="form-group">
 
+        <br />
+
+        <div class="row">
+            <div class="col-md-6">
+                @Html.LabelFor(m => m.PriorityLimits, new { @class = "control-label" })
+            </div>
+        </div>
+
+        <div class="form-group">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-6 ">
                         <table class="datatable table report-table select-all-table" id="ControllerRestriction-table">
                             <thead>
-                            <tr style="background: #990505;">
-                                <th style="background: #990505;">
-                                    @Html.CheckBox("select-all")
-                                </th>
-                                <th style="background: #990505;">Priority</th>
-                                <th style="background: #990505;">
-                                    <div id="lblInstances">Max Instances</div>
-                                    <div id="lblRunning">Running instances per Host</div>
-                                </th>
-
-                            </tr>
+                                <tr style="background: #990505;">
+                                    <th style="background: #990505;">
+                                        @Html.CheckBox("select-all")
+                                    </th>
+                                    <th style="background: #990505;">Priority</th>
+                                    <th style="background: #990505;">
+                                        <div id="lblInstances">Max Instances</div>
+                                        <div id="lblRunning">Running instances per Host</div>
+                                    </th>
+                                </tr>
                             </thead>
                             <tbody>
-                            @for (var i = 0; i < Model.PriorityLimits.Count(); i++)
-                            {
-                                <tr>
-                                    <td  style="text-align: center; vertical-align: middle">
-                                        @Html.CheckBoxFor(x => Model.PriorityLimits[i].Enabled)
-                                        @Html.HiddenFor(x => Model.PriorityLimits[i].Id)
-                                    </td>
-                                    <td style="text-align: center; vertical-align: middle">
-                                        <strong style="font-size: 1.5em;">
+                                @for (var i = 0; i < Model.PriorityLimits.Count(); i++)
+                                {
+                                    <tr>
+                                        <td style="text-align: center; vertical-align: middle">
+                                            @Html.CheckBoxFor(x => Model.PriorityLimits[i].Enabled)
+                                            @Html.HiddenFor(x => Model.PriorityLimits[i].Id)
+                                        </td>
+                                        <td style="text-align: center; vertical-align: middle">
+                                            <strong style="font-size: 1.5em;">
                                                 @Html.HiddenFor(x => Model.PriorityLimits[i].Priority)
                                                 @Model.PriorityLimits[i].Priority
-                                        </strong>
-                                    </td>
-                                    <td>
-                                        @Html.TextBoxFor(e => Model.PriorityLimits[i].Instances)
-                                    </td>
-                                </tr>
-                            }
+                                            </strong>
+                                        </td>
+                                        <td>
+                                            @Html.TextBoxFor(e => Model.PriorityLimits[i].Instances)
+                                        </td>
+                                    </tr>
+                                }
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
-        
-        
+
 
         <div class="col-md-offset-3 col-md-4">
-            <img src="../../Content/img/ajax-loader.gif" id="loading"/>
+            <img src="../../Content/img/ajax-loader.gif" id="loading" />
             <button class="btn btn-default btn-sm" type="submit" i="submit">
                 Save
             </button>
