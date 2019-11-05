@@ -190,11 +190,14 @@ function getColor(status) {
     if (status === "Succeeded") {
         color = "green";
     }
+    else if (status === "Completed with Warning") {
+        color = "orange";
+    }
     else if (status === "Failed" || status.includes("cancelled")) {
         color = "red";
     }
     else {
-        color = "orange";
+        color = "steelblue";
     }
     return color;
 }
@@ -204,11 +207,17 @@ function getIcon(value) {
     if (value.Status === "Succeeded") {
         icon = "glyphicon glyphicon-ok";
     }
+    else if (value.Status === "Completed with Warning") {
+        icon = "glyphicon glyphicon-exclamation-sign";
+    }
     else if (value.Status === "Failed" || value.Status.includes("cancelled")) {
         icon = "glyphicon glyphicon-remove";
     }
+    else if (value.Status === "Executing task") {
+        icon = "glyphicon glyphicon-refresh";
+    }
     else {
-        icon = "glyphicon glyphicon-hourglass";
+        icon = "glyphicon glyphicon-time";
     }
     return icon;
 }
