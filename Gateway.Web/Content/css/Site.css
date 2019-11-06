@@ -480,3 +480,7 @@ progress::-webkit-progress-value {
 .visibility-toggle {
     cursor: pointer;
 }
+
+.alert-success, .alert-danger {
+    background-color: transparent;
+}
