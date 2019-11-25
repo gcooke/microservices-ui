@@ -13,7 +13,7 @@ namespace Gateway.Web.Services
 {
     public class ManifestService : IManifestService
     {
-        private const string RemoteUrl = "https://bitbucket.absa.co.za/rest/api/1.0/projects/CIB_PNR/repos/infrastructure-manifest/raw/windows/SigmaManifest.xml?at=refs/heads/{0}";
+        private const string RemoteUrl = "https://bitbucket-agl.absa.co.za/rest/api/1.0/projects/SIG/repos/infrastructure-manifest/raw/windows/SigmaManifest.xml?at=refs/heads/{0}";
         private readonly ISystemInformation _information;
         private readonly ILogger _logger;
 
@@ -57,7 +57,7 @@ namespace Gateway.Web.Services
                 .AddColumn("Version")
                 .Build();
             result.SetAttribute("Title", "Assigned Services");
-            
+
             foreach (var server in applicable.OrderBy(a => a.Name))
             {
                 var name = server.Name;
@@ -103,7 +103,7 @@ namespace Gateway.Web.Services
                 .AddColumn("Version")
                 .Build();
             table.SetAttribute("Title", "Controller versions");
-            
+
             foreach (var controller in manifest.Controllers.OrderBy(a => a.Name))
             {
                 var name = controller.Name;
