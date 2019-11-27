@@ -247,16 +247,14 @@ namespace Gateway.Web.Controllers
 
         private bool IsPermissionNameValid(Models.Security.PermissionsModel permissions, string systemId, string name)
         {
-            var isValid = true;
-
             var sourceSystem = permissions.AvailableSystems.FirstOrDefault(x => x.Value == systemId);
             var permission = permissions.Items.FirstOrDefault(x => x.Name == sourceSystem.Text);
             var existingPermission = permission.Items.FirstOrDefault(x => x.Name == name);
 
             if (existingPermission != null)
-                isValid = false;
+                return false;
 
-            return isValid;
+            return true;
         }
 
         [HttpPost]
