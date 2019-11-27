@@ -14,6 +14,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+
 namespace Gateway.Web.Controllers
 {
     [RoleBasedAuthorize(Roles = "Security.View")]
@@ -244,6 +245,15 @@ namespace Gateway.Web.Controllers
             return await Groups();
         }
 
+        private bool IsPermissionNameValid(Models.Security.PermissionsModel permissions, string systemId, string name)
+        {
+            var sourceSystem = permissions.AvailableSystems.FirstOrDefault(x => x.Value == systemId);
+            var permission = permissions.Items.FirstOrDefault(x => x.Name == sourceSystem.Text);
+            var existingPermission = permission.Items.FirstOrDefault(x => x.Name == name);
+
+            return existingPermission == null;
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [RoleBasedAuthorize(Roles = "Security.Modify")]
@@ -260,6 +270,9 @@ namespace Gateway.Web.Controllers
 
             if (string.IsNullOrEmpty(systemId))
                 ModelState.AddModelError("System", "System cannot be empty");
+
+            if (!IsPermissionNameValid(await _gateway.GetPermissions(), systemId, name))
+                ModelState.AddModelError("Name", $"{name} is already being used in this system");
 
             // Post instruction to security controller
             var model = new PermissionModel()
@@ -484,7 +497,6 @@ namespace Gateway.Web.Controllers
                     foreach (var item in result)
                         ModelState.AddModelError("Remote", item);
                 }
-
             }
 
             //Setup next view
@@ -522,7 +534,6 @@ namespace Gateway.Web.Controllers
                     foreach (var item in result)
                         ModelState.AddModelError("Remote", item);
                 }
-
             }
 
             //Setup next view
