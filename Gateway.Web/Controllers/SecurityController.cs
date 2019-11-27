@@ -251,10 +251,7 @@ namespace Gateway.Web.Controllers
             var permission = permissions.Items.FirstOrDefault(x => x.Name == sourceSystem.Text);
             var existingPermission = permission.Items.FirstOrDefault(x => x.Name == name);
 
-            if (existingPermission != null)
-                return false;
-
-            return true;
+            return existingPermission == null;
         }
 
         [HttpPost]
