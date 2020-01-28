@@ -98,7 +98,7 @@ function pollResults() {
     var request = $.get("Schedule/Status?includeDailySummaries=true&businessDate=" + businessDate, function (data) {
         requests.pop();
         updateView(data);
-        setTimeout(function () { pollResults() }, 5000);
+        setTimeout(function () { pollResults() }, 10000);
     });
 
     requests.push(request);
