@@ -14,7 +14,6 @@ namespace Gateway.Web.Services
         public static async Task<GatewayResponse<XElement>> GetSync(this Bagl.Cib.MSF.ClientAPI.Gateway.IGateway gateway, string controller, string query, string version)
         {
             var get = new Get(controller) {Query = query};
-
             if (!string.IsNullOrWhiteSpace(version))
                 get.Version = version;
 
