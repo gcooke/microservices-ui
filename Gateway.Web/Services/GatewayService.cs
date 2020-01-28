@@ -109,7 +109,7 @@ namespace Gateway.Web.Services
         public async Task<XElement[]> GetReport(string report)
         {
             //var doc = Fetch("api/riskdata/latest/{0}", report);
-            var response = await _gateway.Get<XElement>("riskdata", report);
+            var response = await _gateway.GetSync("riskdata", report, string.Empty);
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
@@ -119,7 +119,7 @@ namespace Gateway.Web.Services
 
         public async Task<List<SiteModel>> GetSites()
         {
-            var response = await _gateway.Get<XElement>("Security", "sites");
+            var response = await _gateway.GetSync("Security", "sites", string.Empty);
             var result = new List<SiteModel>();
 
             if (!response.Successfull)
@@ -140,7 +140,7 @@ namespace Gateway.Web.Services
         public async Task<VersionsModel> GetControllerVersions(string name)
         {
             var query = string.Format("controllers/{0}", name);
-            var response = await _gateway.Get<XElement>("Catalogue", query);
+            var response = await _gateway.GetSync("Catalogue", query, string.Empty);
 
             var result = new VersionsModel(name);
             if (!response.Successfull)
@@ -183,7 +183,7 @@ namespace Gateway.Web.Services
 
         public async Task<ConfigurationModel> GetControllerConfiguration(string name)
         {
-            var response = await _gateway.Get<XElement>("Catalogue", string.Format("controllers/{0}", name));
+            var response = await _gateway.GetSync("Catalogue", string.Format("controllers/{0}", name), string.Empty);
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
@@ -206,7 +206,7 @@ namespace Gateway.Web.Services
 
         public async Task<GroupsModel> GetGroups()
         {
-            var response = await _gateway.Get<XElement>("Security", "groups");
+            var response = await _gateway.GetSync("Security", "groups",string.Empty);
 
             var result = new GroupsModel();
             if (!response.Successfull)
@@ -226,7 +226,7 @@ namespace Gateway.Web.Services
         public async Task<ReportsModel> GetSecurityReport(string name)
         {
             var query = string.Format("reports/{0}", name);
-            var response = await _gateway.Get<XElement>("Security", query);
+            var response = await _gateway.GetSync("Security", query, string.Empty);
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
@@ -253,7 +253,7 @@ namespace Gateway.Web.Services
             if (!string.IsNullOrEmpty(parameter))
             {
                 var query = string.Format("reports/{0}/{1}", name, parameter);
-                var response = await _gateway.Get<XElement>("Security", query);
+                var response = await _gateway.GetSync("Security", query, string.Empty);
 
                 if (!response.Successfull)
                     throw new RemoteGatewayException(response.Message);
@@ -285,7 +285,7 @@ namespace Gateway.Web.Services
         public async Task<GroupModel> GetGroup(long id)
         {
             var query = string.Format("groups/{0}", id);
-            var response = await _gateway.Get<XElement>("Security", query);
+            var response = await _gateway.GetSync("Security", query, string.Empty);
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
@@ -306,14 +306,14 @@ namespace Gateway.Web.Services
         public async Task<string[]> DeleteGroup(long id)
         {
             var query = string.Format("groups/{0}", id);
-            var response = await _gateway.Delete<string>("Security", query);
+            var response = await _gateway.DeleteSync("Security", query, string.Empty);
 
             return SuccessOrMessage(response);
         }
 
         public async Task<UsersModel> GetUsers()
         {
-            var response = await _gateway.Get<XElement>("Security", "users");
+            var response = await _gateway.GetSync("Security", "users", string.Empty);
 
             var result = new UsersModel();
             if (!response.Successfull)
@@ -333,7 +333,7 @@ namespace Gateway.Web.Services
         public async Task<UserModel> GetUser(string id)
         {
             var query = string.Format("Users/{0}", id);
-            var response = await _gateway.Get<XElement>("Security", query);
+            var response = await _gateway.GetSync("Security", query, string.Empty);
 
             if (!response.Successfull)
                 return new UserModel();
@@ -347,7 +347,7 @@ namespace Gateway.Web.Services
         public async Task<UserModel> GetNonUser(string domain, string login)
         {
             var query = string.Format("Users/{0}", login);
-            var response = await _gateway.Get<XElement>("Security", query);
+            var response = await _gateway.GetSync("Security", query, string.Empty);
 
             if (!response.Successfull)
                 return new UserModel();
@@ -361,7 +361,7 @@ namespace Gateway.Web.Services
         public async Task<UserModel> GetUserGroups(long id)
         {
             var query = string.Format("Users/{0}/Groups", id);
-            var response = await _gateway.Get<XElement>("Security", query);
+            var response = await _gateway.GetSync("Security", query, string.Empty);
 
             if (!response.Successfull)
                 return new UserModel(id);
@@ -397,7 +397,7 @@ namespace Gateway.Web.Services
 
         private async Task PopulateAddIns(ApplicationsModel target)
         {
-            var response = await _gateway.Get<XElement>("Security", "addins");
+            var response = await _gateway.GetSync("Security", "addins", string.Empty);
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
 
@@ -412,7 +412,7 @@ namespace Gateway.Web.Services
 
         private async Task PopulateApplications(ApplicationsModel target)
         {
-            var response = await _gateway.Get<XElement>("Security", "applications");
+            var response = await _gateway.GetSync("Security", "applications", string.Empty);
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
 
@@ -428,7 +428,7 @@ namespace Gateway.Web.Services
         public async Task<AddInModel> GetAddIn(long id)
         {
             var query = string.Format("addins/{0}", id);
-            var response = await _gateway.Get<XElement>("Security", query);
+            var response = await _gateway.GetSync("Security", query, string.Empty);
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
@@ -442,7 +442,7 @@ namespace Gateway.Web.Services
         public async Task<IEnumerable<ApplicationVersionModel>> GetApplicationVersions()
         {
             var query = "applications/versions";
-            var response = await _gateway.Get<XElement>("Security", query);
+            var response = await _gateway.GetSync("Security", query, string.Empty);
 
             var result = new List<ApplicationVersionModel>();
             if (!response.Successfull)
@@ -460,7 +460,7 @@ namespace Gateway.Web.Services
         public async Task<IEnumerable<AddInVersionModel>> GetAddInVersions()
         {
             var query = "addins/versions";
-            var response = await _gateway.Get<XElement>("Security", query);
+            var response = await _gateway.GetSync("Security", query, string.Empty);
 
             var result = new List<AddInVersionModel>();
             if (!response.Successfull)
@@ -494,14 +494,14 @@ namespace Gateway.Web.Services
         public async Task<string[]> DeleteAddIn(long id)
         {
             var query = $"addins/{id}";
-            var response = await _gateway.Delete<string>("Security", query);
+            var response = await _gateway.DeleteSync("Security", query, string.Empty);
 
             return SuccessOrMessage(response);
         }
 
         public async Task<PermissionsModel> GetPermissions()
         {
-            var response = await _gateway.Get<XElement>("Security", "permissions");
+            var response = await _gateway.GetSync("Security", "permissions", string.Empty);
 
             var result = new PermissionsModel();
             if (!response.Successfull)
@@ -526,7 +526,7 @@ namespace Gateway.Web.Services
 
         public async Task<List<PortfolioModel>> GetPortfolios()
         {
-            var response = await _gateway.Get<XElement>("Security", "portfolios");
+            var response = await _gateway.GetSync("Security", "portfolios", string.Empty);
             var result = new List<PortfolioModel>();
 
             if (!response.Successfull)
@@ -541,7 +541,7 @@ namespace Gateway.Web.Services
         public async Task<PermissionModel> GetPermission(long id)
         {
             var query = string.Format("permissions/{0}", id);
-            var response = await _gateway.Get<XElement>("Security", query);
+            var response = await _gateway.GetSync("Security", query, string.Empty);
 
             var result = new PermissionModel();
             if (!response.Successfull)
@@ -556,7 +556,7 @@ namespace Gateway.Web.Services
         public async Task<string[]> DeletePermission(long id)
         {
             var query = string.Format("permissions/{1}", id);
-            var response = await _gateway.Delete<string>("Security", query);
+            var response = await _gateway.DeleteSync("Security", query, string.Empty);
 
             return SuccessOrMessage(response);
         }
@@ -564,7 +564,7 @@ namespace Gateway.Web.Services
         public async Task<string[]> DeleteGroupPortfolio(long id, long groupId)
         {
             var query = $"groups/{groupId}/portfolios/{id}";
-            var response = await _gateway.Delete<string>("Security", query);
+            var response = await _gateway.DeleteSync("Security", query, string.Empty);
 
             return SuccessOrMessage(response);
         }
@@ -572,7 +572,7 @@ namespace Gateway.Web.Services
         public async Task<string[]> DeleteGroupPermission(long id, long groupId)
         {
             var query = $"groups/{groupId}/permissions/{id}";
-            var response = await _gateway.Delete<string>("Security", query);
+            var response = await _gateway.DeleteSync("Security", query, string.Empty);
 
             return SuccessOrMessage(response);
         }
@@ -596,7 +596,7 @@ namespace Gateway.Web.Services
         public async Task<ADGroupsModel> GetGroupADGroups(long groupId)
         {
             var query = $"groups/{groupId}/adgroups";
-            var response = await _gateway.Get<XElement>("Security", query);
+            var response = await _gateway.GetSync("Security", query, string.Empty);
 
             var result = new ADGroupsModel(groupId);
             if (!response.Successfull)
@@ -616,7 +616,7 @@ namespace Gateway.Web.Services
         public async Task<string[]> DeleteGroupADGroup(long id, long groupId)
         {
             var query = $"groups/{groupId}/adgroups/{id}";
-            var response = await _gateway.Delete<string>("Security", query);
+            var response = await _gateway.DeleteSync("Security", query, string.Empty);
 
             return SuccessOrMessage(response);
         }
@@ -633,7 +633,7 @@ namespace Gateway.Web.Services
         public async Task<Models.Group.PermissionsModel> GetGroupPermisions(long groupId)
         {
             var query = $"groups/{groupId}/permissions";
-            var response = await _gateway.Get<XElement>("Security", query);
+            var response = await _gateway.GetSync("Security", query, string.Empty);
 
             var result = new Models.Group.PermissionsModel(groupId);
             if (!response.Successfull)
@@ -654,7 +654,7 @@ namespace Gateway.Web.Services
         public async Task<PortfoliosModel> GetGroupPortfolios(long groupId)
         {
             var query = $"groups/{groupId}/portfolios";
-            var response = await _gateway.Get<XElement>("Security", query);
+            var response = await _gateway.GetSync("Security", query, string.Empty);
 
             var result = new PortfoliosModel(groupId);
             if (!response.Successfull)
@@ -674,7 +674,7 @@ namespace Gateway.Web.Services
         public async Task<SitesModel> GetGroupSites(long groupId)
         {
             var query = $"groups/{groupId}/sites";
-            var response = await _gateway.Get<XElement>("Security", query);
+            var response = await _gateway.GetSync("Security", query, string.Empty);
 
             var result = new SitesModel(groupId);
             if (!response.Successfull)
@@ -695,7 +695,7 @@ namespace Gateway.Web.Services
         public async Task<Models.Group.UsersModel> GetGroupUsers(long groupId)
         {
             var query = $"groups/{groupId}/users";
-            var response = await _gateway.Get<XElement>("Security", query);
+            var response = await _gateway.GetSync("Security", query, string.Empty);
 
             var result = new Models.Group.UsersModel(groupId);
             if (!response.Successfull)
@@ -715,7 +715,7 @@ namespace Gateway.Web.Services
         public async Task<string[]> DeleteGroupSite(long id, long groupId)
         {
             var query = $"groups/{groupId}/sites/{id}";
-            var response = await _gateway.Delete<string>("Security", query);
+            var response = await _gateway.DeleteSync("Security", query, String.Empty);
 
             return SuccessOrMessage(response);
         }
@@ -747,7 +747,7 @@ namespace Gateway.Web.Services
         private async Task PopulateAddInVersions(Models.Group.AddInsModel target, long groupId)
         {
             var query = $"groups/{groupId}/addins";
-            var response = await _gateway.Get<XElement>("Security", query);
+            var response = await _gateway.GetSync("Security", query, string.Empty);
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
@@ -764,7 +764,7 @@ namespace Gateway.Web.Services
         private async Task PopulateApplicationVersions(Models.Group.AddInsModel target, long groupId)
         {
             var query = $"groups/{groupId}/applications";
-            var response = await _gateway.Get<XElement>("Security", query);
+            var response = await _gateway.GetSync("Security", query, string.Empty);
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
@@ -797,7 +797,7 @@ namespace Gateway.Web.Services
         public async Task<string[]> DeleteGroupAddInVersion(long id, long groupId)
         {
             var query = $"groups/{groupId}/addins/{id}";
-            var response = await _gateway.Delete<string>("Security", query);
+            var response = await _gateway.DeleteSync("Security", query, string.Empty);
 
             return SuccessOrMessage(response);
         }
@@ -805,7 +805,7 @@ namespace Gateway.Web.Services
         public async Task<string[]> DeleteGroupApplicationVersion(long id, long groupId)
         {
             var query = $"groups/{groupId}/applications/{id}";
-            var response = await _gateway.Delete<string>("Security", query);
+            var response = await _gateway.DeleteSync("Security", query, String.Empty);
 
             return SuccessOrMessage(response);
         }
@@ -831,7 +831,7 @@ namespace Gateway.Web.Services
         public async Task<string[]> RemoveUser(long id)
         {
             var query = $"users/{id}";
-            var response = await _gateway.Delete<string>("Security", query);
+            var response = await _gateway.DeleteSync("Security", query, String.Empty);
 
             return SuccessOrMessage(response);
         }
@@ -854,7 +854,7 @@ namespace Gateway.Web.Services
         public async Task<Models.User.PortfoliosModel> GetUserPortfolios(long userId)
         {
             var query = $"users/{userId}/portfolios";
-            var response = await _gateway.Get<XElement>("Security", query);
+            var response = await _gateway.GetSync("Security", query, string.Empty);
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
@@ -873,7 +873,7 @@ namespace Gateway.Web.Services
         public async Task<string[]> RemoveUserPortfolio(long userId, long portfolioId)
         {
             var query = $"users/{userId}/portfolios/{portfolioId}";
-            var response = await _gateway.Delete<string>("Security", query);
+            var response = await _gateway.DeleteSync("Security", query, String.Empty);
 
             return SuccessOrMessage(response);
         }
@@ -889,7 +889,7 @@ namespace Gateway.Web.Services
         public async Task<Models.User.SitesModel> GetUserSites(long userId)
         {
             var query = $"users/{userId}/sites";
-            var response = await _gateway.Get<XElement>("Security", query);
+            var response = await _gateway.GetSync("Security", query, string.Empty);
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
@@ -907,7 +907,7 @@ namespace Gateway.Web.Services
         public async Task<string[]> RemoveUserSite(long userId, long siteId)
         {
             var query = string.Format("users/{0}/sites/{1}", userId, siteId);
-            var response = await _gateway.Delete<string>("Security", query);
+            var response = await _gateway.DeleteSync("Security", query, string.Empty);
 
             return SuccessOrMessage(response);
         }
@@ -915,7 +915,7 @@ namespace Gateway.Web.Services
         public async Task<string[]> InsertUserGroup(long userId, long groupId)
         {
             var query = string.Format("users/{0}/groups/{1}", userId, groupId);
-            var response = await _gateway.Put<string, string>("Security", query, string.Empty);
+            var response = await _gateway.Put<string,string>("Security", query, string.Empty);
 
             return SuccessOrMessage(response);
         }
@@ -923,7 +923,7 @@ namespace Gateway.Web.Services
         public async Task<string[]> RemoveUserGroup(long userId, long groupId)
         {
             var query = string.Format("users/{0}/groups/{1}", userId, groupId);
-            var response = await _gateway.Delete<string>("Security", query);
+            var response = await _gateway.DeleteSync("Security", query, string.Empty);
 
             return SuccessOrMessage(response);
         }
@@ -947,7 +947,7 @@ namespace Gateway.Web.Services
         private async Task PopulateAddInVersions(Models.User.AddInsModel target, long userId)
         {
             var query = string.Format("users/{0}/addins", userId);
-            var response = await _gateway.Get<XElement>("Security", query);
+            var response = await _gateway.GetSync("Security", query, string.Empty);
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
@@ -973,7 +973,7 @@ namespace Gateway.Web.Services
         private async Task PopulateApplicationVersions(Models.User.AddInsModel target, long userId)
         {
             var query = string.Format("users/{0}/applications", userId);
-            var response = await _gateway.Get<XElement>("Security", query);
+            var response = await _gateway.GetSync("Security", query, string.Empty);
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
@@ -997,7 +997,7 @@ namespace Gateway.Web.Services
         public async Task<string[]> DeleteUserAddInVersions(long userId, long addInVersionId)
         {
             var query = string.Format("users/{0}/addins/{1}", userId, addInVersionId);
-            var response = await _gateway.Delete<string>("Security", query);
+            var response = await _gateway.DeleteSync("Security", query, string.Empty);
 
             return SuccessOrMessage(response);
         }
@@ -1005,7 +1005,7 @@ namespace Gateway.Web.Services
         public async Task<string[]> DeleteUserApplicationVersions(long userId, long applicationVersionId)
         {
             var query = string.Format("users/{0}/applications/{1}", userId, applicationVersionId);
-            var response = await _gateway.Delete<string>("Security", query);
+            var response = await _gateway.DeleteSync("Security", query, string.Empty);
 
             return SuccessOrMessage(response);
         }
@@ -1029,7 +1029,7 @@ namespace Gateway.Web.Services
         public async Task<IEnumerable<BusinessFunction>> GetBusinessFunctions()
         {
             var query = "businessfunctions";
-            var response = await _gateway.Get<XElement>("security", query);
+            var response = await _gateway.GetSync("security", query, string.Empty);
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
@@ -1052,7 +1052,7 @@ namespace Gateway.Web.Services
         public async Task<string[]> DeleteBusinessFunction(int id)
         {
             var query = string.Format("businessfunctions/{0}", id);
-            var response = await _gateway.Delete<string>("security", query);
+            var response = await _gateway.DeleteSync("security", query, string.Empty);
 
             return SuccessOrMessage(response);
         }
@@ -1060,7 +1060,7 @@ namespace Gateway.Web.Services
         public async Task<IEnumerable<GroupType>> GetGroupTypes()
         {
             var query = "grouptypes";
-            var response = await _gateway.Get<XElement>("security", query);
+            var response = await _gateway.GetSync("security", query, string.Empty);
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
@@ -1083,7 +1083,7 @@ namespace Gateway.Web.Services
         public async Task<string[]> DeleteGroupType(int id)
         {
             var query = string.Format("grouptypes/{0}", id);
-            var response = await _gateway.Delete<string>("security", query);
+            var response = await _gateway.DeleteSync("security", query, string.Empty);
 
             return SuccessOrMessage(response);
         }
@@ -1256,7 +1256,7 @@ namespace Gateway.Web.Services
 
         private async Task PopulateAvailableSystems(PermissionsModel target)
         {
-            var response = await _gateway.Get<XElement>("Security", "systems");
+            var response = await _gateway.GetSync("Security", "systems", string.Empty);
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
@@ -1275,7 +1275,7 @@ namespace Gateway.Web.Services
 
         private async Task PopulateAvailablePermissions(Models.Group.PermissionsModel target)
         {
-            var response = await _gateway.Get<XElement>("Security", "permissions");
+            var response = await _gateway.GetSync("Security", "permissions", string.Empty);
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
@@ -1298,7 +1298,7 @@ namespace Gateway.Web.Services
 
         private async Task PopulateAvailableSites(SitesModel target)
         {
-            var response = await _gateway.Get<XElement>("Security", "sites");
+            var response = await _gateway.GetSync("Security", "sites", string.Empty);
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
@@ -1317,7 +1317,7 @@ namespace Gateway.Web.Services
 
         private async Task<IEnumerable<SelectListItem>> GetAvailableApplicationVersions()
         {
-            var response = await _gateway.Get<XElement>("Security", "applications/versions");
+            var response = await _gateway.GetSync("Security", "applications/versions", string.Empty);
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
@@ -1334,7 +1334,7 @@ namespace Gateway.Web.Services
 
         private async Task<IEnumerable<SelectListItem>> GetAvailableReferencedApplicationVersions()
         {
-            var response = await _gateway.Get<XElement>("Security", "applications/versions/referenced");
+            var response = await _gateway.GetSync("Security", "applications/versions/referenced", string.Empty);
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
@@ -1351,7 +1351,7 @@ namespace Gateway.Web.Services
 
         private async Task<IEnumerable<SelectListItem>> GetAvailableAddInVersions()
         {
-            var response = await _gateway.Get<XElement>("Security", "addins/versions");
+            var response = await _gateway.GetSync("Security", "addins/versions", string.Empty);
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
@@ -1369,7 +1369,7 @@ namespace Gateway.Web.Services
 
         private async Task<IEnumerable<SelectListItem>> GetAvailableReferencedAddInVersions()
         {
-            var response = await _gateway.Get<XElement>("Security", "addins/versions/referenced");
+            var response = await _gateway.GetSync("Security", "addins/versions/referenced",string.Empty);
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
@@ -1419,7 +1419,7 @@ namespace Gateway.Web.Services
 
         public async Task<List<MonikerCheckResult>> GetMonikers(string server, string query)
         {
-            var response = await _gateway.Get<XElement>("marketdata", query);
+            var response = await _gateway.GetSync("marketdata", query, string.Empty);
 
             var result = new List<MonikerCheckResult>();
 

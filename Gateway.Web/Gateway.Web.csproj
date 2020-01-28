@@ -440,6 +440,7 @@
     <Compile Include="Services\Batches\BatchCosts\BatchCostsService.cs" />
     <Compile Include="Services\Batches\BatchCosts\IBatchCostsService.cs" />
     <Compile Include="Services\BatchNameService.cs" />
+    <Compile Include="Services\GatewayEx.cs" />
     <Compile Include="Services\IBatchNameService.cs" />
     <Compile Include="Services\IUsernameService.cs" />
     <Compile Include="Database\spGetHistoryTimingForSchedule1_Result.cs">
