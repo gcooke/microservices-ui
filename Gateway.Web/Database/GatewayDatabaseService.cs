@@ -32,13 +32,12 @@ namespace Gateway.Web.Database
 
         public List<Models.Controllers.ControllerStats> GetControllerStatistics(DateTime start)
         {
-            var result = new List<Models.Controllers.ControllerStats>();
+            var result = new List<ControllerStats>();
 
             using (var database = new GatewayEntities(_connectionString))
             {
                 // Get stats
                 var stats = new ResponseStats(database.spGetResponseStatsAll(start));
-
                 foreach (var controller in database.Controllers.OrderBy(c => c.Name))
                 {
                     var activeVersion = controller?.Versions?.FirstOrDefault(x => x.StatusId == 2 && x.Alias == "Official");
@@ -54,7 +53,7 @@ namespace Gateway.Web.Database
             var previous = ' ';
             for (int index = 0; index < result.Count; index++)
             {
-                var current = result[index].Name[0];
+                var current = Char.ToUpper(result[index].Name[0]);
                 if (current != previous)
                 {
                     result.Insert(index, new ControllerStats() { Name = current.ToString(), IsSeperator = true });

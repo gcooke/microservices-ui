@@ -9,9 +9,9 @@
 @{ Html.RenderPartial("_ControllersNav"); }
 
     <script>
-    function popup(url)
+    function popup(url,controllerName)
     {
-         window.open(url, "#", "dialogHeight:600px;dialogHeight:400px;dialogWidth:700px;dialogTop:300px;dialogLeft:400px;edge:Raised;center:Yes;help:No;Resiable:No;Status:No;");
+         window.open(url, controllerName, "dialogHeight:600px;dialogHeight:400px;dialogWidth:700px;dialogTop:300px;dialogLeft:400px;edge:Raised;center:Yes;help:No;Resiable:No;Status:No;");
    }
 
     </script>
@@ -100,7 +100,7 @@
                                             </td>
                                         </tr>
                                     </table>
-                                    <a href="#" onclick="popup('/Controllers/RedisStats?ControllerName=@controller.RedisSummary.ControllerName&ControllerVersionName=@controller.RedisSummary.ControllerVersion');" style="cursor:pointer">
+                                    <a href="#"  onclick="popup('/Controllers/RedisStats?ControllerName=@controller.RedisSummary.ControllerName&ControllerVersionName=@controller.RedisSummary.ControllerVersion','@controller.RedisSummary.ControllerName');" style="cursor:pointer; color:black">
                                         <small>
 
                                             <span>Queue : <b>@controller.RedisSummary.QueueLength</b></span>
