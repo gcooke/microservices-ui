@@ -17,18 +17,18 @@ using Gateway.Web.Models.Schedule.Input;
 using Gateway.Web.Profiles;
 using Gateway.Web.Services;
 using Gateway.Web.Services.Batches;
+using Gateway.Web.Services.Batches.BatchCosts;
 using Gateway.Web.Services.Batches.Interfaces;
 using Gateway.Web.Services.Batches.Interrogation.Services.BatchService;
 using Gateway.Web.Services.Batches.Interrogation.Services.IssueService;
 using Gateway.Web.Services.Monitoring.ServerDiagnostics;
 using Gateway.Web.Services.Pdc;
+using Gateway.Web.Services.PortfolioProfile;
 using Gateway.Web.Services.Schedule;
 using Gateway.Web.Services.Schedule.Interfaces;
 using StackExchange.Redis;
 using System;
-using Gateway.Web.Services.PortfolioProfile;
 using Unity.Injection;
-using Gateway.Web.Services.Batches.BatchCosts;
 
 namespace Gateway.Web
 {
@@ -64,7 +64,7 @@ namespace Gateway.Web
             information.LoggingInformation.LogPath = information.GetSetting("LogLocation");
             information.LoggingInformation.ConsoleLogLevel = GetLogLevel(information.GetSetting("ConsoleLogLevel"));
             information.LoggingInformation.FileLogLevel = GetLogLevel(information.GetSetting("FileLogLevel"));
-            information.LoggingInformation.ImportantLogLevel = GetLogLevel( information.GetSetting("ImportantLogLevel"));
+            information.LoggingInformation.ImportantLogLevel = GetLogLevel(information.GetSetting("ImportantLogLevel"));
 
             information.RegisterType<ILogsService, LogsService>(Scope.Singleton);
 
@@ -149,6 +149,7 @@ namespace Gateway.Web
             information.RegisterType<IBatchNameService, BatchNameService>(Scope.Singleton);
 
             //Reset Services Registrations
+            information.RegisterType<IRedisService, RedisService>(Scope.ContainerSingleton);
             information.RegisterType<IGatewayService, GatewayService>(Scope.ContainerSingleton);
             information.RegisterType<IStatisticsService, StatisticsService>(Scope.ContainerSingleton);
             information.RegisterType<IBasicRestService, BasicRestService>(Scope.ContainerSingleton);
@@ -173,7 +174,7 @@ namespace Gateway.Web
                 cfg.AddProfile<ScheduleProfile>();
             });
         }
-      
+
         private static LogLevel GetLogLevel(string logLevel)
         {
             LogLevel level;

@@ -437,11 +437,16 @@
     <Compile Include="Controllers\BatchScheduleController.cs" />
     <Compile Include="Models\Batches\CostGroupBatchCost.cs" />
     <Compile Include="Models\Batches\CostGroupMonthlyBatchCost.cs" />
+    <Compile Include="Models\Redis\RedisHealth.cs" />
+    <Compile Include="Models\Redis\RedisStats.cs" />
+    <Compile Include="Models\Redis\RedisStatsViewModel.cs" />
+    <Compile Include="Models\Redis\RedisSummary.cs" />
     <Compile Include="Services\Batches\BatchCosts\BatchCostsService.cs" />
     <Compile Include="Services\Batches\BatchCosts\IBatchCostsService.cs" />
     <Compile Include="Services\BatchNameService.cs" />
     <Compile Include="Services\GatewayEx.cs" />
     <Compile Include="Services\IBatchNameService.cs" />
+    <Compile Include="Services\IRedisService.cs" />
     <Compile Include="Services\IUsernameService.cs" />
     <Compile Include="Database\spGetHistoryTimingForSchedule1_Result.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
@@ -855,6 +860,7 @@
     <Compile Include="Services\Pdc\IPdcService.cs" />
     <Compile Include="Services\Pdc\PdcClient.cs" />
     <Compile Include="Services\Pdc\PdcService.cs" />
+    <Compile Include="Services\RedisService.cs" />
     <Compile Include="Services\RiskBatchInterrogationService.cs" />
     <Compile Include="Services\Schedule\BaseScheduleService.cs" />
     <Compile Include="Services\Schedule\Interfaces\IRequestConfigurationService.cs" />
@@ -1189,6 +1195,8 @@
     <Content Include="Views\PortfolioProfile\_PortfolioProfileConfigNav.cshtml" />
     <Content Include="Views\BatchCosts\Index.cshtml" />
     <Content Include="Views\Schedule\History.cshtml" />
+    <Content Include="Views\Controllers\RedisStats.cshtml" />
+    <Content Include="Views\Shared\_PopupMonitor.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />

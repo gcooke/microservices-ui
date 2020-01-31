@@ -1,5 +1,7 @@
 ﻿using Bagl.Cib.MIT.Cube;
 using Bagl.Cib.MIT.IoC;
+using Bagl.Cib.MSF.ClientAPI.Model;
+using Bagl.Cib.MSF.Contracts.Model;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Controllers;
 using Gateway.Web.Models.Home;
@@ -7,16 +9,12 @@ using Gateway.Web.Models.Monitoring;
 using Gateway.Web.Models.Request;
 using Gateway.Web.Models.Security;
 using Gateway.Web.Models.ServerResource;
+using Gateway.Web.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
-using Bagl.Cib.MIT.Cube.Impl;
-using Bagl.Cib.MSF.ClientAPI.Model;
-using Bagl.Cib.MSF.Contracts.Converters;
-using Bagl.Cib.MSF.Contracts.Model;
 using QueueChartModel = Gateway.Web.Models.Controller.QueueChartModel;
 
 namespace Gateway.Web.Database
@@ -24,10 +22,12 @@ namespace Gateway.Web.Database
     public class GatewayDatabaseService : IGatewayDatabaseService
     {
         private readonly string _connectionString;
+        private readonly IRedisService _redisService;
 
-        public GatewayDatabaseService(ISystemInformation systemInformation)
+        public GatewayDatabaseService(ISystemInformation systemInformation, RedisService redisService)
         {
             _connectionString = systemInformation.GetConnectionString("GatewayDatabase", "Database.PnRFO_Gateway");
+            _redisService = redisService;
         }
 
         public List<Models.Controllers.ControllerStats> GetControllerStatistics(DateTime start)
@@ -41,7 +41,11 @@ namespace Gateway.Web.Database
 
                 foreach (var controller in database.Controllers.OrderBy(c => c.Name))
                 {
+                    var activeVersion = controller?.Versions?.FirstOrDefault(x => x.StatusId == 2 && x.Alias == "Official");
+
+                    var redisSummary = _redisService.GetRedisSummary(controller.Name.ToLower(), activeVersion?.Version1);
                     var model = controller.ToModel(stats);
+                    model.RedisSummary = redisSummary;
                     result.Add(model);
                 }
             }
@@ -282,12 +286,16 @@ namespace Gateway.Web.Database
             {
                 case "GET":
                     return new Get(model.Controller, model.Version);
+
                 case "PUT":
                     return new Put(model.Controller, model.Version);
+
                 case "POST":
                     return new Post(model.Controller, model.Version);
+
                 case "DELETE":
                     return new Delete(model.Controller, model.Version);
+
                 default:
                     throw new InvalidOperationException("Unknown request type " + model.RequestType);
             }
