@@ -100,7 +100,7 @@
                                             </td>
                                         </tr>
                                     </table>
-                                    <a href="#"  onclick="popup('/Controllers/RedisStats?ControllerName=@controller.RedisSummary.ControllerName&ControllerVersionName=@controller.RedisSummary.ControllerVersion','@controller.RedisSummary.ControllerName');" style="cursor:pointer; color:black">
+                                    <a href="#"  onclick="popup('@Request.Url.GetLeftPart(UriPartial.Authority)/Controllers/RedisStats?ControllerName=@controller.RedisSummary.ControllerName&ControllerVersionName=@controller.RedisSummary.ControllerVersion','@controller.RedisSummary.ControllerName');" style="cursor:pointer; color:black">
                                         <small>
 
                                             <span>Queue : <b>@controller.RedisSummary.QueueLength</b></span>
