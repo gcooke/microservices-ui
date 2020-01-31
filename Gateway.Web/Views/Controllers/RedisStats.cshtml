@@ -1,0 +1,72 @@
+﻿@using System.Xml.Schema
+@using Gateway.Web.Models.Redis
+@model Gateway.Web.Models.Redis.RedisStatsViewModel
+@{
+    Layout = "~/Views/Shared/_PopupMonitor.cshtml";
+     ViewBag.Title = "Controller Redis Stats";
+    ViewBag.Current = "Dashboard";
+}
+
+<script type="text/JavaScript">
+    $(document).ready(function () { 
+        
+    setupTable();
+    });
+
+    function setupTable() { 
+        
+        var controllerName = $("#ControllerName").val();
+        var controllerVersion = $("#ControllerVersion").val();
+        var request = $.get("Stats?ControllerName=" + controllerName + "&ControllerVersion="+ controllerVersion , function (data) {
+            requests.pop();
+            updateView(data);
+            setTimeout(function () { setupTable() }, 1000);
+        });
+    }
+
+    function updateView(data)
+    {
+     
+        var list = JSON.parse(data);
+        var table = "<thead><tr><td>Priority</td><td>Queue</td><td>Total Workers</td><td>Idle Workers</td><td>Busy Workers</td></tr></thead>";
+         $.each(list,
+             function (index, value) {
+                 table = table + "<tr class=" + value.RedisHealthDisplay + ">";
+                 table = table + "<td>" + value.Priority + "</td>" 
+                 table = table + "<td>" + value.QueueLength + "</td>" 
+                 table = table + "<td>" + value.Workers + "</td>" 
+                 table = table + "<td>" + value.WorkersIdle + "</td>" 
+                 table = table + "<td>" + value.WorkersBusy + "</td>" 
+                 table = table + "</tr>" 
+        });
+
+         $("#stats").html(table);
+    }
+
+</script>
+    
+<style>
+    .Critical {
+        border-color: red;
+        background-color: lightcoral;
+        border-style: solid;
+        border-width: 1px 1px 1px 1px;
+    }
+
+    .Warning {
+        border-color: orange;
+        background-color: lightsalmon;
+        border-style: solid;
+        border-width: 1px 1px 1px 1px;
+    }
+</style>
+
+<h3>@Model.ControllerName &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v @Model.ControllerVersion</h3>
+<input type="hidden" id="ControllerName" value="@Model.ControllerName" />
+<input type="hidden" id="ControllerVersion" value="@Model.ControllerVersion" />
+<div id="page-content-wrapper" onload="setupTable()">
+    <table white-space: nowrap"   id="stats" class="datatable table">
+ 
+    </table>
+</div>
+

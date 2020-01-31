@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Gateway.Web.Models.Redis;
+using System.Collections.Generic;
 
 namespace Gateway.Web.Models.Controllers
 {
@@ -7,8 +8,10 @@ namespace Gateway.Web.Models.Controllers
         public ControllerStats()
         {
             VersionSummary = new List<InfoItem>();
+            RedisSummary = new RedisSummary();
         }
 
+        public RedisSummary RedisSummary { get; set; }
         public string Name { get; set; }
         public int TotalCalls { get; set; }
         public int TotalErrors { get; set; }
@@ -28,5 +31,5 @@ namespace Gateway.Web.Models.Controllers
 
         public string Key { get; set; }
         public string Value { get; set; }
-    }    
+    }
 }

@@ -8,6 +8,31 @@
 }
 @{ Html.RenderPartial("_ControllersNav"); }
 
+    <script>
+    function popup(url,controllerName)
+    {
+         window.open(url, controllerName, "dialogHeight:600px;dialogHeight:400px;dialogWidth:700px;dialogTop:300px;dialogLeft:400px;edge:Raised;center:Yes;help:No;Resiable:No;Status:No;");
+   }
+
+    </script>
+
+    <style>
+        .Critical {
+            border-color: red;
+            background-color: lightcoral;
+            border-style: solid;
+            border-width: 1px 1px 1px 1px;
+        }
+
+        .Warning {
+            border-color: orange;
+            background-color: lightsalmon;
+            border-style: solid;
+            border-width: 1px 1px 1px 1px;
+        }
+
+    </style>
+
 <div id="page-content-wrapper">
     <div class="hero-unit">
 
@@ -61,9 +86,9 @@
                 }
                 else
                 {
-                    <a href="~/Controller/Dashboard/@controller.Name">
-                        <div class="widget" title="@controller.Name">
-                            <div class="content">
+                    <a href="~/Controller/Dashboard/@controller.Name"  >
+                        <div class="widget @controller.RedisSummary.RedisHealth" title="@controller.Name" >
+                            <div class="content" >
                                 <div class="list-head clearfix" style="color:black">
                                     <table>
                                         <tr>
@@ -75,12 +100,22 @@
                                             </td>
                                         </tr>
                                     </table>
-                                    <small>
-                                        @foreach (var item in controller.VersionSummary)
-                                        {
-                                        <span>@item.Key: <b>@item.Value</b></span>
-                                        }
-                                    </small>
+                                    <a href="#"  onclick="popup('/Controllers/RedisStats?ControllerName=@controller.RedisSummary.ControllerName&ControllerVersionName=@controller.RedisSummary.ControllerVersion','@controller.RedisSummary.ControllerName');" style="cursor:pointer; color:black">
+                                        <small>
+
+                                            <span>Queue : <b>@controller.RedisSummary.QueueLength</b></span>
+                                            <span>Workers : <b>@controller.RedisSummary.Workers</b></span>
+                                            <span>Health <b>@controller.RedisSummary.RedisHealth</b></span>
+
+                                        </small>
+                                        <br />
+                                        <small>
+
+                                            <span>Idle Workers <b>@controller.RedisSummary.WorkersIdle</b></span>
+                                            <span>Busy Workers <b>@controller.RedisSummary.WorkersBusy</b></span>
+
+                                        </small>
+                                    </a>
                                     <br />
                                     <br />
                                     <div style="float: left;">
@@ -96,12 +131,6 @@
                                                     <span class="glyphicon glyphicon-thumbs-down" style="color: red"></span>&nbsp;&nbsp;Errors
                                                 </td>
                                                 <td>@controller.TotalErrors</td>
-                                            </tr>
-                                            <tr>
-                                                <td style="width: 150px">
-                                                    <span class="glyphicon glyphicon-resize-full" style="color: gray"></span>&nbsp;&nbsp;Bandwidth
-                                                </td>
-                                                <td>...</td>
                                             </tr>
                                             <tr>
                                                 <td style="width: 150px">

@@ -1,20 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Web.Http.Results;
-using System.Web.Mvc;
-using System.Xml.Linq;
-using Bagl.Cib.MIT.IoC;
+﻿using Bagl.Cib.MIT.IoC;
 using Bagl.Cib.MIT.Logging;
 using Bagl.Cib.MSF.ClientAPI.Gateway;
 using Gateway.Web.Authorization;
 using Gateway.Web.Database;
 using Gateway.Web.Models.AddIn;
 using Gateway.Web.Models.Controller;
+using Gateway.Web.Models.Redis;
 using Gateway.Web.Services;
 using Gateway.Web.Utils;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Web.Mvc;
+using System.Xml.Linq;
 using DashboardModel = Gateway.Web.Models.Controllers.DashboardModel;
 using HistoryModel = Gateway.Web.Models.Controllers.HistoryModel;
 using QueuesModel = Gateway.Web.Models.Controllers.QueuesModel;
@@ -32,6 +33,7 @@ namespace Gateway.Web.Controllers
         private readonly IUsernameService _usernameService;
         private readonly IBasicRestService _basicRestService;
         private readonly int _refreshPeriodInSeconds;
+        private readonly IRedisService _redisService;
 
         public ControllersController(
             ISystemInformation information,
@@ -41,7 +43,8 @@ namespace Gateway.Web.Controllers
             ILoggingService loggingService,
             IBatchNameService batchNameService,
             IUsernameService usernameService,
-            IBasicRestService basicRestService
+            IBasicRestService basicRestService,
+            IRedisService redisService
             )
             : base(loggingService)
         {
@@ -51,6 +54,7 @@ namespace Gateway.Web.Controllers
             _batchNameService = batchNameService;
             _usernameService = usernameService;
             _basicRestService = basicRestService;
+            _redisService = redisService;
 
             var refreshPeriodInSeconds = information.GetSetting("ControllerActionRefresh");
             if (!int.TryParse(refreshPeriodInSeconds, out _refreshPeriodInSeconds))
@@ -66,6 +70,27 @@ namespace Gateway.Web.Controllers
             var model = new DashboardModel();
             model.Controllers.AddRange(controllers.OrderBy(c => c.Name));
             return View(model);
+        }
+
+        public ActionResult RedisStats()
+        {
+            var model = new RedisStatsViewModel()
+            {
+                ControllerName = Request.QueryString["ControllerName"],
+                ControllerVersion = Request.QueryString["ControllerVersionName"]
+            };
+
+            return View(model);
+        }
+
+        public string Stats()
+        {
+            var controllerName = Request.QueryString["ControllerName"];
+            var controllerVersion = Request.QueryString["ControllerVersion"];
+
+            var stats = _redisService.GetRedisStats(controllerName, controllerVersion);
+
+            return JsonConvert.SerializeObject(stats.ToList());
         }
 
         public async Task<ActionResult> Servers()
@@ -210,7 +235,6 @@ namespace Gateway.Web.Controllers
             return RedirectToAction("Workers");
         }
 
-
         [RoleBasedAuthorize(Roles = "Security.Delete")]
         public async Task<ActionResult> ShutdownWorkers(string controllername)
         {
@@ -245,7 +269,7 @@ namespace Gateway.Web.Controllers
             var data = controllers != null && controllers.Any()
                 ? _dataService.GetQueueChartModel(start, controllers.ToList())
                 : _dataService.GetQueueChartModel(start);
-            
+
             return Json(data.Data, JsonRequestBehavior.AllowGet);
         }
 
@@ -259,7 +283,5 @@ namespace Gateway.Web.Controllers
 
             return Json(data, JsonRequestBehavior.AllowGet);
         }
-
-
     }
 }
