@@ -42,7 +42,7 @@ namespace Gateway.Web.Database
                 {
                     var activeVersion = controller?.Versions?.FirstOrDefault(x => x.StatusId == 2 && x.Alias == "Official");
 
-                    var redisSummary = _redisService.GetRedisSummary(controller.Name.ToLower(), activeVersion?.Version1);
+                    var redisSummary = _redisService.GetRedisSummary(controller.Name.ToLower(), activeVersion?.Version1, controller.MaxPriority);
                     var model = controller.ToModel(stats);
                     model.RedisSummary = redisSummary;
                     result.Add(model);

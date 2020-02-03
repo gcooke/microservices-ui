@@ -9,9 +9,12 @@
 @{ Html.RenderPartial("_ControllersNav"); }
 
     <script>
-    function popup(url,controllerName)
+    function popup(url,controllerName,maxPriority)
     {
-         window.open(url, controllerName, "dialogHeight:600px;dialogHeight:400px;dialogWidth:700px;dialogTop:300px;dialogLeft:400px;edge:Raised;center:Yes;help:No;Resiable:No;Status:No;");
+         myWindow = window.open(url, controllerName, "dialogHeight:600px;dialogHeight:400px;dialogWidth:200px;dialogTop:300px;dialogLeft:200px;edge:Raised;center:Yes;help:No;Resiable:No;Status:No;");
+        // Resizes the new window
+        myWindow.resizeTo(550, 220 + (maxPriority * 38));                             
+        myWindow.focus();     
    }
 
     </script>
@@ -100,7 +103,7 @@
                                             </td>
                                         </tr>
                                     </table>
-                                    <a href="#"  onclick="popup('@Url.Content("~/Controllers/RedisStats")?ControllerName=@controller.RedisSummary.ControllerName&ControllerVersionName=@controller.RedisSummary.ControllerVersion','@controller.RedisSummary.ControllerName');" style="cursor:pointer; color:black">
+                                    <a href="#"  onclick="popup('@Url.Content("~/Controllers/RedisStats")?ControllerName=@controller.RedisSummary.ControllerName&ControllerVersionName=@controller.RedisSummary.ControllerVersion&MaxPriority=@controller.RedisSummary.MaxPriority','@controller.RedisSummary.ControllerName',@controller.RedisSummary.MaxPriority);" style="cursor:pointer; color:black">
                                         <small>
 
                                             <span>Queue : <b>@controller.RedisSummary.QueueLength</b></span>

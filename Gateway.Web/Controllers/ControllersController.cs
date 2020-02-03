@@ -77,7 +77,8 @@ namespace Gateway.Web.Controllers
             var model = new RedisStatsViewModel()
             {
                 ControllerName = Request.QueryString["ControllerName"],
-                ControllerVersion = Request.QueryString["ControllerVersionName"]
+                ControllerVersion = Request.QueryString["ControllerVersionName"],
+                MaxPriority  = int.Parse( Request.QueryString["MaxPriority"])
             };
 
             return View(model);
@@ -87,8 +88,9 @@ namespace Gateway.Web.Controllers
         {
             var controllerName = Request.QueryString["ControllerName"];
             var controllerVersion = Request.QueryString["ControllerVersion"];
+            var maxPriority = Request.QueryString["MaxPriority"];
 
-            var stats = _redisService.GetRedisStats(controllerName, controllerVersion);
+            var stats = _redisService.GetRedisStats(controllerName, controllerVersion, int.Parse(maxPriority));
 
             return JsonConvert.SerializeObject(stats.ToList());
         }

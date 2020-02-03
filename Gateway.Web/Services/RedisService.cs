@@ -23,7 +23,7 @@ namespace Gateway.Web.Services
             _redisPassword = _redisConnectionProvider?.Options?.RedisOptions.Password;
         }
 
-        public IList<RedisStats> GetRedisStats(string controllerName, string controlerversion)
+        public IList<RedisStats> GetRedisStats(string controllerName, string controlerversion, int maxPriority)
         {
             var stats = new List<RedisStats>();
 
@@ -34,7 +34,7 @@ namespace Gateway.Web.Services
                 var db = redis.GetDatabase(0);
                 var servers = db.HashGetAll("{Services}:ControllerService");
 
-                for (int i = 0; i < 16; i++)
+                for (int i = 0; i < maxPriority + 1; i++)
                 {
                     var stat = new RedisStats();
                     var key = "{" + controllerName + "/" + controlerversion + "/" + i + "}";
@@ -59,15 +59,13 @@ namespace Gateway.Web.Services
 
                 return stats;
             }
-            catch (Exception ex)
+            catch
             {
                 throw;
             }
-
-            return stats;
         }
 
-        public RedisSummary GetRedisSummary(string controllerName, string controlerversion)
+        public RedisSummary GetRedisSummary(string controllerName, string controlerversion, int maxPriority)
         {
             var totalActiveWorkers = 0;
             var totalQueueLength = 0;
@@ -82,7 +80,7 @@ namespace Gateway.Web.Services
 
                 var health = RedisHealth.Stable;
 
-                for (int i = 0; i < 16; i++)
+                for (int i = 0; i < maxPriority + 1; i++)
                 {
                     var key = "{" + controllerName + "/" + controlerversion + "/" + i + "}";
 
@@ -107,7 +105,8 @@ namespace Gateway.Web.Services
                     QueueLength = totalQueueLength,
                     RedisHealth = health,
                     WorkersIdle = totalIdleWorkers,
-                    Workers = totalActiveWorkers
+                    Workers = totalActiveWorkers,
+                    MaxPriority = maxPriority
                 };
 
                 return summary;

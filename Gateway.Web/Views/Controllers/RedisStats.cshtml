@@ -7,6 +7,12 @@
     ViewBag.Current = "Dashboard";
 }
 
+<style>
+    body {
+        width:350px;
+    }
+</style>
+
 <script type="text/JavaScript">
     $(document).ready(function () { 
         
@@ -17,7 +23,8 @@
         
         var controllerName = $("#ControllerName").val();
         var controllerVersion = $("#ControllerVersion").val();
-        var request = $.get("Stats?ControllerName=" + controllerName + "&ControllerVersion="+ controllerVersion , function (data) {
+        var maxPriority = $("#MaxPriority").val();
+        var request = $.get("Stats?ControllerName=" + controllerName + "&ControllerVersion="+ controllerVersion + "&MaxPriority=" +maxPriority, function (data) {
             requests.pop();
             updateView(data);
             setTimeout(function () { setupTable() }, 1000);
@@ -64,8 +71,9 @@
 <h3>@Model.ControllerName &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v @Model.ControllerVersion</h3>
 <input type="hidden" id="ControllerName" value="@Model.ControllerName" />
 <input type="hidden" id="ControllerVersion" value="@Model.ControllerVersion" />
-<div id="page-content-wrapper" onload="setupTable()">
-    <table white-space: nowrap"   id="stats" class="datatable table">
+<input type="hidden" id="MaxPriority" value="@Model.MaxPriority" />
+<div class="page-content-wrapper" onload="setupTable()">
+    <table style="white-space: nowrap;width:300px"   id="stats" class="datatable table">
  
     </table>
 </div>
