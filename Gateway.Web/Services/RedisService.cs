@@ -1,4 +1,5 @@
 ﻿using Bagl.Cib.MIT.IoC;
+using Bagl.Cib.MIT.Redis;
 using Gateway.Web.Models.Redis;
 using StackExchange.Redis;
 using System;
@@ -12,12 +13,14 @@ namespace Gateway.Web.Services
         public readonly string _redisPassword;
         public readonly string _redisServer;
         private readonly ISystemInformation _information;
+        private readonly IRedisConnectionProvider _redisConnectionProvider;
 
-        public RedisService(ISystemInformation information)
+        public RedisService(ISystemInformation information, IRedisConnectionProvider redisConnectionProvider)
         {
             _information = information;
+            _redisConnectionProvider = redisConnectionProvider;
             _redisServer = _information.GetSetting("RedisConnection");
-            _redisPassword = _information.GetSetting("RedisPassword");
+            _redisPassword = _redisConnectionProvider?.Options?.RedisOptions.Password;
         }
 
         public IList<RedisStats> GetRedisStats(string controllerName, string controlerversion)
