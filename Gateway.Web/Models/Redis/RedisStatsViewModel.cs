@@ -6,6 +6,8 @@ namespace Gateway.Web.Models.Redis
     {
         public string ControllerName { get; set; }
         public string ControllerVersion { get; set; }
+
+        public int MaxPriority { get; set; }
         public List<RedisStats> RedisStats { get; set; }
     }
 }

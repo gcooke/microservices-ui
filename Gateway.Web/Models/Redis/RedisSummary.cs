@@ -7,6 +7,7 @@
         public int WorkersBusy { get { return Workers - WorkersIdle; } }
         public string ControllerName { get; set; }
         public string ControllerVersion { get; set; }
+        public int MaxPriority { get; set; }
         public long QueueLength { get; set; }
         public RedisHealth RedisHealth { get; set; }
         public string Message { get; set; }
