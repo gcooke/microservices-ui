@@ -78,7 +78,7 @@ namespace Gateway.Web.Controllers
             {
                 ControllerName = Request.QueryString["ControllerName"],
                 ControllerVersion = Request.QueryString["ControllerVersionName"],
-                MaxPriority  = int.Parse( Request.QueryString["MaxPriority"])
+                MaxPriority = int.Parse(Request.QueryString["MaxPriority"])
             };
 
             return View(model);
