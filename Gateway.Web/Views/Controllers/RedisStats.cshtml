@@ -32,7 +32,8 @@
                 });
             }
             catch (e)
-            {                
+            {
+                
                 $("#tickerError").html(" ..error refreshing data.");    
                 setupTable();
             }
@@ -46,14 +47,22 @@
                 var table = "<thead><tr><td>Priority</td><td>Queue</td><td>Total Workers</td><td>Idle Workers</td><td>Busy Workers</td></tr></thead>";
 
                 $.each(list,
-                function (index, value) {
-                    table = table + "<tr class=" + value.RedisHealthDisplay + ">";
-                    table = table + "<td>" + value.Priority + "</td>"
-                    table = table + "<td>" + value.QueueLength + "</td>"
-                    table = table + "<td>" + value.Workers + "</td>"
-                    table = table + "<td>" + value.WorkersIdle + "</td>"
-                    table = table + "<td>" + value.WorkersBusy + "</td>"
-                    table = table + "</tr>"
+                    function (index, value) {
+                        var backgroundColor = "";
+                        if (value.RedisHealthDisplay == "Critical") {
+                            backgroundColor = "style='background-color: lightcoral'"
+                        }
+                        else if (value.RedisHealthDisplay == "Warning")
+                        {
+                            backgroundColor = "style='background-color: lightsalmon'"
+                        }
+                        table = table + "<tr " + backgroundColor + ">";
+                        table = table + "<td>" + value.Priority + "</td>"
+                        table = table + "<td>" + value.QueueLength + "</td>"
+                        table = table + "<td>" + value.Workers + "</td>"
+                        table = table + "<td>" + value.WorkersIdle + "</td>"
+                        table = table + "<td>" + value.WorkersBusy + "</td>"
+                        table = table + "</tr>"
                 });
 
                 $("#stats").html(table);
@@ -65,22 +74,7 @@
     }
 
 </script>
-    
-<style>
-    .Critical {
-        border-color: red;
-        background-color: lightcoral;
-        border-style: solid;
-        border-width: 1px 1px 1px 1px;
-    }
-
-    .Warning {
-        border-color: orange;
-        background-color: lightsalmon;
-        border-style: solid;
-        border-width: 1px 1px 1px 1px;
-    }
-</style>
+  
 
 <h3>@Model.ControllerName &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v @Model.ControllerVersion</h3>
 <div class="row">
