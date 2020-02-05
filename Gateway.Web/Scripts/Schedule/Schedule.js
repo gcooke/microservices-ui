@@ -95,10 +95,10 @@ function pollResults() {
         return;
 
     var businessDate = $("#businessDate").data("date");
+    setTimeout(function () { pollResults() }, 10000);
     var request = $.get("Schedule/Status?includeDailySummaries=true&businessDate=" + businessDate, function (data) {
         requests.pop();
-        updateView(data);
-        setTimeout(function () { pollResults() }, 10000);
+        updateView(data);        
     });
 
     requests.push(request);
