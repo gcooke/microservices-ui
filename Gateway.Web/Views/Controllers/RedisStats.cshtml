@@ -14,40 +14,55 @@
 </style>
 
 <script type="text/JavaScript">
-    $(document).ready(function () { 
-        
-    setupTable();
+    $(document).ready(function () {         
+        setupTable();
     });
 
     function setupTable() { 
-        
-        var controllerName = $("#ControllerName").val();
-        var controllerVersion = $("#ControllerVersion").val();
-        var maxPriority = $("#MaxPriority").val();
-        var request = $.get("Stats?ControllerName=" + controllerName + "&ControllerVersion="+ controllerVersion + "&MaxPriority=" +maxPriority, function (data) {
-            requests.pop();
-            updateView(data);
-            setTimeout(function () { setupTable() }, 1000);
-        });
+        try {
+                $("#tickerError").html("");    
+                var controllerName = $("#ControllerName").val();
+                var controllerVersion = $("#ControllerVersion").val();
+                var maxPriority = $("#MaxPriority").val();
+                setTimeout(function () { setupTable() }, 1000);
+                var request = $.get("Stats?ControllerName=" + controllerName + "&ControllerVersion=" + controllerVersion + "&MaxPriority=" + maxPriority, function (data) {
+                 
+                updateView(data);
+                    
+                });
+            }
+            catch (e)
+            {
+                alert("vok jou");
+                $("#tickerError").html(" ..error refreshing data.");    
+                setupTable();
+            }
     }
 
     function updateView(data)
     {
-     
-        var list = JSON.parse(data);
-        var table = "<thead><tr><td>Priority</td><td>Queue</td><td>Total Workers</td><td>Idle Workers</td><td>Busy Workers</td></tr></thead>";
-         $.each(list,
-             function (index, value) {
-                 table = table + "<tr class=" + value.RedisHealthDisplay + ">";
-                 table = table + "<td>" + value.Priority + "</td>" 
-                 table = table + "<td>" + value.QueueLength + "</td>" 
-                 table = table + "<td>" + value.Workers + "</td>" 
-                 table = table + "<td>" + value.WorkersIdle + "</td>" 
-                 table = table + "<td>" + value.WorkersBusy + "</td>" 
-                 table = table + "</tr>" 
-        });
+        try {
+                $("#tickerError").html("");    
+                var list = JSON.parse(data);
+                var table = "<thead><tr><td>Priority</td><td>Queue</td><td>Total Workers</td><td>Idle Workers</td><td>Busy Workers</td></tr></thead>";
 
-         $("#stats").html(table);
+                $.each(list,
+                function (index, value) {
+                    table = table + "<tr class=" + value.RedisHealthDisplay + ">";
+                    table = table + "<td>" + value.Priority + "</td>"
+                    table = table + "<td>" + value.QueueLength + "</td>"
+                    table = table + "<td>" + value.Workers + "</td>"
+                    table = table + "<td>" + value.WorkersIdle + "</td>"
+                    table = table + "<td>" + value.WorkersBusy + "</td>"
+                    table = table + "</tr>"
+                });
+
+                $("#stats").html(table);
+                var tic = $("#ticker").html();
+                tic = Number(tic) + 1
+                $("#ticker").html(tic);
+            }
+            catch (e) { alert("vok jou"); $("#tickerError").html(" ..error refreshing data.");     }
     }
 
 </script>
@@ -69,12 +84,17 @@
 </style>
 
 <h3>@Model.ControllerName &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v @Model.ControllerVersion</h3>
-<input type="hidden" id="ControllerName" value="@Model.ControllerName" />
-<input type="hidden" id="ControllerVersion" value="@Model.ControllerVersion" />
-<input type="hidden" id="MaxPriority" value="@Model.MaxPriority" />
-<div class="page-content-wrapper" onload="setupTable()">
-    <table style="white-space: nowrap;width:300px"   id="stats" class="datatable table">
- 
-    </table>
+<div class="row">
+    <div class="col-sm-11" style=" display: inline-block;">Ticker :</div>
+    <div class="col-sm-1" style=" display: inline-block;" id="ticker">1</div>
+    <div class="col-sm-1" style=" display: inline-block;color:red" id="tickerError"></div>
 </div>
+<div class="page-content-wrapper" onload="setupTable()">
+    <table style="white-space: nowrap;width:300px" id="stats" class="datatable table">
+    </table>
+    <input type="hidden" id="ControllerName" value="@Model.ControllerName" />
+    <input type="hidden" id="ControllerVersion" value="@Model.ControllerVersion" />
+    <input type="hidden" id="MaxPriority" value="@Model.MaxPriority" />
+</div>
+
 

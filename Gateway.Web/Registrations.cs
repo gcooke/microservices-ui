@@ -69,7 +69,7 @@ namespace Gateway.Web
             information.RegisterType<ILogsService, LogsService>(Scope.Singleton);
 
             //Register Redis
-            information.RegisterType<ConfigurationOptions>(Scope.Singleton, new InjectionFactory(
+            information.RegisterType<ConfigurationOptions>(Scope.ContainerSingleton, new InjectionFactory(
                 e =>
                 {
                     var redisConnectionStr = information.GetSetting("RedisConnection");
@@ -101,14 +101,14 @@ namespace Gateway.Web
                     return redisOptions;
                 }));
 
-            information.RegisterType<IRedisConnectionProvider>(Scope.Singleton, new InjectionFactory(
+            information.RegisterType<IRedisConnectionProvider>(Scope.ContainerSingleton, new InjectionFactory(
                 e =>
                 {
                     var config = (RedisConfiguration)e.Resolve(typeof(RedisConfiguration), null, null);
                     return new RedisConnectionProvider(config);
                 }));
 
-            information.RegisterType<RedisConfiguration>(Scope.Singleton, new InjectionFactory(
+            information.RegisterType<RedisConfiguration>(Scope.ContainerSingleton, new InjectionFactory(
                 e =>
                 {
                     var redisconfig = (ConfigurationOptions)e.Resolve(typeof(ConfigurationOptions), null, null);
@@ -120,12 +120,12 @@ namespace Gateway.Web
                     };
                 }));
 
-            information.RegisterType<ISerializer, JsonSerializer>(Scope.Singleton);
+            information.RegisterType<ISerializer, JsonSerializer>(Scope.ContainerSingleton);
 
-            information.RegisterType<IRedisCache, RedisCache>(Scope.Singleton);
+            information.RegisterType<IRedisCache, RedisCache>(Scope.ContainerSingleton);
 
-            information.RegisterType<IPnRFoDatabaseService, PnRfoDatabaseService>(Scope.Singleton);
-            information.RegisterType<IGatewayDatabaseService, GatewayDatabaseService>(Scope.Singleton);
+            information.RegisterType<IPnRFoDatabaseService, PnRfoDatabaseService>(Scope.ContainerSingleton);
+            information.RegisterType<IGatewayDatabaseService, GatewayDatabaseService>(Scope.ContainerSingleton);
 
             information.RegisterType<IDifferentialArchiveService, DifferentialArchiveService>(Scope.Singleton);
             information.RegisterType<IDifferentialDownloadService, DifferentialDownloadService>(Scope.Singleton);
