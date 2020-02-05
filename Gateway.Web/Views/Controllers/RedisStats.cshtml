@@ -32,8 +32,7 @@
                 });
             }
             catch (e)
-            {
-                alert("vok jou");
+            {                
                 $("#tickerError").html(" ..error refreshing data.");    
                 setupTable();
             }
@@ -62,7 +61,7 @@
                 tic = Number(tic) + 1
                 $("#ticker").html(tic);
             }
-            catch (e) { alert("vok jou"); $("#tickerError").html(" ..error refreshing data.");     }
+            catch (e) { $("#tickerError").html(" ..error refreshing data.");     }
     }
 
 </script>
