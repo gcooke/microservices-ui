@@ -104,13 +104,17 @@ namespace Gateway.Web.Database
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetQueueCountsAll_Result>("spGetQueueCountsAll", startParameter);
         }
     
-        public virtual ObjectResult<spGetResponseStatsAll_Result> spGetResponseStatsAll(Nullable<System.DateTime> start)
+        public virtual ObjectResult<spGetResponseStatsAll_Result> spGetResponseStatsAll(Nullable<System.DateTime> start, string controllerName)
         {
             var startParameter = start.HasValue ?
                 new ObjectParameter("Start", start) :
                 new ObjectParameter("Start", typeof(System.DateTime));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetResponseStatsAll_Result>("spGetResponseStatsAll", startParameter);
+
+            var controllerNameParameter = !string.IsNullOrWhiteSpace(controllerName) ?
+                new ObjectParameter("ControllerName", controllerName) :
+                new ObjectParameter("ControllerName", typeof(string));
+
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetResponseStatsAll_Result>("spGetResponseStatsAll", startParameter, controllerNameParameter);
         }
     
         public virtual ObjectResult<spGetPayloads_Result> spGetPayloads(Nullable<System.Guid> correlationId)
