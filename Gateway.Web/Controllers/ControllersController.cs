@@ -66,7 +66,7 @@ namespace Gateway.Web.Controllers
         public ActionResult Dashboard()
         {
             var start = DateTime.Today.AddDays(-1);
-            var controllers = _dataService.GetControllerStatistics(start);
+            var controllers = _dataService.GetControllerStatistics(start, string.Empty);
             var model = new DashboardModel();
             model.Controllers.AddRange(controllers.OrderBy(c => c.Name));
             return View(model);

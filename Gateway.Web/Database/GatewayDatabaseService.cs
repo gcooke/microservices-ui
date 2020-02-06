@@ -30,14 +30,14 @@ namespace Gateway.Web.Database
             _redisService = redisService;
         }
 
-        public List<Models.Controllers.ControllerStats> GetControllerStatistics(DateTime start)
+        public List<Models.Controllers.ControllerStats> GetControllerStatistics(DateTime start, string controllerName)
         {
             var result = new List<ControllerStats>();
 
             using (var database = new GatewayEntities(_connectionString))
             {
                 // Get stats
-                var stats = new ResponseStats(database.spGetResponseStatsAll(start));
+                var stats = new ResponseStats(database.spGetResponseStatsAll(start, controllerName));
                 foreach (var controller in database.Controllers.OrderBy(c => c.Name))
                 {
                     var activeVersion = controller?.Versions?.FirstOrDefault(x => x.StatusId == 2 && x.Alias == "Official");
@@ -132,11 +132,11 @@ namespace Gateway.Web.Database
             return result;
         }
 
-        public ResponseStats GetResponseStats(DateTime start)
+        public ResponseStats GetResponseStats(DateTime start, string contollerName)
         {
             using (var database = new GatewayEntities(_connectionString))
             {
-                return new ResponseStats(database.spGetResponseStatsAll(start));
+                return new ResponseStats(database.spGetResponseStatsAll(start, contollerName));
             }
         }
 

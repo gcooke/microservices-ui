@@ -43,7 +43,7 @@ namespace Gateway.Web.Controllers
 
         public ActionResult Dashboard(string id)
         {
-            var stats = _dataService.GetResponseStats(DateTime.Today.AddDays(-7));
+            var stats = _dataService.GetResponseStats(DateTime.Today.AddDays(-7), id);
             var model = new DashboardModel(id);
             model.TotalCalls = stats.GetTotalCalls(id);
             model.TotalErrors = stats.GetTotalErrors(id);
