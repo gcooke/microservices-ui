@@ -22,6 +22,8 @@ namespace Gateway.Web.Services
         private readonly IFileService _fileService;
         private readonly RedisList _gatewaysList;
         private Summary _summary;
+        private readonly string _azureKey = "SIGMA";
+        private readonly string _azureDomain = "AZSTN1.CLOUDAPP.AZ.DSARENA.COM";
 
         public LogsService(ILoggingService loggingService,
                            IGatewayDatabaseService database,
@@ -308,7 +310,8 @@ namespace Gateway.Web.Services
                 var pid = message.Substring(0, index);
                 message = message.Substring(index + 4);
                 var server = message;
-
+                if (server.Contains(_azureKey))
+                    server = $"{server}.{_azureDomain}";
                 yield return new LogLocation(server, _summary.Controller, pid);
             }
         }
