@@ -7,7 +7,7 @@
             @Html.HiddenFor(m => m.ControllerId)
         </div>
         <div class="row" hidden="@Model.IsUpdate">
-            <div class="col-md-3">
+            <div class="col-md-3" style="margin-top: 10px">
                 @Html.LabelFor(m => m.Name, new { @class = "control-label" })
             </div>
             <div class="col-md-4">
@@ -19,7 +19,7 @@
             </div>
         </div>
         <div class="row" hidden="@Model.IsUpdate">
-            <div class="col-md-3">
+            <div class="col-md-3" style="margin-top: 10px">
                 @Html.LabelFor(m => m.Configuration, new { @class = "control-label" })
             </div>
             <div class="col-md-4">
@@ -32,7 +32,7 @@
         </div>
 
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-3" style="margin-top: 10px">
                 @Html.LabelFor(m => m.TimeToLiveSec, new { @class = "control-label" })
             </div>
             <div class="col-md-3">
@@ -55,7 +55,7 @@
         </div>
 
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-3" style="margin-top: 10px">
                 @Html.LabelFor(m => m.TimeoutMilliSec, new { @class = "control-label" })
             </div>
             <div class="col-md-3">
@@ -77,7 +77,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-3" style="margin-top: 10px">
                 @Html.LabelFor(m => m.ScalingStrategyId, new { @class = "control-label" })
             </div>
             <div class="col-md-4">
@@ -86,6 +86,15 @@
         </div>
         <div class="row">
             <div class="col-md-3">
+            </div>
+            <div class="col-md-4">
+                <div id="AutomaticLabel" style="font-style: italic;"><small>As demand increases workers are started up across servers until maximum is reached</small></div>
+                <div id="FixedLabel" style="font-style: italic"><small>Workers are always kept running on assigned servers as per count below</small></div>
+                <div id="CloudLabel" style="font-style: italic"><small>Workers are started and managed externally</small></div>
+            </div>
+        </div>
+        <div class="row" id="MaxPrioritiesGroup">
+            <div class="col-md-3" style="margin-top: 10px">
                 @Html.LabelFor(m => m.MaxPriority, new { @class = "control-label" })
             </div>
             <div class="col-md-3">
@@ -104,8 +113,8 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-3">
+        <div class="row" id="MaxInstancesGroup">
+            <div class="col-md-3" style="margin-top: 10px">
                 @Html.LabelFor(m => m.MaxInstances, new { @class = "control-label" })
             </div>
             <div class="col-md-3">
@@ -125,7 +134,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-3" style="margin-top: 10px">
                 @Html.LabelFor(m => m.Description, new { @class = "control-label" })
             </div>
             <div class="col-md-3">
@@ -136,7 +145,7 @@
         </div>
 
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-3" style="margin-top: 10px">
                 @Html.LabelFor(m => m.CachingEnabled, new { @class = "control-label" })
             </div>
             <div class="col-md-3">
@@ -148,13 +157,13 @@
 
         <br />
 
-        <div class="row">
+        <div class="row" id="PriorityLimitsLabel">
             <div class="col-md-6">
                 @Html.LabelFor(m => m.PriorityLimits, new { @class = "control-label" })
             </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" id="PriorityLimitsGrid">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-6 ">
@@ -166,8 +175,7 @@
                                     </th>
                                     <th style="background: #990505;">Priority</th>
                                     <th style="background: #990505;">
-                                        <div id="lblInstances">Max Instances</div>
-                                        <div id="lblRunning">Running instances per Host</div>
+                                        <div>Running workers per server</div>
                                     </th>
                                 </tr>
                             </thead>

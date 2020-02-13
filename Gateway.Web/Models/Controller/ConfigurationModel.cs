@@ -3,19 +3,22 @@ using System.ComponentModel.DataAnnotations;
 using System.Xml.Serialization;
 
 namespace Gateway.Web.Models.Controller
-{ 
+{
     [XmlRoot(ElementName = "Controller")]
     public class ConfigurationModel
     {
         public enum ScalingStrategies
         {
             [XmlEnum(Name = "1")]
-            Dynamic = 1,
+            Automatic = 1,
 
             [XmlEnum(Name = "2")]
-            Static =2 
+            Fixed = 2,
+
+            [XmlEnum(Name = "3")]
+            Container = 3
         }
-        
+
         public bool IsUpdate { get { return ControllerId != 0; } }
 
         [XmlAttribute(AttributeName = "Id")]
@@ -29,12 +32,12 @@ namespace Gateway.Web.Models.Controller
         public string Name { get; set; }
 
         [XmlElement]
-        [Display(Name = "Time to Live")]
+        [Display(Name = "Time to live whilst idle (ms)")]
         [Range(1, int.MaxValue, ErrorMessage = "Please enter the time to live.")]
         public int? TimeToLiveSec { get; set; }
 
         [XmlElement]
-        [Display(Name = "Timeout")]
+        [Display(Name = "Single work item timeout (ms)")]
         [Range(1, int.MaxValue, ErrorMessage = "Please enter the timeout.")]
         public int? TimeoutMilliSec { get; set; }
 
@@ -45,22 +48,22 @@ namespace Gateway.Web.Models.Controller
 
         [XmlElement]
         [Required]
-        [Display(Name = "MaxPriority")]
+        [Display(Name = "Maximum worker priority")]
         [Range(1, 20, ErrorMessage = "Please enter the maximum priority.")]
         public int MaxPriority { get; set; }
 
         [XmlElement]
         [Required]
-        [Display(Name = "Maximum Instances")]
-        [Range(1, int.MaxValue, ErrorMessage = "Please enter the number of instances.")]
+        [Display(Name = "Maximum workers per priority level")]
+        [Range(1, int.MaxValue, ErrorMessage = "Please enter the maximum number of workers.")]
         public int MaxInstances { get; set; }
 
         [XmlElement]
         [StringLength(100, ErrorMessage = "Name cannot be longer than 100 characters.")]
         public string Configuration { get; set; }
 
-        [XmlArray(ElementName="Versions")]
-        [XmlArrayItem(ElementName = "Version", Namespace= "Gateway.Web.Models.Controller")]
+        [XmlArray(ElementName = "Versions")]
+        [XmlArrayItem(ElementName = "Version", Namespace = "Gateway.Web.Models.Controller")]
         public List<Version> Versions { get; set; }
 
 
@@ -71,8 +74,8 @@ namespace Gateway.Web.Models.Controller
         [Display(Name = "Controller Server Restrictions")]
         public List<ControllerServer> ControllerServerRestrictions { get; set; }
 
-        [XmlElement] 
-        [Display(Name = "Priority Limits")]
+        [XmlElement]
+        [Display(Name = "Running workers per server")]
         public List<PriorityLimit> PriorityLimits { get; set; }
 
         [XmlElement]
