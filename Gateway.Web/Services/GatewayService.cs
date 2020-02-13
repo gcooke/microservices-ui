@@ -200,6 +200,21 @@ namespace Gateway.Web.Services
 
         public async Task<GatewayResponse<string>> UpdateControllerConfiguration(ConfigurationModel model)
         {
+            switch (model.ScalingStrategyId)
+            {
+                case ConfigurationModel.ScalingStrategies.Automatic:
+                    model.PriorityLimits?.Clear();
+                    break;
+                case ConfigurationModel.ScalingStrategies.Fixed:
+                    model.MaxInstances = 0;
+                    break;
+                case ConfigurationModel.ScalingStrategies.Container:
+                    model.MaxPriority = 16;
+                    model.MaxInstances = 1;
+                    model.PriorityLimits?.Clear();
+                    break;
+            }
+
             var query = "/controllers/configuration";
             return await _gateway.Put<string, string>("Catalogue", query, model.Serialize());
         }
