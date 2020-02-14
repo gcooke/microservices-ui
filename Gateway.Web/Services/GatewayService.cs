@@ -206,7 +206,7 @@ namespace Gateway.Web.Services
                     model.PriorityLimits?.Clear();
                     break;
                 case ConfigurationModel.ScalingStrategies.Fixed:
-                    model.MaxInstances = 0;
+                    model.MaxInstances = 1;
                     break;
                 case ConfigurationModel.ScalingStrategies.Container:
                     model.MaxPriority = 16;
