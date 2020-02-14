@@ -1,4 +1,5 @@
-﻿using Microsoft.Owin;
+﻿using System.Web.Mvc;
+using Microsoft.Owin;
 using Owin;
 
 [assembly: OwinStartup(typeof(Gateway.Web.Startup))]
