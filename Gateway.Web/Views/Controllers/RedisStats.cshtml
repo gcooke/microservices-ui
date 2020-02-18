@@ -17,6 +17,7 @@
     $(document).ready(function () {         
         setupTable();
     });
+     
 
     function setupTable() { 
         try {
@@ -37,6 +38,43 @@
                 $("#tickerError").html(" ..error refreshing data.");    
                 setupTable();
             }
+    }
+
+    function BusyWorkers(priority)
+    {
+        var controllerName = $("#ControllerName").val();
+        var controllerVersion = $("#ControllerVersion").val();
+        document.getElementById("busy").style.display = '';
+        document.getElementById("stats").style.display = 'none';
+        document.getElementById("back").style.display = '';   
+
+        var request = $.get("BusyWorkers?ControllerName=" + controllerName + "&ControllerVersion=" + controllerVersion + "&Priority=" + priority,
+            function (data)
+            {
+                updateWorkerView(data);
+                    
+            });
+    }
+
+    function Monitor()
+    {
+        document.getElementById("stats").style.display = '';
+        document.getElementById("busy").style.display = 'none';
+        document.getElementById("back").style.display = 'none';
+    }
+
+    function updateWorkerView(data) {
+         var list = JSON.parse(data);
+         var table = "<thead><tr><td>Correlation Id</td></tr></thead>";
+
+                $.each(list,
+                    function (index, value) {
+                        table = table + "<tr>"
+                        table = table + "<td><a target='_blank' href='@Url.Content("~/Request/Logs")?correlationId="+value+"'>" + value + "</a></td>"                        
+                        table = table + "</tr>"
+                });
+
+                $("#busy").html(table);                
     }
 
     function updateView(data)
@@ -61,7 +99,7 @@
                         table = table + "<td>" + value.QueueLength + "</td>"
                         table = table + "<td>" + value.Workers + "</td>"
                         table = table + "<td>" + value.WorkersIdle + "</td>"
-                        table = table + "<td>" + value.WorkersBusy + "</td>"
+                        table = table + "<td style='cursor:pointer' onclick=BusyWorkers('"+value.Priority+"')><a href='#'>" + value.WorkersBusy + "</a></td>"
                         table = table + "</tr>"
                 });
 
@@ -78,16 +116,21 @@
 
 <h3>@Model.ControllerName &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v @Model.ControllerVersion</h3>
 <div class="row">
-    <div class="col-sm-11" style=" display: inline-block;">Ticker :</div>
+    <div class="col-sm-9" style=" display: inline-block;">Ticker :</div>
     <div class="col-sm-1" style=" display: inline-block;" id="ticker">1</div>
     <div class="col-sm-1" style=" display: inline-block;color:red" id="tickerError"></div>
+    <div class="col-sm-1" style=" display: inline-block;display:none" id="back"><a href="#" onclick="Monitor()">Back</a></div>
 </div>
 <div class="page-content-wrapper" onload="setupTable()">
     <table style="white-space: nowrap;width:300px" id="stats" class="datatable table">
+    </table>
+    <table style="white-space: nowrap;width:300px;display:none" id="busy" class="datatable table">
+
     </table>
     <input type="hidden" id="ControllerName" value="@Model.ControllerName" />
     <input type="hidden" id="ControllerVersion" value="@Model.ControllerVersion" />
     <input type="hidden" id="MaxPriority" value="@Model.MaxPriority" />
 </div>
+
 
 

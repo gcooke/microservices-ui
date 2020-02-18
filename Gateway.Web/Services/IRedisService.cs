@@ -8,5 +8,7 @@ namespace Gateway.Web.Services
         IList<RedisStats> GetRedisStats(string controllerName, string controlerversion, int maxPriority);
 
         RedisSummary GetRedisSummary(string controllerName, string controlerversion, int maxPriority);
+
+        IList<string> GetWorkerids(string controllerName, string controlerversion, int priority);
     }
 }

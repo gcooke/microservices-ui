@@ -95,6 +95,17 @@ namespace Gateway.Web.Controllers
             return JsonConvert.SerializeObject(stats.ToList());
         }
 
+        public string BusyWorkers()
+        {
+            var controllerName = Request.QueryString["ControllerName"];
+            var controllerVersion = Request.QueryString["ControllerVersion"];
+            var priority = Request.QueryString["Priority"];
+
+            var correlationIds = _redisService.GetWorkerids(controllerName, controllerVersion, int.Parse(priority));
+
+            return JsonConvert.SerializeObject(correlationIds);
+        }
+
         public async Task<ActionResult> Servers()
         {
             Response.AddHeader("Refresh", _refreshPeriodInSeconds.ToString());
