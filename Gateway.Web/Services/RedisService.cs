@@ -4,7 +4,6 @@ using Gateway.Web.Models.Redis;
 using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Gateway.Web.Services
 {
@@ -41,17 +40,17 @@ namespace Gateway.Web.Services
 
                     var workers = db.HashGetAll($"{key}:Workers");
                     var queue = db.SortedSetLength($"{key}:Queue");
-                    var result = Getworkercounts(workers);
+                    var busyWorkers = db.HashGetAll($"{key}:NackRequests");
 
                     stat.RedisHealth = RedisHealth.Stable;
-                    stat.Workers = result[0];
-                    stat.WorkersIdle = result[1];
+                    stat.Workers = workers.Length;
+                    stat.WorkersIdle = workers.Length - busyWorkers.Length;
                     stat.QueueLength = (int)queue;
                     stat.Priority = i;
 
-                    if ((int)queue > 0 && (int)result[0] == 0)
+                    if ((int)queue > 0 && workers.Length == 0)
                         stat.RedisHealth = RedisHealth.Critical;
-                    else if ((int)queue > 2000 && stat.RedisHealth != RedisHealth.Critical)
+                    else if ((int)queue > 1000 && stat.RedisHealth != RedisHealth.Critical)
                         stat.RedisHealth = RedisHealth.Warning;
 
                     stats.Add(stat);
@@ -86,13 +85,13 @@ namespace Gateway.Web.Services
 
                     var workers = db.HashGetAll($"{key}:Workers");
                     var queue = db.SortedSetLength($"{key}:Queue");
-                    var result = Getworkercounts(workers);
+                    var busyWorkers = db.HashGetAll($"{key}:NackRequests");
 
-                    totalActiveWorkers += result[0];
-                    totalIdleWorkers += result[1];
+                    totalActiveWorkers += workers.Length;
+                    totalIdleWorkers += workers.Length - busyWorkers.Length;
                     totalQueueLength += (int)queue;
 
-                    if ((int)queue > 0 && (int)result[0] == 0)
+                    if ((int)queue > 0 && workers.Length == 0)
                         health = RedisHealth.Critical;
                     else if ((int)queue > 2000 && health != RedisHealth.Critical)
                         health = RedisHealth.Warning;
@@ -126,22 +125,17 @@ namespace Gateway.Web.Services
             }
         }
 
-        private int[] Getworkercounts(HashEntry[] servers)
+        public IList<string> GetWorkerids(string controllerName, string controlerversion, int priority)
         {
-            int[] countresult = new int[2];
-            countresult[0] = servers.Length;
-            var count = 0;
-            foreach (var server in servers)
-            {
-                var workersettings = server.Value.ToString().Split(',');
+            var correlationIds = new List<string>();
+            var redis = ConnectWithPassword(_redisServer, _redisPassword);
+            var db = redis.GetDatabase(0);
+            var key = "{" + controllerName + "/" + controlerversion + "/" + priority + "}";
+            var busyWorkers = db.HashGetAll($"{key}:NackRequests");
+            foreach (var item in busyWorkers)
+                correlationIds.Add(item.Name);
 
-                var inprogress = workersettings.FirstOrDefault(x => x.Contains("InProgressId"));
-                if (inprogress.Length == 17)
-                    count++;
-            }
-            countresult[1] = count;
-
-            return countresult;
+            return correlationIds;
         }
 
         private ConnectionMultiplexer ConnectWithPassword(string server, string password, int retry = 3)
