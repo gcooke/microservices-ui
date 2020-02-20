@@ -95,6 +95,21 @@ namespace Gateway.Web.Controllers
             return JsonConvert.SerializeObject(stats.ToList());
         }
 
+        public async Task AddWorkers()
+        {
+            var controllerName = Request.QueryString["ControllerName"];
+            var controllerVersion = Request.QueryString["ControllerVersion"];
+            var priority = Request.QueryString["Priority"];
+
+            await _gateway.RequestWorkersAsync(new RequestedWorkers()
+            {
+                ControllerName = controllerName,
+                Instances = 25,
+                Priority = priority,
+                Version = controllerVersion
+            });
+        }
+
         public string BusyWorkers()
         {
             var controllerName = Request.QueryString["ControllerName"];

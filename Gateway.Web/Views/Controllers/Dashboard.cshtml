@@ -7,18 +7,7 @@
     ViewBag.Current = "Dashboard";
 }
 @{ Html.RenderPartial("_ControllersNav"); }
-
-    <script>
-    function popup(url,controllerName,maxPriority)
-    {
-         myWindow = window.open(url, controllerName, "dialogHeight:600px;dialogHeight:400px;dialogWidth:200px;dialogTop:300px;dialogLeft:200px;edge:Raised;center:Yes;help:No;Resiable:No;Status:No;");
-        // Resizes the new window
-        myWindow.resizeTo(550, 220 + (maxPriority * 38));                             
-        myWindow.focus();     
-   }
-
-    </script>
-
+ 
     <style>
         .Critical {
             border-color: red;
@@ -102,23 +91,20 @@
                                                 </h3>
                                             </td>
                                         </tr>
-                                    </table>
-                                    <a href="#"  onclick="popup('@Url.Content("~/Controllers/RedisStats")?ControllerName=@controller.RedisSummary.ControllerName&ControllerVersionName=@controller.RedisSummary.ControllerVersion&MaxPriority=@controller.RedisSummary.MaxPriority','@controller.RedisSummary.ControllerName',@controller.RedisSummary.MaxPriority);" style="cursor:pointer; color:black">
-                                        <small>
-
-                                            <span>Queue : <b>@controller.RedisSummary.QueueLength</b></span>
+                                    </table>                                  
+                                        <small style="color:black">
+                                            <span >Queue : <b>@controller.RedisSummary.QueueLength</b></span>
                                             <span>Workers : <b>@controller.RedisSummary.Workers</b></span>
                                             <span>Health <b>@controller.RedisSummary.RedisHealth</b></span>
 
                                         </small>
                                         <br />
-                                        <small>
-
+                                        <small style="color:black">
                                             <span>Idle Workers <b>@controller.RedisSummary.WorkersIdle</b></span>
                                             <span>Busy Workers <b>@controller.RedisSummary.WorkersBusy</b></span>
-
+                                            &nbsp;<a href="#"  onclick="popup('@Url.Content("~/Controllers/RedisStats")?ControllerName=@controller.RedisSummary.ControllerName&ControllerVersionName=@controller.RedisSummary.ControllerVersion&MaxPriority=@controller.RedisSummary.MaxPriority','@controller.RedisSummary.ControllerName',@controller.RedisSummary.MaxPriority);" style="cursor:pointer;" title="Eye of Sauron"  class="glyphicon glyphicon-eye-open"></a>
                                         </small>
-                                    </a>
+                                     
                                     <br />
                                     <br />
                                     <div style="float: left;">

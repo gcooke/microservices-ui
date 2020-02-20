@@ -437,6 +437,7 @@
     <Compile Include="Controllers\BatchScheduleController.cs" />
     <Compile Include="Models\Batches\CostGroupBatchCost.cs" />
     <Compile Include="Models\Batches\CostGroupMonthlyBatchCost.cs" />
+    <Compile Include="Models\Controllers\ControllerDetail.cs" />
     <Compile Include="Models\Redis\RedisHealth.cs" />
     <Compile Include="Models\Redis\RedisStats.cs" />
     <Compile Include="Models\Redis\RedisStatsViewModel.cs" />

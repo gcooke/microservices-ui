@@ -30,7 +30,7 @@ namespace Gateway.Web.Database
             _redisService = redisService;
         }
 
-        public List<Models.Controllers.ControllerStats> GetControllerStatistics(DateTime start, string controllerName)
+        public List<ControllerStats> GetControllerStatistics(DateTime start, string controllerName)
         {
             var result = new List<ControllerStats>();
 
@@ -60,6 +60,28 @@ namespace Gateway.Web.Database
                     index++;
                 }
                 previous = current;
+            }
+
+            return result;
+        }
+
+        public List<ControllerDetail> GetControllerDetails()
+        {
+            var result = new List<ControllerDetail>();
+
+            using (var database = new GatewayEntities(_connectionString))
+            {
+                foreach (var controller in database.Controllers.OrderBy(c => c.Name))
+                {
+                    var activeVersion = controller?.Versions?.FirstOrDefault(x => x.StatusId == 2 && x.Alias == "Official");
+                    result.Add(new ControllerDetail()
+                    {
+                        MaxPriority = controller.MaxPriority,
+                        DisplayName = controller.Name,
+                        Name = controller.Name.ToLower(),
+                        Version = activeVersion?.Version1
+                    });
+                }
             }
 
             return result;
@@ -871,6 +893,22 @@ namespace Gateway.Web.Database
 
                 foreach (var record in records)
                     yield return converter(record);
+            }
+        }
+
+        public ControllerDetail GetControllerDetail(string controllerName)
+        {
+            using (var database = new GatewayEntities(_connectionString))
+            {
+                var controller = database.Controllers.FirstOrDefault(c => c.Name == controllerName);
+                var activeVersion = controller?.Versions?.FirstOrDefault(x => x.StatusId == 2 && x.Alias == "Official");
+                return new ControllerDetail()
+                {
+                    MaxPriority = controller.MaxPriority,
+                    DisplayName = controller.Name,
+                    Name = controller.Name.ToLower(),
+                    Version = activeVersion?.Version1
+                };
             }
         }
     }

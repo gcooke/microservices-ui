@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Bagl.Cib.MSF.ClientAPI.Model;
+﻿using Bagl.Cib.MSF.ClientAPI.Model;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Controllers;
 using Gateway.Web.Models.Home;
@@ -9,6 +6,9 @@ using Gateway.Web.Models.Monitoring;
 using Gateway.Web.Models.Request;
 using Gateway.Web.Models.Security;
 using Gateway.Web.Models.ServerResource;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using QueueChartModel = Gateway.Web.Models.Controller.QueueChartModel;
 
 namespace Gateway.Web.Database
@@ -16,7 +16,12 @@ namespace Gateway.Web.Database
     public interface IGatewayDatabaseService
     {
         IList<spGetHistoryTimingForSchedule_Result> GetHistoryTimingForSchedule(long scheduleId, int days);
+
         List<ControllerStats> GetControllerStatistics(DateTime start, string controllerName);
+
+        List<ControllerDetail> GetControllerDetails();
+
+        ControllerDetail GetControllerDetail(string controllerName);
 
         List<string> GetControllerNames();
 
@@ -81,7 +86,7 @@ namespace Gateway.Web.Database
         bool HasStatusChanged(string controller, string version, string status, string alias);
 
         Task<List<ExtendedBatchSummary>> GetBatchSummaryStatsAsync(DateTime valuationDate);
-       
+
         ControllerServersModel GetControllerServers(string controllerName);
 
         void UpdateControllerServers(ControllerServersModel controllerServers);
@@ -92,7 +97,7 @@ namespace Gateway.Web.Database
 
         void UpdateServerControllers(ServerControllerModel serverControllerModel);
 
-         IEnumerable<T> GetChildMessages<T>(Guid correlationId,
-            Func<spGetRequestChildrenPayloadDetails_Result, T> converter);
+        IEnumerable<T> GetChildMessages<T>(Guid correlationId,
+           Func<spGetRequestChildrenPayloadDetails_Result, T> converter);
     }
 }

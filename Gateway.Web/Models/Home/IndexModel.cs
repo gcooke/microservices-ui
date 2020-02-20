@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Gateway.Web.Models.Controllers;
+using System.Collections.Generic;
 using System.Linq;
-using Gateway.Web.Models.Controllers;
 
 namespace Gateway.Web.Models.Home
 {
@@ -8,7 +8,7 @@ namespace Gateway.Web.Models.Home
     {
         public IndexModel()
         {
-            Controllers = new List<string>();
+            Controllers = new List<ControllerDetail>();
         }
 
         public IEnumerable<DashboardModel.NavigationCharacter> Characters
@@ -16,7 +16,7 @@ namespace Gateway.Web.Models.Home
             get
             {
                 var list = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-                var contains = Controllers.Select(c => c[0]).Distinct().OrderBy(n => n);
+                var contains = Controllers.Select(c => c.DisplayName[0]).Distinct().OrderBy(n => n);
                 foreach (var character in list)
                 {
                     yield return new DashboardModel.NavigationCharacter(character, contains.Contains(character));
@@ -24,6 +24,6 @@ namespace Gateway.Web.Models.Home
             }
         }
 
-        public List<string> Controllers { get; private set; }
+        public List<ControllerDetail> Controllers { get; private set; }
     }
 }
