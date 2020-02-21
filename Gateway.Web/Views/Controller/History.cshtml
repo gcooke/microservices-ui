@@ -19,7 +19,7 @@
                 @Model.SearchText <span>-</span> 
             }
             Last @Model.Requests.Count requests
-        </h3>
+        <a href="#" title="Eye of Sauron" onclick="popup('@Url.Content("~/Controllers/RedisStats")?ControllerName=@Model.ControllerDetail.Name&ControllerVersionName=@Model.ControllerDetail.Version&MaxPriority=@Model.ControllerDetail.MaxPriority','@Model.ControllerDetail.Name',@Model.ControllerDetail.MaxPriority);" style="float:right;" class="glyphicon glyphicon-eye-open"></a></h3>
         <br />
         <div class="containerx bulk">
             @{ Html.RenderPartial("_HistoryItems", (List<HistoryItem>) @Model.Requests); }

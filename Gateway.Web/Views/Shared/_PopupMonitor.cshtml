@@ -1,28 +1,35 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />    
+    <meta charset="utf-8" />
     <title>@ViewBag.Title - Redstone</title>
     @Styles.Render("~/styles/css")
     @Styles.Render("~/styles/charts")
     @Scripts.Render("~/bundles/modernizr")
+    @Styles.Render("~/styles/toastr")
     <link rel="icon" type="image/x-icon" href="@Url.Content(MvcApplication.FavIcon)" />
     <link rel="shortcut icon" type="image/x-icon" href="@Url.Content(MvcApplication.FavIcon)" />
-    
+
 
 </head>
 <body ng-app="app" style="padding: 5px;width:400px" onload="setupTable()">
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
-    @Scripts.Render("~/bundles/bootstrap")       
-    @Scripts.Render("~/bundles/datetime")    
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/spinner")
+    @Scripts.Render("~/bundles/charts")
+    @Scripts.Render("~/bundles/datetime")
+    @Scripts.Render("~/bundles/customQueueCharts")
     @Scripts.Render("~/bundles/monitoring")
     @Scripts.Render("~/bundles/batchcosts")
     @Scripts.Render("~/bundles/schedule")
     @Scripts.Render("~/bundles/treetable")
+    @Scripts.Render("~/bundles/calendar")
     @Scripts.Render("~/bundles/server-resources")
     @Scripts.Render("~/bundles/toastr")
-    @Scripts.Render("~/bundles/selectAllTable")    
+    @Scripts.Render("~/bundles/selectAllTable")
+    @Scripts.Render("~/bundles/portfolioprofile")
+    @RenderSection("scripts", false)
     @RenderBody()
 
 </body>

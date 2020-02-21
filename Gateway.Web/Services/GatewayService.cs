@@ -205,9 +205,11 @@ namespace Gateway.Web.Services
                 case ConfigurationModel.ScalingStrategies.Automatic:
                     model.PriorityLimits?.Clear();
                     break;
+
                 case ConfigurationModel.ScalingStrategies.Fixed:
                     model.MaxInstances = 1;
                     break;
+
                 case ConfigurationModel.ScalingStrategies.Container:
                     model.MaxPriority = 16;
                     model.MaxInstances = 1;
@@ -221,7 +223,7 @@ namespace Gateway.Web.Services
 
         public async Task<GroupsModel> GetGroups()
         {
-            var response = await _gateway.GetSync("Security", "groups",string.Empty);
+            var response = await _gateway.GetSync("Security", "groups", string.Empty);
 
             var result = new GroupsModel();
             if (!response.Successfull)
@@ -738,7 +740,7 @@ namespace Gateway.Web.Services
         public async Task<string[]> InsertGroupSite(long groupId, long siteId)
         {
             var query = $"groups/{groupId}/sites/{siteId}";
-            var response =  await _gateway.Put<string, string>("Security", query, string.Empty);
+            var response = await _gateway.Put<string, string>("Security", query, string.Empty);
 
             return SuccessOrMessage(response);
         }
@@ -930,7 +932,7 @@ namespace Gateway.Web.Services
         public async Task<string[]> InsertUserGroup(long userId, long groupId)
         {
             var query = string.Format("users/{0}/groups/{1}", userId, groupId);
-            var response = await _gateway.Put<string,string>("Security", query, string.Empty);
+            var response = await _gateway.Put<string, string>("Security", query, string.Empty);
 
             return SuccessOrMessage(response);
         }
@@ -1128,7 +1130,6 @@ namespace Gateway.Web.Services
                 return "sigma.absa.co.za";
 
             return $"sigma-{environment}.absa.co.za";
-
         }
 
         private IEnumerable<QueueModel> GetCurrentQueues(IEnumerable<ServerResponse> docs)
@@ -1384,7 +1385,7 @@ namespace Gateway.Web.Services
 
         private async Task<IEnumerable<SelectListItem>> GetAvailableReferencedAddInVersions()
         {
-            var response = await _gateway.GetSync("Security", "addins/versions/referenced",string.Empty);
+            var response = await _gateway.GetSync("Security", "addins/versions/referenced", string.Empty);
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
@@ -1482,7 +1483,7 @@ namespace Gateway.Web.Services
             await Post($"worker/shutdown/{id}", queuename);
         }
 
-        private async Task Post(string query,string content)
+        private async Task Post(string query, string content)
         {
             var gateway = _gateways.FirstOrDefault();
 
@@ -1495,7 +1496,7 @@ namespace Gateway.Web.Services
             }))
             {
                 client.Timeout = _defaultRequestTimeout;
-                var response = await client.PostAsync(url,new StringContent(content));
+                var response = await client.PostAsync(url, new StringContent(content));
                 response.EnsureSuccessStatusCode();
             }
         }
@@ -1504,7 +1505,7 @@ namespace Gateway.Web.Services
         {
             await Post($"worker/kill/{id}", queuename);
         }
-        
+
         private class ServerResponse
         {
             public ServerResponse(string server, XDocument document)
@@ -1529,7 +1530,6 @@ namespace Gateway.Web.Services
             // Return the error message (either in body or message).
             return new[] { response.Body ?? response.Message };
         }
-
 
         public void NotifyResourceUpdate()
         {
@@ -1569,6 +1569,4 @@ namespace Gateway.Web.Services
         {
         }
     }
-
-
 }

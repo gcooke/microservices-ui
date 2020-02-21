@@ -220,8 +220,10 @@ namespace Gateway.Web.Controllers
             ViewBag.Controller = "Controller";
 
             var items = _dataService.GetRecentRequests(id, DateTime.Today.AddDays(-7), search);
+            var controllerDetail = _dataService.GetControllerDetail(id);
 
             var model = new HistoryModel(id);
+            model.ControllerDetail = controllerDetail;
             model.Requests.AddRange(items, sortOrder);
             model.Requests.EnrichHistoryResults(_batchNamesService, _usernameService);
             model.SearchText = search == null ? null : $"Showing results for '{searchResultsText ?? search}'";

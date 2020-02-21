@@ -7,6 +7,8 @@
 @model Gateway.Web.Models.Home.IndexModel
 @{ Html.RenderPartial("_IndexNav"); }
 
+    
+
 <div id="page-content-wrapper">
     <div class="hero-unit">
 
@@ -16,10 +18,10 @@
         <table style="width: 100%; white-space: nowrap" class="datatable table" id="searchable-table">
             <thead>
                 <tr>
-                    <td><b>Controllers</b></td>
+                    <td colspan="2"><b>Controllers</b></td>
                 </tr>
                 <tr>
-                    <td>
+                    <td colspan="2">
                         <div class="form-group">
                             <input class="form-control col-sm-11"
                                    placeholder="search the requests below..."
@@ -35,10 +37,10 @@
             </thead>
             <tbody>
                 @foreach (var controller in Model.Controllers)
-                {
-                    //~/ Controller / Dashboard / @controller.Name
-                    <tr data-href="@(Url.Action("History", "Controller", new {id = controller}))">
-                        <td>@controller</td>
+                {                    
+                    <tr >
+                        <td data-href="@(Url.Action("History", "Controller", new {id = controller.DisplayName}))">@controller.DisplayName</td>
+                        <td   style="width:20px"><a title="Eye of Sauron" href="#" onclick="popup('@Url.Content("~/Controllers/RedisStats")?ControllerName=@controller.Name&ControllerVersionName=@controller.Version&MaxPriority=@controller.MaxPriority','@controller.Name',@controller.MaxPriority);" style="float:right;" class="glyphicon glyphicon-eye-open"></a></td>
                     </tr>
                 }
             </tbody>

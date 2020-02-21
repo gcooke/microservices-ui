@@ -7,17 +7,34 @@
     ViewBag.Current = "Dashboard";
 }
 
-<style>
-    body {
-        width:350px;
-    }
-</style>
 
 <script type="text/JavaScript">
     $(document).ready(function () {         
         setupTable();
     });
      
+
+    function AddWorkers(priority) {
+
+        var controllerName = $("#ControllerName").val();
+        var controllerVersion = $("#ControllerVersion").val();
+        var request = $.get("AddWorkers?ControllerName=" + controllerName + "&ControllerVersion=" + controllerVersion + "&Priority=" + priority, function (data) {
+             
+        });
+
+        toastr.options = {
+            "positionClass": "toast-top-right",
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+           toastr.success('Request to add 25 workers sent.', 'Success');
+    }
 
     function setupTable() { 
         try {
@@ -99,7 +116,8 @@
                         table = table + "<td>" + value.QueueLength + "</td>"
                         table = table + "<td>" + value.Workers + "</td>"
                         table = table + "<td>" + value.WorkersIdle + "</td>"
-                        table = table + "<td style='cursor:pointer' onclick=BusyWorkers('"+value.Priority+"')><a href='#'>" + value.WorkersBusy + "</a></td>"
+                        table = table + "<td style='cursor:pointer' onclick=BusyWorkers('" + value.Priority + "')><a href='#'>" + value.WorkersBusy + "</a></td>"
+                        table = table + "<td><a onclick=AddWorkers('" + value.Priority + "') class='btn btn-success btn-xs glyphicon glyphicon-plus' title='Request 25 new workers'></a></td>"
                         table = table + "</tr>"
                 });
 
