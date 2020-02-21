@@ -1,0 +1,68 @@
+﻿@using Gateway.Web.Models.Request
+@model XvaResultModel
+@{
+    Layout = "~/Views/Shared/_Layout.Empty.cshtml";
+    ViewBag.Title = "Xva Result";
+}
+
+<div style="margin-left: 20px; margin-right: 20px;">
+    <h3>XVA Scenario Result</h3>
+
+    <div style="margin-top: 20px;">
+        <h4>Properties</h4>
+        <table class="datatable" style="width: auto;">
+            <thead>
+                <tr>
+                    <td colspan="2">Properties</td>
+                </tr>
+            </thead>
+            @foreach (var item in @Model.HeaderItems)
+            {
+                <tr>
+                    <td>@item.Key</td>
+                    <td>@item.Value</td>
+                </tr>
+            }
+        </table>
+    </div>
+    
+    <div style="margin-top: 20px;">
+        <h4>Generated Reports</h4>
+        <table class="datatable" style="width: auto; margin-top: 20px;">
+            <thead>
+            <tr>
+                <td colspan="2">Reports</td>
+            </tr>
+            </thead>
+            @foreach (var item in @Model.Reports)
+            {
+                <tr>
+                    <td>@item.Key</td>
+                    <td>
+                        @Html.ActionLink(" ", "ViewCubeItem", "Request", new { @name = @item.Key, @data = @item.Value }, new { @class = "glyphicon glyphicon-fullscreen hoverlink", title = "View cube", target = "_blank" })
+                        @Html.ActionLink(" ", "DownloadCubeItem", "Request", new { @name = @item.Key, @data = @item.Value }, new { @class = "glyphicon glyphicon-download hoverlink", title = "Download cube" })
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+
+    @if (@Model.BatchStatistics != null)
+    {
+        <div style="margin-top: 20px;">
+            <h4>
+                Batch Statistics
+                @Html.ActionLink(" ", "ViewCubeItem", "Request", new { @name = "Batch Statistics", @data = @Model.BatchStatisticsRawData }, new { @class = "glyphicon glyphicon-fullscreen hoverlink", title = "View cube", target = "_blank" })
+                @Html.ActionLink(" ", "DownloadCubeItem", "Request", new { @name = "Batch Statistics", @data = @Model.BatchStatisticsRawData }, new { @class = "glyphicon glyphicon-download hoverlink", title = "Download cube" })
+            </h4>
+            @if (Model.BatchStatistics.HasAttributes)
+            {
+                @Html.Raw(@Model.BatchStatistics.Attributes)
+                <br />
+            }
+
+            @Html.Raw(@Model.BatchStatistics.Rows)
+        </div>
+    }
+</div>
+

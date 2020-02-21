@@ -53,6 +53,8 @@ namespace Gateway.Web.Models.Request
 
         public bool IsCube { get; set; }
 
+        public bool IsXvaResult { get; set; }
+
         public bool ContainsCubeResult { get; set; }
 
         public bool ContainsXmlResult { get; set; }
@@ -89,6 +91,8 @@ namespace Gateway.Web.Models.Request
                     Data = LegacyCompession.DecodeObject(data, payloadType);
                 }
 
+                IsXvaResult = IsXvaScenarioResult(Data, payloadType);
+
                 if (Data?.Contains("<CubeResult") == true)
                     ContainsCubeResult = true;
             }
@@ -96,6 +100,17 @@ namespace Gateway.Web.Models.Request
             {
                 Data = string.Format("Could not decompress payload data: {0}", ex.Message);
             }
+        }
+
+        private bool IsXvaScenarioResult(string data, string payloadType)
+        {
+            if (payloadType.Equals("XElement", StringComparison.InvariantCultureIgnoreCase))
+                return false;
+
+            var xml = XElement.Load(new StringReader(data));
+            var scenarioResult = xml.Name.ToString().Equals("ScenarioResult", StringComparison.InvariantCultureIgnoreCase);
+
+            return scenarioResult;
         }
 
         private void FormatData()

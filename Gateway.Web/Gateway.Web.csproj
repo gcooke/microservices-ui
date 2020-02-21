@@ -442,6 +442,7 @@
     <Compile Include="Models\Redis\RedisStats.cs" />
     <Compile Include="Models\Redis\RedisStatsViewModel.cs" />
     <Compile Include="Models\Redis\RedisSummary.cs" />
+    <Compile Include="Models\Request\XvaResultModel.cs" />
     <Compile Include="Services\Batches\BatchCosts\BatchCostsService.cs" />
     <Compile Include="Services\Batches\BatchCosts\IBatchCostsService.cs" />
     <Compile Include="Services\BatchNameService.cs" />
@@ -1198,6 +1199,7 @@
     <Content Include="Views\Schedule\History.cshtml" />
     <Content Include="Views\Controllers\RedisStats.cshtml" />
     <Content Include="Views\Shared\_PopupMonitor.cshtml" />
+    <Content Include="Views\Request\XvaResult.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />

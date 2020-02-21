@@ -6,7 +6,7 @@
 }
 
 <div>
-
+    
     @if (Model.HasAttributes)
     {
         <h3>Attributes</h3>
@@ -14,7 +14,7 @@
         <br />
     }
 
-    <h3>Data</h3>
+    <h3>@Model.Header</h3>
     @Html.Raw(@Model.Rows)
 
 </div>

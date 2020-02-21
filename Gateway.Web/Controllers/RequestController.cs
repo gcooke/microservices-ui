@@ -178,6 +178,30 @@ namespace Gateway.Web.Controllers
             return View("Cube", model);
         }
 
+        public ActionResult ViewXvaResult(string correlationId, long payloadId)
+        {
+            var data = _dataService.GetPayload(payloadId);
+            var bytes = data.GetBytes();
+            var str = Encoding.UTF8.GetString(bytes);
+            var model = new XvaResultModel(str);
+            return View("XvaResult", model);
+        }
+
+        public ActionResult ViewCubeItem(string name, string data)
+        {
+            var bytes = Convert.FromBase64String(data);
+            var cube = CubeBuilder.FromBytes(bytes);
+            var model = new CubeModel(cube, name);
+            return View("Cube", model);
+        }
+
+        public ActionResult DownloadCubeItem(string name, string data)
+        {
+            var bytes = Convert.FromBase64String(data);
+            var cube = CubeBuilder.FromBytes(bytes);
+            return File(cube.ToBytes(), "application/octet-stream", $"Cube_{name}.dat");
+        }
+
         public ActionResult ExtractCube(string correlationId, long payloadId)
         {
             var data = _dataService.GetPayload(payloadId);
