@@ -91,20 +91,21 @@
                                                 </h3>
                                             </td>
                                         </tr>
-                                    </table>                                  
-                                        <small style="color:black">
+                                    </table>   
+                                    <a href="#"  onclick="popup('@Url.Content("~/Controllers/RedisStats")?ControllerName=@controller.RedisSummary.ControllerName&ControllerVersionName=@controller.RedisSummary.ControllerVersion&MaxPriority=@controller.RedisSummary.MaxPriority','@controller.RedisSummary.ControllerName',@controller.RedisSummary.MaxPriority);" style="cursor:pointer;color:black" title="Eye of Sauron"   >                               
+                                        <small>
                                             <span >Queue : <b>@controller.RedisSummary.QueueLength</b></span>
                                             <span>Workers : <b>@controller.RedisSummary.Workers</b></span>
                                             <span>Health <b>@controller.RedisSummary.RedisHealth</b></span>
 
                                         </small>
                                         <br />
-                                        <small style="color:black">
+                                        <small >
                                             <span>Idle Workers <b>@controller.RedisSummary.WorkersIdle</b></span>
                                             <span>Busy Workers <b>@controller.RedisSummary.WorkersBusy</b></span>
                                             &nbsp;<a href="#"  onclick="popup('@Url.Content("~/Controllers/RedisStats")?ControllerName=@controller.RedisSummary.ControllerName&ControllerVersionName=@controller.RedisSummary.ControllerVersion&MaxPriority=@controller.RedisSummary.MaxPriority','@controller.RedisSummary.ControllerName',@controller.RedisSummary.MaxPriority);" style="cursor:pointer;" title="Eye of Sauron"  class="glyphicon glyphicon-eye-open"></a>
                                         </small>
-                                     
+                                     </a>
                                     <br />
                                     <br />
                                     <div style="float: left;">
