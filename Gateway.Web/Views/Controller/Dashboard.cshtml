@@ -10,6 +10,85 @@
     ViewBag.Current = "Controller";
 }
 @{ Html.RenderPartial("_ControllerNav", (BaseControllerModel)@Model); }
+    <script src="~/Scripts/Chart.min.js"></script>
+    <script>
+
+        var LineChartData =
+            {
+                labels: [@Html.Raw(Model.TimeChart.Key)],
+                datasets: [{
+                    label: 'Avg Time',
+                    backgroundColor: "rgba(166,13,20,0.4)",
+                    borderWidth: 2,
+                    data: [@Model.TimeChart.Value]
+                },
+                {
+                    label: 'Max Time',
+                    backgroundColor: "rgba(255,201,14,0.4)",
+                    borderWidth: 2,
+                    data: [@Model.TimeChart.Value2]
+                    }
+                    
+                ]
+        };
+
+        var LineChartData2 =
+            {
+                labels: [@Html.Raw(Model.RequestsChart.Key)],
+                datasets: [{
+                    label: 'Avg Time',
+                    backgroundColor: "rgba(166,13,20,0.4)",
+                    borderWidth: 2,
+                    data: [@Model.RequestsChart.Value]
+                },
+                {
+                    label: 'Max Time',
+                    backgroundColor: "rgba(255,201,14,0.4)",
+                    borderWidth: 2,
+                    data: [@Model.RequestsChart.Value2]
+                    }
+                    
+                ]
+            };
+
+            window.onload = function () {
+                var ctx1 = document.getElementById("Linecanvas").getContext("2d");
+                var ctx2 = document.getElementById("Linecanvas2").getContext("2d");
+                window.myBar = new Chart(ctx1,
+                    {
+                        type: 'line',
+                        data: LineChartData,
+                        options:
+                            {
+                                title:
+                                {
+                                    display: true,
+                                    text: ""
+                                },
+                                responsive: true,
+                                maintainAspectRatio: true
+                            }
+                    });
+
+                  window.myBar = new Chart(ctx2,
+                    {
+                        type: 'line',
+                        data: LineChartData2,
+                        options:
+                            {
+                                title:
+                                {
+                                    display: true,
+                                    text: ""
+                                },
+                                responsive: true,
+                                maintainAspectRatio: true
+                            }
+                    });
+    } 
+    
+
+    </script>
 
 <div id="page-content-wrapper">
     <div class="hero-unit">
@@ -25,41 +104,36 @@
                         <span class="glyphicon glyphicon-log-in" style="color: green"></span>&nbsp;&nbsp;Calls
                     </td>
                     <td>@Model.TotalCalls</td>
-                </tr>
-                <tr>
+                    <td  style="width: 100px">&nbsp;</td>
                     <td style="width: 150px">
                         <span class="glyphicon glyphicon-thumbs-down" style="color: red"></span>&nbsp;&nbsp;Errors
                     </td>
                     <td>@Model.TotalErrors</td>
-                </tr>
+                </tr>                 
                 <tr>
                     <td style="width: 150px">
                         <span class="glyphicon glyphicon-resize-full" style="color: gray"></span>&nbsp;&nbsp;Bandwidth
                     </td>
                     <td>...</td>
-                </tr>
-                <tr>
+                    <td style="width: 100px">&nbsp;</td>
                     <td style="width: 150px">
                         <span class="glyphicon glyphicon-time" style="color: black"></span>&nbsp;&nbsp;Avg. Response
                     </td>
                     <td>@Model.AverageResponse</td>
-                </tr>
+                </tr>             
             </table>
-        </div>
-
-        <br /><br />
+        </div> 
         <h4>Requests</h4>
-        <div>
-            <img src="~/Controller/RequestsChart?id=@Model.Name&date=@Model.HistoryStartTime.ToString("yyyyMMdd")" />
-        </div>
-
-        <br /><br />
+        <div   style="height:250px;width:500px">
+            @*<img src="~/Controller/RequestsChart?id=@Model.Name&date=@Model.HistoryStartTime.ToString("yyyyMMdd")" />*@
+            <div style="text-align: center">
+                <canvas id="Linecanvas"></canvas>
+            </div>
+        </div>         
         <h4>Response Times</h4>
-        <div>
-            <img src="~/Controller/TimeChart?id=@Model.Name&date=@Model.HistoryStartTime.ToString("yyyyMMdd")" />
-        </div>
-
-        <br />
-
+        <div style="height:250px;width:500px">
+            @*<img src="~/Controller/TimeChart?id=@Model.Name&date=@Model.HistoryStartTime.ToString("yyyyMMdd")" />*@
+            <canvas id="Linecanvas2"></canvas>
+        </div> 
     </div>
 </div>
