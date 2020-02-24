@@ -16,7 +16,7 @@ namespace Gateway.Web.Database
         public Nullable<System.DateTime> Date { get; set; }
         public string Hour { get; set; }
         public string Controller { get; set; }
-        public Nullable<int> AvgTime { get; set; }
-        public Nullable<int> MaxTime { get; set; }
+        public Nullable<long> AvgTime { get; set; }
+        public Nullable<long> MaxTime { get; set; }
     }
 }

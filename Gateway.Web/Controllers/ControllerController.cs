@@ -48,6 +48,9 @@ namespace Gateway.Web.Controllers
             model.TotalCalls = stats.GetTotalCalls(id);
             model.TotalErrors = stats.GetTotalErrors(id);
             model.AverageResponse = stats.GetAverageResponse(id);
+            model.TimeChart = _dataService.GetControllerTimeSummary(id, DateTime.Now.AddDays(-7));
+            model.RequestsChart = _dataService.GetControllerRequestSummary(id, DateTime.Now.AddDays(-7));
+
             return View("Dashboard", model);
         }
 

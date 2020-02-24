@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Gateway.Web.Models.Controller
 {
@@ -10,17 +11,56 @@ namespace Gateway.Web.Models.Controller
         }
 
         public List<ChartItem> RequestSummary { get; private set; }
+
+        public string Key
+        {
+            get
+            {
+                {
+                    if (RequestSummary.Any())
+                        return string.Join(",", RequestSummary.Select(x => $"'{x.Key}'"));
+                    else
+                        return string.Empty;
+                }
+            }
+        }
+
+        public string Value
+        {
+            get
+            {
+                {
+                    if (RequestSummary.Any())
+                        return string.Join(",", RequestSummary.Select(x => x.Value));
+                    else
+                        return string.Empty;
+                }
+            }
+        }
+
+        public string Value2
+        {
+            get
+            {
+                {
+                    if (RequestSummary.Any())
+                        return string.Join(",", RequestSummary.Select(x => x.Value2));
+                    else
+                        return string.Empty;
+                }
+            }
+        }
     }
 
     public class ChartItem
     {
-        public ChartItem(string key, int value)
+        public ChartItem(string key, long value)
         {
             Key = key;
             Value = value;
         }
 
-        public ChartItem(string key, int value, int value2)
+        public ChartItem(string key, long value, long value2)
         {
             Key = key;
             Value = value;
@@ -28,7 +68,7 @@ namespace Gateway.Web.Models.Controller
         }
 
         public string Key { get; set; }
-        public int Value { get; set; }
-        public int Value2 { get; set; }
+        public long Value { get; set; }
+        public long Value2 { get; set; }
     }
 }

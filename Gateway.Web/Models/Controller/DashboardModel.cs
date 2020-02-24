@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using Gateway.Web.Database;
 
 namespace Gateway.Web.Models.Controller
 {
@@ -15,5 +13,7 @@ namespace Gateway.Web.Models.Controller
         public int TotalCalls { get; set; }
         public int TotalErrors { get; set; }
         public string AverageResponse { get; set; }
+        public TimeChartModel TimeChart { get; set; }
+        public RequestsChartModel RequestsChart { get; set; }
     }
 }
