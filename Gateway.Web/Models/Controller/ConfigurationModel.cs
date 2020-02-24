@@ -66,7 +66,6 @@ namespace Gateway.Web.Models.Controller
         [XmlArrayItem(ElementName = "Version", Namespace = "Gateway.Web.Models.Controller")]
         public List<Version> Versions { get; set; }
 
-
         [XmlElement]
         [Display(Name = "Description")]
         public string Description { get; set; }
@@ -81,6 +80,10 @@ namespace Gateway.Web.Models.Controller
         [XmlElement]
         [Display(Name = "Caching Enabled")]
         public bool CachingEnabled { get; set; }
+
+        [XmlElement]
+        [Display(Name = "Nested Priority")]
+        public bool NestedPriority { get; set; }
     }
 
     public class PriorityLimit
