@@ -104,7 +104,7 @@ namespace Gateway.Web.Models.Request
 
         private bool IsXvaScenarioResult(string data, string payloadType)
         {
-            if (payloadType.Equals("XElement", StringComparison.InvariantCultureIgnoreCase))
+            if (!payloadType.Equals("XElement", StringComparison.InvariantCultureIgnoreCase))
                 return false;
 
             var xml = XElement.Load(new StringReader(data));
