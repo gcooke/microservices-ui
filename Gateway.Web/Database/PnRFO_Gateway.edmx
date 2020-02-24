@@ -717,8 +717,8 @@
           <Property Type="DateTime" Name="Date" Nullable="true" />
           <Property Type="String" Name="Hour" Nullable="true" MaxLength="33" />
           <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
-          <Property Type="Int32" Name="AvgTime" Nullable="true" />
-          <Property Type="Int32" Name="MaxTime" Nullable="true" />
+          <Property Type="Int64" Name="AvgTime" Nullable="true" />
+          <Property Type="Int64" Name="MaxTime" Nullable="true" />
         </ComplexType>
         <ComplexType Name="spGetQueueCounts_Result">
           <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
