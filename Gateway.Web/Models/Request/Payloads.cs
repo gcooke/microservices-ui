@@ -104,13 +104,20 @@ namespace Gateway.Web.Models.Request
 
         private bool IsXvaScenarioResult(string data, string payloadType)
         {
-            if (!payloadType.Equals("XElement", StringComparison.InvariantCultureIgnoreCase))
+            try
+            {
+                if (!payloadType.Equals("String", StringComparison.InvariantCultureIgnoreCase))
+                    return false;
+
+                var xml = XElement.Load(new StringReader(data));
+                var scenarioResult = xml.Name.ToString().Equals("ScenarioResult", StringComparison.InvariantCultureIgnoreCase);
+
+                return scenarioResult;
+            }
+            catch (Exception)
+            {
                 return false;
-
-            var xml = XElement.Load(new StringReader(data));
-            var scenarioResult = xml.Name.ToString().Equals("ScenarioResult", StringComparison.InvariantCultureIgnoreCase);
-
-            return scenarioResult;
+            }
         }
 
         private void FormatData()

@@ -183,23 +183,54 @@ namespace Gateway.Web.Controllers
             var data = _dataService.GetPayload(payloadId);
             var bytes = data.GetBytes();
             var str = Encoding.UTF8.GetString(bytes);
-            var model = new XvaResultModel(str);
+            var model = new XvaResultModel(str, correlationId, payloadId);
             return View("XvaResult", model);
         }
 
-        public ActionResult ViewCubeItem(string name, string data)
+        public ActionResult ViewXvaCubeItem(string correlationId, long payloadId, string cubeName)
         {
-            var bytes = Convert.FromBase64String(data);
-            var cube = CubeBuilder.FromBytes(bytes);
-            var model = new CubeModel(cube, name);
-            return View("Cube", model);
+            var data = _dataService.GetPayload(payloadId);
+            var bytes = data.GetBytes();
+            var str = Encoding.UTF8.GetString(bytes);
+            var model = new XvaResultModel(str, correlationId, payloadId);
+
+            if (cubeName.Equals("Batch Statistics", StringComparison.InvariantCultureIgnoreCase))
+            {
+                var statsCubeBytes = Convert.FromBase64String(model.BatchStatisticsRawData);
+                var statsCube = CubeBuilder.FromBytes(statsCubeBytes);
+                return View("Cube", new CubeModel(statsCube, cubeName));
+            }
+
+            var report = model.Reports.SingleOrDefault(x => x.Key.Equals(cubeName, StringComparison.InvariantCultureIgnoreCase));
+            if (report.Key == null)
+                throw new Exception($"Data does not exist for {cubeName} for payload {payloadId} for request {correlationId}");
+
+            var cubeBytes = Convert.FromBase64String(report.Value);
+            var cube = CubeBuilder.FromBytes(cubeBytes);
+            return View("Cube", new CubeModel(cube, cubeName));
         }
 
-        public ActionResult DownloadCubeItem(string name, string data)
+        public ActionResult DownloadXvaCubeItem(string correlationId, long payloadId, string cubeName)
         {
-            var bytes = Convert.FromBase64String(data);
-            var cube = CubeBuilder.FromBytes(bytes);
-            return File(cube.ToBytes(), "application/octet-stream", $"Cube_{name}.dat");
+            var data = _dataService.GetPayload(payloadId);
+            var bytes = data.GetBytes();
+            var str = Encoding.UTF8.GetString(bytes);
+            var model = new XvaResultModel(str, correlationId, payloadId);
+
+            if (cubeName.Equals("Batch Statistics", StringComparison.InvariantCultureIgnoreCase))
+            {
+                var statsCubeBytes = Convert.FromBase64String(model.BatchStatisticsRawData);
+                var statsCube = CubeBuilder.FromBytes(statsCubeBytes);
+                return File(statsCube.ToBytes(), "application/octet-stream", $"Cube_{cubeName}.dat");
+            }
+
+            var report = model.Reports.SingleOrDefault(x => x.Key.Equals(cubeName, StringComparison.InvariantCultureIgnoreCase));
+            if (report.Key == null)
+                throw new Exception($"Data does not exist for {cubeName} for payload {payloadId} for request {correlationId}");
+
+            var cubeBytes = Convert.FromBase64String(report.Value);
+            var cube = CubeBuilder.FromBytes(cubeBytes);
+            return File(cube.ToBytes(), "application/octet-stream", $"Cube_{cubeName}.dat");
         }
 
         public ActionResult ExtractCube(string correlationId, long payloadId)
