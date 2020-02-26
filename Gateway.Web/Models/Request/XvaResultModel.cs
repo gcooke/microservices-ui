@@ -13,11 +13,15 @@ namespace Gateway.Web.Models.Request
         public IDictionary<string, string> Reports { get; set; }
         public CubeModel BatchStatistics { get; set; }
         public string BatchStatisticsRawData { get; set; }
+        public string CorrelationId { get; set; }
+        public long PayloadId { get; }
 
-        public XvaResultModel(string data)
+        public XvaResultModel(string data, string correlationId, long payloadId)
         {
             HeaderItems = new Dictionary<string, string>();
             Reports = new Dictionary<string, string>();
+            CorrelationId = correlationId;
+            PayloadId = payloadId;
             Populate(data);
         }
 
