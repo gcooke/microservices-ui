@@ -41,7 +41,7 @@ namespace Gateway.Web.Services.Schedule.Utils
                     : new Argument("valuationDate", ArgumentDataTypes.PreviousWeekDay.ToString(), "yyyy-MM-dd"));
 
                 if (includeChildRequests)
-                    AddChildRequest(batchRequest, schedule.Children.ToList());
+                    AddChildRequest(batchRequest, schedule.Children.ToList(), businessDate);
 
                 return batchRequest;
             }
@@ -71,7 +71,7 @@ namespace Gateway.Web.Services.Schedule.Utils
             }
 
             if (includeChildRequests)
-                AddChildRequest(webRequest, schedule.Children.ToList());
+                AddChildRequest(webRequest, schedule.Children.ToList(), businessDate);
 
             return webRequest;
         }
@@ -85,17 +85,17 @@ namespace Gateway.Web.Services.Schedule.Utils
             return executableOptions;
         }
 
-        private static void AddChildRequest(RedstoneRequest parent, IList<Database.Schedule> children)
+        private static void AddChildRequest(RedstoneRequest parent, IList<Database.Schedule> children, DateTime? businessDate)
         {
             if (!children.Any())
                 return;
 
             foreach (var child in children)
             {
-                var request = child.ToRequest(child.RiskBatchSchedule?.IsLive ?? false, child.RiskBatchSchedule?.IsT0 ?? false);
+                var request = child.ToRequest(child.RiskBatchSchedule?.IsLive ?? false, child.RiskBatchSchedule?.IsT0 ?? false, businessDate);
                 if (parent.ContinueWith.Any(x => x.ScheduleId == request.ScheduleId)) continue;
                 parent.ContinueWith.Add(request);
-                AddChildRequest(request, child.Children.ToList());
+                AddChildRequest(request, child.Children.ToList(), businessDate);
             }
         }
     }
