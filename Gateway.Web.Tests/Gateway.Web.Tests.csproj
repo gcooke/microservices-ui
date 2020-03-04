@@ -43,8 +43,8 @@
     <Reference Include="Bagl.Cib.MIT.IO, Version=1.0.24.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Bagl.Cib.MIT.IO.1.0.24\lib\net452\Bagl.Cib.MIT.IO.dll</HintPath>
     </Reference>
-    <Reference Include="Bagl.Cib.MIT.IoC, Version=1.0.64.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Bagl.Cib.MIT.IoC.1.0.64\lib\net452\Bagl.Cib.MIT.IoC.dll</HintPath>
+    <Reference Include="Bagl.Cib.MIT.IoC, Version=1.0.65.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bagl.Cib.MIT.IoC.1.0.65\lib\net452\Bagl.Cib.MIT.IoC.dll</HintPath>
     </Reference>
     <Reference Include="Bagl.Cib.MIT.Logging, Version=1.0.38.0, Culture=neutral, PublicKeyToken=6d1ad0679d79c706, processorArchitecture=MSIL">
       <HintPath>..\packages\Bagl.Cib.MIT.Logging.1.0.38\lib\net452\Bagl.Cib.MIT.Logging.dll</HintPath>

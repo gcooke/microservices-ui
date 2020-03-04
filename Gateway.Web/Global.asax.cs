@@ -120,7 +120,9 @@ namespace Gateway.Web
 
             var systemInformation = _container.Resolve<ISystemInformation>();
             var database = systemInformation.GetSetting("GatewayDatabase");
-            var server = systemInformation.GetSetting("DatabaseServer");
+            var defaultserver = systemInformation.GetSetting("DatabaseServer");
+            var server = systemInformation.GetSetting("GatewayDatabaseServer", defaultserver);
+
             var schedulingConnectionString = $"data source={server};initial catalog={database};integrated security=True;multipleactiveresultsets=True;application name=EntityFramework";
             SigmaHomePage = $"https://{dns}";
             if (Debugger.IsAttached)
