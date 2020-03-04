@@ -123,7 +123,7 @@ namespace Gateway.Web
             var defaultserver = systemInformation.GetSetting("DatabaseServer");
             var server = systemInformation.GetSetting("GatewayDatabaseServer", defaultserver);
 
-            var schedulingConnectionString = $"data source={server};initial catalog={database};integrated security=True;multipleactiveresultsets=True;application name=EntityFramework";
+            var schedulingConnectionString = $"data source={server};initial catalog={database};integrated security=True;multipleactiveresultsets=True;application name={systemInformation.ApplicationName}";
             SigmaHomePage = $"https://{dns}";
             if (Debugger.IsAttached)
                 SigmaHomePage = $"https://sigma-dev.absa.co.za";
