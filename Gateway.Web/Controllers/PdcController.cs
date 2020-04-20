@@ -7,7 +7,7 @@ using System.Web.Mvc;
 
 namespace Gateway.Web.Controllers
 {
-    [RoleBasedAuthorize(Roles = "Security.Modify")]
+    [RoleBasedAuthorize(Roles = "PDC")]
     public class PdcController : BaseController
     {
         private readonly IPdcService _pdcService;
