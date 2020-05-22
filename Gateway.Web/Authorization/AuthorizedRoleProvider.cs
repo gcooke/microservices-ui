@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Security;
 using Absa.Cib.Authorization.Extensions;
+using Bagl.Cib.MIT.IoC;
 using Bagl.Cib.MIT.Logging;
 using Bagl.Cib.MSF.ClientAPI.Provider;
 using CommonServiceLocator;
@@ -15,17 +16,24 @@ namespace Gateway.Web.Authorization
     public class AuthorizedRoleProvider : RoleProvider
     {
         private readonly ILogger _logger;
+        private readonly string _environment;
 
         public AuthorizedRoleProvider()
         {
             var loggingService = ServiceLocator.Current.GetInstance<ILoggingService>();
             _logger = loggingService.GetLogger(this);
+
+            var information = ServiceLocator.Current.GetInstance<ISystemInformation>();
+            _environment = information.EnvironmentName;
         }
 
         public override bool IsUserInRole(string username, string roleName)
         {
-            var info = GetUserInformation(_logger);
+            // Allow all users access to DEV
+            if (string.Equals(_environment, "DEV")) return true;
 
+            var info = GetUserInformation(_logger);
+            
             if (info.Roles.Count > 0)
             {
                 return info.Roles.Any(e => e.Equals(roleName, StringComparison.InvariantCultureIgnoreCase));
