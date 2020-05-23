@@ -220,7 +220,7 @@ namespace Gateway.Web.Services
         {
             bool found = false;
             var startLine = "Processing Request " + correlationId;
-            var endLine = "Completed request: " + correlationId;
+            var endLine = "Completed request " + correlationId;
 
             var lines = new List<string>();
             var wasCut = false;
