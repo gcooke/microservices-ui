@@ -71,7 +71,9 @@ namespace Gateway.Web.Controllers
         {
             _authenticationProvider.Authenticate();
             var token = _authenticationProvider.GetToken();
-            var userNames = _authorizationProvider.GetClaims<string>(token, ClaimTypes.Username);
+            var userNames = _authorizationProvider.GetClaims<string>(token, ClaimTypes.Username) ?? new List<string>();
+            if(userNames.Count == 0)
+                userNames.Add(User.Identity.Name);
             var claimsIdentity = new ClaimsIdentity(new JwtIdentity(true, userNames.FirstOrDefault(), "ApplicationCookie"));
             claimsIdentity.AddClaim(new Claim(System.Security.Claims.ClaimTypes.NameIdentifier, userNames.FirstOrDefault()));
 
@@ -96,7 +98,7 @@ namespace Gateway.Web.Controllers
         {
             var claims = new List<Claim>();
 
-            var strClaims = _authorizationProvider.GetClaims<string>(token, claimType);
+            var strClaims = _authorizationProvider.GetClaims<string>(token, claimType) ?? new List<string>();
 
             var strClaimType = claimType == ClaimTypes.Role
                 ? System.Security.Claims.ClaimTypes.Role.ToString()
