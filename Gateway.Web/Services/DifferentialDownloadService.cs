@@ -11,7 +11,7 @@ namespace Gateway.Web.Services
     public class DifferentialDownloadService : IDifferentialDownloadService
     {
         private const string DifferentialDirectory = @"D:\Services\Redstone\Differentials";
-        private const string RemoteAppsDirectory = @"\\Intranet.barcapint.com\dfs-emea\Group\Jhb\IT_Pricing_Risk\Builds\Redstone\Apps";
+        private const string RemoteAppsDirectory = @"\\ds1.ad.absa.co.za\ZA-CIB\group\Jhb\IT_Pricing_Risk\Builds\Redstone\Apps";
 
         private readonly IFileService _fileService;
         private readonly IDifferentialArchiveService _archiveService;
