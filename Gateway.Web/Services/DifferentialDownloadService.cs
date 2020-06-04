@@ -1,30 +1,42 @@
 ﻿using System;
+using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using Bagl.Cib.MIT.IO;
+using Bagl.Cib.MIT.IoC;
 using Bagl.Cib.MIT.Logging;
+using Gateway.Web.Controllers;
 
 namespace Gateway.Web.Services
 {
     public class DifferentialDownloadService : IDifferentialDownloadService
     {
         private const string DifferentialDirectory = @"D:\Services\Redstone\Differentials";
-        private const string RemoteAppsDirectory = @"\\ds1.ad.absa.co.za\ZA-CIB\group\Jhb\IT_Pricing_Risk\Builds\Redstone\Apps";
 
         private readonly IFileService _fileService;
         private readonly IDifferentialArchiveService _archiveService;
         private readonly ILogger _logger;
+        private readonly string RemoteAppsDirectory;
         private readonly object _synchLock = new object();
 
-        public DifferentialDownloadService(ILoggingService loggingService,
+        public DifferentialDownloadService(ILoggingService loggingService, 
+                                           ISystemInformation information,
                                            IFileService fileService,
                                            IDifferentialArchiveService archiveService)
         {
             _fileService = fileService;
             _archiveService = archiveService;
             _logger = loggingService.GetLogger(this);
+
+            string remoteAppsDirectory;
+            if (!information.TryGetSetting(DownloadsController.RemoteAppsDirectoryKey, out remoteAppsDirectory))
+            {
+                throw new ConfigurationErrorsException("Missing configuration key: " + DownloadsController.RemoteAppsDirectoryKey);
+            }
+            RemoteAppsDirectory = remoteAppsDirectory;
+
         }
 
         public Differential Get(string app, string @from, string to)

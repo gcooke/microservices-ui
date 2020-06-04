@@ -20,7 +20,7 @@ namespace Gateway.Web.Controllers
     public class DownloadsController : BaseController
     {
         private string RemoteAppsDirectory { get; }
-        private const string RemoteAppsDirectoryKey = "RemoteAppsDirectory";
+        public const string RemoteAppsDirectoryKey = "RemoteAppsDirectory";
         private readonly IGatewayDatabaseService _database;
         private readonly IDifferentialDownloadService _differentialDownloadService;
         private readonly ILogger _logger;
