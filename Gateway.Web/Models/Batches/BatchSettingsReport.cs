@@ -39,6 +39,7 @@ namespace Gateway.Web.Models.Batches
 
         public string Schedule { get; set; }
         public EchoCreationDto Echo { get; set; }
+        public string MarketDataMap { get; set; }
         public List<string> Differences { get; set; }
     }
 }

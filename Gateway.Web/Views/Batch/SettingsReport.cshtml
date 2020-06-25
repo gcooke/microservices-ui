@@ -29,6 +29,7 @@
                         <tr>
                             <td>Batch Name</td>
                             <td>Schedule</td>
+                            <td>Used Map</td>
                             <td>Differences</td>
                         </tr>
                     </thead>
@@ -37,6 +38,7 @@
                         <tr>
                             <td><div data-toggle="tooltip" title="@item.Name">@item.Name.Truncate(45)</div></td>
                             <td>@item.Schedule</td>
+                            <td>@item.MarketDataMap</td>
                             <td>
                                 @foreach (var diff in item.Differences)
                                 {

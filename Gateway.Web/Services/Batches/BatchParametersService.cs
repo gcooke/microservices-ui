@@ -41,20 +41,21 @@ namespace Gateway.Web.Services.Batches
                     continue;
                 }
 
-                item.Differences = GetDifferences(item, parameters);
+                SetDifferences(item, parameters);
             }
 
             return report;
         }
 
-        private List<string> GetDifferences(BatchItem item, List<CalcStateParameter> parameters)
+        private void SetDifferences(BatchItem item, List<CalcStateParameter> parameters)
         {
             var result = new List<string>();
             var configuration = item.Echo.Parameters.Categories.FirstOrDefault(c => c.Name == "Configuration");
             if (configuration == null)
             {
                 result.Add("No parameters found in echo");
-                return result;
+                item.Differences = result;
+                return;
             }
 
             foreach (var entry in configuration.Entries)
@@ -84,6 +85,7 @@ namespace Gateway.Web.Services.Batches
             var marketDataMap = marketDataSection?.Entries.FirstOrDefault(e => string.Equals(e.Key.Trim(), "Market Data Map", StringComparison.CurrentCultureIgnoreCase));
             if (marketDataMap != null)
             {
+                item.MarketDataMap = marketDataMap.Value;
                 var desired = parameters.FirstOrDefault(p => string.Equals(p.Name, "MarketDataMapName", StringComparison.CurrentCultureIgnoreCase));
                 if (!string.Equals(desired?.Value, marketDataMap.Value, StringComparison.CurrentCultureIgnoreCase))
                 {
@@ -91,7 +93,7 @@ namespace Gateway.Web.Services.Batches
                 }
             }
 
-            return result;
+            item.Differences = result;
         }
 
         private async Task<Dictionary<string, List<CalcStateParameter>>> LoadDefaultSettings(BatchSettingsReport report)
