@@ -30,6 +30,8 @@ namespace Gateway.Web.Database
         public int MaxInstances { get; set; }
         public Nullable<int> TimeoutMilliSec { get; set; }
         public string Description { get; set; }
+        public bool CachingEnabled { get; set; }
+        public bool NestedPriority { get; set; }
     
         public virtual ScalingModel ScalingModel { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

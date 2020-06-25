@@ -109,11 +109,11 @@ namespace Gateway.Web.Database
             var startParameter = start.HasValue ?
                 new ObjectParameter("Start", start) :
                 new ObjectParameter("Start", typeof(System.DateTime));
-
-            var controllerNameParameter = !string.IsNullOrWhiteSpace(controllerName) ?
+    
+            var controllerNameParameter = controllerName != null ?
                 new ObjectParameter("ControllerName", controllerName) :
                 new ObjectParameter("ControllerName", typeof(string));
-
+    
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetResponseStatsAll_Result>("spGetResponseStatsAll", startParameter, controllerNameParameter);
         }
     
@@ -291,6 +291,11 @@ namespace Gateway.Web.Database
                 new ObjectParameter("Days", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetHistoryTimingForSchedule2_Result>("spGetHistoryTimingForSchedule2", scheduleParameter, daysParameter);
+        }
+    
+        public virtual ObjectResult<spBatchOverridesReport_Result> spBatchOverridesReport()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spBatchOverridesReport_Result>("spBatchOverridesReport");
         }
     }
 }

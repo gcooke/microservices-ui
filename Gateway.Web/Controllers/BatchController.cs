@@ -5,6 +5,7 @@ using Gateway.Web.Services.Batches.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Routing;
 
@@ -14,12 +15,15 @@ namespace Gateway.Web.Controllers
     public class BatchController : BaseController
     {
         private readonly IBatchConfigService _riskBatchConfigService;
+        private readonly IBatchParametersService _batchParametersService;
 
         public BatchController(IBatchConfigService riskBatchConfigService,
+            IBatchParametersService batchParametersService,
             ILoggingService loggingService)
            : base(loggingService)
         {
             _riskBatchConfigService = riskBatchConfigService;
+            _batchParametersService = batchParametersService;
         }
 
         [HttpGet]
@@ -162,6 +166,13 @@ namespace Gateway.Web.Controllers
         {
             model.ConfigurationTemplates = GetConfigurationTypes();
             return View("Create", model);
+        }
+
+        public async Task<ActionResult> SettingsReport()
+        {
+            var report = _riskBatchConfigService.GetSettingsReport();
+            report = await _batchParametersService.PopulateDifferences(report);
+            return View(report);
         }
 
         private IList<SelectListItem> GetConfigurationTypes()

@@ -15,6 +15,6 @@ namespace Gateway.Web.Services.Batches.Interfaces
         IList<BatchConfigModel> GetConfigurationTypes();
         IList<BatchConfigModel> GetConfigurationTypes(IEnumerable<long> configurationIdList);
         IEnumerable<ScheduleGroup> GetScheduleGroups();
-        IEnumerable<Database.Schedule> GetSchedules();
+        BatchSettingsReport GetSettingsReport();
     }
 }

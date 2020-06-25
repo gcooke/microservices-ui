@@ -132,6 +132,7 @@ namespace Gateway.Web
 
             information.RegisterType<IActiveDirectoryService, ActiveDirectoryService>(Scope.Singleton);
             information.RegisterType<IBatchConfigService, BatchConfigService>(Scope.Singleton);
+            information.RegisterType<IBatchParametersService, BatchParametersService>(Scope.Singleton);
             information.RegisterType<IScheduleDataService, ScheduleDataService>(Scope.Singleton);
             information.RegisterType<IRedstoneWebRequestScheduler, RedstoneWebRequestScheduler>(Scope.Singleton);
             information.RegisterType<IExecutableScheduler, ExecutableScheduler>(Scope.Singleton);

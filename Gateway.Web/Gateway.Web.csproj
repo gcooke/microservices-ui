@@ -435,8 +435,14 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ExecutableScheduleController.cs" />
     <Compile Include="Controllers\BatchScheduleController.cs" />
+    <Compile Include="Database\spBatchOverridesReport_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Batches\BatchSettingsReport.cs" />
+    <Compile Include="Models\Batches\CalcStateParameters.cs" />
     <Compile Include="Models\Batches\CostGroupBatchCost.cs" />
     <Compile Include="Models\Batches\CostGroupMonthlyBatchCost.cs" />
+    <Compile Include="Models\Batches\EchoCreationDto.cs" />
     <Compile Include="Models\Controllers\ControllerDetail.cs" />
     <Compile Include="Models\Redis\RedisHealth.cs" />
     <Compile Include="Models\Redis\RedisStats.cs" />
@@ -445,6 +451,8 @@
     <Compile Include="Models\Request\XvaResultModel.cs" />
     <Compile Include="Services\Batches\BatchCosts\BatchCostsService.cs" />
     <Compile Include="Services\Batches\BatchCosts\IBatchCostsService.cs" />
+    <Compile Include="Services\Batches\BatchParametersService.cs" />
+    <Compile Include="Services\Batches\Interfaces\IBatchParametersService.cs" />
     <Compile Include="Services\BatchNameService.cs" />
     <Compile Include="Services\GatewayEx.cs" />
     <Compile Include="Services\IBatchNameService.cs" />
@@ -1200,6 +1208,8 @@
     <Content Include="Views\Controllers\RedisStats.cshtml" />
     <Content Include="Views\Shared\_PopupMonitor.cshtml" />
     <Content Include="Views\Request\XvaResult.cshtml" />
+    <Content Include="Views\Batch\SettingsReport.cshtml" />
+    <Content Include="Views\Shared\_EmptyNav.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />

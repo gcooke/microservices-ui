@@ -1,0 +1,55 @@
+﻿@using System.Xml.Schema
+@using Gateway.Web.Models
+@using Gateway.Web.Models.Controllers
+@using Gateway.Web.Utils
+@model Gateway.Web.Models.Batches.BatchSettingsReport
+
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Current = "Batch";
+    ViewBag.Title = "Settings Report";
+}
+@{ Html.RenderPartial("_EmptyNav"); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+
+        <div class="row">
+            <div class="col-sm-6">
+                <h3 class="text-lowercase">Batch Overrides Report</h3><br />
+                <small>Report shows all scheduled batches and whether any settings differ from official quant defaults</small>
+            </div>
+        </div>
+
+        <div class="row m-t-15">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+                <table style="width: 100%; white-space: nowrap" class="datatable">
+                    <thead>
+                        <tr>
+                            <td>Batch Name</td>
+                            <td>Schedule</td>
+                            <td>Differences</td>
+                        </tr>
+                    </thead>
+                    @foreach (var item in Model.Batches.OrderBy(b => b.Schedule).ThenBy(b => b.Name))
+                    {
+                        <tr>
+                            <td><div data-toggle="tooltip" title="@item.Name">@item.Name.Truncate(45)</div></td>
+                            <td>@item.Schedule</td>
+                            <td>
+                                @foreach (var diff in item.Differences)
+                                {
+                                    @diff
+                                    <br />
+                                }
+                            </td>
+                        </tr>
+                    }
+                </table>
+                <br />
+
+            </div>
+        </div>
+    </div>
+</div>

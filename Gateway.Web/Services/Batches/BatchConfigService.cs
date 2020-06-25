@@ -1,13 +1,19 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text;
+using System.Windows.Forms.VisualStyles;
+using System.Xml.Linq;
 using Bagl.Cib.MIT.IoC;
+using CronExpressionDescriptor;
 using Gateway.Web.Database;
 using Gateway.Web.Models.Batches;
 using Gateway.Web.Services.Batches.Interfaces;
 using Gateway.Web.Services.Batches.Utils;
 using Gateway.Web.Services.Schedule.Interfaces;
+using Gateway.Web.Utils;
 using ScheduleGroup = Gateway.Web.Database.ScheduleGroup;
 
 namespace Gateway.Web.Services.Batches
@@ -126,7 +132,7 @@ namespace Gateway.Web.Services.Batches
             using (var db = new GatewayEntities(ConnectionString))
             {
                 return db.RiskBatchConfigurations
-                    .Select(x => new { x.Type, x.ConfigurationId,x.OutputTag})
+                    .Select(x => new { x.Type, x.ConfigurationId, x.OutputTag })
                     .Select(x => new BatchConfigModel
                     {
                         ConfigurationId = x.ConfigurationId,
@@ -147,19 +153,45 @@ namespace Gateway.Web.Services.Batches
             }
         }
 
-        public IEnumerable<Database.Schedule> GetSchedules()
+        public BatchSettingsReport GetSettingsReport()
         {
+            var report = new BatchSettingsReport();
             using (var db = new GatewayEntities(ConnectionString))
             {
-                var items = db.Schedules
-                    .Include("RiskBatchSchedule")
-                    .Include("RiskBatchSchedule.RiskBatchConfiguration")
-                    .Include("RequestConfiguration")
-                    .Include("ExecutableConfiguration")
-                    .Include("ParentSchedule")
-                    .Include("Children")
-                    .ToList();
-                return items;
+                var rawData = db.spBatchOverridesReport();
+
+                foreach (var row in rawData)
+                {
+                    var item = new BatchItem(row.Name);
+                    if (!string.IsNullOrEmpty(row.Schedule))
+                        item.Schedule = ExpressionDescriptor.GetDescription(row.Schedule, new Options() { Use24HourTimeFormat = true });
+
+                    item.Echo = ExtractEcho(db, row.EchoId);
+                    report.Batches.Add(item);
+                }
+            }
+            return report;
+        }
+
+        private EchoCreationDto ExtractEcho(GatewayEntities db, Guid? echoId)
+        {
+            try
+            {
+                var records = db.Payloads.Where(p => p.CorrelationId == echoId).ToList();
+                var record = records.FirstOrDefault(r => r.Direction == "Request");
+                if (record == null) throw new InvalidOperationException("No echo found");
+
+                var data = LegacyCompession.DecodeObject(record.Data, "String");
+                var element = XElement.Parse(data);
+                var echo = element.Deserialize<EchoCreationDto>();
+                return echo;
+            }
+            catch (Exception ex)
+            {
+                return new EchoCreationDto()
+                {
+                    ApplicationName = "Could not compare parameters:" + ex.Message
+                };
             }
         }
 
