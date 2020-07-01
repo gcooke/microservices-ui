@@ -422,10 +422,10 @@ namespace Gateway.Web.Controllers
 
         public async Task<ActionResult> History(long id, string login, string sortOrder)
         {
-            return await HistoryUntil(id, login, sortOrder, null);
+            return await HistoryRange(id, login, sortOrder, null, null);
         }
 
-        public async Task<ActionResult> HistoryUntil(long id, string login, string sortOrder, string before)
+        public async Task<ActionResult> HistoryRange(long id, string login, string sortOrder, string after, string before)
         {
             if (string.IsNullOrEmpty(login))
                 throw new Exception("Insufficient details received to resolve login.");
@@ -453,16 +453,18 @@ namespace Gateway.Web.Controllers
                 //login = user.Domain + "\\" + user.Login;
             }
 
-            DateTime? untilValue = null;
-            DateTime fromValue = DateTime.Today.AddDays(-7);
+            DateTime? beforeValue = null;
+            DateTime afterValue = DateTime.Today.AddDays(-7);
             if (DateTime.TryParseExact(before, GatewayDatabaseService.UserRequestTimeFormat, CultureInfo.CurrentUICulture, DateTimeStyles.None, out DateTime dt))
-                untilValue = dt;
+                beforeValue = dt;
+            if (DateTime.TryParseExact(after, GatewayDatabaseService.UserRequestTimeFormat, CultureInfo.CurrentUICulture, DateTimeStyles.None, out dt))
+                afterValue = dt;
 
             ViewBag.SortColumn = sortOrder;
             ViewBag.SortDirection = sortOrder.EndsWith("_desc") ? "" : "_desc";
             ViewBag.Controller = "User";
 
-            var items = _dataService.GetRecentUserRequests(login, fromValue, untilValue);
+            var items = _dataService.GetRecentUserRequests(login, afterValue, beforeValue);
 
             if (id > 0)
                 foreach (var item in items)
@@ -490,6 +492,7 @@ namespace Gateway.Web.Controllers
 
             string domain = "";
             ViewBag.Controller = "User";
+            var chart = _dataService.GetUserChart(login);
 
             var fullName = _usernameService.GetFullName(login);
             if (login.Contains("\\"))
@@ -498,7 +501,6 @@ namespace Gateway.Web.Controllers
                 login = login.Substring(login.IndexOf("\\") + 1);
             }
 
-            var chart = _dataService.GetUserChart(login);
             var model = new ChartModel(id, login, domain, fullName);
             model.Chart = chart;
             return View("Chart", model);

@@ -82,7 +82,7 @@
                 {
                     <tr>
                         <td>
-                            <a href="~/User/HistoryUntil?id=@Model.Id&login=@Model.Domain\@Model.Login&before=@item.AdditionalData" class="hoverlink">@item.Key</a>
+                            <a href="~/User/HistoryRange?id=@Model.Id&login=@Model.Domain\@Model.Login@item.AdditionalData" class="hoverlink">@item.Key</a>
                         </td>
                         <td>@item.Value</td>
                     </tr>

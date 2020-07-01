@@ -172,12 +172,15 @@ namespace Gateway.Web.Database
             var result = new RequestsChartModel("Request Summary");
             using (var database = new GatewayEntities(_connectionString))
             {
-                foreach(var row in database.spGetUserRequestSummary(user))
+                foreach (var row in database.spGetUserRequestSummary(user))
                 {
                     if (!row.StartTimeUtc.HasValue || !row.RequestCount.HasValue) continue;
                     var label = row.StartTimeUtc.Value.ToLocalTime().ToString("HH:mm");
                     var item = new ChartItem(label, row.RequestCount.Value);
-                    item.AdditionalData = row.StartTimeUtc.Value.AddMinutes(1).ToString(UserRequestTimeFormat);
+
+                    var start = row.StartTimeUtc.Value;
+                    var end = row.StartTimeUtc.Value.AddMinutes(1);
+                    item.AdditionalData = $"&after={start.ToString(UserRequestTimeFormat)}&before={end.ToString(UserRequestTimeFormat)}";
                     result.RequestSummary.Add(item);
                 }
             }
