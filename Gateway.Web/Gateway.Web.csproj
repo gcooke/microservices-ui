@@ -438,6 +438,12 @@
     <Compile Include="Database\spBatchOverridesReport_Result.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
+    <Compile Include="Database\spGetRangeUserRequests_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\spGetUserRequestSummary_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Batches\BatchSettingsReport.cs" />
     <Compile Include="Models\Batches\CalcStateParameters.cs" />
     <Compile Include="Models\Batches\CostGroupBatchCost.cs" />
@@ -449,6 +455,7 @@
     <Compile Include="Models\Redis\RedisStatsViewModel.cs" />
     <Compile Include="Models\Redis\RedisSummary.cs" />
     <Compile Include="Models\Request\XvaResultModel.cs" />
+    <Compile Include="Models\User\ChartModel.cs" />
     <Compile Include="Services\Batches\BatchCosts\BatchCostsService.cs" />
     <Compile Include="Services\Batches\BatchCosts\IBatchCostsService.cs" />
     <Compile Include="Services\Batches\BatchParametersService.cs" />
@@ -1210,6 +1217,7 @@
     <Content Include="Views\Request\XvaResult.cshtml" />
     <Content Include="Views\Batch\SettingsReport.cshtml" />
     <Content Include="Views\Shared\_EmptyNav.cshtml" />
+    <Content Include="Views\User\Chart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />

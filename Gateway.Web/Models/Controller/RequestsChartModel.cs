@@ -68,6 +68,7 @@ namespace Gateway.Web.Models.Controller
         }
 
         public string Key { get; set; }
+        public string AdditionalData { get; set; }
         public long Value { get; set; }
         public long Value2 { get; set; }
     }

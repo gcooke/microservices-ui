@@ -59,7 +59,7 @@ namespace Gateway.Web.Controllers
 
             return View("Details", Nonuser);
         }
-
+        
         [RoleBasedAuthorize(Roles = "Security.Delete")]
         public async Task<ActionResult> RemoveUser(long id)
         {
@@ -422,6 +422,11 @@ namespace Gateway.Web.Controllers
 
         public async Task<ActionResult> History(long id, string login, string sortOrder)
         {
+            return await HistoryUntil(id, login, sortOrder, null);
+        }
+
+        public async Task<ActionResult> HistoryUntil(long id, string login, string sortOrder, string before)
+        {
             if (string.IsNullOrEmpty(login))
                 throw new Exception("Insufficient details received to resolve login.");
 
@@ -448,11 +453,16 @@ namespace Gateway.Web.Controllers
                 //login = user.Domain + "\\" + user.Login;
             }
 
+            DateTime? untilValue = null;
+            DateTime fromValue = DateTime.Today.AddDays(-7);
+            if (DateTime.TryParseExact(before, GatewayDatabaseService.UserRequestTimeFormat, CultureInfo.CurrentUICulture, DateTimeStyles.None, out DateTime dt))
+                untilValue = dt;
+
             ViewBag.SortColumn = sortOrder;
             ViewBag.SortDirection = sortOrder.EndsWith("_desc") ? "" : "_desc";
             ViewBag.Controller = "User";
 
-            var items = _dataService.GetRecentUserRequests(login, DateTime.Today.AddDays(-7));
+            var items = _dataService.GetRecentUserRequests(login, fromValue, untilValue);
 
             if (id > 0)
                 foreach (var item in items)
@@ -471,6 +481,27 @@ namespace Gateway.Web.Controllers
             model.Requests.AddRange(items, sortOrder);
             model.Requests.EnrichHistoryResults(_batchNameService, _usernameService);
             return View("History", model);
+        }
+
+        public async Task<ActionResult> Chart(long id, string login)
+        {
+            if (string.IsNullOrEmpty(login))
+                throw new Exception("Insufficient details received to resolve login.");
+
+            string domain = "";
+            ViewBag.Controller = "User";
+
+            var fullName = _usernameService.GetFullName(login);
+            if (login.Contains("\\"))
+            {
+                domain = login.Substring(0, (login.IndexOf("\\")));
+                login = login.Substring(login.IndexOf("\\") + 1);
+            }
+
+            var chart = _dataService.GetUserChart(login);
+            var model = new ChartModel(id, login, domain, fullName);
+            model.Chart = chart;
+            return View("Chart", model);
         }
     }
 }

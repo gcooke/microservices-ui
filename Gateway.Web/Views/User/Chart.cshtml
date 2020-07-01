@@ -1,0 +1,93 @@
+﻿@using Gateway.Web.Database
+@using Gateway.Web.Models
+@using Gateway.Web.Models.Controller
+@using Gateway.Web.Models.User
+@using Gateway.Web.Utils
+@using Newtonsoft.Json
+@using Version = Gateway.Web.Models.Controller.Version
+@model ChartModel
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = @Model.FullName;
+    ViewBag.Current = "Chart";
+}
+@{ Html.RenderPartial("_UserNav", (IUserModel)@Model); }
+<script src="~/Scripts/Chart.min.js"></script>
+<script>
+
+    var LineChartData2 =
+    {
+        labels: [@Html.Raw(Model.Chart.Key)],
+        datasets: [{
+                label: 'Requests',
+                backgroundColor: "rgba(166,13,20,0.4)",
+                borderWidth: 2,
+                pointRadius: 0,
+                fill: true,
+                data: [@Model.Chart.Value]
+            }]
+    };
+
+    window.onload = function () {
+        var ctx2 = document.getElementById("UserCanvas").getContext("2d");
+
+        window.myBar = new Chart(ctx2,
+            {
+                type: 'line',
+                data: LineChartData2,
+                options:
+                {
+                    title: {
+                        display: true,
+                        text: ""
+                    },
+                    tooltips: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    hover: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    responsive: true,
+                    maintainAspectRatio: true
+                }
+            });
+    }
+
+</script>
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+
+        <h3 class="text-lowercase">Last 24 Hours</h3>
+
+        <br />
+
+        <div style="height:500px;width:800px">
+            <canvas id="UserCanvas"></canvas>
+        </div>
+
+        <br />
+
+        <table style="width: 100%; white-space: nowrap" class="datatable table">
+            <thead>
+                <tr>
+                    <td><b>Minute</b></td>
+                    <td><b>Requests</b></td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Chart.RequestSummary)
+                {
+                    <tr>
+                        <td>
+                            <a href="~/User/HistoryUntil?id=@Model.Id&login=@Model.Domain\@Model.Login&before=@item.AdditionalData" class="hoverlink">@item.Key</a>
+                        </td>
+                        <td>@item.Value</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

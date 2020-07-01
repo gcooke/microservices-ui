@@ -72,8 +72,15 @@
 
         <li>
             <a href="~/User/History?id=@Model.Id&login=@Model.Domain\@Model.Login"
-                class="@(ViewBag.Current == "History" ? "active" : "")">
+               class="@(ViewBag.Current == "History" ? "active" : "")">
                 <span class="glyphicon glyphicon-transfer"></span>&nbsp;&nbsp;History
+            </a>
+        </li>
+        
+        <li>
+            <a href="~/User/Chart?id=@Model.Id&login=@Model.Domain\@Model.Login"
+               class="@(ViewBag.Current == "Chart" ? "active" : "")">
+                <span class="glyphicon glyphicon-signal	"></span>&nbsp;&nbsp;Chart
             </a>
         </li>
     </ul>

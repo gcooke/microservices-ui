@@ -408,6 +408,11 @@
         <Function Name="spGetQueueCountsAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Start" Type="datetime" Mode="In" />
         </Function>
+        <Function Name="spGetRangeUserRequests" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Start" Type="datetime" Mode="In" />
+          <Parameter Name="End" Type="datetime" Mode="In" />
+          <Parameter Name="User" Type="nvarchar" Mode="In" />
+        </Function>
         <Function Name="spGetRecentRequests" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Start" Type="datetime" Mode="In" />
           <Parameter Name="Controller" Type="nvarchar" Mode="In" />
@@ -445,6 +450,9 @@
         </Function>
         <Function Name="spGetUserReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Start" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="spGetUserRequestSummary" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="User" Type="varchar" Mode="In" />
         </Function>
         <EntityContainer Name="GatewayModelStoreContainer">
           <EntitySet Name="ControllerServerRestriction" EntityType="Self.ControllerServerRestriction" Schema="config" store:Type="Tables" />
@@ -708,6 +716,14 @@
             <Parameter Name="Days" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="spBatchOverridesReport" ReturnType="Collection(GatewayModel.spBatchOverridesReport_Result)" />
+          <FunctionImport Name="spGetUserRequestSummary" ReturnType="Collection(GatewayModel.spGetUserRequestSummary_Result)">
+          <Parameter Name="User" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="spGetRangeUserRequests" ReturnType="Collection(GatewayModel.spGetRangeUserRequests_Result)">
+            <Parameter Name="Start" Mode="In" Type="DateTime" />
+            <Parameter Name="End" Mode="In" Type="DateTime" />
+            <Parameter Name="User" Mode="In" Type="String" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="spGetJobStats_Result">
           <Property Type="DateTime" Name="Date" Nullable="true" />
@@ -1254,6 +1270,30 @@
           <Property Type="String" Name="Schedule" Nullable="false" MaxLength="50" />
           <Property Type="Guid" Name="EchoId" Nullable="true" />
         </ComplexType>
+        <ComplexType Name="spGetUserRequestSummary_Result">
+          <Property Type="String" Name="User" Nullable="false" MaxLength="100" />
+          <Property Type="DateTime" Name="StartTimeUtc" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="RequestCount" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="spGetRangeUserRequests_Result">
+          <Property Type="Guid" Name="CorrelationId" Nullable="false" />
+          <Property Type="String" Name="User" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="IpAddress" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Version" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Resource" Nullable="false" MaxLength="1024" />
+          <Property Type="String" Name="RequestType" Nullable="false" MaxLength="10" />
+          <Property Type="Int32" Name="Priority" Nullable="false" />
+          <Property Type="Boolean" Name="IsAsync" Nullable="false" />
+          <Property Type="DateTime" Name="StartUtc" Nullable="false" Precision="23" />
+          <Property Type="DateTime" Name="EndUtc" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="QueueTimeMs" Nullable="true" />
+          <Property Type="Int32" Name="TimeTakeMs" Nullable="true" />
+          <Property Type="Int32" Name="ResultCode" Nullable="true" />
+          <Property Type="String" Name="ResultMessage" Nullable="true" />
+          <Property Type="DateTime" Name="UpdateTimeUtc" Nullable="false" Precision="23" />
+          <Property Type="String" Name="Status" Nullable="true" MaxLength="250" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1770,6 +1810,38 @@
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Schedule" ColumnName="Schedule" />
                 <ScalarProperty Name="EchoId" ColumnName="EchoId" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetUserRequestSummary" FunctionName="GatewayModel.Store.spGetUserRequestSummary">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GatewayModel.spGetUserRequestSummary_Result">
+                <ScalarProperty Name="User" ColumnName="User" />
+                <ScalarProperty Name="StartTimeUtc" ColumnName="StartTimeUtc" />
+                <ScalarProperty Name="RequestCount" ColumnName="RequestCount" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetRangeUserRequests" FunctionName="GatewayModel.Store.spGetRangeUserRequests">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GatewayModel.spGetRangeUserRequests_Result">
+                <ScalarProperty Name="CorrelationId" ColumnName="CorrelationId" />
+                <ScalarProperty Name="User" ColumnName="User" />
+                <ScalarProperty Name="IpAddress" ColumnName="IpAddress" />
+                <ScalarProperty Name="Controller" ColumnName="Controller" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+                <ScalarProperty Name="Resource" ColumnName="Resource" />
+                <ScalarProperty Name="RequestType" ColumnName="RequestType" />
+                <ScalarProperty Name="Priority" ColumnName="Priority" />
+                <ScalarProperty Name="IsAsync" ColumnName="IsAsync" />
+                <ScalarProperty Name="StartUtc" ColumnName="StartUtc" />
+                <ScalarProperty Name="EndUtc" ColumnName="EndUtc" />
+                <ScalarProperty Name="QueueTimeMs" ColumnName="QueueTimeMs" />
+                <ScalarProperty Name="TimeTakeMs" ColumnName="TimeTakeMs" />
+                <ScalarProperty Name="ResultCode" ColumnName="ResultCode" />
+                <ScalarProperty Name="ResultMessage" ColumnName="ResultMessage" />
+                <ScalarProperty Name="UpdateTimeUtc" ColumnName="UpdateTimeUtc" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

@@ -21,6 +21,8 @@ namespace Gateway.Web.Database
 {
     public class GatewayDatabaseService : IGatewayDatabaseService
     {
+        public const string UserRequestTimeFormat = "yyyyMMdd_HHmmss";
+
         private readonly string _connectionString;
         private readonly IRedisService _redisService;
 
@@ -140,17 +142,46 @@ namespace Gateway.Web.Database
             return result;
         }
 
-        public List<HistoryItem> GetRecentUserRequests(string user, DateTime start)
+        public List<HistoryItem> GetRecentUserRequests(string user, DateTime start, DateTime? until)
         {
             var result = new List<HistoryItem>();
             using (var database = new GatewayEntities(_connectionString))
             {
-                var items = database.spGetRecentUserRequests(start, user);
-                foreach (var item in items)
+                if (until.HasValue)
                 {
-                    result.Add(item.ToModel());
+                    var items = database.spGetRangeUserRequests(start, until, user);
+                    foreach (var item in items)
+                    {
+                        result.Add(item.ToModel());
+                    }
+                }
+                else
+                {
+                    var items = database.spGetRecentUserRequests(start, user);
+                    foreach (var item in items)
+                    {
+                        result.Add(item.ToModel());
+                    }
                 }
             }
+            return result;
+        }
+
+        public RequestsChartModel GetUserChart(string user)
+        {
+            var result = new RequestsChartModel("Request Summary");
+            using (var database = new GatewayEntities(_connectionString))
+            {
+                foreach(var row in database.spGetUserRequestSummary(user))
+                {
+                    if (!row.StartTimeUtc.HasValue || !row.RequestCount.HasValue) continue;
+                    var label = row.StartTimeUtc.Value.ToLocalTime().ToString("HH:mm");
+                    var item = new ChartItem(label, row.RequestCount.Value);
+                    item.AdditionalData = row.StartTimeUtc.Value.AddMinutes(1).ToString(UserRequestTimeFormat);
+                    result.RequestSummary.Add(item);
+                }
+            }
+
             return result;
         }
 

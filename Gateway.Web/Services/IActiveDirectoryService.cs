@@ -53,8 +53,15 @@ namespace Gateway.Web.Services
 
         public UserPrincipal FindUser(string domain, string name)
         {
-            var context = GetDomainContext(domain);
-            return GetUserPrincipal(context, name);
+            try
+            {
+                var context = GetDomainContext(domain);
+                return GetUserPrincipal(context, name);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         private UserPrincipal GetUserPrincipal(PrincipalContext groupCtx, string userName, string userSid = null)

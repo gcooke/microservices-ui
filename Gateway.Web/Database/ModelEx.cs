@@ -206,6 +206,29 @@ namespace Gateway.Web.Database
             return result;
         }
 
+        public static Models.Controller.HistoryItem ToModel(this spGetRangeUserRequests_Result item)
+        {
+            var result = new Models.Controller.HistoryItem();
+            result.CorrelationId = item.CorrelationId;
+            result.User = item.User;
+            result.IpAddress = item.IpAddress;
+            result.Controller = item.Controller;
+            result.Version = item.Version;
+            result.Resource = item.Resource;
+            result.RequestType = item.RequestType;
+            result.Priority = item.Priority;
+            result.IsAsync = item.IsAsync;
+            result.StartUtc = item.StartUtc;
+            result.EndUtc = item.EndUtc;
+            result.QueueTimeMs = item.QueueTimeMs;
+            result.TimeTakeMs = item.TimeTakeMs;
+            result.ResultCode = item.ResultCode;
+            result.ResultMessage = item.ResultMessage;
+            result.RequestChangeUtc = item.UpdateTimeUtc;
+            result.RequestChangeMessage = item.Status;
+            return result;
+        }
+
         public static Models.Request.DetailRow ToModel(this spGetRequestChildSummary_Result item)
         {
             var result = new Models.Request.DetailRow();

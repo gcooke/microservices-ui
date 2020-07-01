@@ -297,5 +297,31 @@ namespace Gateway.Web.Database
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spBatchOverridesReport_Result>("spBatchOverridesReport");
         }
+    
+        public virtual ObjectResult<spGetUserRequestSummary_Result> spGetUserRequestSummary(string user)
+        {
+            var userParameter = user != null ?
+                new ObjectParameter("User", user) :
+                new ObjectParameter("User", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetUserRequestSummary_Result>("spGetUserRequestSummary", userParameter);
+        }
+    
+        public virtual ObjectResult<spGetRangeUserRequests_Result> spGetRangeUserRequests(Nullable<System.DateTime> start, Nullable<System.DateTime> end, string user)
+        {
+            var startParameter = start.HasValue ?
+                new ObjectParameter("Start", start) :
+                new ObjectParameter("Start", typeof(System.DateTime));
+    
+            var endParameter = end.HasValue ?
+                new ObjectParameter("End", end) :
+                new ObjectParameter("End", typeof(System.DateTime));
+    
+            var userParameter = user != null ?
+                new ObjectParameter("User", user) :
+                new ObjectParameter("User", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetRangeUserRequests_Result>("spGetRangeUserRequests", startParameter, endParameter, userParameter);
+        }
     }
 }
