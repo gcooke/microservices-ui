@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 namespace Gateway.Web.Models.Controller
 {
     [XmlRoot(ElementName = "Controller")]
-    public class ConfigurationModel
+    public class ConfigurationModel : IValidatableObject
     {
         public enum ScalingStrategies
         {
@@ -90,8 +90,8 @@ namespace Gateway.Web.Models.Controller
         public int DefaultPriority { get; set; }
 
         [XmlElement]
-        [Display(Name = "Default Replicas")]
-        [Range(0, 500, ErrorMessage = "Please enter the maximum priority.")]
+        [Display(Name = "Desired Replicas")]
+        [Range(0, 500, ErrorMessage = "Please enter the desired replicas.")]
         public int DefaultReplicaCount { get; set; }
 
         [XmlElement]
@@ -109,6 +109,19 @@ namespace Gateway.Web.Models.Controller
         [XmlElement]
         [Display(Name = "Memory Limit")]
         public string MemoryLimit { get; set; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (ScalingStrategyId != ScalingStrategies.Container) yield break;
+            if (string.IsNullOrEmpty(MemoryRequest))
+                yield return new ValidationResult("The memory request for pods is required.");
+            if (string.IsNullOrEmpty(CpuRequest))
+                yield return new ValidationResult("The CPU request for pods is required.");
+            if (string.IsNullOrEmpty(MemoryLimit))
+                yield return new ValidationResult("The memory limit for pods is required.");
+            if (string.IsNullOrEmpty(CpuLimit))
+                yield return new ValidationResult("The CPU limit for pods is required.");
+        }
     }
 
     public class PriorityLimit
