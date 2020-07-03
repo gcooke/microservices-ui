@@ -212,6 +212,7 @@ namespace Gateway.Web.Services
                 case ConfigurationModel.ScalingStrategies.Container:
                     model.MaxPriority = model.PriorityLimits.Any() ? model.PriorityLimits.Where(r => r.Enabled).Max(r => r.Priority) : 1;
                     model.MaxInstances = 1;
+                    model.NestedPriority = true;
                     break;
             }
 
