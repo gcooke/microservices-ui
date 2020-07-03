@@ -84,6 +84,31 @@ namespace Gateway.Web.Models.Controller
         [XmlElement]
         [Display(Name = "Nested Priority")]
         public bool NestedPriority { get; set; }
+
+        [XmlElement]
+        [Display(Name = "Default Priority")]
+        public int DefaultPriority { get; set; }
+
+        [XmlElement]
+        [Display(Name = "Default Replicas")]
+        [Range(0, 500, ErrorMessage = "Please enter the maximum priority.")]
+        public int DefaultReplicaCount { get; set; }
+
+        [XmlElement]
+        [Display(Name = "CPUs required on start")]
+        public string CpuRequest { get; set; }
+
+        [XmlElement]
+        [Display(Name = "CPU Limit")]
+        public string CpuLimit { get; set; }
+
+        [XmlElement]
+        [Display(Name = "Memory required on start")]
+        public string MemoryRequest { get; set; }
+
+        [XmlElement]
+        [Display(Name = "Memory Limit")]
+        public string MemoryLimit { get; set; }
     }
 
     public class PriorityLimit
@@ -104,7 +129,7 @@ namespace Gateway.Web.Models.Controller
         [XmlElement]
         [Required]
         [Display(Name = "Instances")]
-        [Range(1, 2000, ErrorMessage = "Please enter the maximum priority.")]
+        [Range(1, 500, ErrorMessage = "Please enter the maximum priority.")]
         public int Instances { get; set; }
     }
 }

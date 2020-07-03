@@ -154,8 +154,8 @@
                 </div>
             </div>
         </div>
-    
-        <div class="row">
+
+        <div class="row" id="NestedPriorityGroup">
             <div class="col-md-3" style="margin-top: 10px">
                 @Html.LabelFor(m => m.NestedPriority, new { @class = "control-label" })
             </div>
@@ -166,7 +166,109 @@
             </div>
         </div>
 
-    <br />
+        <div id="PodConfigurationGroup">
+            <div class="row" id="DefaultReplicaCountGroup">
+                <div class="col-md-3" style="margin-top: 10px">
+                    @Html.LabelFor(m => m.DefaultReplicaCount, new { @class = "control-label" })
+                </div>
+                <div class="col-md-3">
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-spinner btn-number" data-type="minus" data-field="DefaultReplicaCount">
+                                <span class="glyphicon glyphicon-minus"></span>
+                            </button>
+                        </span>
+                        @Html.TextBoxFor(m => m.DefaultReplicaCount, new { @name = "Replicas", @class = "number-spinner input-number", @min = "0", @max = "2000", Value = "0" })
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-spinner btn-number" data-type="plus" data-field="DefaultReplicaCount">
+                                <span class="glyphicon glyphicon-plus"></span>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                </div>
+                <div class="col-md-4">
+                    <div id="DefaultReplicaCountLabel" style="font-style: italic;"><small>The desired number of pods for this workload.</small></div>
+                </div>
+            </div>
+
+            <div class="row" id="CpuRequestGroup">
+                <div class="col-md-3" style="margin-top: 10px">
+                    @Html.LabelFor(m => m.CpuRequest, new { @class = "control-label" })
+                </div>
+                <div class="col-md-3">
+                    <div class="input-group">
+                        @Html.TextBoxFor(m => m.CpuRequest, new { @name = "CPU Request", style = "width:80px;" })
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                </div>
+                <div class="col-md-4">
+                    <div id="CpuRequestLabel" style="font-style: italic;"><small>The minimum CPU requirement when Kubernetes schedules a pod. Can be expressed as '0.1' or '100m'.</small></div>
+                </div>
+            </div>
+
+            <div class="row" id="CpuLimitGroup">
+                <div class="col-md-3" style="margin-top: 10px">
+                    @Html.LabelFor(m => m.CpuLimit, new { @class = "control-label" })
+                </div>
+                <div class="col-md-3">
+                    <div class="input-group">
+                        @Html.TextBoxFor(m => m.CpuLimit, new { @name = "CPU Limit", style = "width:80px;" })
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                </div>
+                <div class="col-md-4">
+                    <div id="CpuLimitLabel" style="font-style: italic;"><small>The maximum amount of CPU time that a container can use. Can be expressed as '0.1', '100m' or '1'.</small></div>
+                </div>
+            </div>
+
+            <div class="row" id="MemoryRequestGroup">
+                <div class="col-md-3" style="margin-top: 10px">
+                    @Html.LabelFor(m => m.MemoryRequest, new { @class = "control-label" })
+                </div>
+                <div class="col-md-3">
+                    <div class="input-group">
+                        @Html.TextBoxFor(m => m.MemoryRequest, new { @name = "Memory Request", style = "width:80px;" })
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                </div>
+                <div class="col-md-4">
+                    <div id="MemoryRequestLabel" style="font-style: italic;"><small>The minimum memory requirement when Kubernetes schedules a pod. Can be expressed as 'Mi', e.g.: '50Mi'.</small></div>
+                </div>
+            </div>
+
+            <div class="row" id="MemoryLimitGroup">
+                <div class="col-md-3" style="margin-top: 10px">
+                    @Html.LabelFor(m => m.MemoryLimit, new { @class = "control-label" })
+                </div>
+                <div class="col-md-3">
+                    <div class="input-group">
+                        @Html.TextBoxFor(m => m.MemoryLimit, new { @name = "Memory Limit", style = "width:80px;" })
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                </div>
+                <div class="col-md-4">
+                    <div id="MemoryLimitLabel" style="font-style: italic;"><small>The maximum amount of memory that a container can use. Can be expressed as 'Mi' or 'Gi' e.g.: '100Mi' or '1Gi'.</small></div>
+                </div>
+            </div>
+        </div>
+
+        <br />
 
         <div class="row" id="PriorityLimitsLabel">
             <div class="col-md-6">
@@ -186,7 +288,7 @@
                                     </th>
                                     <th style="background: #990505;">Priority</th>
                                     <th style="background: #990505;">
-                                        <div>Running workers per server</div>
+                                        <div id="PriorityLimitsTableHeaderLabel">Running workers per server</div>
                                     </th>
                                 </tr>
                             </thead>
@@ -215,7 +317,6 @@
                 </div>
             </div>
         </div>
-
 
         <div class="col-md-offset-3 col-md-4">
             <img src="../../Content/img/ajax-loader.gif" id="loading" />

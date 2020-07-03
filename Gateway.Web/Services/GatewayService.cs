@@ -183,7 +183,7 @@ namespace Gateway.Web.Services
 
         public async Task<ConfigurationModel> GetControllerConfiguration(string name)
         {
-            var response = await _gateway.GetSync("Catalogue", string.Format("controllers/{0}", name), string.Empty);
+            var response = await _gateway.GetSync("Catalogue", $"controllers/{name}", string.Empty);
 
             if (!response.Successfull)
                 throw new RemoteGatewayException(response.Message);
@@ -209,11 +209,9 @@ namespace Gateway.Web.Services
                 case ConfigurationModel.ScalingStrategies.Fixed:
                     model.MaxInstances = 1;
                     break;
-
                 case ConfigurationModel.ScalingStrategies.Container:
-                    model.MaxPriority = 16;
+                    model.MaxPriority = model.PriorityLimits.Any() ? model.PriorityLimits.Where(r => r.Enabled).Max(r => r.Priority) : 1;
                     model.MaxInstances = 1;
-                    model.PriorityLimits?.Clear();
                     break;
             }
 
