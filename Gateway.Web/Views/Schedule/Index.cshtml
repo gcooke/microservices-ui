@@ -4,6 +4,7 @@
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
     ViewBag.Title = "Configuration";
+    ViewBag.CustomTitle = "Schedule - " + Model.BusinessDate.ToString("dd MMM yyyy");
     ViewBag.Current = "Schedule";
 }
 @{ Html.RenderPartial("_BatchConfigNav"); }

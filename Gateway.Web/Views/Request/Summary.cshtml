@@ -9,6 +9,7 @@
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
     ViewBag.Title = "Request";
+    ViewBag.CustomTitle = Model.Controller + " - " + Model.StartUtc.ToString("dd MMM yyyy");
     ViewBag.Current = "Summary";
     var title = (string)Model.ParentCorrelationId.ToString();
 }
