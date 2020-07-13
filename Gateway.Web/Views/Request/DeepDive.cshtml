@@ -1,0 +1,102 @@
+﻿@using Gateway.Web.Helpers
+@using Gateway.Web.Models.Request
+
+@model DeepDive
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "Request";
+    ViewBag.Current = "DeepDive";
+}
+@{ Html.RenderPartial("_RequestNav", (DeepDive)@Model); }
+
+<style>
+    label {
+        font-weight: normal !important;
+    }
+</style>
+
+@using (@Html.BeginForm("DeepDive", "Request", FormMethod.Post))
+{
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+        <div class="container-fluid">
+            <h3 class="row text-lowercase">Deep Dive</h3>
+            <table style="width: 100%; white-space: nowrap" class="datatable">
+                <tr>
+                    <td class="columnheader" style="width: 10%">Controller</td>
+                    <td style="width: 40%">
+                        @Html.DropDownListFor(m => m.DeepDiveSearch.Controller, Model.Controllers, new { @id = "Controller", @name = "Controller", @class = "form-control" })
+                    </td>
+                    <td class="columnheader" style="width: 10%">Correlation Id</td>
+                    <td style="width: 40%">
+                        @Html.TextBoxFor(m => m.DeepDiveSearch.CorrelationId, new { @name = "id", @id = "id", @class = "form-control" })
+                    </td>
+                </tr>
+                <tr>
+                    <td class="columnheader" style="width: 10%">Search</td>
+                    <td style="width: 40%">
+                        @Html.TextBoxFor(m => m.DeepDiveSearch.Search, new { @name = "id", @id = "id", @class = "form-control" })
+                    </td>
+                    <td class="columnheader" style="width: 10%">Search Depth</td>
+                    <td style="width: 40%;font-size:x-small" class="small">
+                        <div class="block">
+                            @Html.CheckBoxFor(f => f.DeepDiveSearch.SearchResource)
+                            <label for="mycheck">@Html.LabelFor(f => f.DeepDiveSearch.SearchResource) </label>
+                        </div>
+                        <div class="block">
+                            @Html.CheckBoxFor(f => f.DeepDiveSearch.SearchError)
+                            <label for="mycheck">@Html.LabelFor(f => f.DeepDiveSearch.SearchError) </label>
+                        </div>
+                        <div class="block">
+                            @Html.CheckBoxFor(f => f.DeepDiveSearch.SearchPayload)
+                            <label for="mycheck">@Html.LabelFor(f => f.DeepDiveSearch.SearchPayload) </label>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="row m-t-15">
+            <div class="col-sm-12">
+                <button type="submit" class="btn btn-default">Search</button>
+            </div>
+        </div>
+    </div>
+    @if (Model.DeepDiveResults.Count > 0)
+    {
+        <br />
+
+        <h3 class="text-lowercase">Deep Dive Results</h3>
+
+        <table style="width: 100%; white-space: nowrap" class="datatable">
+            <thead>
+                <tr>
+                    <td>CorrelationId</td>
+                    <td>Controller</td>
+                    <td style="width:200px">Resource</td>
+     
+                    <td>ResultMessage</td>
+                    <td>ParentCorrelationId</td>
+                    <td>Payload</td>
+                    <td>Depth</td>
+                </tr>
+            </thead>
+            @foreach (var row in Model.DeepDiveResults)
+            {
+                <tr>
+                    <td>@row.CorrelationId</td>
+                    <td>@row.Controller</td>
+                    <td style="width:200px" title="@row.Resource">@row.ResourceDisplay </td>
+       
+                    <td>@row.ResultMessage</td>
+                    <td>@row.ParentCorrelationId</td>
+                    <td><a href="">Open Payload</a></td>
+                    <td>@row.Depth</td>
+                </tr>
+            }
+        </table>
+    }
+</div>
+
+}
+

@@ -945,6 +945,15 @@ namespace Gateway.Web.Database
                 };
             }
         }
+
+        public IList<DeepDiveDto> GetDeepDive(string correlationId, string controller, string keyword, bool searchResource, bool searchPayload, bool searchMessage)
+        {
+            using (var database = new GatewayEntities(_connectionString, 300))
+            {
+                var results = database.spGetDeepDive(correlationId, controller, keyword, searchResource, searchPayload, searchMessage);
+                return AutoMapper.Mapper.Map<List<DeepDiveDto>>(results.ToList());
+            }
+        }
     }
 
     internal class ChildRequest

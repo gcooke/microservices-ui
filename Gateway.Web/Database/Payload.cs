@@ -22,5 +22,6 @@ namespace Gateway.Web.Database
         public System.DateTime UpdateTime { get; set; }
         public string CompressionType { get; set; }
         public Nullable<long> DataLengthBytes { get; set; }
+        public string Location { get; set; }
     }
 }

@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Web.Mvc;
-using System.Xml.Linq;
+﻿using System.Text;
 using Bagl.Cib.MIT.Cube;
 using Bagl.Cib.MIT.Logging;
 using Bagl.Cib.MSF.ClientAPI.Model;
-using Bagl.Cib.MSF.Contracts.Model;
 using Gateway.Web.Authorization;
 using Gateway.Web.Database;
 using Gateway.Web.Helpers;
@@ -17,6 +9,16 @@ using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Request;
 using Gateway.Web.Services;
 using Gateway.Web.Utils;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+using System.Text;
+
+using System.Threading;
+using System.Threading.Tasks;
+using System.Web.Mvc;
+using System.Xml.Linq;
 
 namespace Gateway.Web.Controllers
 {
@@ -265,6 +267,48 @@ namespace Gateway.Web.Controllers
 
             var model = _statisticsService.GetTimings(correlationId);
             return View(model);
+        }
+
+        public ActionResult DeepDive(string id, string controllername)
+        {
+            var model = new DeepDive()
+            {
+                Controller = controllername,
+                DeepDiveResults = new List<DeepDiveDto>(),
+                DeepDiveSearch = new DeepDiveSearch()
+                {
+                    CorrelationId = id,
+                    Controller = controllername
+                }
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult DeepDive()
+        {
+            var updatedmodel = new DeepDive();
+            var correlationId = Request.Form["DeepDiveSearch.CorrelationId"];
+            var controller = Request.Form["DeepDiveSearch.Controller"];
+            var keyword = Request.Form["DeepDiveSearch.Search"];
+            var searchResource = (Request.Form["DeepDiveSearch.SearchResource"] == null || Request.Form["DeepDiveSearch.SearchResource"] == "false") ? false : true;
+            var searchMessage = (Request.Form["DeepDiveSearch.SearchMessage"] == null || Request.Form["DeepDiveSearch.SearchMessage"] == "false") ? false : true;
+            var searchPayload = (Request.Form["DeepDiveSearch.SearchPayload"] == null || Request.Form["DeepDiveSearch.SearchPayload"] == "false") ? false : true;
+
+            updatedmodel.DeepDiveSearch = new DeepDiveSearch()
+            {
+                CorrelationId = correlationId,
+                Search = keyword,
+                SearchError = searchMessage,
+                SearchPayload = searchPayload,
+                SearchResource = searchPayload,
+                Controller = controller,
+            };
+            updatedmodel.Controller = controller;
+            var result = _dataService.GetDeepDive(correlationId, controller, keyword, searchResource, searchMessage, searchPayload);
+            updatedmodel.DeepDiveResults = result.ToList();
+            return View(updatedmodel);
         }
     }
 }

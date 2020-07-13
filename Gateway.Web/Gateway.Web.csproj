@@ -435,25 +435,91 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ExecutableScheduleController.cs" />
     <Compile Include="Controllers\BatchScheduleController.cs" />
+    <Compile Include="Database\CheckFileSizes_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\DelimitedSplit8K_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\fnGetBatchTradeAndRiskAverages_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\GetBatches_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
     <Compile Include="Database\spBatchOverridesReport_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\spCreateEcho_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\spGetBatchCosts_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\spGetBatchSummary_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\spGetBatchTradeAndRiskAverages_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\spGetControllerShaping_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\spGetDeepDive_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\spGetDetailsForExecutedBatches_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\spGetPodConfiguration_Result.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\spGetRangeUserRequests_Result.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
+    <Compile Include="Database\spGetRequestAverage_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\spGetRequestStatsAll_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\spGetRequestTimings_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\spGetStaleFilterRequests_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\spGetUsageReport_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
     <Compile Include="Database\spGetUserRequestSummary_Result.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
+    <Compile Include="Database\spGetUserUsageReportData_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\spGetWorkers_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\sp_helpdiagramdefinition_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\sp_helpdiagrams_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Enums\SigmaController.cs" />
     <Compile Include="Models\Batches\BatchSettingsReport.cs" />
     <Compile Include="Models\Batches\CalcStateParameters.cs" />
     <Compile Include="Models\Batches\CostGroupBatchCost.cs" />
     <Compile Include="Models\Batches\CostGroupMonthlyBatchCost.cs" />
     <Compile Include="Models\Batches\EchoCreationDto.cs" />
     <Compile Include="Models\Controllers\ControllerDetail.cs" />
+    <Compile Include="Models\Controller\DeepDiveDto.cs" />
     <Compile Include="Models\Redis\RedisHealth.cs" />
     <Compile Include="Models\Redis\RedisStats.cs" />
     <Compile Include="Models\Redis\RedisStatsViewModel.cs" />
     <Compile Include="Models\Redis\RedisSummary.cs" />
+    <Compile Include="Models\Request\DeepDive.cs" />
     <Compile Include="Models\Request\XvaResultModel.cs" />
     <Compile Include="Models\User\ChartModel.cs" />
     <Compile Include="Services\Batches\BatchCosts\BatchCostsService.cs" />
@@ -1218,6 +1284,7 @@
     <Content Include="Views\Batch\SettingsReport.cshtml" />
     <Content Include="Views\Shared\_EmptyNav.cshtml" />
     <Content Include="Views\User\Chart.cshtml" />
+    <Content Include="Views\Request\DeepDive.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />

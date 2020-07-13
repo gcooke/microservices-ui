@@ -94,6 +94,7 @@
           <Property Name="Data" Type="varbinary(max)" Nullable="false" />
           <Property Name="UpdateTime" Type="datetime" Nullable="false" />
           <Property Name="DataLengthBytes" Type="bigint" />
+          <Property Name="Location" Type="nvarchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="Request">
           <Key>
@@ -386,11 +387,162 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="ReleaseControllerVersion" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="adm">
+          <Parameter Name="ControllerName" Type="nvarchar" Mode="In" />
+          <Parameter Name="Alias" Type="nvarchar" Mode="In" />
+          <Parameter Name="Version" Type="nvarchar" Mode="In" />
+          <Parameter Name="Status" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="spGetPodConfiguration" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="config" />
+        <Function Name="CheckFileSizes" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="CleanupDatabase" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="BusinessDate" Type="datetime" Mode="In" />
+          <Parameter Name="JobID" Type="bigint" Mode="In" />
+          <Parameter Name="OlderThanDays" Type="int" Mode="In" />
+        </Function>
+        <Function Name="DelimitedSplit8K" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="pString" Type="varchar" Mode="In" />
+          <Parameter Name="pDelimiter" Type="char" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="ItemNumber" Type="bigint" />
+                <Property Name="Item" Type="varchar" MaxLength="8000" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
+        <Function Name="fn_GetUserGroups" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="varchar">
+          <Parameter Name="user" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="fn_VersionPad" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="varchar">
+          <Parameter Name="version" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="fnGetBatchTradeAndRiskAverages" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="EvaluationDate" Type="datetime" Mode="In" />
+          <Parameter Name="ScheduleId" Type="bigint" Mode="In" />
+          <Parameter Name="RiskBatchScheduleId" Type="bigint" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="AverageTrades" Type="int" Nullable="false" />
+                <Property Name="AverageRisks" Type="int" Nullable="false" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="fnGetRiskCountByCorrelationId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int">
+          <Parameter Name="CorrelationId" Type="uniqueidentifier" Mode="In" />
+        </Function>
+        <Function Name="fnGetRiskCountByDate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int">
+          <Parameter Name="CurrentValuationDate" Type="datetime" Mode="In" />
+          <Parameter Name="ScheduleId" Type="bigint" Mode="In" />
+          <Parameter Name="RiskBatchScheduleId" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="fnGetTradeCountByCorrelationId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int">
+          <Parameter Name="CorrelationId" Type="uniqueidentifier" Mode="In" />
+        </Function>
+        <Function Name="fnGetTradeCountByDate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int">
+          <Parameter Name="CurrentValuationDate" Type="datetime" Mode="In" />
+          <Parameter Name="ScheduleId" Type="bigint" Mode="In" />
+          <Parameter Name="RiskBatchScheduleId" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="fnGetValidAveragingDates" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="EvaluationDate" Type="datetime" Mode="In" />
+          <Parameter Name="SampleSize" Type="int" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="OutputDate" Type="datetime" Nullable="false" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="LogToTable" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="JobID" Type="bigint" Mode="In" />
+          <Parameter Name="BusinessDate" Type="datetime" Mode="In" />
+          <Parameter Name="LogStatus" Type="varchar" Mode="In" />
+          <Parameter Name="StoredProcedure" Type="varchar" Mode="In" />
+          <Parameter Name="Message" Type="ntext" Mode="In" />
+        </Function>
+        <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_creatediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_dropdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagramdefinition" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_renamediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="spBatchOverridesReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="spCaptureBatchCosts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="BatchDate" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="spCreateEcho" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CorrelationId" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="User" Type="nvarchar" Mode="In" />
+          <Parameter Name="ApplicationName" Type="nvarchar" Mode="In" />
+          <Parameter Name="Site" Type="nvarchar" Mode="In" />
+          <Parameter Name="CalculationName" Type="nvarchar" Mode="In" />
+          <Parameter Name="Started" Type="datetime" Mode="In" />
+          <Parameter Name="ValuationDate" Type="date" Mode="In" />
+          <Parameter Name="Parameters" Type="nvarchar(max)" Mode="In" />
+        </Function>
+        <Function Name="spGetAllTradeAndRiskAverages" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="EvaluationDate" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="spGetBatchCosts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ReportDate" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="spGetBatchSummary" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="fromDateTime" Type="datetime" Mode="In" />
+          <Parameter Name="toDateTime" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="spGetBatchTradeAndRiskAverages" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="EvaluationDate" Type="datetime" Mode="In" />
+          <Parameter Name="ScheduleId" Type="bigint" Mode="In" />
+          <Parameter Name="RiskBatchScheduleId" Type="bigint" Mode="In" />
+        </Function>
         <Function Name="spGetChildRequests" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="correlationId" Type="uniqueidentifier" Mode="In" />
         </Function>
+        <Function Name="spGetControllerShaping" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Controller" Type="nvarchar" Mode="In" />
+        </Function>
         <Function Name="spGetControllerStates" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="spGetDeepDive" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="correlationId" Type="varchar" Mode="In" />
+          <Parameter Name="controller" Type="varchar" Mode="In" />
+          <Parameter Name="Keyword" Type="varchar" Mode="In" />
+          <Parameter Name="SearchResource" Type="bit" Mode="In" />
+          <Parameter Name="SearchResultMessage" Type="bit" Mode="In" />
+          <Parameter Name="SearchPayLoad" Type="bit" Mode="In" />
+        </Function>
+        <Function Name="spGetDetailsForExecutedBatches" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="EvaluationDate" Type="datetime" Mode="In" />
+        </Function>
         <Function Name="spGetHistoryTimingForSchedule" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Schedule" Type="bigint" Mode="In" />
           <Parameter Name="Days" Type="int" Mode="In" />
@@ -400,6 +552,11 @@
         </Function>
         <Function Name="spGetPayloads" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CorrelationId" Type="uniqueidentifier" Mode="In" />
+        </Function>
+        <Function Name="spGetPricingRequestTotalExecutionTime" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CorrelationId" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="TotalNodes" Type="int" Mode="InOut" />
+          <Parameter Name="TotalExecutionTime" Type="float" Mode="InOut" />
         </Function>
         <Function Name="spGetQueueCounts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Start" Type="datetime" Mode="In" />
@@ -427,6 +584,13 @@
           <Parameter Name="Start" Type="datetime" Mode="In" />
           <Parameter Name="User" Type="nvarchar" Mode="In" />
         </Function>
+        <Function Name="spGetRequestAverage" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Controller" Type="nvarchar" Mode="In" />
+          <Parameter Name="Resource" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="spGetRequestChildren" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="correllationId" Type="uniqueidentifier" Mode="In" />
+        </Function>
         <Function Name="spGetRequestChildrenPayloadDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="correlationId" Type="uniqueidentifier" Mode="In" />
         </Function>
@@ -440,19 +604,76 @@
           <Parameter Name="Start" Type="datetime" Mode="In" />
           <Parameter Name="Controller" Type="nvarchar" Mode="In" />
         </Function>
+        <Function Name="spGetRequestStatsAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Start" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="spGetRequestTimings" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="correlationId" Type="uniqueidentifier" Mode="In" />
+        </Function>
         <Function Name="spGetResponseStatsAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Start" Type="datetime" Mode="In" />
           <Parameter Name="ControllerName" Type="varchar" Mode="In" />
         </Function>
+        <Function Name="spGetStaleFilterRequests" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="DaysNotUsed" Type="int" Mode="In" />
+        </Function>
         <Function Name="spGetTimeStats" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Start" Type="datetime" Mode="In" />
           <Parameter Name="Controller" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="spGetUsageReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="startDate" Type="datetime" Mode="In" />
         </Function>
         <Function Name="spGetUserReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Start" Type="datetime" Mode="In" />
         </Function>
         <Function Name="spGetUserRequestSummary" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="User" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="spGetUserUsageReportData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="startDate" Type="datetime" Mode="In" />
+          <Parameter Name="endDate" Type="datetime" Mode="In" />
+          <Parameter Name="excludedControllers" Type="varchar(max)" Mode="In" />
+          <Parameter Name="excludedUsers" Type="varchar(max)" Mode="In" />
+        </Function>
+        <Function Name="spGetWorkers" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="queryTime" Type="datetime" Mode="In" />
+          <Parameter Name="Controller" Type="nvarchar" Mode="In" />
+          <Parameter Name="version" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="TruncateLogFile" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="JobID" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="UpdateControllerVersions" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ControllerName" Type="varchar" Mode="In" />
+          <Parameter Name="Status" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="UpsertControllerVersion" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ControllerName" Type="varchar" Mode="In" />
+          <Parameter Name="Version" Type="nvarchar" Mode="In" />
+          <Parameter Name="Alias" Type="nvarchar" Mode="In" />
+          <Parameter Name="Status" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="WriteRequestChange" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CorrelationId" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="Status" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="WriteResponse" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CorrelationId" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="EndUtc" Type="datetime" Mode="In" />
+          <Parameter Name="TimeTakenMs" Type="int" Mode="In" />
+          <Parameter Name="ResultCode" Type="int" Mode="In" />
+          <Parameter Name="ResultMessage" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="QueueTimeMs" Type="int" Mode="In" />
+          <Parameter Name="Size" Type="int" Mode="In" />
+          <Parameter Name="SizeUnit" Type="nvarchar" Mode="In" />
+          <Parameter Name="PayloadType" Type="nvarchar" Mode="In" />
+          <Parameter Name="PayloadData" Type="varbinary(max)" Mode="In" />
+          <Parameter Name="PayloadDataLength" Type="bigint" Mode="In" />
+          <Parameter Name="CompressionType" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="GetBatches" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="metrics">
+          <Parameter Name="runDate" Type="datetime" Mode="In" />
         </Function>
         <EntityContainer Name="GatewayModelStoreContainer">
           <EntitySet Name="ControllerServerRestriction" EntityType="Self.ControllerServerRestriction" Schema="config" store:Type="Tables" />
@@ -724,6 +945,180 @@
             <Parameter Name="End" Mode="In" Type="DateTime" />
             <Parameter Name="User" Mode="In" Type="String" />
           </FunctionImport>
+          <FunctionImport Name="ReleaseControllerVersion">
+            <Parameter Name="ControllerName" Mode="In" Type="String" />
+            <Parameter Name="Alias" Mode="In" Type="String" />
+            <Parameter Name="Version" Mode="In" Type="String" />
+            <Parameter Name="Status" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="spGetPodConfiguration" ReturnType="Collection(GatewayModel.spGetPodConfiguration_Result)" />
+          <FunctionImport Name="CheckFileSizes" ReturnType="Collection(GatewayModel.CheckFileSizes_Result)" />
+          <FunctionImport Name="CleanupDatabase" ReturnType="Collection(Int32)">
+            <Parameter Name="BusinessDate" Mode="In" Type="DateTime" />
+            <Parameter Name="JobID" Mode="In" Type="Int64" />
+            <Parameter Name="OlderThanDays" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="DelimitedSplit8K" IsComposable="true" ReturnType="Collection(GatewayModel.DelimitedSplit8K_Result)">
+            <Parameter Name="pString" Mode="In" Type="String" />
+            <Parameter Name="pDelimiter" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="fnGetBatchTradeAndRiskAverages" IsComposable="true" ReturnType="Collection(GatewayModel.fnGetBatchTradeAndRiskAverages_Result)">
+            <Parameter Name="EvaluationDate" Mode="In" Type="DateTime" />
+            <Parameter Name="ScheduleId" Mode="In" Type="Int64" />
+            <Parameter Name="RiskBatchScheduleId" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="fnGetValidAveragingDates" IsComposable="true" ReturnType="Collection(DateTime)">
+            <Parameter Name="EvaluationDate" Mode="In" Type="DateTime" />
+            <Parameter Name="SampleSize" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="LogToTable">
+            <Parameter Name="JobID" Mode="In" Type="Int64" />
+            <Parameter Name="BusinessDate" Mode="In" Type="DateTime" />
+            <Parameter Name="LogStatus" Mode="In" Type="String" />
+            <Parameter Name="StoredProcedure" Mode="In" Type="String" />
+            <Parameter Name="Message" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_alterdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="sp_creatediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="sp_dropdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(GatewayModel.sp_helpdiagramdefinition_Result)">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(GatewayModel.sp_helpdiagrams_Result)">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_renamediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="new_diagramname" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_upgraddiagrams" />
+          <FunctionImport Name="spCaptureBatchCosts">
+            <Parameter Name="BatchDate" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="spCreateEcho" ReturnType="Collection(GatewayModel.spCreateEcho_Result)">
+            <Parameter Name="CorrelationId" Mode="In" Type="Guid" />
+            <Parameter Name="User" Mode="In" Type="String" />
+            <Parameter Name="ApplicationName" Mode="In" Type="String" />
+            <Parameter Name="Site" Mode="In" Type="String" />
+            <Parameter Name="CalculationName" Mode="In" Type="String" />
+            <Parameter Name="Started" Mode="In" Type="DateTime" />
+            <Parameter Name="ValuationDate" Mode="In" Type="DateTime" />
+            <Parameter Name="Parameters" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="spGetAllTradeAndRiskAverages">
+            <Parameter Name="EvaluationDate" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="spGetBatchCosts" ReturnType="Collection(GatewayModel.spGetBatchCosts_Result)">
+            <Parameter Name="ReportDate" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="spGetBatchSummary" ReturnType="Collection(GatewayModel.spGetBatchSummary_Result)">
+            <Parameter Name="fromDateTime" Mode="In" Type="DateTime" />
+            <Parameter Name="toDateTime" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="spGetBatchTradeAndRiskAverages" ReturnType="Collection(GatewayModel.spGetBatchTradeAndRiskAverages_Result)">
+            <Parameter Name="EvaluationDate" Mode="In" Type="DateTime" />
+            <Parameter Name="ScheduleId" Mode="In" Type="Int64" />
+            <Parameter Name="RiskBatchScheduleId" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="spGetControllerShaping" ReturnType="Collection(GatewayModel.spGetControllerShaping_Result)">
+            <Parameter Name="Controller" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="spGetDeepDive" ReturnType="Collection(GatewayModel.spGetDeepDive_Result)">
+            <Parameter Name="correlationId" Mode="In" Type="String" />
+            <Parameter Name="controller" Mode="In" Type="String" />
+            <Parameter Name="Keyword" Mode="In" Type="String" />
+            <Parameter Name="SearchResource" Mode="In" Type="Boolean" />
+            <Parameter Name="SearchResultMessage" Mode="In" Type="Boolean" />
+            <Parameter Name="SearchPayLoad" Mode="In" Type="Boolean" />
+          </FunctionImport>
+          <FunctionImport Name="spGetDetailsForExecutedBatches" ReturnType="Collection(GatewayModel.spGetDetailsForExecutedBatches_Result)">
+            <Parameter Name="EvaluationDate" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="spGetPricingRequestTotalExecutionTime">
+            <Parameter Name="CorrelationId" Mode="In" Type="Guid" />
+            <Parameter Name="TotalNodes" Mode="InOut" Type="Int32" />
+            <Parameter Name="TotalExecutionTime" Mode="InOut" Type="Double" />
+          </FunctionImport>
+          <FunctionImport Name="spGetRequestAverage" ReturnType="Collection(GatewayModel.spGetRequestAverage_Result)">
+            <Parameter Name="Controller" Mode="In" Type="String" />
+            <Parameter Name="Resource" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="spGetRequestChildren">
+            <Parameter Name="correllationId" Mode="In" Type="Guid" />
+          </FunctionImport>
+          <FunctionImport Name="spGetRequestStatsAll" ReturnType="Collection(GatewayModel.spGetRequestStatsAll_Result)">
+            <Parameter Name="Start" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="spGetRequestTimings" ReturnType="Collection(GatewayModel.spGetRequestTimings_Result)">
+            <Parameter Name="correlationId" Mode="In" Type="Guid" />
+          </FunctionImport>
+          <FunctionImport Name="spGetStaleFilterRequests" ReturnType="Collection(GatewayModel.spGetStaleFilterRequests_Result)">
+            <Parameter Name="DaysNotUsed" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="spGetUsageReport" ReturnType="Collection(GatewayModel.spGetUsageReport_Result)">
+            <Parameter Name="startDate" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="spGetUserUsageReportData" ReturnType="Collection(GatewayModel.spGetUserUsageReportData_Result)">
+            <Parameter Name="startDate" Mode="In" Type="DateTime" />
+            <Parameter Name="endDate" Mode="In" Type="DateTime" />
+            <Parameter Name="excludedControllers" Mode="In" Type="String" />
+            <Parameter Name="excludedUsers" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="spGetWorkers" ReturnType="Collection(GatewayModel.spGetWorkers_Result)">
+            <Parameter Name="queryTime" Mode="In" Type="DateTime" />
+            <Parameter Name="Controller" Mode="In" Type="String" />
+            <Parameter Name="version" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="TruncateLogFile">
+            <Parameter Name="JobID" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="UpdateControllerVersions">
+            <Parameter Name="ControllerName" Mode="In" Type="String" />
+            <Parameter Name="Status" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="UpsertControllerVersion">
+            <Parameter Name="ControllerName" Mode="In" Type="String" />
+            <Parameter Name="Version" Mode="In" Type="String" />
+            <Parameter Name="Alias" Mode="In" Type="String" />
+            <Parameter Name="Status" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="WriteRequestChange">
+            <Parameter Name="CorrelationId" Mode="In" Type="Guid" />
+            <Parameter Name="Status" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="WriteResponse">
+            <Parameter Name="CorrelationId" Mode="In" Type="Guid" />
+            <Parameter Name="EndUtc" Mode="In" Type="DateTime" />
+            <Parameter Name="TimeTakenMs" Mode="In" Type="Int32" />
+            <Parameter Name="ResultCode" Mode="In" Type="Int32" />
+            <Parameter Name="ResultMessage" Mode="In" Type="String" />
+            <Parameter Name="QueueTimeMs" Mode="In" Type="Int32" />
+            <Parameter Name="Size" Mode="In" Type="Int32" />
+            <Parameter Name="SizeUnit" Mode="In" Type="String" />
+            <Parameter Name="PayloadType" Mode="In" Type="String" />
+            <Parameter Name="PayloadData" Mode="In" Type="Binary" />
+            <Parameter Name="PayloadDataLength" Mode="In" Type="Int64" />
+            <Parameter Name="CompressionType" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="GetBatches" ReturnType="Collection(GatewayModel.GetBatches_Result)">
+            <Parameter Name="runDate" Mode="In" Type="DateTime" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="spGetJobStats_Result">
           <Property Type="DateTime" Name="Date" Nullable="true" />
@@ -774,6 +1169,7 @@
           <Property Name="UpdateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="CompressionType" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="DataLengthBytes" Type="Int64" />
+          <Property Name="Location" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
         </EntityType>
         <ComplexType Name="spGetResponseStatsAll_Result">
           <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
@@ -1294,6 +1690,160 @@
           <Property Type="DateTime" Name="UpdateTimeUtc" Nullable="false" Precision="23" />
           <Property Type="String" Name="Status" Nullable="true" MaxLength="250" />
         </ComplexType>
+        <ComplexType Name="spGetPodConfiguration_Result">
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="MaxPriority" Nullable="false" />
+          <Property Type="String" Name="CpuLimit" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="CpuRequest" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="MemoryLimit" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="MemoryRequest" Nullable="false" MaxLength="10" />
+          <Property Type="Int32" Name="Priority" Nullable="false" />
+          <Property Type="Int32" Name="ReplicaCount" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="CheckFileSizes_Result">
+          <Property Type="String" Name="Type" Nullable="true" MaxLength="60" />
+          <Property Type="String" Name="name" Nullable="false" MaxLength="128" />
+          <Property Type="String" Name="Drive" Nullable="true" MaxLength="2" />
+          <Property Type="String" Name="CurrentSizeMB" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="MaxSizeMb" Nullable="true" MaxLength="30" />
+          <Property Type="Int32" Name="growth" Nullable="false" />
+          <Property Type="Decimal" Name="SpaceUsedMB" Nullable="true" Precision="12" Scale="2" />
+          <Property Type="Decimal" Name="FreeSpaceMB" Nullable="true" Precision="12" Scale="2" />
+        </ComplexType>
+        <ComplexType Name="DelimitedSplit8K_Result">
+          <Property Type="Int64" Name="ItemNumber" Nullable="true" />
+          <Property Type="String" Name="Item" Nullable="true" MaxLength="8000" />
+        </ComplexType>
+        <ComplexType Name="fnGetBatchTradeAndRiskAverages_Result">
+          <Property Type="Int32" Name="AverageTrades" Nullable="false" />
+          <Property Type="Int32" Name="AverageRisks" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="sp_helpdiagramdefinition_Result">
+          <Property Type="Int32" Name="version" Nullable="true" />
+          <Property Type="Binary" Name="definition" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_helpdiagrams_Result">
+          <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
+          <Property Type="Int32" Name="OwnerID" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="spCreateEcho_Result">
+          <Property Type="Decimal" Name="Id" Nullable="true" Precision="38" Scale="0" />
+          <Property Type="String" Name="Name" Nullable="true" MaxLength="12" />
+          <Property Type="Guid" Name="CorrelationId" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="spGetBatchCosts_Result">
+          <Property Type="String" Name="CostGroup" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="BatchType" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="CostType" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Month" Nullable="true" MaxLength="30" />
+          <Property Type="Decimal" Name="TotalCost" Nullable="true" Precision="19" />
+        </ComplexType>
+        <ComplexType Name="spGetBatchSummary_Result">
+          <Property Type="Int64" Name="ScheduleId" Nullable="false" />
+          <Property Type="DateTime" Name="BusinessDate" Nullable="false" Precision="23" />
+          <Property Type="Guid" Name="RequestId" Nullable="true" />
+          <Property Type="DateTime" Name="StartedAt" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="EndUtc" Nullable="true" Precision="23" />
+          <Property Type="String" Name="BatchName" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="TradeSource" Nullable="false" />
+          <Property Type="String" Name="TradeSourceType" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Site" Nullable="false" MaxLength="500" />
+          <Property Type="String" Name="MarketDataMap" Nullable="false" MaxLength="500" />
+          <Property Type="Int32" Name="ResultCode" Nullable="true" />
+          <Property Type="Int32" Name="TimeTakenMs" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="spGetBatchTradeAndRiskAverages_Result">
+          <Property Type="Int32" Name="AverageTrades" Nullable="false" />
+          <Property Type="Int32" Name="AverageRisks" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="spGetControllerShaping_Result">
+          <Property Type="String" Name="Period" Nullable="false" MaxLength="9" />
+          <Property Type="Int32" Name="Priority" Nullable="false" />
+          <Property Type="Int32" Name="Column1" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="spGetDeepDive_Result">
+          <Property Type="Guid" Name="CorrelationId" Nullable="true" />
+          <Property Type="String" Name="Controller" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="Resource" Nullable="true" MaxLength="1024" />
+          <Property Type="Int32" Name="ResultCode" Nullable="true" />
+          <Property Type="String" Name="ResultMessage" Nullable="true" />
+          <Property Type="Guid" Name="ParentCorrelationId" Nullable="true" />
+          <Property Type="Binary" Name="Payload" Nullable="true" />
+          <Property Type="Int32" Name="Depth" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="spGetDetailsForExecutedBatches_Result">
+          <Property Type="Int64" Name="ScheduleId" Nullable="false" />
+          <Property Type="Int64" Name="RiskBatchScheduleId" Nullable="false" />
+          <Property Type="DateTime" Name="StartedAt" Nullable="true" Precision="23" />
+          <Property Type="String" Name="BatchType" Nullable="false" />
+          <Property Type="String" Name="Status" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="TradeCount" Nullable="true" />
+          <Property Type="Int32" Name="RiskCount" Nullable="true" />
+          <Property Type="Guid" Name="CorrelationId" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="spGetRequestAverage_Result">
+          <Property Type="Int32" Name="AverageMS" Nullable="true" />
+          <Property Type="Int32" Name="Occurences" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="spGetRequestStatsAll_Result">
+          <Property Type="DateTime" Name="Date" Nullable="true" />
+          <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="Count" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="spGetRequestTimings_Result">
+          <Property Type="Guid" Name="CorrelationId" Nullable="true" />
+          <Property Type="Guid" Name="ParentCorrelationId" Nullable="true" />
+          <Property Type="String" Name="Controller" Nullable="true" MaxLength="100" />
+          <Property Type="Int32" Name="QueueTimeMs" Nullable="false" />
+          <Property Type="Int32" Name="TimeTakeMs" Nullable="false" />
+          <Property Type="Int32" Name="Size" Nullable="true" />
+          <Property Type="String" Name="SizeUnit" Nullable="true" MaxLength="100" />
+          <Property Type="DateTime" Name="StartUtc" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="EndUtc" Nullable="false" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="spGetStaleFilterRequests_Result">
+          <Property Type="Int32" Name="ID" Nullable="true" />
+          <Property Type="String" Name="FilterName" Nullable="true" MaxLength="255" />
+        </ComplexType>
+        <ComplexType Name="spGetUsageReport_Result">
+          <Property Type="String" Name="User" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Usage" Nullable="false" MaxLength="20" />
+          <Property Type="Int32" Name="RequestCount" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="spGetUserUsageReportData_Result">
+          <Property Type="String" Name="User" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Resource" Nullable="false" MaxLength="1024" />
+          <Property Type="Int32" Name="RequestCount" Nullable="true" />
+          <Property Type="Int32" Name="SuccessRequestCount" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="spGetWorkers_Result">
+          <Property Type="String" Name="ControllerName" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Version" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="RunningServer" Nullable="false" MaxLength="50" />
+          <Property Type="Int32" Name="Port" Nullable="false" />
+          <Property Type="Int32" Name="ProcessId" Nullable="false" />
+          <Property Type="DateTime" Name="UpdateTime" Nullable="false" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="GetBatches_Result">
+          <Property Type="Int64" Name="ScheduleId" Nullable="false" />
+          <Property Type="String" Name="Type" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="TradeSourceType" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="TradeSource" Nullable="false" />
+          <Property Type="String" Name="Site" Nullable="false" MaxLength="500" />
+          <Property Type="String" Name="MarketDataMap" Nullable="false" MaxLength="500" />
+          <Property Type="Boolean" Name="IsLive" Nullable="false" />
+          <Property Type="Guid" Name="CorrelationID" Nullable="true" />
+          <Property Type="DateTime" Name="StartedAt" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="FinishedAt" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="BusinessDate" Nullable="false" Precision="23" />
+          <Property Type="String" Name="Status" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="TimeTakeMs" Nullable="false" />
+          <Property Type="Int32" Name="QueueTimeMs" Nullable="false" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1389,6 +1939,7 @@
           <EntitySetMapping Name="Payloads">
             <EntityTypeMapping TypeName="GatewayModel.Payload">
               <MappingFragment StoreEntitySet="Payload">
+                <ScalarProperty Name="Location" ColumnName="Location" />
                 <ScalarProperty Name="DataLengthBytes" ColumnName="DataLengthBytes" />
                 <ScalarProperty Name="CompressionType" ColumnName="CompressionType" />
                 <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
@@ -1842,6 +2393,262 @@
                 <ScalarProperty Name="ResultMessage" ColumnName="ResultMessage" />
                 <ScalarProperty Name="UpdateTimeUtc" ColumnName="UpdateTimeUtc" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="ReleaseControllerVersion" FunctionName="GatewayModel.Store.ReleaseControllerVersion" />
+          <FunctionImportMapping FunctionImportName="spGetPodConfiguration" FunctionName="GatewayModel.Store.spGetPodConfiguration">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GatewayModel.spGetPodConfiguration_Result">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="MaxPriority" ColumnName="MaxPriority" />
+                <ScalarProperty Name="CpuLimit" ColumnName="CpuLimit" />
+                <ScalarProperty Name="CpuRequest" ColumnName="CpuRequest" />
+                <ScalarProperty Name="MemoryLimit" ColumnName="MemoryLimit" />
+                <ScalarProperty Name="MemoryRequest" ColumnName="MemoryRequest" />
+                <ScalarProperty Name="Priority" ColumnName="Priority" />
+                <ScalarProperty Name="ReplicaCount" ColumnName="ReplicaCount" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="CheckFileSizes" FunctionName="GatewayModel.Store.CheckFileSizes">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GatewayModel.CheckFileSizes_Result">
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="Drive" ColumnName="Drive" />
+                <ScalarProperty Name="CurrentSizeMB" ColumnName="CurrentSizeMB" />
+                <ScalarProperty Name="MaxSizeMb" ColumnName="MaxSizeMb" />
+                <ScalarProperty Name="growth" ColumnName="growth" />
+                <ScalarProperty Name="SpaceUsedMB" ColumnName="SpaceUsedMB" />
+                <ScalarProperty Name="FreeSpaceMB" ColumnName="FreeSpaceMB" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="CleanupDatabase" FunctionName="GatewayModel.Store.CleanupDatabase" />
+          <FunctionImportMapping FunctionImportName="DelimitedSplit8K" FunctionName="GatewayModel.Store.DelimitedSplit8K">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GatewayModel.DelimitedSplit8K_Result">
+                <ScalarProperty Name="ItemNumber" ColumnName="ItemNumber" />
+                <ScalarProperty Name="Item" ColumnName="Item" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="fnGetBatchTradeAndRiskAverages" FunctionName="GatewayModel.Store.fnGetBatchTradeAndRiskAverages">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GatewayModel.fnGetBatchTradeAndRiskAverages_Result">
+                <ScalarProperty Name="AverageTrades" ColumnName="AverageTrades" />
+                <ScalarProperty Name="AverageRisks" ColumnName="AverageRisks" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="fnGetValidAveragingDates" FunctionName="GatewayModel.Store.fnGetValidAveragingDates" />
+          <FunctionImportMapping FunctionImportName="LogToTable" FunctionName="GatewayModel.Store.LogToTable" />
+          <FunctionImportMapping FunctionImportName="sp_alterdiagram" FunctionName="GatewayModel.Store.sp_alterdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_creatediagram" FunctionName="GatewayModel.Store.sp_creatediagram" />
+          <FunctionImportMapping FunctionImportName="sp_dropdiagram" FunctionName="GatewayModel.Store.sp_dropdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_helpdiagramdefinition" FunctionName="GatewayModel.Store.sp_helpdiagramdefinition">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GatewayModel.sp_helpdiagramdefinition_Result">
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_helpdiagrams" FunctionName="GatewayModel.Store.sp_helpdiagrams">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GatewayModel.sp_helpdiagrams_Result">
+                <ScalarProperty Name="Database" ColumnName="Database" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Owner" ColumnName="Owner" />
+                <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="GatewayModel.Store.sp_renamediagram" />
+          <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="GatewayModel.Store.sp_upgraddiagrams" />
+          <FunctionImportMapping FunctionImportName="spCaptureBatchCosts" FunctionName="GatewayModel.Store.spCaptureBatchCosts" />
+          <FunctionImportMapping FunctionImportName="spCreateEcho" FunctionName="GatewayModel.Store.spCreateEcho">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GatewayModel.spCreateEcho_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="CorrelationId" ColumnName="CorrelationId" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetAllTradeAndRiskAverages" FunctionName="GatewayModel.Store.spGetAllTradeAndRiskAverages" />
+          <FunctionImportMapping FunctionImportName="spGetBatchCosts" FunctionName="GatewayModel.Store.spGetBatchCosts">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GatewayModel.spGetBatchCosts_Result">
+                <ScalarProperty Name="CostGroup" ColumnName="CostGroup" />
+                <ScalarProperty Name="BatchType" ColumnName="BatchType" />
+                <ScalarProperty Name="CostType" ColumnName="CostType" />
+                <ScalarProperty Name="Month" ColumnName="Month" />
+                <ScalarProperty Name="TotalCost" ColumnName="TotalCost" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetBatchSummary" FunctionName="GatewayModel.Store.spGetBatchSummary">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GatewayModel.spGetBatchSummary_Result">
+                <ScalarProperty Name="ScheduleId" ColumnName="ScheduleId" />
+                <ScalarProperty Name="BusinessDate" ColumnName="BusinessDate" />
+                <ScalarProperty Name="RequestId" ColumnName="RequestId" />
+                <ScalarProperty Name="StartedAt" ColumnName="StartedAt" />
+                <ScalarProperty Name="EndUtc" ColumnName="EndUtc" />
+                <ScalarProperty Name="BatchName" ColumnName="BatchName" />
+                <ScalarProperty Name="TradeSource" ColumnName="TradeSource" />
+                <ScalarProperty Name="TradeSourceType" ColumnName="TradeSourceType" />
+                <ScalarProperty Name="Site" ColumnName="Site" />
+                <ScalarProperty Name="MarketDataMap" ColumnName="MarketDataMap" />
+                <ScalarProperty Name="ResultCode" ColumnName="ResultCode" />
+                <ScalarProperty Name="TimeTakenMs" ColumnName="TimeTakenMs" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetBatchTradeAndRiskAverages" FunctionName="GatewayModel.Store.spGetBatchTradeAndRiskAverages">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GatewayModel.spGetBatchTradeAndRiskAverages_Result">
+                <ScalarProperty Name="AverageTrades" ColumnName="AverageTrades" />
+                <ScalarProperty Name="AverageRisks" ColumnName="AverageRisks" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetControllerShaping" FunctionName="GatewayModel.Store.spGetControllerShaping">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GatewayModel.spGetControllerShaping_Result">
+                <ScalarProperty Name="Period" ColumnName="Period" />
+                <ScalarProperty Name="Priority" ColumnName="Priority" />
+                <ScalarProperty Name="Column1" ColumnName="Column1" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetDeepDive" FunctionName="GatewayModel.Store.spGetDeepDive">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GatewayModel.spGetDeepDive_Result">
+                <ScalarProperty Name="CorrelationId" ColumnName="CorrelationId" />
+                <ScalarProperty Name="Controller" ColumnName="Controller" />
+                <ScalarProperty Name="Resource" ColumnName="Resource" />
+                <ScalarProperty Name="ResultCode" ColumnName="ResultCode" />
+                <ScalarProperty Name="ResultMessage" ColumnName="ResultMessage" />
+                <ScalarProperty Name="ParentCorrelationId" ColumnName="ParentCorrelationId" />
+                <ScalarProperty Name="Payload" ColumnName="Payload" />
+                <ScalarProperty Name="Depth" ColumnName="Depth" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetDetailsForExecutedBatches" FunctionName="GatewayModel.Store.spGetDetailsForExecutedBatches">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GatewayModel.spGetDetailsForExecutedBatches_Result">
+                <ScalarProperty Name="ScheduleId" ColumnName="ScheduleId" />
+                <ScalarProperty Name="RiskBatchScheduleId" ColumnName="RiskBatchScheduleId" />
+                <ScalarProperty Name="StartedAt" ColumnName="StartedAt" />
+                <ScalarProperty Name="BatchType" ColumnName="BatchType" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="TradeCount" ColumnName="TradeCount" />
+                <ScalarProperty Name="RiskCount" ColumnName="RiskCount" />
+                <ScalarProperty Name="CorrelationId" ColumnName="CorrelationId" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetPricingRequestTotalExecutionTime" FunctionName="GatewayModel.Store.spGetPricingRequestTotalExecutionTime" />
+          <FunctionImportMapping FunctionImportName="spGetRequestAverage" FunctionName="GatewayModel.Store.spGetRequestAverage">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GatewayModel.spGetRequestAverage_Result">
+                <ScalarProperty Name="AverageMS" ColumnName="AverageMS" />
+                <ScalarProperty Name="Occurences" ColumnName="Occurences" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetRequestChildren" FunctionName="GatewayModel.Store.spGetRequestChildren" />
+          <FunctionImportMapping FunctionImportName="spGetRequestStatsAll" FunctionName="GatewayModel.Store.spGetRequestStatsAll">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GatewayModel.spGetRequestStatsAll_Result">
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Controller" ColumnName="Controller" />
+                <ScalarProperty Name="Count" ColumnName="Count" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetRequestTimings" FunctionName="GatewayModel.Store.spGetRequestTimings">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GatewayModel.spGetRequestTimings_Result">
+                <ScalarProperty Name="CorrelationId" ColumnName="CorrelationId" />
+                <ScalarProperty Name="ParentCorrelationId" ColumnName="ParentCorrelationId" />
+                <ScalarProperty Name="Controller" ColumnName="Controller" />
+                <ScalarProperty Name="QueueTimeMs" ColumnName="QueueTimeMs" />
+                <ScalarProperty Name="TimeTakeMs" ColumnName="TimeTakeMs" />
+                <ScalarProperty Name="Size" ColumnName="Size" />
+                <ScalarProperty Name="SizeUnit" ColumnName="SizeUnit" />
+                <ScalarProperty Name="StartUtc" ColumnName="StartUtc" />
+                <ScalarProperty Name="EndUtc" ColumnName="EndUtc" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetStaleFilterRequests" FunctionName="GatewayModel.Store.spGetStaleFilterRequests">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GatewayModel.spGetStaleFilterRequests_Result">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="FilterName" ColumnName="FilterName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetUsageReport" FunctionName="GatewayModel.Store.spGetUsageReport">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GatewayModel.spGetUsageReport_Result">
+                <ScalarProperty Name="User" ColumnName="User" />
+                <ScalarProperty Name="Usage" ColumnName="Usage" />
+                <ScalarProperty Name="RequestCount" ColumnName="RequestCount" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetUserUsageReportData" FunctionName="GatewayModel.Store.spGetUserUsageReportData">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GatewayModel.spGetUserUsageReportData_Result">
+                <ScalarProperty Name="User" ColumnName="User" />
+                <ScalarProperty Name="Controller" ColumnName="Controller" />
+                <ScalarProperty Name="Resource" ColumnName="Resource" />
+                <ScalarProperty Name="RequestCount" ColumnName="RequestCount" />
+                <ScalarProperty Name="SuccessRequestCount" ColumnName="SuccessRequestCount" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetWorkers" FunctionName="GatewayModel.Store.spGetWorkers">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GatewayModel.spGetWorkers_Result">
+                <ScalarProperty Name="ControllerName" ColumnName="ControllerName" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+                <ScalarProperty Name="RunningServer" ColumnName="RunningServer" />
+                <ScalarProperty Name="Port" ColumnName="Port" />
+                <ScalarProperty Name="ProcessId" ColumnName="ProcessId" />
+                <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="TruncateLogFile" FunctionName="GatewayModel.Store.TruncateLogFile" />
+          <FunctionImportMapping FunctionImportName="UpdateControllerVersions" FunctionName="GatewayModel.Store.UpdateControllerVersions" />
+          <FunctionImportMapping FunctionImportName="UpsertControllerVersion" FunctionName="GatewayModel.Store.UpsertControllerVersion" />
+          <FunctionImportMapping FunctionImportName="WriteRequestChange" FunctionName="GatewayModel.Store.WriteRequestChange" />
+          <FunctionImportMapping FunctionImportName="WriteResponse" FunctionName="GatewayModel.Store.WriteResponse" />
+          <FunctionImportMapping FunctionImportName="GetBatches" FunctionName="GatewayModel.Store.GetBatches">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GatewayModel.GetBatches_Result">
+                <ScalarProperty Name="ScheduleId" ColumnName="ScheduleId" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="TradeSourceType" ColumnName="TradeSourceType" />
+                <ScalarProperty Name="TradeSource" ColumnName="TradeSource" />
+                <ScalarProperty Name="Site" ColumnName="Site" />
+                <ScalarProperty Name="MarketDataMap" ColumnName="MarketDataMap" />
+                <ScalarProperty Name="IsLive" ColumnName="IsLive" />
+                <ScalarProperty Name="CorrelationID" ColumnName="CorrelationID" />
+                <ScalarProperty Name="StartedAt" ColumnName="StartedAt" />
+                <ScalarProperty Name="FinishedAt" ColumnName="FinishedAt" />
+                <ScalarProperty Name="BusinessDate" ColumnName="BusinessDate" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="TimeTakeMs" ColumnName="TimeTakeMs" />
+                <ScalarProperty Name="QueueTimeMs" ColumnName="QueueTimeMs" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

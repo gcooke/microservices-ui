@@ -54,12 +54,23 @@
             </tr>
             <tr>
                 <td class="columnheader">Correlation Id</td>
-                <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">@Model.CorrelationId</td>
+                <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
+                    @Model.CorrelationId
+                    @if (Model.CorrelationId != Guid.Empty)
+                    {
+                        <a href="~/Request/DeepDive?id=@Model.CorrelationId&controllername=@Model.Controller">
+                            <span class="glyphicon glyphicon-eye-open" title="Eye of Sauron"></span>
+                        </a>
+                    }
+                    </td>
                 <td class="columnheader">Parent Correlation Id</td>
                 <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
                     @if (Model.ParentCorrelationId != Guid.Empty)
                     {
                         @Html.ActionLink(title, "Summary", "Request", new { correlationId = Model.ParentCorrelationId }, new { @class = "hoverlink" })
+                        <a href="~/Request/DeepDive?id=@Model.ParentCorrelationId">
+                            <span class="glyphicon glyphicon-eye-open" title="Eye of Sauron"></span>
+                        </a>
                     }
                 </td>
             </tr>
