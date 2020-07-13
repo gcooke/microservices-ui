@@ -278,7 +278,7 @@ namespace Gateway.Web.Controllers
                 DeepDiveSearch = new DeepDiveSearch()
                 {
                     CorrelationId = id,
-                    Controller = controllername
+                    Controller = "All"
                 }
             };
 
@@ -289,7 +289,6 @@ namespace Gateway.Web.Controllers
         public ActionResult DeepDive()
         {
             var updatedmodel = new DeepDive();
-            var correlationId = Request.Form["DeepDiveSearch.CorrelationId"];
             var controller = Request.Form["DeepDiveSearch.Controller"];
             var keyword = Request.Form["DeepDiveSearch.Search"];
             var searchResource = (Request.Form["DeepDiveSearch.SearchResource"] == null || Request.Form["DeepDiveSearch.SearchResource"] == "false") ? false : true;
@@ -298,15 +297,19 @@ namespace Gateway.Web.Controllers
 
             updatedmodel.DeepDiveSearch = new DeepDiveSearch()
             {
-                CorrelationId = correlationId,
-                Search = keyword,
+                CorrelationId = Request.Form["DeepDiveSearch.CorrelationId"],
                 SearchError = searchMessage,
                 SearchPayload = searchPayload,
                 SearchResource = searchPayload,
-                Controller = controller,
             };
-            updatedmodel.Controller = controller;
-            var result = _dataService.GetDeepDive(correlationId, controller, keyword, searchResource, searchMessage, searchPayload);
+
+            if (!string.IsNullOrEmpty(keyword))
+                updatedmodel.DeepDiveSearch.Search = keyword;
+
+            if (searchPayload || (!string.IsNullOrEmpty(controller) && controller != "All"))
+                updatedmodel.DeepDiveSearch.Controller = controller;
+
+            var result = _dataService.GetDeepDive(updatedmodel.DeepDiveSearch);
             updatedmodel.DeepDiveResults = result.ToList();
             return View(updatedmodel);
         }

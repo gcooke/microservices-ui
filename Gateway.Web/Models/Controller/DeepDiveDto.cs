@@ -10,6 +10,7 @@ namespace Gateway.Web.Models.Controller
         public Nullable<int> ResultCode { get; set; }
         public string ResultMessage { get; set; }
         public Nullable<System.Guid> ParentCorrelationId { get; set; }
+        public byte[] Request { get; set; }
         public byte[] Payload { get; set; }
         public Nullable<int> Depth { get; set; }
 
