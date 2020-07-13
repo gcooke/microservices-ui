@@ -946,11 +946,11 @@ namespace Gateway.Web.Database
             }
         }
 
-        public IList<DeepDiveDto> GetDeepDive(string correlationId, string controller, string keyword, bool searchResource, bool searchPayload, bool searchMessage)
+        public IList<DeepDiveDto> GetDeepDive(DeepDiveSearch deepDive)
         {
             using (var database = new GatewayEntities(_connectionString, 300))
             {
-                var results = database.spGetDeepDive(correlationId, controller, keyword, searchResource, searchPayload, searchMessage);
+                var results = database.spGetDeepDive(deepDive.CorrelationId, deepDive.Controller, deepDive.Search, deepDive.SearchResource, deepDive.SearchError, deepDive.SearchPayload);
                 return AutoMapper.Mapper.Map<List<DeepDiveDto>>(results.ToList());
             }
         }

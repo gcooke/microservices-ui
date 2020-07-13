@@ -17,7 +17,7 @@ namespace Gateway.Web.Database
     {
         IList<spGetHistoryTimingForSchedule_Result> GetHistoryTimingForSchedule(long scheduleId, int days);
 
-        IList<DeepDiveDto> GetDeepDive(string correlationId, string controller, string keyword, bool searchResource, bool searchPayload, bool searchMessage);
+        IList<DeepDiveDto> GetDeepDive(DeepDiveSearch deepDive);
 
         List<ControllerStats> GetControllerStatistics(DateTime start, string controllerName);
 
