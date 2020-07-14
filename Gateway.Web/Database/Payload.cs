@@ -18,10 +18,9 @@ namespace Gateway.Web.Database
         public System.Guid CorrelationId { get; set; }
         public string Direction { get; set; }
         public string PayloadType { get; set; }
+        public string CompressionType { get; set; }
         public byte[] Data { get; set; }
         public System.DateTime UpdateTime { get; set; }
-        public string CompressionType { get; set; }
         public Nullable<long> DataLengthBytes { get; set; }
-        public string Location { get; set; }
     }
 }

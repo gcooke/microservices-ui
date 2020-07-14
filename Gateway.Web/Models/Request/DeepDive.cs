@@ -16,7 +16,7 @@ namespace Gateway.Web.Models.Request
             DeepDiveSearch = new DeepDiveSearch() { SearchResource = true };
         }
 
-        public string CorrelationId { get; set; }
+        public Guid CorrelationId { get; set; }
         public DeepDiveSearch DeepDiveSearch { get; set; }
         public List<SelectListItem> Controllers { get; set; }
         public List<DeepDiveDto> DeepDiveResults { get; set; }

@@ -94,7 +94,6 @@
           <Property Name="Data" Type="varbinary(max)" Nullable="false" />
           <Property Name="UpdateTime" Type="datetime" Nullable="false" />
           <Property Name="DataLengthBytes" Type="bigint" />
-          <Property Name="Location" Type="nvarchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="Request">
           <Key>
@@ -520,11 +519,6 @@
           <Parameter Name="fromDateTime" Type="datetime" Mode="In" />
           <Parameter Name="toDateTime" Type="datetime" Mode="In" />
         </Function>
-        <Function Name="spGetBatchTradeAndRiskAverages" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="EvaluationDate" Type="datetime" Mode="In" />
-          <Parameter Name="ScheduleId" Type="bigint" Mode="In" />
-          <Parameter Name="RiskBatchScheduleId" Type="bigint" Mode="In" />
-        </Function>
         <Function Name="spGetChildRequests" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="correlationId" Type="uniqueidentifier" Mode="In" />
         </Function>
@@ -817,7 +811,6 @@
           <FunctionImport Name="spGetQueueCountsAll" ReturnType="Collection(GatewayModel.spGetQueueCountsAll_Result)">
           <Parameter Name="Start" Mode="In" Type="DateTime" />
           </FunctionImport>
-          <EntitySet Name="Payloads" EntityType="GatewayModel.Payload" />
           <FunctionImport Name="spGetResponseStatsAll" ReturnType="Collection(GatewayModel.spGetResponseStatsAll_Result)">
             <Parameter Name="Start" Mode="In" Type="DateTime" />
             <Parameter Name="ControllerName" Mode="In" Type="String" />
@@ -1009,7 +1002,7 @@
           </FunctionImport>
           <FunctionImport Name="sp_upgraddiagrams" />
           <FunctionImport Name="spCaptureBatchCosts">
-            <Parameter Name="BatchDate" Mode="In" Type="DateTime" />
+          <Parameter Name="BatchDate" Mode="In" Type="DateTime" />
           </FunctionImport>
           <FunctionImport Name="spCreateEcho" ReturnType="Collection(GatewayModel.spCreateEcho_Result)">
             <Parameter Name="CorrelationId" Mode="In" Type="Guid" />
@@ -1022,10 +1015,10 @@
             <Parameter Name="Parameters" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="spGetAllTradeAndRiskAverages">
-            <Parameter Name="EvaluationDate" Mode="In" Type="DateTime" />
+          <Parameter Name="EvaluationDate" Mode="In" Type="DateTime" />
           </FunctionImport>
           <FunctionImport Name="spGetBatchCosts" ReturnType="Collection(GatewayModel.spGetBatchCosts_Result)">
-            <Parameter Name="ReportDate" Mode="In" Type="DateTime" />
+          <Parameter Name="ReportDate" Mode="In" Type="DateTime" />
           </FunctionImport>
           <FunctionImport Name="spGetBatchSummary" ReturnType="Collection(GatewayModel.spGetBatchSummary_Result)">
             <Parameter Name="fromDateTime" Mode="In" Type="DateTime" />
@@ -1037,7 +1030,7 @@
             <Parameter Name="RiskBatchScheduleId" Mode="In" Type="Int64" />
           </FunctionImport>
           <FunctionImport Name="spGetControllerShaping" ReturnType="Collection(GatewayModel.spGetControllerShaping_Result)">
-            <Parameter Name="Controller" Mode="In" Type="String" />
+          <Parameter Name="Controller" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="spGetDeepDive" ReturnType="Collection(GatewayModel.spGetDeepDive_Result)">
             <Parameter Name="correlationId" Mode="In" Type="String" />
@@ -1048,7 +1041,7 @@
             <Parameter Name="SearchPayLoad" Mode="In" Type="Boolean" />
           </FunctionImport>
           <FunctionImport Name="spGetDetailsForExecutedBatches" ReturnType="Collection(GatewayModel.spGetDetailsForExecutedBatches_Result)">
-            <Parameter Name="EvaluationDate" Mode="In" Type="DateTime" />
+          <Parameter Name="EvaluationDate" Mode="In" Type="DateTime" />
           </FunctionImport>
           <FunctionImport Name="spGetPricingRequestTotalExecutionTime">
             <Parameter Name="CorrelationId" Mode="In" Type="Guid" />
@@ -1060,19 +1053,19 @@
             <Parameter Name="Resource" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="spGetRequestChildren">
-            <Parameter Name="correllationId" Mode="In" Type="Guid" />
+          <Parameter Name="correllationId" Mode="In" Type="Guid" />
           </FunctionImport>
           <FunctionImport Name="spGetRequestStatsAll" ReturnType="Collection(GatewayModel.spGetRequestStatsAll_Result)">
-            <Parameter Name="Start" Mode="In" Type="DateTime" />
+          <Parameter Name="Start" Mode="In" Type="DateTime" />
           </FunctionImport>
           <FunctionImport Name="spGetRequestTimings" ReturnType="Collection(GatewayModel.spGetRequestTimings_Result)">
-            <Parameter Name="correlationId" Mode="In" Type="Guid" />
+          <Parameter Name="correlationId" Mode="In" Type="Guid" />
           </FunctionImport>
           <FunctionImport Name="spGetStaleFilterRequests" ReturnType="Collection(GatewayModel.spGetStaleFilterRequests_Result)">
-            <Parameter Name="DaysNotUsed" Mode="In" Type="Int32" />
+          <Parameter Name="DaysNotUsed" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="spGetUsageReport" ReturnType="Collection(GatewayModel.spGetUsageReport_Result)">
-            <Parameter Name="startDate" Mode="In" Type="DateTime" />
+          <Parameter Name="startDate" Mode="In" Type="DateTime" />
           </FunctionImport>
           <FunctionImport Name="spGetUserUsageReportData" ReturnType="Collection(GatewayModel.spGetUserUsageReportData_Result)">
             <Parameter Name="startDate" Mode="In" Type="DateTime" />
@@ -1086,7 +1079,7 @@
             <Parameter Name="version" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="TruncateLogFile">
-            <Parameter Name="JobID" Mode="In" Type="Int64" />
+          <Parameter Name="JobID" Mode="In" Type="Int64" />
           </FunctionImport>
           <FunctionImport Name="UpdateControllerVersions">
             <Parameter Name="ControllerName" Mode="In" Type="String" />
@@ -1117,8 +1110,9 @@
             <Parameter Name="CompressionType" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="GetBatches" ReturnType="Collection(GatewayModel.GetBatches_Result)">
-            <Parameter Name="runDate" Mode="In" Type="DateTime" />
+          <Parameter Name="runDate" Mode="In" Type="DateTime" />
           </FunctionImport>
+          <EntitySet Name="Payloads" EntityType="GatewayModel.Payload" />
           </EntityContainer>
         <ComplexType Name="spGetJobStats_Result">
           <Property Type="DateTime" Name="Date" Nullable="true" />
@@ -1157,20 +1151,6 @@
           <Property Type="DateTime" Name="LastDequeue" Nullable="true" Precision="23" />
           <Property Type="String" Name="Server" Nullable="true" MaxLength="100" />
         </ComplexType>
-        <EntityType Name="Payload">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CorrelationId" Type="Guid" Nullable="false" />
-          <Property Name="Direction" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="PayloadType" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="Data" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
-          <Property Name="UpdateTime" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="CompressionType" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="DataLengthBytes" Type="Int64" />
-          <Property Name="Location" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
-        </EntityType>
         <ComplexType Name="spGetResponseStatsAll_Result">
           <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
           <Property Type="Int32" Name="ResultCode" Nullable="true" />
@@ -1844,6 +1824,19 @@
           <Property Type="Int32" Name="TimeTakeMs" Nullable="false" />
           <Property Type="Int32" Name="QueueTimeMs" Nullable="false" />
         </ComplexType>
+        <EntityType Name="Payload">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CorrelationId" Type="Guid" Nullable="false" />
+          <Property Name="Direction" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="PayloadType" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="CompressionType" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Data" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
+          <Property Name="UpdateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DataLengthBytes" Type="Int64" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1936,21 +1929,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <EntitySetMapping Name="Payloads">
-            <EntityTypeMapping TypeName="GatewayModel.Payload">
-              <MappingFragment StoreEntitySet="Payload">
-                <ScalarProperty Name="Location" ColumnName="Location" />
-                <ScalarProperty Name="DataLengthBytes" ColumnName="DataLengthBytes" />
-                <ScalarProperty Name="CompressionType" ColumnName="CompressionType" />
-                <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
-                <ScalarProperty Name="Data" ColumnName="Data" />
-                <ScalarProperty Name="PayloadType" ColumnName="PayloadType" />
-                <ScalarProperty Name="Direction" ColumnName="Direction" />
-                <ScalarProperty Name="CorrelationId" ColumnName="CorrelationId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="spGetResponseStatsAll" FunctionName="GatewayModel.Store.spGetResponseStatsAll">
             <ResultMapping>
               <ComplexTypeMapping TypeName="GatewayModel.spGetResponseStatsAll_Result">
@@ -2508,14 +2486,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="spGetBatchTradeAndRiskAverages" FunctionName="GatewayModel.Store.spGetBatchTradeAndRiskAverages">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="GatewayModel.spGetBatchTradeAndRiskAverages_Result">
-                <ScalarProperty Name="AverageTrades" ColumnName="AverageTrades" />
-                <ScalarProperty Name="AverageRisks" ColumnName="AverageRisks" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="spGetControllerShaping" FunctionName="GatewayModel.Store.spGetControllerShaping">
             <ResultMapping>
               <ComplexTypeMapping TypeName="GatewayModel.spGetControllerShaping_Result">
@@ -2652,6 +2622,20 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="Payloads">
+            <EntityTypeMapping TypeName="GatewayModel.Payload">
+              <MappingFragment StoreEntitySet="Payload">
+                <ScalarProperty Name="DataLengthBytes" ColumnName="DataLengthBytes" />
+                <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
+                <ScalarProperty Name="Data" ColumnName="Data" />
+                <ScalarProperty Name="CompressionType" ColumnName="CompressionType" />
+                <ScalarProperty Name="PayloadType" ColumnName="PayloadType" />
+                <ScalarProperty Name="Direction" ColumnName="Direction" />
+                <ScalarProperty Name="CorrelationId" ColumnName="CorrelationId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -2666,7 +2650,7 @@
     <Options>
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
-        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="False" />
         <DesignerProperty Name="UseLegacyProvider" Value="false" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />

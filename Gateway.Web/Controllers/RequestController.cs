@@ -271,6 +271,8 @@ namespace Gateway.Web.Controllers
 
         public ActionResult DeepDive(string id, string controllername)
         {
+            Guid correlationId;
+
             var model = new DeepDive()
             {
                 Controller = controllername,
@@ -281,6 +283,9 @@ namespace Gateway.Web.Controllers
                     Controller = "All"
                 }
             };
+
+            if (!Guid.TryParse(id, out correlationId))
+                model.CorrelationId = correlationId;
 
             return View(model);
         }

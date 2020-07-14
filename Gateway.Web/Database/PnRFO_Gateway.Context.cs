@@ -30,7 +30,6 @@ namespace Gateway.Web.Database
         public virtual DbSet<Request> Requests { get; set; }
         public virtual DbSet<Response> Responses { get; set; }
         public virtual DbSet<Version> Versions { get; set; }
-        public virtual DbSet<Payload> Payloads { get; set; }
         public virtual DbSet<Status> Status { get; set; }
         public virtual DbSet<RequestChange> RequestChanges { get; set; }
         public virtual DbSet<StatusChange> StatusChanges { get; set; }
@@ -46,6 +45,7 @@ namespace Gateway.Web.Database
         public virtual DbSet<ScheduledJob> ScheduledJobs { get; set; }
         public virtual DbSet<ScalingModel> ScalingModels { get; set; }
         public virtual DbSet<Controller> Controllers { get; set; }
+        public virtual DbSet<Payload> Payloads { get; set; }
     
         public virtual ObjectResult<spGetJobStats_Result> spGetJobStats(Nullable<System.DateTime> start, string controller)
         {
