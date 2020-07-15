@@ -180,6 +180,22 @@ namespace Gateway.Web.Controllers
             return View("Cube", model);
         }
 
+        public ActionResult ViewPayLoad(string correlationId, long payloadId)
+        {
+            var data = _dataService.GetPayload(payloadId);
+
+            var model = new PayloadModel(new spGetPayloads_Result()
+            {
+                PayloadType = data.PayloadType,
+                CompressionType = data.CompressionType,
+                DataLengthBytes = data.DataLengthBytes,
+                Data = data.Data,
+                Direction = data.Direction
+            });
+
+            return View("ViewPayLoad", model);
+        }
+
         public ActionResult ViewXvaResult(string correlationId, long payloadId)
         {
             var data = _dataService.GetPayload(payloadId);

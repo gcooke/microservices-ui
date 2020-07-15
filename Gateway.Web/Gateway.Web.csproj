@@ -1285,6 +1285,7 @@
     <Content Include="Views\Shared\_EmptyNav.cshtml" />
     <Content Include="Views\User\Chart.cshtml" />
     <Content Include="Views\Request\DeepDive.cshtml" />
+    <Content Include="Views\Request\ViewPayLoad.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />
