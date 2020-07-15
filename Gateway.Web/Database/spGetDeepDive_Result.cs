@@ -21,5 +21,10 @@ namespace Gateway.Web.Database
         public Nullable<System.Guid> ParentCorrelationId { get; set; }
         public byte[] Payload { get; set; }
         public Nullable<int> Depth { get; set; }
+        public byte[] Request { get; set; }
+        public Nullable<long> PayloadId { get; set; }
+        public Nullable<long> PayloadRequestId { get; set; }
+        public string PayloadType { get; set; }
+        public string PayloadTypeRequest { get; set; }
     }
 }

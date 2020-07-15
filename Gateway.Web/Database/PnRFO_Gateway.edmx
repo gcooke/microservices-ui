@@ -1753,6 +1753,11 @@
           <Property Type="Guid" Name="ParentCorrelationId" Nullable="true" />
           <Property Type="Binary" Name="Payload" Nullable="true" />
           <Property Type="Int32" Name="Depth" Nullable="true" />
+          <Property Type="Binary" Name="Request" Nullable="true" />
+          <Property Type="Int64" Name="PayloadId" Nullable="true" />
+          <Property Type="Int64" Name="PayloadRequestId" Nullable="true" />
+          <Property Type="String" Name="PayloadType" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="PayloadTypeRequest" Nullable="true" MaxLength="10" />
         </ComplexType>
         <ComplexType Name="spGetDetailsForExecutedBatches_Result">
           <Property Type="Int64" Name="ScheduleId" Nullable="false" />
@@ -2506,6 +2511,11 @@
                 <ScalarProperty Name="ParentCorrelationId" ColumnName="ParentCorrelationId" />
                 <ScalarProperty Name="Payload" ColumnName="Payload" />
                 <ScalarProperty Name="Depth" ColumnName="Depth" />
+                <ScalarProperty Name="Request" ColumnName="Request" />
+                <ScalarProperty Name="PayloadId" ColumnName="PayloadId" />
+                <ScalarProperty Name="PayloadRequestId" ColumnName="PayloadRequestId" />
+                <ScalarProperty Name="PayloadType" ColumnName="PayloadType" />
+                <ScalarProperty Name="PayloadTypeRequest" ColumnName="PayloadTypeRequest" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
