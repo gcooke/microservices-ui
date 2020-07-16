@@ -300,7 +300,7 @@ namespace Gateway.Web.Controllers
                 }
             };
 
-            if (!Guid.TryParse(id, out correlationId))
+            if (Guid.TryParse(id, out correlationId))
                 model.CorrelationId = correlationId;
 
             return View(model);
@@ -309,30 +309,35 @@ namespace Gateway.Web.Controllers
         [HttpPost]
         public ActionResult DeepDive()
         {
-            var updatedmodel = new DeepDive();
+            Guid correlationId;
+            var model = new DeepDive();
             var controller = Request.Form["DeepDiveSearch.Controller"];
             var keyword = Request.Form["DeepDiveSearch.Search"];
+            var id = Request.Form["DeepDiveSearch.CorrelationId"];
             var searchResource = (Request.Form["DeepDiveSearch.SearchResource"] == null || Request.Form["DeepDiveSearch.SearchResource"] == "false") ? false : true;
-            var searchMessage = (Request.Form["DeepDiveSearch.SearchMessage"] == null || Request.Form["DeepDiveSearch.SearchMessage"] == "false") ? false : true;
+            var searchMessage = (Request.Form["DeepDiveSearch.SearchError"] == null || Request.Form["DeepDiveSearch.SearchError"] == "false") ? false : true;
             var searchPayload = (Request.Form["DeepDiveSearch.SearchPayload"] == null || Request.Form["DeepDiveSearch.SearchPayload"] == "false") ? false : true;
 
-            updatedmodel.DeepDiveSearch = new DeepDiveSearch()
+            model.DeepDiveSearch = new DeepDiveSearch()
             {
-                CorrelationId = Request.Form["DeepDiveSearch.CorrelationId"],
+                CorrelationId = id,
                 SearchError = searchMessage,
                 SearchPayload = searchPayload,
-                SearchResource = searchPayload,
+                SearchResource = searchResource,
             };
 
             if (!string.IsNullOrEmpty(keyword))
-                updatedmodel.DeepDiveSearch.Search = keyword;
+                model.DeepDiveSearch.Search = keyword;
 
             if (searchPayload || (!string.IsNullOrEmpty(controller) && controller != "All"))
-                updatedmodel.DeepDiveSearch.Controller = controller;
+                model.DeepDiveSearch.Controller = controller;
 
-            var result = _dataService.GetDeepDive(updatedmodel.DeepDiveSearch);
-            updatedmodel.DeepDiveResults = result.ToList();
-            return View(updatedmodel);
+            if (Guid.TryParse(id, out correlationId))
+                model.CorrelationId = correlationId;
+
+            var result = _dataService.GetDeepDive(model.DeepDiveSearch);
+            model.DeepDiveResults = result.ToList();
+            return View(model);
         }
     }
 }
