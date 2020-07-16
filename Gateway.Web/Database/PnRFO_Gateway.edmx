@@ -94,6 +94,7 @@
           <Property Name="Data" Type="varbinary(max)" Nullable="false" />
           <Property Name="UpdateTime" Type="datetime" Nullable="false" />
           <Property Name="DataLengthBytes" Type="bigint" />
+          <Property Name="Server" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Request">
           <Key>
@@ -774,6 +775,7 @@
           <Property Name="UpdateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="CompressionType" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="DataLengthBytes" Type="Int64" />
+          <Property Name="Server" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <ComplexType Name="spGetResponseStatsAll_Result">
           <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
@@ -811,6 +813,7 @@
           <Property Type="Binary" Name="Data" Nullable="true" />
           <Property Type="DateTime" Name="UpdateTime" Nullable="false" Precision="23" />
           <Property Type="Int64" Name="DataLengthBytes" Nullable="true" />
+          <Property Type="String" Name="Server" Nullable="true" MaxLength="50" />
         </ComplexType>
         <ComplexType Name="spGetRequestChildSummary_Result">
           <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
@@ -1389,6 +1392,7 @@
           <EntitySetMapping Name="Payloads">
             <EntityTypeMapping TypeName="GatewayModel.Payload">
               <MappingFragment StoreEntitySet="Payload">
+                <ScalarProperty Name="Server" ColumnName="Server" />
                 <ScalarProperty Name="DataLengthBytes" ColumnName="DataLengthBytes" />
                 <ScalarProperty Name="CompressionType" ColumnName="CompressionType" />
                 <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
@@ -1430,6 +1434,7 @@
                 <ScalarProperty Name="Data" ColumnName="Data" />
                 <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
                 <ScalarProperty Name="DataLengthBytes" ColumnName="DataLengthBytes" />
+                <ScalarProperty Name="Server" ColumnName="Server" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
