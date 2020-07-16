@@ -649,7 +649,7 @@ namespace Gateway.Web.Database
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetControllerShaping_Result>("spGetControllerShaping", controllerParameter);
         }
     
-        public virtual ObjectResult<spGetDeepDive_Result> spGetDeepDive(string correlationId, string controller, string keyword, Nullable<bool> searchResource, Nullable<bool> searchResultMessage, Nullable<bool> searchPayLoad)
+        public virtual ObjectResult<spGetDeepDive_Result> spGetDeepDive(string correlationId, string controller, string keyword, Nullable<bool> searchResource, Nullable<bool> searchResultMessage, Nullable<bool> searchPayLoad, Nullable<bool> onlyShowErrors)
         {
             var correlationIdParameter = correlationId != null ?
                 new ObjectParameter("correlationId", correlationId) :
@@ -675,7 +675,11 @@ namespace Gateway.Web.Database
                 new ObjectParameter("SearchPayLoad", searchPayLoad) :
                 new ObjectParameter("SearchPayLoad", typeof(bool));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetDeepDive_Result>("spGetDeepDive", correlationIdParameter, controllerParameter, keywordParameter, searchResourceParameter, searchResultMessageParameter, searchPayLoadParameter);
+            var onlyShowErrorsParameter = onlyShowErrors.HasValue ?
+                new ObjectParameter("OnlyShowErrors", onlyShowErrors) :
+                new ObjectParameter("OnlyShowErrors", typeof(bool));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetDeepDive_Result>("spGetDeepDive", correlationIdParameter, controllerParameter, keywordParameter, searchResourceParameter, searchResultMessageParameter, searchPayLoadParameter, onlyShowErrorsParameter);
         }
     
         public virtual ObjectResult<spGetDetailsForExecutedBatches_Result> spGetDetailsForExecutedBatches(Nullable<System.DateTime> evaluationDate)

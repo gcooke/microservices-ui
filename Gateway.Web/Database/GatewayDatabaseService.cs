@@ -950,7 +950,7 @@ namespace Gateway.Web.Database
         {
             using (var database = new GatewayEntities(_connectionString, 300))
             {
-                var results = database.spGetDeepDive(deepDive.CorrelationId, deepDive.Controller, deepDive.Search, deepDive.SearchResource, deepDive.SearchError, deepDive.SearchPayload);
+                var results = database.spGetDeepDive(deepDive.CorrelationId, deepDive.Controller, deepDive.Search, deepDive.SearchResource, deepDive.SearchError, deepDive.SearchPayload, deepDive.OnlyShowErrors);
                 return AutoMapper.Mapper.Map<List<DeepDiveDto>>(results.ToList());
             }
         }

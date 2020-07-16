@@ -2,6 +2,7 @@
 using Bagl.Cib.MIT.Cube;
 using Bagl.Cib.MIT.Logging;
 using Bagl.Cib.MSF.ClientAPI.Model;
+using Bagl.Cib.MSF.Contracts.Model;
 using Gateway.Web.Authorization;
 using Gateway.Web.Database;
 using Gateway.Web.Helpers;
@@ -17,6 +18,7 @@ using System.Text;
 
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
 using System.Xml.Linq;
 
@@ -311,33 +313,89 @@ namespace Gateway.Web.Controllers
         {
             Guid correlationId;
             var model = new DeepDive();
-            var controller = Request.Form["DeepDiveSearch.Controller"];
-            var keyword = Request.Form["DeepDiveSearch.Search"];
-            var id = Request.Form["DeepDiveSearch.CorrelationId"];
-            var searchResource = (Request.Form["DeepDiveSearch.SearchResource"] == null || Request.Form["DeepDiveSearch.SearchResource"] == "false") ? false : true;
-            var searchMessage = (Request.Form["DeepDiveSearch.SearchError"] == null || Request.Form["DeepDiveSearch.SearchError"] == "false") ? false : true;
-            var searchPayload = (Request.Form["DeepDiveSearch.SearchPayload"] == null || Request.Form["DeepDiveSearch.SearchPayload"] == "false") ? false : true;
 
-            model.DeepDiveSearch = new DeepDiveSearch()
+            model.DeepDiveSearch = GetDeepDiveSearch(Request);
+
+            if (Guid.TryParse(model.DeepDiveSearch?.CorrelationId, out correlationId))
+                model.CorrelationId = correlationId;
+
+            var result = _dataService.GetDeepDive(model.DeepDiveSearch);
+            model.DeepDiveResults = result.ToList();
+
+            if (model.DeepDiveSearch.SearchPayload)
+            {
+                var updatedResults = new List<DeepDiveDto>();
+                foreach (var item in model.DeepDiveResults)
+                {
+                    if (item.PayloadId.HasValue && item.PayloadId > 0)
+                    {
+                        var payload = _dataService.GetPayload(item.PayloadId.Value);
+                        if (payload == null)
+                            continue;
+
+                        var payloadTypeValue = (PayloadType)Enum.Parse((typeof(PayloadType)), payload.PayloadType);
+                        switch (payloadTypeValue)
+                        {
+                            case PayloadType.XElement:
+                                break;
+
+                            case PayloadType.JObject:
+                                break;
+
+                            case PayloadType.String:
+                                break;
+
+                            case PayloadType.Binary:
+                                break;
+
+                            case PayloadType.Cube:
+                                break;
+
+                            case PayloadType.MultiPart:
+                                break;
+
+                            case PayloadType.Unknown:
+                                break;
+
+                            default:
+                                break;
+                        }
+
+                        updatedResults.Add(item);
+                    }
+                }
+                model.DeepDiveResults = updatedResults;
+            }
+
+            return View(model);
+        }
+
+        private DeepDiveSearch GetDeepDiveSearch(HttpRequestBase request)
+        {
+            var controller = request.Form["DeepDiveSearch.Controller"];
+            var keyword = request.Form["DeepDiveSearch.Search"];
+            var id = request.Form["DeepDiveSearch.CorrelationId"];
+            var searchResource = (request.Form["DeepDiveSearch.SearchResource"] == null || request.Form["DeepDiveSearch.SearchResource"] == "false") ? false : true;
+            var searchMessage = (request.Form["DeepDiveSearch.SearchError"] == null || request.Form["DeepDiveSearch.SearchError"] == "false") ? false : true;
+            var searchPayload = (request.Form["DeepDiveSearch.SearchPayload"] == null || request.Form["DeepDiveSearch.SearchPayload"] == "false") ? false : true;
+            var onlyShowErrors = (request.Form["DeepDiveSearch.OnlyShowErrors"] == null || request.Form["DeepDiveSearch.OnlyShowErrors"] == "false") ? false : true;
+
+            var model = new DeepDiveSearch()
             {
                 CorrelationId = id,
                 SearchError = searchMessage,
                 SearchPayload = searchPayload,
                 SearchResource = searchResource,
+                OnlyShowErrors = onlyShowErrors
             };
 
             if (!string.IsNullOrEmpty(keyword))
-                model.DeepDiveSearch.Search = keyword;
+                model.Search = keyword;
 
             if (searchPayload || (!string.IsNullOrEmpty(controller) && controller != "All"))
-                model.DeepDiveSearch.Controller = controller;
+                model.Controller = controller;
 
-            if (Guid.TryParse(id, out correlationId))
-                model.CorrelationId = correlationId;
-
-            var result = _dataService.GetDeepDive(model.DeepDiveSearch);
-            model.DeepDiveResults = result.ToList();
-            return View(model);
+            return model;
         }
     }
 }

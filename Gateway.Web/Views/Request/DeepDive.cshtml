@@ -54,6 +54,14 @@
                         </div>
                     </td>
                 </tr>
+                <tr>
+                    <td class="columnheader" style="width: 10%">Search Depth</td>
+                    <td colspan="3">
+                        @Html.CheckBoxFor(f => f.DeepDiveSearch.OnlyShowErrors)
+                        <label for="mycheck">@Html.LabelFor(f => f.DeepDiveSearch.OnlyShowErrors) </label>
+                    </td>
+                </tr>
+                
             </table>
         </div>
         <div class="row m-t-15">

@@ -533,6 +533,7 @@
           <Parameter Name="SearchResource" Type="bit" Mode="In" />
           <Parameter Name="SearchResultMessage" Type="bit" Mode="In" />
           <Parameter Name="SearchPayLoad" Type="bit" Mode="In" />
+          <Parameter Name="OnlyShowErrors" Type="bit" Mode="In" />
         </Function>
         <Function Name="spGetDetailsForExecutedBatches" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="EvaluationDate" Type="datetime" Mode="In" />
@@ -1039,6 +1040,7 @@
             <Parameter Name="SearchResource" Mode="In" Type="Boolean" />
             <Parameter Name="SearchResultMessage" Mode="In" Type="Boolean" />
             <Parameter Name="SearchPayLoad" Mode="In" Type="Boolean" />
+            <Parameter Name="OnlyShowErrors" Mode="In" Type="Boolean" />
           </FunctionImport>
           <FunctionImport Name="spGetDetailsForExecutedBatches" ReturnType="Collection(GatewayModel.spGetDetailsForExecutedBatches_Result)">
           <Parameter Name="EvaluationDate" Mode="In" Type="DateTime" />
