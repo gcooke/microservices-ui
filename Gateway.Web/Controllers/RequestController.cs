@@ -5,6 +5,7 @@ using Bagl.Cib.MSF.ClientAPI.Model;
 using Bagl.Cib.MSF.Contracts.Model;
 using Gateway.Web.Authorization;
 using Gateway.Web.Database;
+using Gateway.Web.Enums;
 using Gateway.Web.Helpers;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Request;
@@ -182,10 +183,22 @@ namespace Gateway.Web.Controllers
             return View("Cube", model);
         }
 
-        public ActionResult ViewPayLoad(string correlationId, long payloadId)
+        public ActionResult ViewPayLoad(string correlationId, long payloadId, string controllername)
         {
             var data = _dataService.GetPayload(payloadId);
 
+            if (controllername.ToLower() == SigmaController.CounterpartyXVA.ToString().ToLower() && data.Direction == "Response")
+            {
+                var bytes = data.GetBytes();
+                var str = Encoding.UTF8.GetString(bytes);
+                var xvamodel = new XvaResultModel(str, correlationId, payloadId);
+
+                var report = xvamodel.Reports.FirstOrDefault(x => x.Key.Contains("XVA Counterparty Validation"));
+
+                var cubeBytes = Convert.FromBase64String(report.Value);
+                var cube = CubeBuilder.FromBytes(cubeBytes);
+                return View("Cube", new CubeModel(cube, "XVA Counterparty Validation"));
+            }
             var model = new PayloadModel(new spGetPayloads_Result()
             {
                 PayloadType = data.PayloadType,
@@ -327,7 +340,7 @@ namespace Gateway.Web.Controllers
                 var updatedResults = new List<DeepDiveDto>();
                 foreach (var item in model.DeepDiveResults)
                 {
-                    if (item.PayloadId.HasValue && item.PayloadId > 0)
+                    if (item.PayloadId.HasValue && item.PayloadId > 0 && !string.IsNullOrEmpty(model?.DeepDiveSearch?.Search))
                     {
                         var payload = _dataService.GetPayload(item.PayloadId.Value);
                         if (payload == null)
@@ -336,32 +349,41 @@ namespace Gateway.Web.Controllers
                         var payloadTypeValue = (PayloadType)Enum.Parse((typeof(PayloadType)), payload.PayloadType);
                         switch (payloadTypeValue)
                         {
-                            case PayloadType.XElement:
-                                break;
-
                             case PayloadType.JObject:
-                                break;
-
+                            case PayloadType.Unknown:
                             case PayloadType.String:
+                            case PayloadType.XElement:
+
+                                var payloadModel = new PayloadModel(new spGetPayloads_Result()
+                                {
+                                    PayloadType = payload.PayloadType,
+                                    CompressionType = payload.CompressionType,
+                                    DataLengthBytes = payload.DataLengthBytes,
+                                    Data = payload.Data,
+                                    Direction = payload.Direction
+                                });
+
+                                if (payloadModel.Data.Contains(model.DeepDiveSearch.Search))
+                                    updatedResults.Add(item);
                                 break;
 
                             case PayloadType.Binary:
                                 break;
 
                             case PayloadType.Cube:
+                                var cubeModel = new CubeModel(payload);
+                                var rows = cubeModel.Rows;
+                                if (rows.Contains(model.DeepDiveSearch.Search))
+                                    updatedResults.Add(item);
                                 break;
 
                             case PayloadType.MultiPart:
                                 break;
 
-                            case PayloadType.Unknown:
-                                break;
-
                             default:
+                                updatedResults.Add(item);
                                 break;
                         }
-
-                        updatedResults.Add(item);
                     }
                 }
                 model.DeepDiveResults = updatedResults;
@@ -392,7 +414,7 @@ namespace Gateway.Web.Controllers
             if (!string.IsNullOrEmpty(keyword))
                 model.Search = keyword;
 
-            if (searchPayload || (!string.IsNullOrEmpty(controller) && controller != "All"))
+            if (!string.IsNullOrEmpty(controller) && controller != "All")
                 model.Controller = controller;
 
             return model;
