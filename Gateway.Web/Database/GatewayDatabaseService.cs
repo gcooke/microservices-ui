@@ -372,7 +372,24 @@ namespace Gateway.Web.Database
                 result.WallClockTime = (end - result.StartUtc).ToString("h'h 'm'm 's's'");
 
                 foreach (var item in database.spGetRequestChildSummary(id).OrderBy(r => r.MinStartUtc))
-                    result.Items.Add(item.ToModel());
+                {
+                    if (item.Controller == "cashflow" && item.LastCorrelationId.HasValue)
+                    {
+                        var data = database.Payloads.FirstOrDefault(x => x.Direction == "Response" && x.CorrelationId == item.LastCorrelationId.Value);
+                        if (data != null)
+                        {
+                            var cube = new CubeModel(new PayloadData(data));
+                            var model = item.ToModel();
+                            model.Size = cube.Rows.Count();
+                            model.SizeUnit = "Cashflows";
+                            result.Items.Add(model);
+                        }
+                        else
+                            result.Items.Add(item.ToModel());
+                    }
+                    else
+                        result.Items.Add(item.ToModel());
+                }
             }
             return result;
         }

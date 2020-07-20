@@ -311,12 +311,14 @@ namespace Gateway.Web.Controllers
                 DeepDiveSearch = new DeepDiveSearch()
                 {
                     CorrelationId = id,
-                    Controller = "All"
+                    OnlyShowErrors = true
                 }
             };
 
             if (Guid.TryParse(id, out correlationId))
                 model.CorrelationId = correlationId;
+
+            GetDeepDiveResults(model);
 
             return View(model);
         }
@@ -332,13 +334,19 @@ namespace Gateway.Web.Controllers
             if (Guid.TryParse(model.DeepDiveSearch?.CorrelationId, out correlationId))
                 model.CorrelationId = correlationId;
 
+            GetDeepDiveResults(model);
+
+            return View(model);
+        }
+
+        private void GetDeepDiveResults(DeepDive model)
+        {
             var result = _dataService.GetDeepDive(model.DeepDiveSearch);
-            model.DeepDiveResults = result.ToList();
 
             if (model.DeepDiveSearch.SearchPayload)
             {
                 var updatedResults = new List<DeepDiveDto>();
-                foreach (var item in model.DeepDiveResults)
+                foreach (var item in result)
                 {
                     if (item.PayloadId.HasValue && item.PayloadId > 0 && !string.IsNullOrEmpty(model?.DeepDiveSearch?.Search))
                     {
@@ -388,8 +396,10 @@ namespace Gateway.Web.Controllers
                 }
                 model.DeepDiveResults = updatedResults;
             }
-
-            return View(model);
+            else
+            {
+                model.DeepDiveResults = result.ToList();
+            }
         }
 
         private DeepDiveSearch GetDeepDiveSearch(HttpRequestBase request)
