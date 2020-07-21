@@ -101,7 +101,7 @@ namespace Gateway.Web
                     return redisOptions;
                 }));
 
-            information.RegisterType<IRedisConnectionProvider>(Scope.Singleton, new InjectionFactory(
+            information.RegisterType<IRedisConnectionProvider>(Scope.ContainerSingleton, new InjectionFactory(
                 e =>
                 {
                     var config = (RedisConfiguration)e.Resolve(typeof(RedisConfiguration), null, null);
@@ -124,8 +124,8 @@ namespace Gateway.Web
 
             information.RegisterType<IRedisCache, RedisCache>(Scope.ContainerSingleton);
 
-            information.RegisterType<IPnRFoDatabaseService, PnRfoDatabaseService>(Scope.Singleton);
-            information.RegisterType<IGatewayDatabaseService, GatewayDatabaseService>(Scope.Singleton);
+            information.RegisterType<IPnRFoDatabaseService, PnRfoDatabaseService>(Scope.ContainerSingleton);
+            information.RegisterType<IGatewayDatabaseService, GatewayDatabaseService>(Scope.ContainerSingleton);
 
             information.RegisterType<IDifferentialArchiveService, DifferentialArchiveService>(Scope.Singleton);
             information.RegisterType<IDifferentialDownloadService, DifferentialDownloadService>(Scope.Singleton);
