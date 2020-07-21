@@ -8,6 +8,7 @@
         <EntityTypeShape EntityType="GatewayModel.Request" Width="1.5" PointX="5.75" PointY="2.75" IsExpanded="false" />
         <EntityTypeShape EntityType="GatewayModel.Response" Width="1.5" PointX="5.75" PointY="4.75" IsExpanded="false" />
         <EntityTypeShape EntityType="GatewayModel.Version" Width="1.5" PointX="3" PointY="5.875" IsExpanded="false" />
+        <EntityTypeShape EntityType="GatewayModel.Payload" Width="1.5" PointX="12.125" PointY="6" IsExpanded="true" />
         <EntityTypeShape EntityType="GatewayModel.Status" Width="1.5" PointX="0.75" PointY="3.875" IsExpanded="true" />
         <AssociationConnector Association="GatewayModel.FK_Version_Status" />
         <EntityTypeShape EntityType="GatewayModel.RequestChange" Width="1.5" PointX="0.75" PointY="7.75" IsExpanded="false" />
