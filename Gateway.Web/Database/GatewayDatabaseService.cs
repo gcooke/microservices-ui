@@ -13,8 +13,10 @@ using Gateway.Web.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Threading.Tasks;
+using Bagl.Cib.MIT.IO;
 using QueueChartModel = Gateway.Web.Models.Controller.QueueChartModel;
 
 namespace Gateway.Web.Database
@@ -22,14 +24,17 @@ namespace Gateway.Web.Database
     public class GatewayDatabaseService : IGatewayDatabaseService
     {
         public const string UserRequestTimeFormat = "yyyyMMdd_HHmmss";
+        public const string PayloadSeverPathFormat = "\\\\{server}\\DATA\\Audit\\{requestdate}\\{direction}\\{correlationid}";
 
         private readonly string _connectionString;
         private readonly IRedisService _redisService;
+        private readonly IFileService _fileService;
 
-        public GatewayDatabaseService(ISystemInformation systemInformation, RedisService redisService)
+        public GatewayDatabaseService(ISystemInformation systemInformation, IRedisService redisService, IFileService fileService)
         {
             _connectionString = systemInformation.GetConnectionString("GatewayDatabase", "Database.PnRFO_Gateway");
             _redisService = redisService;
+            _fileService = fileService;
         }
 
         public List<ControllerStats> GetControllerStatistics(DateTime start, string controllerName)
@@ -327,6 +332,10 @@ namespace Gateway.Web.Database
                     if (originalPayload != null)
                     {
                         var comp = (CompressionType)Enum.Parse(typeof(CompressionType), originalPayload.CompressionType);
+
+                        if (!string.IsNullOrEmpty(originalPayload.Server))
+                            originalPayload.Data = GetPayloadFromSever(originalPayload);
+
                         result.SetBody(originalPayload.Data, comp, originalPayload.PayloadType);
                     }
                 }
@@ -334,6 +343,51 @@ namespace Gateway.Web.Database
                 return result;
             }
         }
+
+        private byte[] GetPayloadFromSever(spGetPayloads_Result payload)
+        {
+            return GetPayloadFromFile(payload.CorrelationId,payload.Direction,payload.UpdateTime,payload.Server,payload.DataLengthBytes);
+        }
+
+        private byte[] GetPayloadFromFile(Guid CorrelationId,string direction, DateTime UpdateTime, string server, long? dataLengthBytes)
+        {
+            var path = PayloadSeverPathFormat
+                .Replace("{server}", server)
+                .Replace("{requestdate}", UpdateTime.ToString("yyyyMMdd"))
+                .Replace("{direction}", direction)
+                .Replace("{correlationid}", $"{CorrelationId}");
+
+            if (!_fileService.FileExists(path))
+                return null;
+
+            if (dataLengthBytes.HasValue)
+            {
+                var totalbytes = (int)dataLengthBytes.Value;
+                var data = new byte[totalbytes];
+                var numBytesRead = 0;
+
+                using (var stream = _fileService.OpenRead(path))
+                {
+                    var readbytes = 0;
+
+                    while((readbytes = stream.Read(data, numBytesRead, totalbytes-numBytesRead)) > 0)
+                    {
+                        numBytesRead += readbytes;
+                    }
+                }
+
+                return data;
+            }
+
+            // Endless Read ? 
+            return null;
+        }
+
+        private byte[] GetPayloadFromSever(Payload payload)
+        {
+            return GetPayloadFromFile(payload.CorrelationId, payload.Direction, payload.UpdateTime, payload.Server, payload.DataLengthBytes);
+        }
+
 
         private GatewayRequest GetRequest(Request model)
         {
@@ -446,6 +500,9 @@ namespace Gateway.Web.Database
                 }
                 foreach (var item in database.spGetPayloads(id))
                 {
+                    if(!string.IsNullOrEmpty(item.Server))
+                        item.Data = GetPayloadFromSever(item);
+
                     result.Items.Add(new PayloadModel(item));
                 }
             }
@@ -485,6 +542,10 @@ namespace Gateway.Web.Database
             using (var database = new GatewayEntities(_connectionString))
             {
                 var payload = database.Payloads.FirstOrDefault(p => p.Id == id);
+
+                if (payload!= null && !string.IsNullOrEmpty(payload.Server))
+                    payload.Data = GetPayloadFromSever(payload);
+
                 return new PayloadData(payload);
             }
         }
