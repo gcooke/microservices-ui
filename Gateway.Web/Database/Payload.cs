@@ -22,5 +22,6 @@ namespace Gateway.Web.Database
         public byte[] Data { get; set; }
         public System.DateTime UpdateTime { get; set; }
         public Nullable<long> DataLengthBytes { get; set; }
+        public string Server { get; set; }
     }
 }

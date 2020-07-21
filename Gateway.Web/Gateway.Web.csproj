@@ -471,6 +471,9 @@
     <Compile Include="Database\spGetDetailsForExecutedBatches_Result.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
+    <Compile Include="Database\spGetPayloadResponsesByController_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
     <Compile Include="Database\spGetPodConfiguration_Result.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>

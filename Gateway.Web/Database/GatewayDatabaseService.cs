@@ -356,6 +356,24 @@ namespace Gateway.Web.Database
             }
         }
 
+        private List<PayloadData> GetAllMarketDataPayloads(Guid id)
+        {
+            var payloadData = new List<PayloadData>();
+            var results = new List<spGetPayloadResponsesByController_Result>();
+            using (var database = new GatewayEntities(_connectionString))
+            {
+                var data = database.spGetPayloadResponsesByController(id, "marketdata");
+                results = data.ToList();
+            }
+
+            foreach (var item in results)
+            {
+                var cube = new PayloadModel(AutoMapper.Mapper.Map<spGetPayloads_Result>(item));
+            }
+
+            return payloadData;
+        }
+
         public Summary GetRequestSummary(string correlationId)
         {
             var result = new Summary();
@@ -373,6 +391,11 @@ namespace Gateway.Web.Database
 
                 foreach (var item in database.spGetRequestChildSummary(id).OrderBy(r => r.MinStartUtc))
                 {
+                    if (item.Controller == "marketdata" && item.LastCorrelationId.HasValue)
+                    {
+                        var marketDataPayloads = GetAllMarketDataPayloads(id);
+                    }
+
                     if (item.Controller == "cashflow" && item.LastCorrelationId.HasValue)
                     {
                         var data = database.Payloads.FirstOrDefault(x => x.Direction == "Response" && x.CorrelationId == item.LastCorrelationId.Value);

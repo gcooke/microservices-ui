@@ -11,6 +11,7 @@ namespace Gateway.Web.Profiles
         {
             CreateMap<spGetHistoryTimingForSchedule_Result, HistoryTimingForScheduleViewModel>().ReverseMap();
             CreateMap<spGetDeepDive_Result, DeepDiveDto>().ReverseMap();
+            CreateMap<spGetPayloads_Result, spGetPayloadResponsesByController_Result>().ReverseMap();
         }
     }
 }

@@ -913,5 +913,18 @@ namespace Gateway.Web.Database
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetBatches_Result>("GetBatches", runDateParameter);
         }
+    
+        public virtual ObjectResult<spGetPayloadResponsesByController_Result> spGetPayloadResponsesByController(Nullable<System.Guid> correlationId, string controllerName)
+        {
+            var correlationIdParameter = correlationId.HasValue ?
+                new ObjectParameter("CorrelationId", correlationId) :
+                new ObjectParameter("CorrelationId", typeof(System.Guid));
+    
+            var controllerNameParameter = controllerName != null ?
+                new ObjectParameter("ControllerName", controllerName) :
+                new ObjectParameter("ControllerName", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetPayloadResponsesByController_Result>("spGetPayloadResponsesByController", correlationIdParameter, controllerNameParameter);
+        }
     }
 }

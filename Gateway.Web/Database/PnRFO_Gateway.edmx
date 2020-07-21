@@ -94,6 +94,7 @@
           <Property Name="Data" Type="varbinary(max)" Nullable="false" />
           <Property Name="UpdateTime" Type="datetime" Nullable="false" />
           <Property Name="DataLengthBytes" Type="bigint" />
+          <Property Name="Server" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Request">
           <Key>
@@ -544,6 +545,10 @@
         </Function>
         <Function Name="spGetIncompleteRequestCount" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="time" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="spGetPayloadResponsesByController" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CorrelationId" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="ControllerName" Type="varchar" Mode="In" />
         </Function>
         <Function Name="spGetPayloads" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CorrelationId" Type="uniqueidentifier" Mode="In" />
@@ -1115,6 +1120,10 @@
           <Parameter Name="runDate" Mode="In" Type="DateTime" />
           </FunctionImport>
           <EntitySet Name="Payloads" EntityType="GatewayModel.Payload" />
+          <FunctionImport Name="spGetPayloadResponsesByController" ReturnType="Collection(GatewayModel.spGetPayloadResponsesByController_Result)">
+            <Parameter Name="CorrelationId" Mode="In" Type="Guid" />
+            <Parameter Name="ControllerName" Mode="In" Type="String" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="spGetJobStats_Result">
           <Property Type="DateTime" Name="Date" Nullable="true" />
@@ -1843,7 +1852,18 @@
           <Property Name="Data" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
           <Property Name="UpdateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="DataLengthBytes" Type="Int64" />
+          <Property Name="Server" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
+        <ComplexType Name="spGetPayloadResponsesByController_Result">
+          <Property Type="Int64" Name="Id" Nullable="false" />
+          <Property Type="Guid" Name="CorrelationId" Nullable="false" />
+          <Property Type="String" Name="Direction" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="PayloadType" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="CompressionType" Nullable="false" MaxLength="50" />
+          <Property Type="Binary" Name="Data" Nullable="true" />
+          <Property Type="DateTime" Name="UpdateTime" Nullable="false" Precision="23" />
+          <Property Type="Int64" Name="DataLengthBytes" Nullable="true" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2637,6 +2657,7 @@
           <EntitySetMapping Name="Payloads">
             <EntityTypeMapping TypeName="GatewayModel.Payload">
               <MappingFragment StoreEntitySet="Payload">
+                <ScalarProperty Name="Server" ColumnName="Server" />
                 <ScalarProperty Name="DataLengthBytes" ColumnName="DataLengthBytes" />
                 <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
                 <ScalarProperty Name="Data" ColumnName="Data" />
@@ -2648,6 +2669,20 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="spGetPayloadResponsesByController" FunctionName="GatewayModel.Store.spGetPayloadResponsesByController">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GatewayModel.spGetPayloadResponsesByController_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="CorrelationId" ColumnName="CorrelationId" />
+                <ScalarProperty Name="Direction" ColumnName="Direction" />
+                <ScalarProperty Name="PayloadType" ColumnName="PayloadType" />
+                <ScalarProperty Name="CompressionType" ColumnName="CompressionType" />
+                <ScalarProperty Name="Data" ColumnName="Data" />
+                <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
+                <ScalarProperty Name="DataLengthBytes" ColumnName="DataLengthBytes" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
