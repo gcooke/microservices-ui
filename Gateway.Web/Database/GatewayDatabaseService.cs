@@ -494,6 +494,25 @@ namespace Gateway.Web.Database
 
                     result.Items.Add(model);
                 }
+
+                var deepDiveSearch = new DeepDiveSearch()
+                {
+                    CorrelationId = id.ToString(),
+                    OnlyShowErrors = true
+                };
+
+                var deepDiveResult = GetDeepDive(deepDiveSearch).Where(x => x.PayloadId > 0 && x.PayloadType == PayloadType.Cube.ToString());
+                foreach (var item in deepDiveResult)
+                {
+                    var data = database.Payloads.FirstOrDefault(x => x.Id == item.PayloadId);
+                    data.Data = GetPayloadFromSever(data);
+                    if (data != null)
+                    {
+                        var cube = new CubeModel(new PayloadData(data));
+
+                        result.ErrorRows.AddRange(cube.Errors.Select(x => new ErrorRow() { Controller = item.Controller, ErrorName = x.Value, ItemName = string.Empty }));
+                    }
+                }
             }
             return result;
         }
