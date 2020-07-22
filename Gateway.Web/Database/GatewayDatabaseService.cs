@@ -14,6 +14,8 @@ using Gateway.Web.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data.Entity.Design.PluralizationServices;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -453,6 +455,8 @@ namespace Gateway.Web.Database
 
         public Summary GetRequestSummary(string correlationId)
         {
+            var ci = new CultureInfo("en-us");
+            var ps = PluralizationService.CreateService(ci);
             var result = new Summary();
             var id = Guid.Parse(correlationId);
             using (var database = new GatewayEntities(_connectionString))
@@ -475,25 +479,21 @@ namespace Gateway.Web.Database
                             result.ErrorRows.AddRange(marketDataPayloadErrors.Select(x => new ErrorRow() { Controller = item.Controller, ErrorName = x.Value, ItemName = item.SizeUnit }));
                     }
 
-                    if (item.Controller == "cashflow" && item.LastCorrelationId.HasValue)
+                    var model = item.ToModel();
+                    if (model.Size.HasValue && model.Size == 1 && model.SizeUnit == "ICube")
                     {
                         var data = database.Payloads.FirstOrDefault(x => x.Direction == "Response" && x.CorrelationId == item.LastCorrelationId.Value);
                         data.Data = GetPayloadFromSever(data);
-
                         if (data != null)
                         {
                             var cube = new CubeModel(new PayloadData(data));
 
-                            var model = item.ToModel();
                             model.Size = cube.RowCount;
-                            model.SizeUnit = "Cashflows";
-                            result.Items.Add(model);
+                            model.SizeUnit = ps.Pluralize(item.Controller);
                         }
-                        else
-                            result.Items.Add(item.ToModel());
                     }
-                    else
-                        result.Items.Add(item.ToModel());
+
+                    result.Items.Add(model);
                 }
             }
             return result;
