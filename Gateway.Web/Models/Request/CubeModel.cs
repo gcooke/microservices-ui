@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web;
-using System.Web.UI.HtmlControls;
+﻿using System.Text;
 using Bagl.Cib.MIT.Cube;
 using Gateway.Web.Database;
+using System.Linq;
+
+using System.Text;
 
 namespace Gateway.Web.Models.Request
 {
@@ -33,6 +31,7 @@ namespace Gateway.Web.Models.Request
         {
             get { return !string.IsNullOrEmpty(Attributes); }
         }
+
         public string Attributes { get; private set; }
         public string Rows { get; private set; }
         public int RowCount { get; private set; }
@@ -52,7 +51,6 @@ namespace Gateway.Web.Models.Request
             builder.AppendLine("</tr>");
             builder.AppendLine("</thead>");
 
-            RowCount = attributes.Count();
             foreach (var attribute in attributes)
             {
                 builder.AppendLine("<tr>");
@@ -68,6 +66,7 @@ namespace Gateway.Web.Models.Request
         {
             // Render rows
             var builder = new StringBuilder();
+            RowCount = _cube.Rows;
             builder.AppendLine("<table class=\"datatable\">");
             builder.AppendLine("<thead>");
             builder.AppendLine("<tr>");
@@ -91,6 +90,5 @@ namespace Gateway.Web.Models.Request
             builder.AppendLine("</table>");
             Rows = builder.ToString();
         }
-
     }
 }
