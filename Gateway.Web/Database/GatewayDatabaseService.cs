@@ -20,7 +20,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using Bagl.Cib.MIT.StatePublisher.Utils;
 using QueueChartModel = Gateway.Web.Models.Controller.QueueChartModel;
 
 namespace Gateway.Web.Database
