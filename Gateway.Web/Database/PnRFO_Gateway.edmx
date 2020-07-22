@@ -1161,21 +1161,7 @@
           <Property Type="DateTime" Name="LastEnqueue" Nullable="true" Precision="23" />
           <Property Type="DateTime" Name="LastDequeue" Nullable="true" Precision="23" />
           <Property Type="String" Name="Server" Nullable="true" MaxLength="100" />
-        </ComplexType>
-        <EntityType Name="Payload">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CorrelationId" Type="Guid" Nullable="false" />
-          <Property Name="Direction" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="PayloadType" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="Data" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
-          <Property Name="UpdateTime" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="CompressionType" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="DataLengthBytes" Type="Int64" />
-          <Property Name="Server" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-        </EntityType>
+        </ComplexType>         
         <ComplexType Name="spGetResponseStatsAll_Result">
           <Property Type="String" Name="Controller" Nullable="false" MaxLength="100" />
           <Property Type="Int32" Name="ResultCode" Nullable="true" />
@@ -1878,6 +1864,7 @@
           <Property Type="Binary" Name="Data" Nullable="true" />
           <Property Type="DateTime" Name="UpdateTime" Nullable="false" Precision="23" />
           <Property Type="Int64" Name="DataLengthBytes" Nullable="true" />
+          <Property Type="String" Name="Server" Nullable="true" MaxLength="50" />
         </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
@@ -2711,6 +2698,7 @@
                 <ScalarProperty Name="Data" ColumnName="Data" />
                 <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
                 <ScalarProperty Name="DataLengthBytes" ColumnName="DataLengthBytes" />
+                <ScalarProperty Name="Server" ColumnName="Server" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

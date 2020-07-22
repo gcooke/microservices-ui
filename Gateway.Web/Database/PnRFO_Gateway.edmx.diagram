@@ -33,7 +33,6 @@
         <EntityTypeShape EntityType="GatewayModel.Controller" Width="1.5" PointX="10.771378587359273" PointY="9.7806513504035077" />
         <AssociationConnector Association="GatewayModel.FK_Controller_ScalingModel" />
         <AssociationConnector Association="GatewayModel.FK_Version_Controller" />
-        <EntityTypeShape EntityType="GatewayModel.Payload" Width="1.5" PointX="10.726051166060405" PointY="2.1656648824762854" />
         </Diagram>
         <EntityTypeShape EntityType="GatewayModel.ControllerExternalResource" Width="1.5" PointX="13.625" PointY="3.25" />
         <EntityTypeShape EntityType="GatewayModel.ExternalResource" Width="1.5" PointX="11.375" PointY="3.875" />

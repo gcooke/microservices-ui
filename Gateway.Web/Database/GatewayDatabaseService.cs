@@ -1,4 +1,5 @@
 ﻿using Bagl.Cib.MIT.Cube;
+using Bagl.Cib.MIT.IO;
 using Bagl.Cib.MIT.IoC;
 using Bagl.Cib.MSF.ClientAPI.Model;
 using Bagl.Cib.MSF.Contracts.Model;
@@ -13,10 +14,10 @@ using Gateway.Web.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data.SqlTypes;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Bagl.Cib.MIT.IO;
+using System.Xml.Linq;
 using QueueChartModel = Gateway.Web.Models.Controller.QueueChartModel;
 
 namespace Gateway.Web.Database
@@ -346,10 +347,10 @@ namespace Gateway.Web.Database
 
         private byte[] GetPayloadFromSever(spGetPayloads_Result payload)
         {
-            return GetPayloadFromFile(payload.CorrelationId,payload.Direction,payload.UpdateTime,payload.Server,payload.DataLengthBytes);
+            return GetPayloadFromFile(payload.CorrelationId, payload.Direction, payload.UpdateTime, payload.Server, payload.DataLengthBytes);
         }
 
-        private byte[] GetPayloadFromFile(Guid CorrelationId,string direction, DateTime UpdateTime, string server, long? dataLengthBytes)
+        private byte[] GetPayloadFromFile(Guid CorrelationId, string direction, DateTime UpdateTime, string server, long? dataLengthBytes)
         {
             var path = PayloadSeverPathFormat
                 .Replace("{server}", server)
@@ -370,7 +371,7 @@ namespace Gateway.Web.Database
                 {
                     var readbytes = 0;
 
-                    while((readbytes = stream.Read(data, numBytesRead, totalbytes-numBytesRead)) > 0)
+                    while ((readbytes = stream.Read(data, numBytesRead, totalbytes - numBytesRead)) > 0)
                     {
                         numBytesRead += readbytes;
                     }
@@ -379,7 +380,7 @@ namespace Gateway.Web.Database
                 return data;
             }
 
-            // Endless Read ? 
+            // Endless Read ?
             return null;
         }
 
@@ -387,7 +388,6 @@ namespace Gateway.Web.Database
         {
             return GetPayloadFromFile(payload.CorrelationId, payload.Direction, payload.UpdateTime, payload.Server, payload.DataLengthBytes);
         }
-
 
         private GatewayRequest GetRequest(Request model)
         {
@@ -410,9 +410,9 @@ namespace Gateway.Web.Database
             }
         }
 
-        private List<PayloadData> GetAllMarketDataPayloads(Guid id)
+        private Dictionary<string, string> GetAllMarketDataPayloadErrors(Guid id)
         {
-            var payloadData = new List<PayloadData>();
+            var errorList = new Dictionary<string, string>();
             var results = new List<spGetPayloadResponsesByController_Result>();
             using (var database = new GatewayEntities(_connectionString))
             {
@@ -422,10 +422,27 @@ namespace Gateway.Web.Database
 
             foreach (var item in results)
             {
-                var cube = new PayloadModel(AutoMapper.Mapper.Map<spGetPayloads_Result>(item));
+                var payload = AutoMapper.Mapper.Map<spGetPayloads_Result>(item);
+                payload.Data = GetPayloadFromSever(payload);
+
+                var cube = new PayloadModel(payload);
+                if (cube.ContainsXmlResult)
+                {
+                    var xml = XElement.Load(new StringReader(cube.Data));
+                    var ele = xml.Elements("MultiAnswer").Elements("SingleResponses");
+                    foreach (var element in ele.Elements("SingleResponse"))
+                    {
+                        var errorMessage = element.Element("ErrorMessage").Value;
+                        if (!string.IsNullOrEmpty(errorMessage))
+                        {
+                            if (!errorList.ContainsKey(errorMessage))
+                                errorList.Add(errorMessage, errorMessage);
+                        }
+                    }
+                }
             }
 
-            return payloadData;
+            return errorList;
         }
 
         public Summary GetRequestSummary(string correlationId)
@@ -447,17 +464,22 @@ namespace Gateway.Web.Database
                 {
                     if (item.Controller == "marketdata" && item.LastCorrelationId.HasValue)
                     {
-                        var marketDataPayloads = GetAllMarketDataPayloads(id);
+                        var marketDataPayloadErrors = GetAllMarketDataPayloadErrors(id);
+                        if (marketDataPayloadErrors.Count > 0)
+                            result.ErrorRows.AddRange(marketDataPayloadErrors.Select(x => new ErrorRow() { Controller = item.Controller, ErrorName = x.Value, ItemName = item.SizeUnit }));
                     }
 
                     if (item.Controller == "cashflow" && item.LastCorrelationId.HasValue)
                     {
                         var data = database.Payloads.FirstOrDefault(x => x.Direction == "Response" && x.CorrelationId == item.LastCorrelationId.Value);
+                        data.Data = GetPayloadFromSever(data);
+
                         if (data != null)
                         {
                             var cube = new CubeModel(new PayloadData(data));
+
                             var model = item.ToModel();
-                            model.Size = cube.Rows.Count();
+                            model.Size = cube.RowCount;
                             model.SizeUnit = "Cashflows";
                             result.Items.Add(model);
                         }
@@ -500,7 +522,7 @@ namespace Gateway.Web.Database
                 }
                 foreach (var item in database.spGetPayloads(id))
                 {
-                    if(!string.IsNullOrEmpty(item.Server))
+                    if (!string.IsNullOrEmpty(item.Server))
                         item.Data = GetPayloadFromSever(item);
 
                     result.Items.Add(new PayloadModel(item));
@@ -543,7 +565,7 @@ namespace Gateway.Web.Database
             {
                 var payload = database.Payloads.FirstOrDefault(p => p.Id == id);
 
-                if (payload!= null && !string.IsNullOrEmpty(payload.Server))
+                if (payload != null && !string.IsNullOrEmpty(payload.Server))
                     payload.Data = GetPayloadFromSever(payload);
 
                 return new PayloadData(payload);

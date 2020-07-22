@@ -35,6 +35,7 @@ namespace Gateway.Web.Models.Request
         }
         public string Attributes { get; private set; }
         public string Rows { get; private set; }
+        public int RowCount { get; private set; }
 
         private void RenderAttributes()
         {
@@ -51,6 +52,7 @@ namespace Gateway.Web.Models.Request
             builder.AppendLine("</tr>");
             builder.AppendLine("</thead>");
 
+            RowCount = attributes.Count();
             foreach (var attribute in attributes)
             {
                 builder.AppendLine("<tr>");
