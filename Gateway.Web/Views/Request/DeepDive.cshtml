@@ -79,6 +79,7 @@
         <table style="width: 100%; white-space: nowrap" class="datatable">
             <thead>
                 <tr>
+                    <td></td>
                     <td>Controller</td>
                     <td style="width:200px">Resource</td>
                     <td>ResultMessage</td>
@@ -92,6 +93,7 @@
             @foreach (var row in Model.DeepDiveResults)
             {
         <tr>
+            <td>  @Html.ActionLink(" ", "Summary", "Request", new { correlationId = row.CorrelationId, filter = row.Controller }, new { @class = "glyphicon glyphicon-share hoverlink", target = "_blank", title = "Open Link" })</td>
             <td>@row.Controller</td>
             <td style="width:200px" title="@row.Resource">@row.ResourceDisplay </td>
 
@@ -107,7 +109,7 @@
                     else
                     {
                         @Html.ActionLink(" ", "Download", "Request", new { correlationId = row.CorrelationId, payloadId = row.PayloadRequestId }, new { @class = "glyphicon glyphicon-download hoverlink", title = "Download converted payload" })
-                        @Html.ActionLink(" Open Request", "ViewPayLoad", "Request", new { correlationId = row.CorrelationId, payloadId = row.PayloadRequestId,controllername=row.Controller }, new { @class = "edit", title = "View cube", target = "_blank" })
+                        @Html.ActionLink(" Open Request", "ViewPayLoad", "Request", new { correlationId = row.CorrelationId, payloadId = row.PayloadRequestId, controllername = row.Controller }, new { @class = "edit", title = "View cube", target = "_blank" })
                     }
                 }
                 else
@@ -126,7 +128,7 @@
                     else
                     {
                         @Html.ActionLink(" ", "Download", "Request", new { correlationId = row.CorrelationId, payloadId = row.PayloadId }, new { @class = "glyphicon glyphicon-download hoverlink", title = "Download converted payload" })
-                        @Html.ActionLink(" Open Request", "ViewPayLoad", "Request", new { correlationId = row.CorrelationId, payloadId = row.PayloadId,controllername=row.Controller }, new { title = "View cube", target = "_blank" })
+                        @Html.ActionLink(" Open Request", "ViewPayLoad", "Request", new { correlationId = row.CorrelationId, payloadId = row.PayloadId, controllername = row.Controller }, new { title = "View cube", target = "_blank" })
                     }
                 }
                 else
