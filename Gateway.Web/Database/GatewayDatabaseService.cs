@@ -18,6 +18,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Bagl.Cib.MIT.StatePublisher.Utils;
 using QueueChartModel = Gateway.Web.Models.Controller.QueueChartModel;
 
 namespace Gateway.Web.Database
@@ -428,10 +429,15 @@ namespace Gateway.Web.Database
                 var cube = new PayloadModel(payload);
                 if (cube.ContainsXmlResult)
                 {
+                    if (!cube.Data.StartsWith("<") || !cube.Data.Contains("Download"))
+                        continue;
+
                     var xml = XElement.Load(new StringReader(cube.Data));
                     var ele = xml.Elements("MultiAnswer").Elements("SingleResponses");
                     foreach (var element in ele.Elements("SingleResponse"))
                     {
+                        if (element.Element("ErrorMessage") == null) continue;
+
                         var errorMessage = element.Element("ErrorMessage").Value;
                         if (!string.IsNullOrEmpty(errorMessage))
                         {
