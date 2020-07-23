@@ -16,7 +16,7 @@ namespace Gateway.Web.Database
         public Nullable<System.Guid> CorrelationId { get; set; }
         public string Controller { get; set; }
         public string Resource { get; set; }
-        public Nullable<int> ResultCode { get; set; }
+        public int ResultCode { get; set; }
         public string ResultMessage { get; set; }
         public Nullable<System.Guid> ParentCorrelationId { get; set; }
         public byte[] Payload { get; set; }
@@ -26,5 +26,6 @@ namespace Gateway.Web.Database
         public Nullable<long> PayloadRequestId { get; set; }
         public string PayloadType { get; set; }
         public string PayloadTypeRequest { get; set; }
+        public Nullable<int> TimeTakenInMs { get; set; }
     }
 }

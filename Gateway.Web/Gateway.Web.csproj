@@ -451,6 +451,9 @@
     <Compile Include="Database\GetBatches_Result.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
+    <Compile Include="Database\Payload.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
     <Compile Include="Database\spBatchOverridesReport_Result.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
@@ -583,9 +586,6 @@
       <DependentUpon>PnRFO.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\Link.cs">
-      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Database\Payload.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\PnRFO.partial.cs" />

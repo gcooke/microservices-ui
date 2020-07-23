@@ -1119,11 +1119,11 @@
           <FunctionImport Name="GetBatches" ReturnType="Collection(GatewayModel.GetBatches_Result)">
           <Parameter Name="runDate" Mode="In" Type="DateTime" />
           </FunctionImport>
-          <EntitySet Name="Payloads" EntityType="GatewayModel.Payload" />
           <FunctionImport Name="spGetPayloadResponsesByController" ReturnType="Collection(GatewayModel.spGetPayloadResponsesByController_Result)">
             <Parameter Name="CorrelationId" Mode="In" Type="Guid" />
             <Parameter Name="ControllerName" Mode="In" Type="String" />
           </FunctionImport>
+          <EntitySet Name="Payloads" EntityType="GatewayModel.Payload" />
           </EntityContainer>
         <ComplexType Name="spGetJobStats_Result">
           <Property Type="DateTime" Name="Date" Nullable="true" />
@@ -1760,7 +1760,7 @@
           <Property Type="Guid" Name="CorrelationId" Nullable="true" />
           <Property Type="String" Name="Controller" Nullable="true" MaxLength="100" />
           <Property Type="String" Name="Resource" Nullable="true" MaxLength="1024" />
-          <Property Type="Int32" Name="ResultCode" Nullable="true" />
+          <Property Type="Int32" Name="ResultCode" Nullable="false" />
           <Property Type="String" Name="ResultMessage" Nullable="true" />
           <Property Type="Guid" Name="ParentCorrelationId" Nullable="true" />
           <Property Type="Binary" Name="Payload" Nullable="true" />
@@ -1770,6 +1770,7 @@
           <Property Type="Int64" Name="PayloadRequestId" Nullable="true" />
           <Property Type="String" Name="PayloadType" Nullable="true" MaxLength="10" />
           <Property Type="String" Name="PayloadTypeRequest" Nullable="true" MaxLength="10" />
+          <Property Type="Int32" Name="TimeTakenInMs" Nullable="true" />
         </ComplexType>
         <ComplexType Name="spGetDetailsForExecutedBatches_Result">
           <Property Type="Int64" Name="ScheduleId" Nullable="false" />
@@ -1841,6 +1842,17 @@
           <Property Type="Int32" Name="TimeTakeMs" Nullable="false" />
           <Property Type="Int32" Name="QueueTimeMs" Nullable="false" />
         </ComplexType>
+        <ComplexType Name="spGetPayloadResponsesByController_Result">
+          <Property Type="Int64" Name="Id" Nullable="false" />
+          <Property Type="Guid" Name="CorrelationId" Nullable="false" />
+          <Property Type="String" Name="Direction" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="PayloadType" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="CompressionType" Nullable="false" MaxLength="50" />
+          <Property Type="Binary" Name="Data" Nullable="true" />
+          <Property Type="DateTime" Name="UpdateTime" Nullable="false" Precision="23" />
+          <Property Type="Int64" Name="DataLengthBytes" Nullable="true" />
+          <Property Type="String" Name="Server" Nullable="true" MaxLength="50" />
+        </ComplexType>
         <EntityType Name="Payload">
           <Key>
             <PropertyRef Name="Id" />
@@ -1855,17 +1867,6 @@
           <Property Name="DataLengthBytes" Type="Int64" />
           <Property Name="Server" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
-        <ComplexType Name="spGetPayloadResponsesByController_Result">
-          <Property Type="Int64" Name="Id" Nullable="false" />
-          <Property Type="Guid" Name="CorrelationId" Nullable="false" />
-          <Property Type="String" Name="Direction" Nullable="false" MaxLength="10" />
-          <Property Type="String" Name="PayloadType" Nullable="false" MaxLength="10" />
-          <Property Type="String" Name="CompressionType" Nullable="false" MaxLength="50" />
-          <Property Type="Binary" Name="Data" Nullable="true" />
-          <Property Type="DateTime" Name="UpdateTime" Nullable="false" Precision="23" />
-          <Property Type="Int64" Name="DataLengthBytes" Nullable="true" />
-          <Property Type="String" Name="Server" Nullable="true" MaxLength="50" />
-        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1958,21 +1959,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <EntitySetMapping Name="Payloads">
-            <EntityTypeMapping TypeName="GatewayModel.Payload">
-              <MappingFragment StoreEntitySet="Payload">
-                <ScalarProperty Name="Server" ColumnName="Server" />
-                <ScalarProperty Name="DataLengthBytes" ColumnName="DataLengthBytes" />
-                <ScalarProperty Name="CompressionType" ColumnName="CompressionType" />
-                <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
-                <ScalarProperty Name="Data" ColumnName="Data" />
-                <ScalarProperty Name="PayloadType" ColumnName="PayloadType" />
-                <ScalarProperty Name="Direction" ColumnName="Direction" />
-                <ScalarProperty Name="CorrelationId" ColumnName="CorrelationId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="spGetResponseStatsAll" FunctionName="GatewayModel.Store.spGetResponseStatsAll">
             <ResultMapping>
               <ComplexTypeMapping TypeName="GatewayModel.spGetResponseStatsAll_Result">
@@ -2556,6 +2542,7 @@
                 <ScalarProperty Name="PayloadRequestId" ColumnName="PayloadRequestId" />
                 <ScalarProperty Name="PayloadType" ColumnName="PayloadType" />
                 <ScalarProperty Name="PayloadTypeRequest" ColumnName="PayloadTypeRequest" />
+                <ScalarProperty Name="TimeTakenInMs" ColumnName="TimeTakenInMs" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -2672,21 +2659,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <EntitySetMapping Name="Payloads">
-            <EntityTypeMapping TypeName="GatewayModel.Payload">
-              <MappingFragment StoreEntitySet="Payload">
-                <ScalarProperty Name="Server" ColumnName="Server" />
-                <ScalarProperty Name="DataLengthBytes" ColumnName="DataLengthBytes" />
-                <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
-                <ScalarProperty Name="Data" ColumnName="Data" />
-                <ScalarProperty Name="CompressionType" ColumnName="CompressionType" />
-                <ScalarProperty Name="PayloadType" ColumnName="PayloadType" />
-                <ScalarProperty Name="Direction" ColumnName="Direction" />
-                <ScalarProperty Name="CorrelationId" ColumnName="CorrelationId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="spGetPayloadResponsesByController" FunctionName="GatewayModel.Store.spGetPayloadResponsesByController">
             <ResultMapping>
               <ComplexTypeMapping TypeName="GatewayModel.spGetPayloadResponsesByController_Result">
@@ -2702,6 +2674,21 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="Payloads">
+            <EntityTypeMapping TypeName="GatewayModel.Payload">
+              <MappingFragment StoreEntitySet="Payload">
+                <ScalarProperty Name="Server" ColumnName="Server" />
+                <ScalarProperty Name="DataLengthBytes" ColumnName="DataLengthBytes" />
+                <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
+                <ScalarProperty Name="Data" ColumnName="Data" />
+                <ScalarProperty Name="CompressionType" ColumnName="CompressionType" />
+                <ScalarProperty Name="PayloadType" ColumnName="PayloadType" />
+                <ScalarProperty Name="Direction" ColumnName="Direction" />
+                <ScalarProperty Name="CorrelationId" ColumnName="CorrelationId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

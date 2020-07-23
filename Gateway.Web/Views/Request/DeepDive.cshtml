@@ -76,18 +76,28 @@
 
         <h3 class="text-lowercase">Deep Dive Results</h3>
 
-        <table style="width: 100%; white-space: nowrap" class="datatable">
+        <table style="width:100%;  " class="datatable">
+            <colgroup>
+                <col width="5%" />
+                <col width="5%" />
+                <col width="20%" />
+                <col width="30%" />
+                <col width="10%" />
+                <col width="10%" />
+                <col width="5%" />
+                <col width="10%" />
+            </colgroup>
             <thead>
                 <tr>
                     <td></td>
                     <td>Controller</td>
-                    <td style="width:200px">Resource</td>
+                    <td>Resource</td>
                     <td>ResultMessage</td>
                     <td>Request</td>
                     <td>Payload</td>
-                    <td>Depth</td>
-                    <td>CorrelationId</td>
-                    <td>ParentCorrelationId</td>
+                    <td>Depth</td>                   
+                    <td>TimeTakenInMs</td>
+                    
                 </tr>
             </thead>
             @foreach (var row in Model.DeepDiveResults)
@@ -95,9 +105,8 @@
         <tr>
             <td>  @Html.ActionLink(" ", "Summary", "Request", new { correlationId = row.CorrelationId, filter = row.Controller }, new { @class = "glyphicon glyphicon-share hoverlink", target = "_blank", title = "Open Link" })</td>
             <td>@row.Controller</td>
-            <td style="width:200px" title="@row.Resource">@row.ResourceDisplay </td>
-
-            <td>@row.ResultMessage</td>
+            <td  title="@row.Resource">@row.ResourceDisplay </td>
+            <td >@row.ResultMessage</td>
             <td>
                 @if (row.PayloadRequestId.HasValue)
                 {
@@ -117,7 +126,7 @@
                     @Html.Label("No Payload");
                 }
             </td>
-            <td>
+            <td >
                 @if (row.PayloadId.HasValue)
                 {
                     if (row.PayloadType == "Cube")
@@ -136,9 +145,8 @@
                     @Html.Label("No Payload");
                 }
             </td>
-            <td>@row.Depth</td>
-            <td>@row.CorrelationId</td>
-            <td>@row.ParentCorrelationId</td>
+            <td>@row.Depth</td>        
+            <td>@row.TimeTakenFormatted</td>
         </tr>
             }
         </table>
