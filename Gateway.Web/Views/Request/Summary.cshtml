@@ -15,6 +15,16 @@
 }
 @{ Html.RenderPartial("_RequestNav", (Summary)@Model); }
 
+<style>
+    .rowError {
+        background-color:tomato
+    }
+
+    table.table.table-striped tr.found td {
+    background-color:tomato;
+}
+</style>
+    
 <div id="page-content-wrapper">
     <div class="hero-unit">
 
@@ -54,7 +64,10 @@
             </tr>
             <tr>
                 <td class="columnheader">Correlation Id</td>
-                <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
+                <td style="        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+">
                     @Model.CorrelationId
                     @if (Model.CorrelationId != Guid.Empty)
                     {
@@ -187,7 +200,12 @@
                         </thead>
                         @foreach (DetailRow row in Model.Items)
                         {
-                            <tr>
+                            var errorBackround = "";
+                            if (row.Size == 0 || row.SuccessfulCount==0 || row.CompletedCount > @row.SuccessfulCount)
+                            {
+                                errorBackround = "background-color: lightcoral";
+                            }
+                            <tr style="@errorBackround">
                                 <td>@row.Controller</td>
                                 <td>@row.RequestCount</td>
                                 <td>

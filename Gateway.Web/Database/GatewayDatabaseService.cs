@@ -430,7 +430,7 @@ namespace Gateway.Web.Database
                 var cube = new PayloadModel(payload);
                 if (cube.ContainsXmlResult)
                 {
-                    if (!cube.Data.StartsWith("<") || !cube.Data.Contains("Download"))
+                    if (!cube.Data.StartsWith("<") || cube.Data.Contains("Download"))
                         continue;
 
                     var xml = XElement.Load(new StringReader(cube.Data));
