@@ -143,6 +143,7 @@
             <table style="width: 100%; white-space: nowrap" class="datatable">
                 <thead>
                     <tr>
+                        <td></td>
                         <td>Controller</td>
                         <td>Unit</td>
                         <td>Error</td>
@@ -151,6 +152,7 @@
                 @foreach (var error in Model.ErrorRows)
                 {
                 <tr>
+                    <td>  @Html.ActionLink(" ", "Summary", "Request", new { correlationId = error.CorrelationId, filter = error.Controller }, new { @class = "glyphicon glyphicon-share hoverlink", target = "_blank", title = "Open Link" })</td>
                     <td>@error.Controller</td>
                     <td>@error.ItemName</td>
                     <td>@error.ErrorName</td>

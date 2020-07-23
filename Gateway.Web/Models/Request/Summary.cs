@@ -73,5 +73,6 @@ namespace Gateway.Web.Models.Request
         public string Controller { get; set; }
         public string ItemName { get; set; }
         public string ErrorName { get; set; }
+        public string CorrelationId { get; set; }
     }
 }

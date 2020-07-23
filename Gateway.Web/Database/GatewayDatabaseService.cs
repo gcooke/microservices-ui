@@ -443,7 +443,7 @@ namespace Gateway.Web.Database
                         if (!string.IsNullOrEmpty(errorMessage))
                         {
                             if (!errorList.ContainsKey(errorMessage))
-                                errorList.Add(errorMessage, errorMessage);
+                                errorList.Add(errorMessage, item.CorrelationId.ToString());
                         }
                     }
                 }
@@ -475,7 +475,7 @@ namespace Gateway.Web.Database
                     {
                         var marketDataPayloadErrors = GetAllMarketDataPayloadErrors(id);
                         if (marketDataPayloadErrors.Count > 0)
-                            result.ErrorRows.AddRange(marketDataPayloadErrors.Select(x => new ErrorRow() { Controller = item.Controller, ErrorName = x.Value, ItemName = item.SizeUnit }));
+                            result.ErrorRows.AddRange(marketDataPayloadErrors.Select(x => new ErrorRow() { Controller = item.Controller, ErrorName = x.Key, ItemName = item.SizeUnit, CorrelationId = x.Value }));
                     }
 
                     var model = item.ToModel();
@@ -510,7 +510,7 @@ namespace Gateway.Web.Database
                     {
                         var cube = new CubeModel(new PayloadData(data));
 
-                        result.ErrorRows.AddRange(cube.Errors.Select(x => new ErrorRow() { Controller = item.Controller, ErrorName = x.Value, ItemName = string.Empty }));
+                        result.ErrorRows.AddRange(cube.Errors.Select(x => new ErrorRow() { Controller = item.Controller, ErrorName = x.Value, ItemName = string.Empty, CorrelationId = data.CorrelationId.ToString() }));
                     }
                 }
             }
