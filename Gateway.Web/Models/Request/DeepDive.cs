@@ -27,7 +27,7 @@ namespace Gateway.Web.Models.Request
     {
         public string CorrelationId { get; set; }
         public string Search { get; set; }
-
+        public string SortOrder { get; set; }
         public bool SearchPayload { get; set; }
         public bool SearchResource { get; set; }
         public bool SearchError { get; set; }

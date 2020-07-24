@@ -335,8 +335,42 @@ namespace Gateway.Web.Controllers
                 model.CorrelationId = correlationId;
 
             GetDeepDiveResults(model);
+            ApplySorting(model);
 
             return View(model);
+        }
+
+        private static void ApplySorting(DeepDive model)
+        {
+            var sortName = model.DeepDiveSearch.SortOrder.Replace("_Desc", "");
+            var isDescending = model.DeepDiveSearch.SortOrder.Contains("_Desc");
+
+            switch (sortName)
+            {
+                case "Controller":
+                    if (isDescending)
+                        model.DeepDiveResults = model.DeepDiveResults.OrderByDescending(x => x.Controller).ToList();
+                    else
+                        model.DeepDiveResults = model.DeepDiveResults.OrderBy(x => x.Controller).ToList();
+                    break;
+
+                case "Resource":
+                    if (isDescending)
+                        model.DeepDiveResults = model.DeepDiveResults.OrderByDescending(x => x.Resource).ToList();
+                    else
+                        model.DeepDiveResults = model.DeepDiveResults.OrderBy(x => x.Resource).ToList();
+                    break;
+
+                case "TimeTakenInMs":
+                    if (isDescending)
+                        model.DeepDiveResults = model.DeepDiveResults.OrderByDescending(x => x.TimeTakenInMs).ToList();
+                    else
+                        model.DeepDiveResults = model.DeepDiveResults.OrderBy(x => x.TimeTakenInMs).ToList();
+                    break;
+
+                default:
+                    break;
+            }
         }
 
         private void GetDeepDiveResults(DeepDive model)
@@ -407,10 +441,16 @@ namespace Gateway.Web.Controllers
             var controller = request.Form["DeepDiveSearch.Controller"];
             var keyword = request.Form["DeepDiveSearch.Search"];
             var id = request.Form["DeepDiveSearch.CorrelationId"];
+            var sortDirection = request.Form["SortDirection"];
             var searchResource = (request.Form["DeepDiveSearch.SearchResource"] == null || request.Form["DeepDiveSearch.SearchResource"] == "false") ? false : true;
             var searchMessage = (request.Form["DeepDiveSearch.SearchError"] == null || request.Form["DeepDiveSearch.SearchError"] == "false") ? false : true;
             var searchPayload = (request.Form["DeepDiveSearch.SearchPayload"] == null || request.Form["DeepDiveSearch.SearchPayload"] == "false") ? false : true;
             var onlyShowErrors = (request.Form["DeepDiveSearch.OnlyShowErrors"] == null || request.Form["DeepDiveSearch.OnlyShowErrors"] == "false") ? false : true;
+
+            if (sortDirection.Contains("_Desc"))
+                ViewBag.SortDirection = "";
+            else
+                ViewBag.SortDirection = "_Desc";
 
             var model = new DeepDiveSearch()
             {
@@ -418,7 +458,8 @@ namespace Gateway.Web.Controllers
                 SearchError = searchMessage,
                 SearchPayload = searchPayload,
                 SearchResource = searchResource,
-                OnlyShowErrors = onlyShowErrors
+                OnlyShowErrors = onlyShowErrors,
+                SortOrder = sortDirection
             };
 
             if (!string.IsNullOrEmpty(keyword))

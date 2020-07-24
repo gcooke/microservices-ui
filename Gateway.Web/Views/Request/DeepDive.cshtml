@@ -6,152 +6,172 @@
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
     ViewBag.Title = "Request";
     ViewBag.Current = "DeepDive";
+    var direction = ViewBag.SortDirection;
 }
 @{ Html.RenderPartial("_RequestNav", (DeepDive)@Model); }
 
 <style>
+
+    .sortableHeader {
+        cursor:pointer;
+    }
+
+    .sortableHeader:hover {
+        text-decoration: underline;
+    }
+
     label {
         font-weight: normal !important;
     }
 </style>
- 
-@using (@Html.BeginForm("DeepDive", "Request", FormMethod.Post))
-{
 
-<div id="page-content-wrapper">
-    <div class="hero-unit">
-        <div class="container-fluid">
-            <h3 class="row text-lowercase">Deep Dive</h3>
-            <table style="width: 100%; white-space: nowrap" class="datatable">
-                <tr>
-                    <td class="columnheader" style="width: 10%">Controller</td>
-                    <td style="width: 40%">
-                        @Html.DropDownListFor(m => m.DeepDiveSearch.Controller, Model.Controllers, new { @id = "Controller", @name = "Controller", @class = "form-control" })
-                    </td>
-                    <td class="columnheader" style="width: 10%">Correlation Id</td>
-                    <td style="width: 40%">
-                        @Html.TextBoxFor(m => m.DeepDiveSearch.CorrelationId, new { @name = "id", @id = "id", @class = "form-control" })
-                    </td>
-                </tr>
-                <tr>
-                    <td class="columnheader" style="width: 10%">Search</td>
-                    <td style="width: 40%">
-                        @Html.TextBoxFor(m => m.DeepDiveSearch.Search, new { @name = "id", @id = "id", @class = "form-control" })
-                    </td>
-                    <td class="columnheader" style="width: 10%">Search Depth</td>
-                    <td style="width: 40%;font-size:x-small" class="small">
-                        <div class="block">
-                            @Html.CheckBoxFor(f => f.DeepDiveSearch.SearchResource)
-                            <label for="mycheck">@Html.LabelFor(f => f.DeepDiveSearch.SearchResource) </label>
-                        </div>
-                        <div class="block">
-                            @Html.CheckBoxFor(f => f.DeepDiveSearch.SearchError)
-                            <label for="mycheck">@Html.LabelFor(f => f.DeepDiveSearch.SearchError) </label>
-                        </div>
-                        <div class="block">
-                            @Html.CheckBoxFor(f => f.DeepDiveSearch.SearchPayload)
-                            <label for="mycheck">@Html.LabelFor(f => f.DeepDiveSearch.SearchPayload) </label>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="columnheader" style="width: 10%">Search Depth</td>
-                    <td colspan="3" style=" font-size:x-small" class="small">
-                        @Html.CheckBoxFor(f => f.DeepDiveSearch.OnlyShowErrors)
-                        <label for="mycheck">@Html.LabelFor(f => f.DeepDiveSearch.OnlyShowErrors) </label>
-                    </td>
-                </tr>
-                
-            </table>
-        </div>
-        <div class="row m-t-15">
-            <div class="col-sm-12">
-                <button type="submit" class="btn btn-default">Search</button>
+<script>
+    function Sort(value)
+    {
+        document.getElementById("SortDirection").value=value; 
+        document.getElementById("myForm").submit(); 
+    }
+</script>
+ 
+
+@using (@Html.BeginForm("DeepDive", "Request", FormMethod.Post,new { @id="myForm" }))
+{
+    <input type="hidden" id="SortDirection" name="SortDirection">
+    <div id="page-content-wrapper">
+        <div class="hero-unit">
+            <div class="container-fluid">
+                <h3 class="row text-lowercase">Deep Dive</h3>
+                <table style="width: 100%; white-space: nowrap" class="datatable">
+                    <tr>
+                        <td class="columnheader" style="        width: 10%
+">Controller</td>
+                        <td style="width: 40%">
+                            @Html.DropDownListFor(m => m.DeepDiveSearch.Controller, Model.Controllers, new { @id = "Controller", @name = "Controller", @class = "form-control" })
+                        </td>
+                        <td class="columnheader" style="width: 10%">Correlation Id</td>
+                        <td style="width: 40%">
+                            @Html.TextBoxFor(m => m.DeepDiveSearch.CorrelationId, new { @name = "id", @id = "id", @class = "form-control" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="columnheader" style="width: 10%">Search</td>
+                        <td style="width: 40%">
+                            @Html.TextBoxFor(m => m.DeepDiveSearch.Search, new { @name = "id", @id = "id", @class = "form-control" })
+                        </td>
+                        <td class="columnheader" style="width: 10%">Search Depth</td>
+                        <td style="width: 40%;font-size:x-small" class="small">
+                            <div class="block">
+                                @Html.CheckBoxFor(f => f.DeepDiveSearch.SearchResource)
+                                <label for="mycheck">@Html.LabelFor(f => f.DeepDiveSearch.SearchResource) </label>
+                            </div>
+                            <div class="block">
+                                @Html.CheckBoxFor(f => f.DeepDiveSearch.SearchError)
+                                <label for="mycheck">@Html.LabelFor(f => f.DeepDiveSearch.SearchError) </label>
+                            </div>
+                            <div class="block">
+                                @Html.CheckBoxFor(f => f.DeepDiveSearch.SearchPayload)
+                                <label for="mycheck">@Html.LabelFor(f => f.DeepDiveSearch.SearchPayload) </label>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="columnheader" style="width: 10%">Search Depth</td>
+                        <td colspan="3" style=" font-size:x-small" class="small">
+                            @Html.CheckBoxFor(f => f.DeepDiveSearch.OnlyShowErrors)
+                            <label for="mycheck">@Html.LabelFor(f => f.DeepDiveSearch.OnlyShowErrors) </label>
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+            <div class="row m-t-15">
+                <div class="col-sm-12">
+                    <button type="submit" class="btn btn-default">Search</button>
+                </div>
             </div>
         </div>
+        @if (Model.DeepDiveResults.Count > 0)
+        {
+            <br />
+
+            <h3 class="text-lowercase">Deep Dive Results</h3>
+
+            <table id="deepdivetable" style="width:100%;  " class="datatable ">
+                <colgroup>
+                    <col width="5%" />
+                    <col width="5%" />
+                    <col width="20%" />
+                    <col width="30%" />
+                    <col width="10%" />
+                    <col width="10%" />
+                    <col width="5%" />
+                    <col width="10%" />
+                </colgroup>
+                <thead>
+                    <tr>
+                        <td></td>
+                        <td class="sortableHeader" onclick="Sort('Controller' + '@direction')" style="">Controller</td>
+                        <td class="sortableHeader" onclick="Sort('Resource' + '@direction')">Resource</td>
+                        <td>ResultMessage</td>
+                        <td>Request</td>
+                        <td>Payload</td>
+                        <td>Depth</td>
+                        <td class="sortableHeader" onclick="Sort('TimeTakenInMs' + '@direction')">TimeTaken</td>
+
+                    </tr>
+                </thead>
+                @foreach (var row in Model.DeepDiveResults)
+                {
+                    <tr>
+                        <td>  @Html.ActionLink(" ", "Summary", "Request", new { correlationId = row.CorrelationId, filter = row.Controller }, new { @class = "glyphicon glyphicon-share hoverlink", target = "_blank", title = "Open Link" })</td>
+                        <td>@row.Controller</td>
+                        <td title="@row.Resource">@row.ResourceDisplay </td>
+                        <td>@row.ResultMessage</td>
+                        <td>
+                            @if (row.PayloadRequestId.HasValue)
+                            {
+                                if (row.PayloadTypeRequest == "Cube")
+                                {
+                                    @Html.ActionLink(" ", "DownloadCube", "Request", new { correlationId = row.CorrelationId, payloadId = row.PayloadRequestId }, new { @class = "glyphicon glyphicon-download hoverlink", title = "Download cube" })
+                                    @Html.ActionLink(" Open Request", "ViewCube", "Request", new { correlationId = row.CorrelationId, payloadId = row.PayloadRequestId }, new { @class = "edit", title = "View cube", target = "_blank" })
+                                }
+                                else
+                                {
+                                    @Html.ActionLink(" ", "Download", "Request", new { correlationId = row.CorrelationId, payloadId = row.PayloadRequestId }, new { @class = "glyphicon glyphicon-download hoverlink", title = "Download converted payload" })
+                                    @Html.ActionLink(" Open Request", "ViewPayLoad", "Request", new { correlationId = row.CorrelationId, payloadId = row.PayloadRequestId, controllername = row.Controller }, new { @class = "edit", title = "View cube", target = "_blank" })
+                                }
+                            }
+                            else
+                            {
+                                @Html.Label("No Payload");
+                            }
+                        </td>
+                        <td>
+                            @if (row.PayloadId.HasValue)
+                            {
+                                if (row.PayloadType == "Cube")
+                                {
+                                    @Html.ActionLink(" ", "DownloadCube", "Request", new { correlationId = row.CorrelationId, payloadId = row.PayloadId }, new { @class = "glyphicon glyphicon-download hoverlink", title = "Download cube" })
+                                    @Html.ActionLink(" Open Payload", "ViewCube", "Request", new { correlationId = row.CorrelationId, payloadId = row.PayloadId }, new { title = "View cube", target = "_blank" })
+                                }
+                                else
+                                {
+                                    @Html.ActionLink(" ", "Download", "Request", new { correlationId = row.CorrelationId, payloadId = row.PayloadId }, new { @class = "glyphicon glyphicon-download hoverlink", title = "Download converted payload" })
+                                    @Html.ActionLink(" Open Request", "ViewPayLoad", "Request", new { correlationId = row.CorrelationId, payloadId = row.PayloadId, controllername = row.Controller }, new { title = "View cube", target = "_blank" })
+                                }
+                            }
+                            else
+                            {
+                                @Html.Label("No Payload");
+                            }
+                        </td>
+                        <td>@row.Depth</td>
+                        <td>@row.TimeTakenFormatted</td>
+                    </tr>
+                }
+            </table>
+        }
     </div>
-    @if (Model.DeepDiveResults.Count > 0)
-    {
-        <br />
-
-        <h3 class="text-lowercase">Deep Dive Results</h3>
-
-        <table style="width:100%;  " class="datatable">
-            <colgroup>
-                <col width="5%" />
-                <col width="5%" />
-                <col width="20%" />
-                <col width="30%" />
-                <col width="10%" />
-                <col width="10%" />
-                <col width="5%" />
-                <col width="10%" />
-            </colgroup>
-            <thead>
-                <tr>
-                    <td></td>
-                    <td>Controller</td>
-                    <td>Resource</td>
-                    <td>ResultMessage</td>
-                    <td>Request</td>
-                    <td>Payload</td>
-                    <td>Depth</td>                   
-                    <td>TimeTakenInMs</td>
-                    
-                </tr>
-            </thead>
-            @foreach (var row in Model.DeepDiveResults)
-            {
-        <tr>
-            <td>  @Html.ActionLink(" ", "Summary", "Request", new { correlationId = row.CorrelationId, filter = row.Controller }, new { @class = "glyphicon glyphicon-share hoverlink", target = "_blank", title = "Open Link" })</td>
-            <td>@row.Controller</td>
-            <td  title="@row.Resource">@row.ResourceDisplay </td>
-            <td >@row.ResultMessage</td>
-            <td>
-                @if (row.PayloadRequestId.HasValue)
-                {
-                    if (row.PayloadTypeRequest == "Cube")
-                    {
-                        @Html.ActionLink(" ", "DownloadCube", "Request", new { correlationId = row.CorrelationId, payloadId = row.PayloadRequestId }, new { @class = "glyphicon glyphicon-download hoverlink", title = "Download cube" })
-                        @Html.ActionLink(" Open Request", "ViewCube", "Request", new { correlationId = row.CorrelationId, payloadId = row.PayloadRequestId }, new { @class = "edit", title = "View cube", target = "_blank" })
-                    }
-                    else
-                    {
-                        @Html.ActionLink(" ", "Download", "Request", new { correlationId = row.CorrelationId, payloadId = row.PayloadRequestId }, new { @class = "glyphicon glyphicon-download hoverlink", title = "Download converted payload" })
-                        @Html.ActionLink(" Open Request", "ViewPayLoad", "Request", new { correlationId = row.CorrelationId, payloadId = row.PayloadRequestId, controllername = row.Controller }, new { @class = "edit", title = "View cube", target = "_blank" })
-                    }
-                }
-                else
-                {
-                    @Html.Label("No Payload");
-                }
-            </td>
-            <td >
-                @if (row.PayloadId.HasValue)
-                {
-                    if (row.PayloadType == "Cube")
-                    {
-                        @Html.ActionLink(" ", "DownloadCube", "Request", new { correlationId = row.CorrelationId, payloadId = row.PayloadId }, new { @class = "glyphicon glyphicon-download hoverlink", title = "Download cube" })
-                        @Html.ActionLink(" Open Payload", "ViewCube", "Request", new { correlationId = row.CorrelationId, payloadId = row.PayloadId }, new { title = "View cube", target = "_blank" })
-                    }
-                    else
-                    {
-                        @Html.ActionLink(" ", "Download", "Request", new { correlationId = row.CorrelationId, payloadId = row.PayloadId }, new { @class = "glyphicon glyphicon-download hoverlink", title = "Download converted payload" })
-                        @Html.ActionLink(" Open Request", "ViewPayLoad", "Request", new { correlationId = row.CorrelationId, payloadId = row.PayloadId, controllername = row.Controller }, new { title = "View cube", target = "_blank" })
-                    }
-                }
-                else
-                {
-                    @Html.Label("No Payload");
-                }
-            </td>
-            <td>@row.Depth</td>        
-            <td>@row.TimeTakenFormatted</td>
-        </tr>
-            }
-        </table>
-    }
-</div>
 
 }
 

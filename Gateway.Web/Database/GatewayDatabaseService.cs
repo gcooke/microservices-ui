@@ -388,8 +388,6 @@ namespace Gateway.Web.Database
 
         private byte[] GetPayloadFromSever(Payload payload)
         {
-            if (payload == null)
-                return null;
             return GetPayloadFromFile(payload.CorrelationId, payload.Direction, payload.UpdateTime, payload.Server, payload.DataLengthBytes);
         }
 
@@ -508,9 +506,9 @@ namespace Gateway.Web.Database
                 foreach (var item in deepDiveResult)
                 {
                     var data = database.Payloads.FirstOrDefault(x => x.Id == item.PayloadId);
-                    data.Data = GetPayloadFromSever(data);
                     if (data != null)
                     {
+                        data.Data = GetPayloadFromSever(data);
                         var cube = new CubeModel(new PayloadData(data));
 
                         result.ErrorRows.AddRange(cube.Errors.Select(x => new ErrorRow() { Controller = item.Controller, ErrorName = x.Value, ItemName = string.Empty, CorrelationId = data.CorrelationId.ToString() }));
