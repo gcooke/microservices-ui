@@ -388,6 +388,8 @@ namespace Gateway.Web.Database
 
         private byte[] GetPayloadFromSever(Payload payload)
         {
+            if (payload == null)
+                return null;
             return GetPayloadFromFile(payload.CorrelationId, payload.Direction, payload.UpdateTime, payload.Server, payload.DataLengthBytes);
         }
 
@@ -482,9 +484,10 @@ namespace Gateway.Web.Database
                     if (model.Size.HasValue && model.Size == 1 && model.SizeUnit == "ICube")
                     {
                         var data = database.Payloads.FirstOrDefault(x => x.Direction == "Response" && x.CorrelationId == item.LastCorrelationId.Value);
-                        data.Data = GetPayloadFromSever(data);
+
                         if (data != null)
                         {
+                            data.Data = GetPayloadFromSever(data);
                             var cube = new CubeModel(new PayloadData(data));
 
                             model.Size = cube.RowCount;
