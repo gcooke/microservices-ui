@@ -79,6 +79,8 @@
                         <td colspan="3" style=" font-size:x-small" class="small">
                             @Html.CheckBoxFor(f => f.DeepDiveSearch.OnlyShowErrors)
                             <label for="mycheck">@Html.LabelFor(f => f.DeepDiveSearch.OnlyShowErrors) </label>
+                            @Html.CheckBoxFor(f => f.DeepDiveSearch.RunningChildren)
+                            <label for="mycheck">@Html.LabelFor(f => f.DeepDiveSearch.RunningChildren) </label>
                         </td>
                     </tr>
 

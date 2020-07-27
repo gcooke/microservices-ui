@@ -446,6 +446,7 @@ namespace Gateway.Web.Controllers
             var searchMessage = (request.Form["DeepDiveSearch.SearchError"] == null || request.Form["DeepDiveSearch.SearchError"] == "false") ? false : true;
             var searchPayload = (request.Form["DeepDiveSearch.SearchPayload"] == null || request.Form["DeepDiveSearch.SearchPayload"] == "false") ? false : true;
             var onlyShowErrors = (request.Form["DeepDiveSearch.OnlyShowErrors"] == null || request.Form["DeepDiveSearch.OnlyShowErrors"] == "false") ? false : true;
+            var runningChildren = (request.Form["DeepDiveSearch.RunningChildren"] == null || request.Form["DeepDiveSearch.RunningChildren"] == "false") ? false : true;
 
             if (sortDirection.Contains("_Desc"))
                 ViewBag.SortDirection = "";
@@ -459,7 +460,8 @@ namespace Gateway.Web.Controllers
                 SearchPayload = searchPayload,
                 SearchResource = searchResource,
                 OnlyShowErrors = onlyShowErrors,
-                SortOrder = sortDirection
+                SortOrder = sortDirection,
+                RunningChildren = runningChildren
             };
 
             if (!string.IsNullOrEmpty(keyword))

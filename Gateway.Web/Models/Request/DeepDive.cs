@@ -32,6 +32,7 @@ namespace Gateway.Web.Models.Request
         public bool SearchResource { get; set; }
         public bool SearchError { get; set; }
         public bool OnlyShowErrors { get; set; }
+        public bool RunningChildren { get; set; }
 
         public string Controller { get; set; }
     }
