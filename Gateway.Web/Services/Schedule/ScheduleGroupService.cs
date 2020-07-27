@@ -82,6 +82,13 @@ namespace Gateway.Web.Services.Schedule
                         task.StartedAt = lastJob.StartedAt;
                         task.FinishedAt = lastJob.FinishedAt;
                         task.BusinessDate = lastJob.BusinessDate;
+                        if (!task.FinishedAt.HasValue)
+                        {
+                            var response = db.Responses.FirstOrDefault(x => x.CorrelationId == lastJob.RequestId);
+                            if (response != null)
+                                task.FinishedAt = response.EndUtc.AddHours(2);
+                        }
+
                         tasks.Add(task);
                     }
 
