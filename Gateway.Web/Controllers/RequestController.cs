@@ -443,7 +443,7 @@ namespace Gateway.Web.Controllers
             var id = request.Form["DeepDiveSearch.CorrelationId"];
             var sortDirection = request.Form["SortDirection"];
             var searchResource = (request.Form["DeepDiveSearch.SearchResource"] == null || request.Form["DeepDiveSearch.SearchResource"] == "false") ? false : true;
-            var searchMessage = (request.Form["DeepDiveSearch.SearchError"] == null || request.Form["DeepDiveSearch.SearchError"] == "false") ? false : true;
+            var searchMessage = (request.Form["DeepDiveSearch.SearchResultMessage"] == null || request.Form["DeepDiveSearch.SearchResultMessage"] == "false") ? false : true;
             var searchPayload = (request.Form["DeepDiveSearch.SearchPayload"] == null || request.Form["DeepDiveSearch.SearchPayload"] == "false") ? false : true;
             var onlyShowErrors = (request.Form["DeepDiveSearch.OnlyShowErrors"] == null || request.Form["DeepDiveSearch.OnlyShowErrors"] == "false") ? false : true;
             var runningChildren = (request.Form["DeepDiveSearch.RunningChildren"] == null || request.Form["DeepDiveSearch.RunningChildren"] == "false") ? false : true;
@@ -456,7 +456,7 @@ namespace Gateway.Web.Controllers
             var model = new DeepDiveSearch()
             {
                 CorrelationId = id,
-                SearchError = searchMessage,
+                SearchResultMessage = searchMessage,
                 SearchPayload = searchPayload,
                 SearchResource = searchResource,
                 OnlyShowErrors = onlyShowErrors,

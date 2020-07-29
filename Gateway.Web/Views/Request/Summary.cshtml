@@ -9,7 +9,7 @@
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
     ViewBag.Title = "Request";
-    ViewBag.CustomTitle = Model.Controller + " - " + Model.StartUtc.ToString("dd MMM yyyy");
+    ViewBag.CustomTitle = Model.StartUtc.ToString("dd MMM yyyy")+ " - " +  Model.Controller ;
     ViewBag.Current = "Summary";
     var title = (string)Model.ParentCorrelationId.ToString();
 }
@@ -135,8 +135,68 @@
                 </tr>
             </table>
             <br />
+        }   
+
+        <h3 class="text-lowercase">Actions</h3>
+        @if (Model.IsBusy)
+        {
+            @Html.ActionLink("Cancel", "Cancel", "Request",
+                new { correlationId = Model.CorrelationId },
+                new { @class = "hoverlink", onclick = "return confirm('Are you sure you want to cancel this request?');" })
+            <br />       
+            @Html.ActionLink("Retry", "Retry", "Request",
+                new { correlationId = Model.CorrelationId },
+                new { @class = "hoverlink", onclick = "return confirm('Are you sure you want to retry this running request?');" })
+            <br />
         }
-        <br />
+        else
+        {
+            @Html.ActionLink("Rerun", "Rerun", "Request",
+                new { correlationId = Model.CorrelationId },
+                new { @class = "hoverlink", onclick = "return confirm('Are you sure you want to re-enqueue a copy of this request?');" })
+            <br />
+        }
+
+        @if (Model.HasChildren)
+        {
+         
+
+            <h3 class="text-lowercase">Child Requests</h3>
+
+            <table style="width: 100%; white-space: nowrap" class="datatable">
+                <thead>
+                    <tr>
+                        <!--TODO: Click through to child requests-->
+                        <td>Controller</td>
+                        <td>Requests</td>
+                        <td>Successful</td>
+                        <td>Items</td>
+                        <td>Min Start</td>
+                        <td>Max End</td>
+                    </tr>
+                </thead>
+                @foreach (DetailRow row in Model.Items)
+                {
+                    var errorBackround = "";
+                    if (row.Size == 0 || row.SuccessfulCount == 0 || row.CompletedCount > @row.SuccessfulCount)
+                    {
+                        errorBackround = "background-color: lightcoral";
+                    }
+                    <tr style="@errorBackround">
+                        <td>@row.Controller</td>
+                        <td>@row.RequestCount</td>
+                        <td>
+                            <a href="@Url.Action("Children", "Request", new { correlationId = Model.CorrelationId, filter = row.Controller })" class="hoverlink">
+                                (@row.SuccessfulCount / @row.CompletedCount)
+                            </a>
+                        </td>
+                        <td>@row.Size @row.SizeUnit</td>
+                        <td>@row.MinStart</td>
+                        <td>@row.MaxEnd</td>
+                    </tr>
+                }
+            </table>
+        }
         @if (Model.ErrorRows.Count > 0)
         {
             <h3 class="text-lowercase">Payload Errors</h3>
@@ -151,76 +211,15 @@
                 </thead>
                 @foreach (var error in Model.ErrorRows)
                 {
-                <tr>
-                    <td>  @Html.ActionLink(" ", "Summary", "Request", new { correlationId = error.CorrelationId, filter = error.Controller }, new { @class = "glyphicon glyphicon-share hoverlink", target = "_blank", title = "Open Link" })</td>
-                    <td>@error.Controller</td>
-                    <td>@error.ItemName</td>
-                    <td>@error.ErrorName</td>
-                </tr>
+                    <tr>
+                        <td>  @Html.ActionLink(" ", "Summary", "Request", new { correlationId = error.CorrelationId, filter = error.Controller }, new { @class = "glyphicon glyphicon-share hoverlink", target = "_blank", title = "Open Link" })</td>
+                        <td>@error.Controller</td>
+                        <td>@error.ItemName</td>
+                        <td>@error.ErrorName</td>
+                    </tr>
                 }
             </table>
         }
-                <br />
-                <h3 class="text-lowercase">Actions</h3>
-                @if (Model.IsBusy)
-                {
-                    @Html.ActionLink("Cancel", "Cancel", "Request",
-                        new { correlationId = Model.CorrelationId },
-                        new { @class = "hoverlink", onclick = "return confirm('Are you sure you want to cancel this request?');" })
-                    <br />
-                    <br />
-                    @Html.ActionLink("Retry", "Retry", "Request",
-                        new { correlationId = Model.CorrelationId },
-                        new { @class = "hoverlink", onclick = "return confirm('Are you sure you want to retry this running request?');" })
-                    <br />
-                }
-                else
-                {
-                    @Html.ActionLink("Rerun", "Rerun", "Request",
-                        new { correlationId = Model.CorrelationId },
-                        new { @class = "hoverlink", onclick = "return confirm('Are you sure you want to re-enqueue a copy of this request?');" })
-                    <br />
-                }
-
-                @if (Model.HasChildren)
-                {
-                    <br />
-
-                    <h3 class="text-lowercase">Child Requests</h3>
-
-                    <table style="width: 100%; white-space: nowrap" class="datatable">
-                        <thead>
-                            <tr>
-                                <!--TODO: Click through to child requests-->
-                                <td>Controller</td>
-                                <td>Requests</td>
-                                <td>Successful</td>
-                                <td>Items</td>
-                                <td>Min Start</td>
-                                <td>Max End</td>
-                            </tr>
-                        </thead>
-                        @foreach (DetailRow row in Model.Items)
-                        {
-                            var errorBackround = "";
-                            if (row.Size == 0 || row.SuccessfulCount==0 || row.CompletedCount > @row.SuccessfulCount)
-                            {
-                                errorBackround = "background-color: lightcoral";
-                            }
-                            <tr style="@errorBackround">
-                                <td>@row.Controller</td>
-                                <td>@row.RequestCount</td>
-                                <td>
-                                    <a href="@Url.Action("Children", "Request", new { correlationId = Model.CorrelationId, filter = row.Controller })" class="hoverlink">
-                                        (@row.SuccessfulCount / @row.CompletedCount)
-                                    </a>
-                                </td>
-                                <td>@row.Size @row.SizeUnit</td>
-                                <td>@row.MinStart</td>
-                                <td>@row.MaxEnd</td>
-                            </tr>
-                        }
-                    </table>
-                }
-</div>
+        <br />
+    </div>
 </div>

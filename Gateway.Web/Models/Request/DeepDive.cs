@@ -30,7 +30,7 @@ namespace Gateway.Web.Models.Request
         public string SortOrder { get; set; }
         public bool SearchPayload { get; set; }
         public bool SearchResource { get; set; }
-        public bool SearchError { get; set; }
+        public bool SearchResultMessage { get; set; }
         public bool OnlyShowErrors { get; set; }
         public bool RunningChildren { get; set; }
 
