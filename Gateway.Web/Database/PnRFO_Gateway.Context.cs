@@ -30,7 +30,6 @@ namespace Gateway.Web.Database
         public virtual DbSet<Request> Requests { get; set; }
         public virtual DbSet<Response> Responses { get; set; }
         public virtual DbSet<Version> Versions { get; set; }
-        public virtual DbSet<Payload> Payloads { get; set; }
         public virtual DbSet<Status> Status { get; set; }
         public virtual DbSet<RequestChange> RequestChanges { get; set; }
         public virtual DbSet<StatusChange> StatusChanges { get; set; }
@@ -46,6 +45,7 @@ namespace Gateway.Web.Database
         public virtual DbSet<ScheduledJob> ScheduledJobs { get; set; }
         public virtual DbSet<ScalingModel> ScalingModels { get; set; }
         public virtual DbSet<Controller> Controllers { get; set; }
+        public virtual DbSet<Payload> Payloads { get; set; }
     
         public virtual ObjectResult<spGetJobStats_Result> spGetJobStats(Nullable<System.DateTime> start, string controller)
         {
@@ -322,6 +322,613 @@ namespace Gateway.Web.Database
                 new ObjectParameter("User", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetRangeUserRequests_Result>("spGetRangeUserRequests", startParameter, endParameter, userParameter);
+        }
+    
+        public virtual int ReleaseControllerVersion(string controllerName, string alias, string version, string status)
+        {
+            var controllerNameParameter = controllerName != null ?
+                new ObjectParameter("ControllerName", controllerName) :
+                new ObjectParameter("ControllerName", typeof(string));
+    
+            var aliasParameter = alias != null ?
+                new ObjectParameter("Alias", alias) :
+                new ObjectParameter("Alias", typeof(string));
+    
+            var versionParameter = version != null ?
+                new ObjectParameter("Version", version) :
+                new ObjectParameter("Version", typeof(string));
+    
+            var statusParameter = status != null ?
+                new ObjectParameter("Status", status) :
+                new ObjectParameter("Status", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("ReleaseControllerVersion", controllerNameParameter, aliasParameter, versionParameter, statusParameter);
+        }
+    
+        public virtual ObjectResult<spGetPodConfiguration_Result> spGetPodConfiguration()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetPodConfiguration_Result>("spGetPodConfiguration");
+        }
+    
+        public virtual ObjectResult<CheckFileSizes_Result> CheckFileSizes()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CheckFileSizes_Result>("CheckFileSizes");
+        }
+    
+        public virtual ObjectResult<Nullable<int>> CleanupDatabase(Nullable<System.DateTime> businessDate, Nullable<long> jobID, Nullable<int> olderThanDays)
+        {
+            var businessDateParameter = businessDate.HasValue ?
+                new ObjectParameter("BusinessDate", businessDate) :
+                new ObjectParameter("BusinessDate", typeof(System.DateTime));
+    
+            var jobIDParameter = jobID.HasValue ?
+                new ObjectParameter("JobID", jobID) :
+                new ObjectParameter("JobID", typeof(long));
+    
+            var olderThanDaysParameter = olderThanDays.HasValue ?
+                new ObjectParameter("OlderThanDays", olderThanDays) :
+                new ObjectParameter("OlderThanDays", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("CleanupDatabase", businessDateParameter, jobIDParameter, olderThanDaysParameter);
+        }
+    
+        [DbFunction("GatewayEntities", "DelimitedSplit8K")]
+        public virtual IQueryable<DelimitedSplit8K_Result> DelimitedSplit8K(string pString, string pDelimiter)
+        {
+            var pStringParameter = pString != null ?
+                new ObjectParameter("pString", pString) :
+                new ObjectParameter("pString", typeof(string));
+    
+            var pDelimiterParameter = pDelimiter != null ?
+                new ObjectParameter("pDelimiter", pDelimiter) :
+                new ObjectParameter("pDelimiter", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<DelimitedSplit8K_Result>("[GatewayEntities].[DelimitedSplit8K](@pString, @pDelimiter)", pStringParameter, pDelimiterParameter);
+        }
+    
+        [DbFunction("GatewayEntities", "fnGetBatchTradeAndRiskAverages")]
+        public virtual IQueryable<fnGetBatchTradeAndRiskAverages_Result> fnGetBatchTradeAndRiskAverages(Nullable<System.DateTime> evaluationDate, Nullable<long> scheduleId, Nullable<long> riskBatchScheduleId)
+        {
+            var evaluationDateParameter = evaluationDate.HasValue ?
+                new ObjectParameter("EvaluationDate", evaluationDate) :
+                new ObjectParameter("EvaluationDate", typeof(System.DateTime));
+    
+            var scheduleIdParameter = scheduleId.HasValue ?
+                new ObjectParameter("ScheduleId", scheduleId) :
+                new ObjectParameter("ScheduleId", typeof(long));
+    
+            var riskBatchScheduleIdParameter = riskBatchScheduleId.HasValue ?
+                new ObjectParameter("RiskBatchScheduleId", riskBatchScheduleId) :
+                new ObjectParameter("RiskBatchScheduleId", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<fnGetBatchTradeAndRiskAverages_Result>("[GatewayEntities].[fnGetBatchTradeAndRiskAverages](@EvaluationDate, @ScheduleId, @RiskBatchScheduleId)", evaluationDateParameter, scheduleIdParameter, riskBatchScheduleIdParameter);
+        }
+    
+        [DbFunction("GatewayEntities", "fnGetValidAveragingDates")]
+        public virtual IQueryable<Nullable<System.DateTime>> fnGetValidAveragingDates(Nullable<System.DateTime> evaluationDate, Nullable<int> sampleSize)
+        {
+            var evaluationDateParameter = evaluationDate.HasValue ?
+                new ObjectParameter("EvaluationDate", evaluationDate) :
+                new ObjectParameter("EvaluationDate", typeof(System.DateTime));
+    
+            var sampleSizeParameter = sampleSize.HasValue ?
+                new ObjectParameter("SampleSize", sampleSize) :
+                new ObjectParameter("SampleSize", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<Nullable<System.DateTime>>("[GatewayEntities].[fnGetValidAveragingDates](@EvaluationDate, @SampleSize)", evaluationDateParameter, sampleSizeParameter);
+        }
+    
+        public virtual int LogToTable(Nullable<long> jobID, Nullable<System.DateTime> businessDate, string logStatus, string storedProcedure, string message)
+        {
+            var jobIDParameter = jobID.HasValue ?
+                new ObjectParameter("JobID", jobID) :
+                new ObjectParameter("JobID", typeof(long));
+    
+            var businessDateParameter = businessDate.HasValue ?
+                new ObjectParameter("BusinessDate", businessDate) :
+                new ObjectParameter("BusinessDate", typeof(System.DateTime));
+    
+            var logStatusParameter = logStatus != null ?
+                new ObjectParameter("LogStatus", logStatus) :
+                new ObjectParameter("LogStatus", typeof(string));
+    
+            var storedProcedureParameter = storedProcedure != null ?
+                new ObjectParameter("StoredProcedure", storedProcedure) :
+                new ObjectParameter("StoredProcedure", typeof(string));
+    
+            var messageParameter = message != null ?
+                new ObjectParameter("Message", message) :
+                new ObjectParameter("Message", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("LogToTable", jobIDParameter, businessDateParameter, logStatusParameter, storedProcedureParameter, messageParameter);
+        }
+    
+        public virtual int sp_alterdiagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)
+        {
+            var diagramnameParameter = diagramname != null ?
+                new ObjectParameter("diagramname", diagramname) :
+                new ObjectParameter("diagramname", typeof(string));
+    
+            var owner_idParameter = owner_id.HasValue ?
+                new ObjectParameter("owner_id", owner_id) :
+                new ObjectParameter("owner_id", typeof(int));
+    
+            var versionParameter = version.HasValue ?
+                new ObjectParameter("version", version) :
+                new ObjectParameter("version", typeof(int));
+    
+            var definitionParameter = definition != null ?
+                new ObjectParameter("definition", definition) :
+                new ObjectParameter("definition", typeof(byte[]));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_alterdiagram", diagramnameParameter, owner_idParameter, versionParameter, definitionParameter);
+        }
+    
+        public virtual int sp_creatediagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)
+        {
+            var diagramnameParameter = diagramname != null ?
+                new ObjectParameter("diagramname", diagramname) :
+                new ObjectParameter("diagramname", typeof(string));
+    
+            var owner_idParameter = owner_id.HasValue ?
+                new ObjectParameter("owner_id", owner_id) :
+                new ObjectParameter("owner_id", typeof(int));
+    
+            var versionParameter = version.HasValue ?
+                new ObjectParameter("version", version) :
+                new ObjectParameter("version", typeof(int));
+    
+            var definitionParameter = definition != null ?
+                new ObjectParameter("definition", definition) :
+                new ObjectParameter("definition", typeof(byte[]));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_creatediagram", diagramnameParameter, owner_idParameter, versionParameter, definitionParameter);
+        }
+    
+        public virtual int sp_dropdiagram(string diagramname, Nullable<int> owner_id)
+        {
+            var diagramnameParameter = diagramname != null ?
+                new ObjectParameter("diagramname", diagramname) :
+                new ObjectParameter("diagramname", typeof(string));
+    
+            var owner_idParameter = owner_id.HasValue ?
+                new ObjectParameter("owner_id", owner_id) :
+                new ObjectParameter("owner_id", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_dropdiagram", diagramnameParameter, owner_idParameter);
+        }
+    
+        public virtual ObjectResult<sp_helpdiagramdefinition_Result> sp_helpdiagramdefinition(string diagramname, Nullable<int> owner_id)
+        {
+            var diagramnameParameter = diagramname != null ?
+                new ObjectParameter("diagramname", diagramname) :
+                new ObjectParameter("diagramname", typeof(string));
+    
+            var owner_idParameter = owner_id.HasValue ?
+                new ObjectParameter("owner_id", owner_id) :
+                new ObjectParameter("owner_id", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_helpdiagramdefinition_Result>("sp_helpdiagramdefinition", diagramnameParameter, owner_idParameter);
+        }
+    
+        public virtual ObjectResult<sp_helpdiagrams_Result> sp_helpdiagrams(string diagramname, Nullable<int> owner_id)
+        {
+            var diagramnameParameter = diagramname != null ?
+                new ObjectParameter("diagramname", diagramname) :
+                new ObjectParameter("diagramname", typeof(string));
+    
+            var owner_idParameter = owner_id.HasValue ?
+                new ObjectParameter("owner_id", owner_id) :
+                new ObjectParameter("owner_id", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_helpdiagrams_Result>("sp_helpdiagrams", diagramnameParameter, owner_idParameter);
+        }
+    
+        public virtual int sp_renamediagram(string diagramname, Nullable<int> owner_id, string new_diagramname)
+        {
+            var diagramnameParameter = diagramname != null ?
+                new ObjectParameter("diagramname", diagramname) :
+                new ObjectParameter("diagramname", typeof(string));
+    
+            var owner_idParameter = owner_id.HasValue ?
+                new ObjectParameter("owner_id", owner_id) :
+                new ObjectParameter("owner_id", typeof(int));
+    
+            var new_diagramnameParameter = new_diagramname != null ?
+                new ObjectParameter("new_diagramname", new_diagramname) :
+                new ObjectParameter("new_diagramname", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_renamediagram", diagramnameParameter, owner_idParameter, new_diagramnameParameter);
+        }
+    
+        public virtual int sp_upgraddiagrams()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_upgraddiagrams");
+        }
+    
+        public virtual int spCaptureBatchCosts(Nullable<System.DateTime> batchDate)
+        {
+            var batchDateParameter = batchDate.HasValue ?
+                new ObjectParameter("BatchDate", batchDate) :
+                new ObjectParameter("BatchDate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("spCaptureBatchCosts", batchDateParameter);
+        }
+    
+        public virtual ObjectResult<spCreateEcho_Result> spCreateEcho(Nullable<System.Guid> correlationId, string user, string applicationName, string site, string calculationName, Nullable<System.DateTime> started, Nullable<System.DateTime> valuationDate, string parameters)
+        {
+            var correlationIdParameter = correlationId.HasValue ?
+                new ObjectParameter("CorrelationId", correlationId) :
+                new ObjectParameter("CorrelationId", typeof(System.Guid));
+    
+            var userParameter = user != null ?
+                new ObjectParameter("User", user) :
+                new ObjectParameter("User", typeof(string));
+    
+            var applicationNameParameter = applicationName != null ?
+                new ObjectParameter("ApplicationName", applicationName) :
+                new ObjectParameter("ApplicationName", typeof(string));
+    
+            var siteParameter = site != null ?
+                new ObjectParameter("Site", site) :
+                new ObjectParameter("Site", typeof(string));
+    
+            var calculationNameParameter = calculationName != null ?
+                new ObjectParameter("CalculationName", calculationName) :
+                new ObjectParameter("CalculationName", typeof(string));
+    
+            var startedParameter = started.HasValue ?
+                new ObjectParameter("Started", started) :
+                new ObjectParameter("Started", typeof(System.DateTime));
+    
+            var valuationDateParameter = valuationDate.HasValue ?
+                new ObjectParameter("ValuationDate", valuationDate) :
+                new ObjectParameter("ValuationDate", typeof(System.DateTime));
+    
+            var parametersParameter = parameters != null ?
+                new ObjectParameter("Parameters", parameters) :
+                new ObjectParameter("Parameters", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spCreateEcho_Result>("spCreateEcho", correlationIdParameter, userParameter, applicationNameParameter, siteParameter, calculationNameParameter, startedParameter, valuationDateParameter, parametersParameter);
+        }
+    
+        public virtual int spGetAllTradeAndRiskAverages(Nullable<System.DateTime> evaluationDate)
+        {
+            var evaluationDateParameter = evaluationDate.HasValue ?
+                new ObjectParameter("EvaluationDate", evaluationDate) :
+                new ObjectParameter("EvaluationDate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("spGetAllTradeAndRiskAverages", evaluationDateParameter);
+        }
+    
+        public virtual ObjectResult<spGetBatchCosts_Result> spGetBatchCosts(Nullable<System.DateTime> reportDate)
+        {
+            var reportDateParameter = reportDate.HasValue ?
+                new ObjectParameter("ReportDate", reportDate) :
+                new ObjectParameter("ReportDate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetBatchCosts_Result>("spGetBatchCosts", reportDateParameter);
+        }
+    
+        public virtual ObjectResult<spGetBatchSummary_Result> spGetBatchSummary(Nullable<System.DateTime> fromDateTime, Nullable<System.DateTime> toDateTime)
+        {
+            var fromDateTimeParameter = fromDateTime.HasValue ?
+                new ObjectParameter("fromDateTime", fromDateTime) :
+                new ObjectParameter("fromDateTime", typeof(System.DateTime));
+    
+            var toDateTimeParameter = toDateTime.HasValue ?
+                new ObjectParameter("toDateTime", toDateTime) :
+                new ObjectParameter("toDateTime", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetBatchSummary_Result>("spGetBatchSummary", fromDateTimeParameter, toDateTimeParameter);
+        }
+    
+        public virtual ObjectResult<spGetBatchTradeAndRiskAverages_Result> spGetBatchTradeAndRiskAverages(Nullable<System.DateTime> evaluationDate, Nullable<long> scheduleId, Nullable<long> riskBatchScheduleId)
+        {
+            var evaluationDateParameter = evaluationDate.HasValue ?
+                new ObjectParameter("EvaluationDate", evaluationDate) :
+                new ObjectParameter("EvaluationDate", typeof(System.DateTime));
+    
+            var scheduleIdParameter = scheduleId.HasValue ?
+                new ObjectParameter("ScheduleId", scheduleId) :
+                new ObjectParameter("ScheduleId", typeof(long));
+    
+            var riskBatchScheduleIdParameter = riskBatchScheduleId.HasValue ?
+                new ObjectParameter("RiskBatchScheduleId", riskBatchScheduleId) :
+                new ObjectParameter("RiskBatchScheduleId", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetBatchTradeAndRiskAverages_Result>("spGetBatchTradeAndRiskAverages", evaluationDateParameter, scheduleIdParameter, riskBatchScheduleIdParameter);
+        }
+    
+        public virtual ObjectResult<spGetControllerShaping_Result> spGetControllerShaping(string controller)
+        {
+            var controllerParameter = controller != null ?
+                new ObjectParameter("Controller", controller) :
+                new ObjectParameter("Controller", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetControllerShaping_Result>("spGetControllerShaping", controllerParameter);
+        }
+    
+        public virtual ObjectResult<spGetDeepDive_Result> spGetDeepDive(string correlationId, string controller, string keyword, Nullable<bool> searchResource, Nullable<bool> searchResultMessage, Nullable<bool> searchPayLoad, Nullable<bool> onlyShowErrors, Nullable<bool> runningChildren)
+        {
+            var correlationIdParameter = correlationId != null ?
+                new ObjectParameter("correlationId", correlationId) :
+                new ObjectParameter("correlationId", typeof(string));
+    
+            var controllerParameter = controller != null ?
+                new ObjectParameter("controller", controller) :
+                new ObjectParameter("controller", typeof(string));
+    
+            var keywordParameter = keyword != null ?
+                new ObjectParameter("Keyword", keyword) :
+                new ObjectParameter("Keyword", typeof(string));
+    
+            var searchResourceParameter = searchResource.HasValue ?
+                new ObjectParameter("SearchResource", searchResource) :
+                new ObjectParameter("SearchResource", typeof(bool));
+    
+            var searchResultMessageParameter = searchResultMessage.HasValue ?
+                new ObjectParameter("SearchResultMessage", searchResultMessage) :
+                new ObjectParameter("SearchResultMessage", typeof(bool));
+    
+            var searchPayLoadParameter = searchPayLoad.HasValue ?
+                new ObjectParameter("SearchPayLoad", searchPayLoad) :
+                new ObjectParameter("SearchPayLoad", typeof(bool));
+    
+            var onlyShowErrorsParameter = onlyShowErrors.HasValue ?
+                new ObjectParameter("OnlyShowErrors", onlyShowErrors) :
+                new ObjectParameter("OnlyShowErrors", typeof(bool));
+    
+            var runningChildrenParameter = runningChildren.HasValue ?
+                new ObjectParameter("RunningChildren", runningChildren) :
+                new ObjectParameter("RunningChildren", typeof(bool));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetDeepDive_Result>("spGetDeepDive", correlationIdParameter, controllerParameter, keywordParameter, searchResourceParameter, searchResultMessageParameter, searchPayLoadParameter, onlyShowErrorsParameter, runningChildrenParameter);
+        }
+    
+        public virtual ObjectResult<spGetDetailsForExecutedBatches_Result> spGetDetailsForExecutedBatches(Nullable<System.DateTime> evaluationDate)
+        {
+            var evaluationDateParameter = evaluationDate.HasValue ?
+                new ObjectParameter("EvaluationDate", evaluationDate) :
+                new ObjectParameter("EvaluationDate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetDetailsForExecutedBatches_Result>("spGetDetailsForExecutedBatches", evaluationDateParameter);
+        }
+    
+        public virtual int spGetPricingRequestTotalExecutionTime(Nullable<System.Guid> correlationId, ObjectParameter totalNodes, ObjectParameter totalExecutionTime)
+        {
+            var correlationIdParameter = correlationId.HasValue ?
+                new ObjectParameter("CorrelationId", correlationId) :
+                new ObjectParameter("CorrelationId", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("spGetPricingRequestTotalExecutionTime", correlationIdParameter, totalNodes, totalExecutionTime);
+        }
+    
+        public virtual ObjectResult<spGetRequestAverage_Result> spGetRequestAverage(string controller, string resource)
+        {
+            var controllerParameter = controller != null ?
+                new ObjectParameter("Controller", controller) :
+                new ObjectParameter("Controller", typeof(string));
+    
+            var resourceParameter = resource != null ?
+                new ObjectParameter("Resource", resource) :
+                new ObjectParameter("Resource", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetRequestAverage_Result>("spGetRequestAverage", controllerParameter, resourceParameter);
+        }
+    
+        public virtual int spGetRequestChildren(Nullable<System.Guid> correllationId)
+        {
+            var correllationIdParameter = correllationId.HasValue ?
+                new ObjectParameter("correllationId", correllationId) :
+                new ObjectParameter("correllationId", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("spGetRequestChildren", correllationIdParameter);
+        }
+    
+        public virtual ObjectResult<spGetRequestStatsAll_Result> spGetRequestStatsAll(Nullable<System.DateTime> start)
+        {
+            var startParameter = start.HasValue ?
+                new ObjectParameter("Start", start) :
+                new ObjectParameter("Start", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetRequestStatsAll_Result>("spGetRequestStatsAll", startParameter);
+        }
+    
+        public virtual ObjectResult<spGetRequestTimings_Result> spGetRequestTimings(Nullable<System.Guid> correlationId)
+        {
+            var correlationIdParameter = correlationId.HasValue ?
+                new ObjectParameter("correlationId", correlationId) :
+                new ObjectParameter("correlationId", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetRequestTimings_Result>("spGetRequestTimings", correlationIdParameter);
+        }
+    
+        public virtual ObjectResult<spGetStaleFilterRequests_Result> spGetStaleFilterRequests(Nullable<int> daysNotUsed)
+        {
+            var daysNotUsedParameter = daysNotUsed.HasValue ?
+                new ObjectParameter("DaysNotUsed", daysNotUsed) :
+                new ObjectParameter("DaysNotUsed", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetStaleFilterRequests_Result>("spGetStaleFilterRequests", daysNotUsedParameter);
+        }
+    
+        public virtual ObjectResult<spGetUsageReport_Result> spGetUsageReport(Nullable<System.DateTime> startDate)
+        {
+            var startDateParameter = startDate.HasValue ?
+                new ObjectParameter("startDate", startDate) :
+                new ObjectParameter("startDate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetUsageReport_Result>("spGetUsageReport", startDateParameter);
+        }
+    
+        public virtual ObjectResult<spGetUserUsageReportData_Result> spGetUserUsageReportData(Nullable<System.DateTime> startDate, Nullable<System.DateTime> endDate, string excludedControllers, string excludedUsers)
+        {
+            var startDateParameter = startDate.HasValue ?
+                new ObjectParameter("startDate", startDate) :
+                new ObjectParameter("startDate", typeof(System.DateTime));
+    
+            var endDateParameter = endDate.HasValue ?
+                new ObjectParameter("endDate", endDate) :
+                new ObjectParameter("endDate", typeof(System.DateTime));
+    
+            var excludedControllersParameter = excludedControllers != null ?
+                new ObjectParameter("excludedControllers", excludedControllers) :
+                new ObjectParameter("excludedControllers", typeof(string));
+    
+            var excludedUsersParameter = excludedUsers != null ?
+                new ObjectParameter("excludedUsers", excludedUsers) :
+                new ObjectParameter("excludedUsers", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetUserUsageReportData_Result>("spGetUserUsageReportData", startDateParameter, endDateParameter, excludedControllersParameter, excludedUsersParameter);
+        }
+    
+        public virtual ObjectResult<spGetWorkers_Result> spGetWorkers(Nullable<System.DateTime> queryTime, string controller, string version)
+        {
+            var queryTimeParameter = queryTime.HasValue ?
+                new ObjectParameter("queryTime", queryTime) :
+                new ObjectParameter("queryTime", typeof(System.DateTime));
+    
+            var controllerParameter = controller != null ?
+                new ObjectParameter("Controller", controller) :
+                new ObjectParameter("Controller", typeof(string));
+    
+            var versionParameter = version != null ?
+                new ObjectParameter("version", version) :
+                new ObjectParameter("version", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetWorkers_Result>("spGetWorkers", queryTimeParameter, controllerParameter, versionParameter);
+        }
+    
+        public virtual int TruncateLogFile(Nullable<long> jobID)
+        {
+            var jobIDParameter = jobID.HasValue ?
+                new ObjectParameter("JobID", jobID) :
+                new ObjectParameter("JobID", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("TruncateLogFile", jobIDParameter);
+        }
+    
+        public virtual int UpdateControllerVersions(string controllerName, string status)
+        {
+            var controllerNameParameter = controllerName != null ?
+                new ObjectParameter("ControllerName", controllerName) :
+                new ObjectParameter("ControllerName", typeof(string));
+    
+            var statusParameter = status != null ?
+                new ObjectParameter("Status", status) :
+                new ObjectParameter("Status", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("UpdateControllerVersions", controllerNameParameter, statusParameter);
+        }
+    
+        public virtual int UpsertControllerVersion(string controllerName, string version, string alias, string status)
+        {
+            var controllerNameParameter = controllerName != null ?
+                new ObjectParameter("ControllerName", controllerName) :
+                new ObjectParameter("ControllerName", typeof(string));
+    
+            var versionParameter = version != null ?
+                new ObjectParameter("Version", version) :
+                new ObjectParameter("Version", typeof(string));
+    
+            var aliasParameter = alias != null ?
+                new ObjectParameter("Alias", alias) :
+                new ObjectParameter("Alias", typeof(string));
+    
+            var statusParameter = status != null ?
+                new ObjectParameter("Status", status) :
+                new ObjectParameter("Status", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("UpsertControllerVersion", controllerNameParameter, versionParameter, aliasParameter, statusParameter);
+        }
+    
+        public virtual int WriteRequestChange(Nullable<System.Guid> correlationId, string status)
+        {
+            var correlationIdParameter = correlationId.HasValue ?
+                new ObjectParameter("CorrelationId", correlationId) :
+                new ObjectParameter("CorrelationId", typeof(System.Guid));
+    
+            var statusParameter = status != null ?
+                new ObjectParameter("Status", status) :
+                new ObjectParameter("Status", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("WriteRequestChange", correlationIdParameter, statusParameter);
+        }
+    
+        public virtual int WriteResponse(Nullable<System.Guid> correlationId, Nullable<System.DateTime> endUtc, Nullable<int> timeTakenMs, Nullable<int> resultCode, string resultMessage, Nullable<int> queueTimeMs, Nullable<int> size, string sizeUnit, string payloadType, byte[] payloadData, Nullable<long> payloadDataLength, string compressionType)
+        {
+            var correlationIdParameter = correlationId.HasValue ?
+                new ObjectParameter("CorrelationId", correlationId) :
+                new ObjectParameter("CorrelationId", typeof(System.Guid));
+    
+            var endUtcParameter = endUtc.HasValue ?
+                new ObjectParameter("EndUtc", endUtc) :
+                new ObjectParameter("EndUtc", typeof(System.DateTime));
+    
+            var timeTakenMsParameter = timeTakenMs.HasValue ?
+                new ObjectParameter("TimeTakenMs", timeTakenMs) :
+                new ObjectParameter("TimeTakenMs", typeof(int));
+    
+            var resultCodeParameter = resultCode.HasValue ?
+                new ObjectParameter("ResultCode", resultCode) :
+                new ObjectParameter("ResultCode", typeof(int));
+    
+            var resultMessageParameter = resultMessage != null ?
+                new ObjectParameter("ResultMessage", resultMessage) :
+                new ObjectParameter("ResultMessage", typeof(string));
+    
+            var queueTimeMsParameter = queueTimeMs.HasValue ?
+                new ObjectParameter("QueueTimeMs", queueTimeMs) :
+                new ObjectParameter("QueueTimeMs", typeof(int));
+    
+            var sizeParameter = size.HasValue ?
+                new ObjectParameter("Size", size) :
+                new ObjectParameter("Size", typeof(int));
+    
+            var sizeUnitParameter = sizeUnit != null ?
+                new ObjectParameter("SizeUnit", sizeUnit) :
+                new ObjectParameter("SizeUnit", typeof(string));
+    
+            var payloadTypeParameter = payloadType != null ?
+                new ObjectParameter("PayloadType", payloadType) :
+                new ObjectParameter("PayloadType", typeof(string));
+    
+            var payloadDataParameter = payloadData != null ?
+                new ObjectParameter("PayloadData", payloadData) :
+                new ObjectParameter("PayloadData", typeof(byte[]));
+    
+            var payloadDataLengthParameter = payloadDataLength.HasValue ?
+                new ObjectParameter("PayloadDataLength", payloadDataLength) :
+                new ObjectParameter("PayloadDataLength", typeof(long));
+    
+            var compressionTypeParameter = compressionType != null ?
+                new ObjectParameter("CompressionType", compressionType) :
+                new ObjectParameter("CompressionType", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("WriteResponse", correlationIdParameter, endUtcParameter, timeTakenMsParameter, resultCodeParameter, resultMessageParameter, queueTimeMsParameter, sizeParameter, sizeUnitParameter, payloadTypeParameter, payloadDataParameter, payloadDataLengthParameter, compressionTypeParameter);
+        }
+    
+        public virtual ObjectResult<GetBatches_Result> GetBatches(Nullable<System.DateTime> runDate)
+        {
+            var runDateParameter = runDate.HasValue ?
+                new ObjectParameter("runDate", runDate) :
+                new ObjectParameter("runDate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetBatches_Result>("GetBatches", runDateParameter);
+        }
+    
+        public virtual ObjectResult<spGetPayloadResponsesByController_Result> spGetPayloadResponsesByController(Nullable<System.Guid> correlationId, string controllerName)
+        {
+            var correlationIdParameter = correlationId.HasValue ?
+                new ObjectParameter("CorrelationId", correlationId) :
+                new ObjectParameter("CorrelationId", typeof(System.Guid));
+    
+            var controllerNameParameter = controllerName != null ?
+                new ObjectParameter("ControllerName", controllerName) :
+                new ObjectParameter("ControllerName", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetPayloadResponsesByController_Result>("spGetPayloadResponsesByController", correlationIdParameter, controllerNameParameter);
         }
     }
 }

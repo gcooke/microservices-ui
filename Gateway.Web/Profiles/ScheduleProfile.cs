@@ -1,10 +1,7 @@
 ﻿using AutoMapper;
 using Gateway.Web.Database;
+using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Schedule.Output;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace Gateway.Web.Profiles
 {
@@ -12,8 +9,9 @@ namespace Gateway.Web.Profiles
     {
         public ScheduleProfile()
         {
-            CreateMap<spGetHistoryTimingForSchedule_Result, HistoryTimingForScheduleViewModel > ().ReverseMap();
+            CreateMap<spGetHistoryTimingForSchedule_Result, HistoryTimingForScheduleViewModel>().ReverseMap();
+            CreateMap<spGetDeepDive_Result, DeepDiveDto>().ReverseMap();
+            CreateMap<spGetPayloads_Result, spGetPayloadResponsesByController_Result>().ReverseMap();
         }
-
     }
 }

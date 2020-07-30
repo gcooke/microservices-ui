@@ -9,11 +9,22 @@
 @{
     Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
     ViewBag.Title = "Request";
+    ViewBag.CustomTitle = Model.StartUtc.ToString("dd MMM yyyy")+ " - " +  Model.Controller ;
     ViewBag.Current = "Summary";
     var title = (string)Model.ParentCorrelationId.ToString();
 }
 @{ Html.RenderPartial("_RequestNav", (Summary)@Model); }
 
+<style>
+    .rowError {
+        background-color:tomato
+    }
+
+    table.table.table-striped tr.found td {
+    background-color:tomato;
+}
+</style>
+    
 <div id="page-content-wrapper">
     <div class="hero-unit">
 
@@ -53,12 +64,26 @@
             </tr>
             <tr>
                 <td class="columnheader">Correlation Id</td>
-                <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">@Model.CorrelationId</td>
+                <td style="        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+">
+                    @Model.CorrelationId
+                    @if (Model.CorrelationId != Guid.Empty)
+                    {
+                        <a href="~/Request/DeepDive?id=@Model.CorrelationId&controllername=@Model.Controller">
+                            <span class="glyphicon glyphicon-eye-open" title="Eye of Sauron"></span>
+                        </a>
+                    }
+                </td>
                 <td class="columnheader">Parent Correlation Id</td>
                 <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
                     @if (Model.ParentCorrelationId != Guid.Empty)
                     {
                         @Html.ActionLink(title, "Summary", "Request", new { correlationId = Model.ParentCorrelationId }, new { @class = "hoverlink" })
+                        <a href="~/Request/DeepDive?id=@Model.ParentCorrelationId">
+                            <span class="glyphicon glyphicon-eye-open" title="Eye of Sauron"></span>
+                        </a>
                     }
                 </td>
             </tr>
@@ -110,33 +135,31 @@
                 </tr>
             </table>
             <br />
-        }
+        }   
 
-        <br />
         <h3 class="text-lowercase">Actions</h3>
         @if (Model.IsBusy)
         {
-            @Html.ActionLink("Cancel", "Cancel", "Request", 
-                new { correlationId = Model.CorrelationId }, 
+            @Html.ActionLink("Cancel", "Cancel", "Request",
+                new { correlationId = Model.CorrelationId },
                 new { @class = "hoverlink", onclick = "return confirm('Are you sure you want to cancel this request?');" })
-            <br />
-            <br />
-            @Html.ActionLink("Retry", "Retry", "Request", 
-                new { correlationId = Model.CorrelationId }, 
+            <br />       
+            @Html.ActionLink("Retry", "Retry", "Request",
+                new { correlationId = Model.CorrelationId },
                 new { @class = "hoverlink", onclick = "return confirm('Are you sure you want to retry this running request?');" })
             <br />
         }
         else
         {
-            @Html.ActionLink("Rerun", "Rerun", "Request", 
-                new { correlationId = Model.CorrelationId }, 
+            @Html.ActionLink("Rerun", "Rerun", "Request",
+                new { correlationId = Model.CorrelationId },
                 new { @class = "hoverlink", onclick = "return confirm('Are you sure you want to re-enqueue a copy of this request?');" })
             <br />
         }
 
         @if (Model.HasChildren)
         {
-            <br />
+         
 
             <h3 class="text-lowercase">Child Requests</h3>
 
@@ -154,7 +177,12 @@
                 </thead>
                 @foreach (DetailRow row in Model.Items)
                 {
-                    <tr>
+                    var errorBackround = "";
+                    if (row.Size == 0 || row.SuccessfulCount == 0 || row.CompletedCount > @row.SuccessfulCount)
+                    {
+                        errorBackround = "background-color: lightcoral";
+                    }
+                    <tr style="@errorBackround">
                         <td>@row.Controller</td>
                         <td>@row.RequestCount</td>
                         <td>
@@ -169,5 +197,29 @@
                 }
             </table>
         }
+        @if (Model.ErrorRows.Count > 0)
+        {
+            <h3 class="text-lowercase">Payload Errors</h3>
+            <table style="width: 100%;" class="datatable">
+                <thead>
+                    <tr>
+                        <td></td>
+                        <td>Controller</td>
+                        <td>Unit</td>
+                        <td>Error</td>
+                    </tr>
+                </thead>
+                @foreach (var error in Model.ErrorRows)
+                {
+                    <tr>
+                        <td>  @Html.ActionLink(" ", "Summary", "Request", new { correlationId = error.CorrelationId, filter = error.Controller }, new { @class = "glyphicon glyphicon-share hoverlink", target = "_blank", title = "Open Link" })</td>
+                        <td>@error.Controller</td>
+                        <td>@error.ItemName</td>
+                        <td>@error.ErrorName</td>
+                    </tr>
+                }
+            </table>
+        }
+        <br />
     </div>
 </div>

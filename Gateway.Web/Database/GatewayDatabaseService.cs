@@ -1,4 +1,5 @@
 ﻿using Bagl.Cib.MIT.Cube;
+using Bagl.Cib.MIT.IO;
 using Bagl.Cib.MIT.IoC;
 using Bagl.Cib.MSF.ClientAPI.Model;
 using Bagl.Cib.MSF.Contracts.Model;
@@ -13,10 +14,12 @@ using Gateway.Web.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data.SqlTypes;
+using System.Data.Entity.Design.PluralizationServices;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Bagl.Cib.MIT.IO;
+using System.Xml.Linq;
 using QueueChartModel = Gateway.Web.Models.Controller.QueueChartModel;
 
 namespace Gateway.Web.Database
@@ -346,10 +349,10 @@ namespace Gateway.Web.Database
 
         private byte[] GetPayloadFromSever(spGetPayloads_Result payload)
         {
-            return GetPayloadFromFile(payload.CorrelationId,payload.Direction,payload.UpdateTime,payload.Server,payload.DataLengthBytes);
+            return GetPayloadFromFile(payload.CorrelationId, payload.Direction, payload.UpdateTime, payload.Server, payload.DataLengthBytes);
         }
 
-        private byte[] GetPayloadFromFile(Guid CorrelationId,string direction, DateTime UpdateTime, string server, long? dataLengthBytes)
+        private byte[] GetPayloadFromFile(Guid CorrelationId, string direction, DateTime UpdateTime, string server, long? dataLengthBytes)
         {
             var path = PayloadSeverPathFormat
                 .Replace("{server}", server)
@@ -370,7 +373,7 @@ namespace Gateway.Web.Database
                 {
                     var readbytes = 0;
 
-                    while((readbytes = stream.Read(data, numBytesRead, totalbytes-numBytesRead)) > 0)
+                    while ((readbytes = stream.Read(data, numBytesRead, totalbytes - numBytesRead)) > 0)
                     {
                         numBytesRead += readbytes;
                     }
@@ -379,7 +382,7 @@ namespace Gateway.Web.Database
                 return data;
             }
 
-            // Endless Read ? 
+            // Endless Read ?
             return null;
         }
 
@@ -387,7 +390,6 @@ namespace Gateway.Web.Database
         {
             return GetPayloadFromFile(payload.CorrelationId, payload.Direction, payload.UpdateTime, payload.Server, payload.DataLengthBytes);
         }
-
 
         private GatewayRequest GetRequest(Request model)
         {
@@ -410,8 +412,50 @@ namespace Gateway.Web.Database
             }
         }
 
+        private Dictionary<string, string> GetAllMarketDataPayloadErrors(Guid id)
+        {
+            var errorList = new Dictionary<string, string>();
+            var results = new List<spGetPayloadResponsesByController_Result>();
+            using (var database = new GatewayEntities(_connectionString))
+            {
+                var data = database.spGetPayloadResponsesByController(id, "marketdata");
+                results = data.ToList();
+            }
+
+            foreach (var item in results)
+            {
+                var payload = AutoMapper.Mapper.Map<spGetPayloads_Result>(item);
+                payload.Data = GetPayloadFromSever(payload);
+
+                var cube = new PayloadModel(payload);
+                if (cube.ContainsXmlResult)
+                {
+                    if (!cube.Data.StartsWith("<") || cube.Data.Contains("Download"))
+                        continue;
+
+                    var xml = XElement.Load(new StringReader(cube.Data));
+                    var ele = xml.Elements("MultiAnswer").Elements("SingleResponses");
+                    foreach (var element in ele.Elements("SingleResponse"))
+                    {
+                        if (element.Element("ErrorMessage") == null) continue;
+
+                        var errorMessage = element.Element("ErrorMessage").Value;
+                        if (!string.IsNullOrEmpty(errorMessage))
+                        {
+                            if (!errorList.ContainsKey(errorMessage))
+                                errorList.Add(errorMessage, item.CorrelationId.ToString());
+                        }
+                    }
+                }
+            }
+
+            return errorList;
+        }
+
         public Summary GetRequestSummary(string correlationId)
         {
+            var ci = new CultureInfo("en-us");
+            var ps = PluralizationService.CreateService(ci);
             var result = new Summary();
             var id = Guid.Parse(correlationId);
             using (var database = new GatewayEntities(_connectionString))
@@ -426,7 +470,50 @@ namespace Gateway.Web.Database
                 result.WallClockTime = (end - result.StartUtc).ToString("h'h 'm'm 's's'");
 
                 foreach (var item in database.spGetRequestChildSummary(id).OrderBy(r => r.MinStartUtc))
-                    result.Items.Add(item.ToModel());
+                {
+                    if (item.Controller == "marketdata" && item.LastCorrelationId.HasValue)
+                    {
+                        var marketDataPayloadErrors = GetAllMarketDataPayloadErrors(id);
+                        if (marketDataPayloadErrors.Count > 0)
+                            result.ErrorRows.AddRange(marketDataPayloadErrors.Select(x => new ErrorRow() { Controller = item.Controller, ErrorName = x.Key, ItemName = item.SizeUnit, CorrelationId = x.Value }));
+                    }
+
+                    var model = item.ToModel();
+                    if (model.Size.HasValue && model.Size == 1 && model.SizeUnit == "ICube")
+                    {
+                        var data = database.Payloads.FirstOrDefault(x => x.Direction == "Response" && x.CorrelationId == item.LastCorrelationId.Value);
+
+                        if (data != null)
+                        {
+                            data.Data = GetPayloadFromSever(data);
+                            var cube = new CubeModel(new PayloadData(data));
+
+                            model.Size = cube.RowCount;
+                            model.SizeUnit = ps.Pluralize(item.Controller);
+                        }
+                    }
+
+                    result.Items.Add(model);
+                }
+
+                var deepDiveSearch = new DeepDiveSearch()
+                {
+                    CorrelationId = id.ToString(),
+                    OnlyShowErrors = true
+                };
+
+                var deepDiveResult = GetDeepDive(deepDiveSearch).Where(x => x.PayloadId > 0 && x.PayloadType == PayloadType.Cube.ToString());
+                foreach (var item in deepDiveResult)
+                {
+                    var data = database.Payloads.FirstOrDefault(x => x.Id == item.PayloadId);
+                    if (data != null)
+                    {
+                        data.Data = GetPayloadFromSever(data);
+                        var cube = new CubeModel(new PayloadData(data));
+
+                        result.ErrorRows.AddRange(cube.Errors.Select(x => new ErrorRow() { Controller = item.Controller, ErrorName = x.Value, ItemName = string.Empty, CorrelationId = data.CorrelationId.ToString() }));
+                    }
+                }
             }
             return result;
         }
@@ -460,7 +547,7 @@ namespace Gateway.Web.Database
                 }
                 foreach (var item in database.spGetPayloads(id))
                 {
-                    if(!string.IsNullOrEmpty(item.Server))
+                    if (!string.IsNullOrEmpty(item.Server))
                         item.Data = GetPayloadFromSever(item);
 
                     result.Items.Add(new PayloadModel(item));
@@ -503,7 +590,7 @@ namespace Gateway.Web.Database
             {
                 var payload = database.Payloads.FirstOrDefault(p => p.Id == id);
 
-                if (payload!= null && !string.IsNullOrEmpty(payload.Server))
+                if (payload != null && !string.IsNullOrEmpty(payload.Server))
                     payload.Data = GetPayloadFromSever(payload);
 
                 return new PayloadData(payload);
@@ -1004,6 +1091,15 @@ namespace Gateway.Web.Database
                     Name = controller.Name.ToLower(),
                     Version = activeVersion?.Version1
                 };
+            }
+        }
+
+        public IList<DeepDiveDto> GetDeepDive(DeepDiveSearch deepDive)
+        {
+            using (var database = new GatewayEntities(_connectionString, 300))
+            {
+                var results = database.spGetDeepDive(deepDive.CorrelationId, deepDive.Controller, deepDive.Search, deepDive.SearchResource, deepDive.SearchResultMessage, deepDive.SearchPayload, deepDive.OnlyShowErrors, deepDive.RunningChildren);
+                return AutoMapper.Mapper.Map<List<DeepDiveDto>>(results.ToList());
             }
         }
     }

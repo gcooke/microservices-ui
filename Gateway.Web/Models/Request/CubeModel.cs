@@ -1,11 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web;
-using System.Web.UI.HtmlControls;
+﻿using System.Text;
 using Bagl.Cib.MIT.Cube;
 using Gateway.Web.Database;
+
+using System.Text;
+
+using System.Collections.Generic;
+using System.Linq;
+
+using System.Text;
 
 namespace Gateway.Web.Models.Request
 {
@@ -17,6 +19,7 @@ namespace Gateway.Web.Models.Request
         public CubeModel(PayloadData data)
         {
             _cube = CubeBuilder.FromBytes(data.GetCubeBytes());
+            Errors = new Dictionary<string, string>();
             RenderAttributes();
             RenderRows();
         }
@@ -25,6 +28,7 @@ namespace Gateway.Web.Models.Request
         {
             Header = header;
             _cube = cube;
+            Errors = new Dictionary<string, string>();
             RenderAttributes();
             RenderRows();
         }
@@ -33,8 +37,12 @@ namespace Gateway.Web.Models.Request
         {
             get { return !string.IsNullOrEmpty(Attributes); }
         }
+
         public string Attributes { get; private set; }
         public string Rows { get; private set; }
+        public int RowCount { get; private set; }
+
+        public Dictionary<string, string> Errors { get; private set; }
 
         private void RenderAttributes()
         {
@@ -65,13 +73,19 @@ namespace Gateway.Web.Models.Request
         private void RenderRows()
         {
             // Render rows
+            int? errorColoumnIndex = null;
             var builder = new StringBuilder();
+            int colIndex = 0;
+            RowCount = _cube.Rows;
             builder.AppendLine("<table class=\"datatable\">");
             builder.AppendLine("<thead>");
             builder.AppendLine("<tr>");
             foreach (var column in _cube.ColumnDefinitions)
             {
+                if (column.Name == "ErrorDescription")
+                    errorColoumnIndex = colIndex;
                 builder.Append($"<td>{column.Name}</td>");
+                colIndex++;
             }
             builder.AppendLine("</tr>");
             builder.AppendLine("</thead>");
@@ -82,6 +96,8 @@ namespace Gateway.Web.Models.Request
                 for (int index = 0; index < _cube.Columns; index++)
                 {
                     builder.Append($"<td>{row[index]}</td>");
+                    if (errorColoumnIndex.HasValue && errorColoumnIndex == index && !string.IsNullOrEmpty(row[index]?.ToString()) && !Errors.ContainsKey(row[index].ToString()))
+                        Errors.Add(row[index].ToString(), row[index].ToString());
                 }
                 builder.AppendLine("</tr>");
             }
@@ -89,6 +105,5 @@ namespace Gateway.Web.Models.Request
             builder.AppendLine("</table>");
             Rows = builder.ToString();
         }
-
     }
 }

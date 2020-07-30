@@ -178,6 +178,9 @@
     <Reference Include="Pipelines.Sockets.Unofficial, Version=1.0.0.0, Culture=neutral, PublicKeyToken=42ea0a778e13fbe2, processorArchitecture=MSIL">
       <HintPath>..\packages\Pipelines.Sockets.Unofficial.2.0.22\lib\net461\Pipelines.Sockets.Unofficial.dll</HintPath>
     </Reference>
+    <Reference Include="Pluralize.NET, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Pluralize.NET.1.0.2\lib\net46\Pluralize.NET.dll</HintPath>
+    </Reference>
     <Reference Include="RabbitMQ.Client, Version=3.5.6.0, Culture=neutral, PublicKeyToken=89e7d7c5feba84ce, processorArchitecture=MSIL">
       <HintPath>..\packages\RabbitMQ.Client.3.5.6\lib\net40\RabbitMQ.Client.dll</HintPath>
     </Reference>
@@ -208,6 +211,7 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data.Entity.Design" />
     <Reference Include="System.Diagnostics.PerformanceCounter, Version=4.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Diagnostics.PerformanceCounter.4.5.0\lib\net461\System.Diagnostics.PerformanceCounter.dll</HintPath>
     </Reference>
@@ -435,25 +439,97 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ExecutableScheduleController.cs" />
     <Compile Include="Controllers\BatchScheduleController.cs" />
+    <Compile Include="Database\CheckFileSizes_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\DelimitedSplit8K_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\fnGetBatchTradeAndRiskAverages_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\GetBatches_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\Payload.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
     <Compile Include="Database\spBatchOverridesReport_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\spCreateEcho_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\spGetBatchCosts_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\spGetBatchSummary_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\spGetBatchTradeAndRiskAverages_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\spGetControllerShaping_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\spGetDeepDive_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\spGetDetailsForExecutedBatches_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\spGetPayloadResponsesByController_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\spGetPodConfiguration_Result.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\spGetRangeUserRequests_Result.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
+    <Compile Include="Database\spGetRequestAverage_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\spGetRequestStatsAll_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\spGetRequestTimings_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\spGetStaleFilterRequests_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\spGetUsageReport_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
     <Compile Include="Database\spGetUserRequestSummary_Result.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
+    <Compile Include="Database\spGetUserUsageReportData_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\spGetWorkers_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\sp_helpdiagramdefinition_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\sp_helpdiagrams_Result.cs">
+      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Enums\SigmaController.cs" />
     <Compile Include="Models\Batches\BatchSettingsReport.cs" />
     <Compile Include="Models\Batches\CalcStateParameters.cs" />
     <Compile Include="Models\Batches\CostGroupBatchCost.cs" />
     <Compile Include="Models\Batches\CostGroupMonthlyBatchCost.cs" />
     <Compile Include="Models\Batches\EchoCreationDto.cs" />
     <Compile Include="Models\Controllers\ControllerDetail.cs" />
+    <Compile Include="Models\Controller\DeepDiveDto.cs" />
     <Compile Include="Models\Redis\RedisHealth.cs" />
     <Compile Include="Models\Redis\RedisStats.cs" />
     <Compile Include="Models\Redis\RedisStatsViewModel.cs" />
     <Compile Include="Models\Redis\RedisSummary.cs" />
+    <Compile Include="Models\Request\DeepDive.cs" />
     <Compile Include="Models\Request\XvaResultModel.cs" />
     <Compile Include="Models\User\ChartModel.cs" />
     <Compile Include="Services\Batches\BatchCosts\BatchCostsService.cs" />
@@ -510,9 +586,6 @@
       <DependentUpon>PnRFO.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\Link.cs">
-      <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Database\Payload.cs">
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\PnRFO.partial.cs" />
@@ -1218,6 +1291,8 @@
     <Content Include="Views\Batch\SettingsReport.cshtml" />
     <Content Include="Views\Shared\_EmptyNav.cshtml" />
     <Content Include="Views\User\Chart.cshtml" />
+    <Content Include="Views\Request\DeepDive.cshtml" />
+    <Content Include="Views\Request\ViewPayLoad.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />

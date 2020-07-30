@@ -1,22 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Web.Mvc;
-using System.Xml.Linq;
+﻿using System.Text;
 using Bagl.Cib.MIT.Cube;
 using Bagl.Cib.MIT.Logging;
 using Bagl.Cib.MSF.ClientAPI.Model;
 using Bagl.Cib.MSF.Contracts.Model;
 using Gateway.Web.Authorization;
 using Gateway.Web.Database;
+using Gateway.Web.Enums;
 using Gateway.Web.Helpers;
 using Gateway.Web.Models.Controller;
 using Gateway.Web.Models.Request;
 using Gateway.Web.Services;
 using Gateway.Web.Utils;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+using System.Text;
+
+using System.Threading;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Mvc;
+using System.Xml.Linq;
 
 namespace Gateway.Web.Controllers
 {
@@ -178,6 +183,34 @@ namespace Gateway.Web.Controllers
             return View("Cube", model);
         }
 
+        public ActionResult ViewPayLoad(string correlationId, long payloadId, string controllername)
+        {
+            var data = _dataService.GetPayload(payloadId);
+
+            if (controllername.ToLower() == SigmaController.CounterpartyXVA.ToString().ToLower() && data.Direction == "Response")
+            {
+                var bytes = data.GetBytes();
+                var str = Encoding.UTF8.GetString(bytes);
+                var xvamodel = new XvaResultModel(str, correlationId, payloadId);
+
+                var report = xvamodel.Reports.FirstOrDefault(x => x.Key.Contains("XVA Counterparty Validation"));
+
+                var cubeBytes = Convert.FromBase64String(report.Value);
+                var cube = CubeBuilder.FromBytes(cubeBytes);
+                return View("Cube", new CubeModel(cube, "XVA Counterparty Validation"));
+            }
+            var model = new PayloadModel(new spGetPayloads_Result()
+            {
+                PayloadType = data.PayloadType,
+                CompressionType = data.CompressionType,
+                DataLengthBytes = data.DataLengthBytes,
+                Data = data.Data,
+                Direction = data.Direction
+            });
+
+            return View("ViewPayLoad", model);
+        }
+
         public ActionResult ViewXvaResult(string correlationId, long payloadId)
         {
             var data = _dataService.GetPayload(payloadId);
@@ -265,6 +298,179 @@ namespace Gateway.Web.Controllers
 
             var model = _statisticsService.GetTimings(correlationId);
             return View(model);
+        }
+
+        public ActionResult DeepDive(string id, string controllername)
+        {
+            Guid correlationId;
+
+            var model = new DeepDive()
+            {
+                Controller = controllername,
+                DeepDiveResults = new List<DeepDiveDto>(),
+                DeepDiveSearch = new DeepDiveSearch()
+                {
+                    CorrelationId = id,
+                    OnlyShowErrors = true
+                }
+            };
+
+            if (Guid.TryParse(id, out correlationId))
+                model.CorrelationId = correlationId;
+
+            GetDeepDiveResults(model);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult DeepDive()
+        {
+            Guid correlationId;
+            var model = new DeepDive();
+
+            model.DeepDiveSearch = GetDeepDiveSearch(Request);
+
+            if (Guid.TryParse(model.DeepDiveSearch?.CorrelationId, out correlationId))
+                model.CorrelationId = correlationId;
+
+            GetDeepDiveResults(model);
+            ApplySorting(model);
+
+            return View(model);
+        }
+
+        private static void ApplySorting(DeepDive model)
+        {
+            var sortName = model.DeepDiveSearch.SortOrder.Replace("_Desc", "");
+            var isDescending = model.DeepDiveSearch.SortOrder.Contains("_Desc");
+
+            switch (sortName)
+            {
+                case "Controller":
+                    if (isDescending)
+                        model.DeepDiveResults = model.DeepDiveResults.OrderByDescending(x => x.Controller).ToList();
+                    else
+                        model.DeepDiveResults = model.DeepDiveResults.OrderBy(x => x.Controller).ToList();
+                    break;
+
+                case "Resource":
+                    if (isDescending)
+                        model.DeepDiveResults = model.DeepDiveResults.OrderByDescending(x => x.Resource).ToList();
+                    else
+                        model.DeepDiveResults = model.DeepDiveResults.OrderBy(x => x.Resource).ToList();
+                    break;
+
+                case "TimeTakenInMs":
+                    if (isDescending)
+                        model.DeepDiveResults = model.DeepDiveResults.OrderByDescending(x => x.TimeTakenInMs).ToList();
+                    else
+                        model.DeepDiveResults = model.DeepDiveResults.OrderBy(x => x.TimeTakenInMs).ToList();
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        private void GetDeepDiveResults(DeepDive model)
+        {
+            var result = _dataService.GetDeepDive(model.DeepDiveSearch);
+
+            if (model.DeepDiveSearch.SearchPayload)
+            {
+                var updatedResults = new List<DeepDiveDto>();
+                foreach (var item in result)
+                {
+                    if (item.PayloadId.HasValue && item.PayloadId > 0 && !string.IsNullOrEmpty(model?.DeepDiveSearch?.Search))
+                    {
+                        var payload = _dataService.GetPayload(item.PayloadId.Value);
+                        if (payload == null)
+                            continue;
+
+                        var payloadTypeValue = (PayloadType)Enum.Parse((typeof(PayloadType)), payload.PayloadType);
+                        switch (payloadTypeValue)
+                        {
+                            case PayloadType.JObject:
+                            case PayloadType.Unknown:
+                            case PayloadType.String:
+                            case PayloadType.XElement:
+
+                                var payloadModel = new PayloadModel(new spGetPayloads_Result()
+                                {
+                                    PayloadType = payload.PayloadType,
+                                    CompressionType = payload.CompressionType,
+                                    DataLengthBytes = payload.DataLengthBytes,
+                                    Data = payload.Data,
+                                    Direction = payload.Direction
+                                });
+
+                                if (payloadModel.Data.Contains(model.DeepDiveSearch.Search))
+                                    updatedResults.Add(item);
+                                break;
+
+                            case PayloadType.Binary:
+                                break;
+
+                            case PayloadType.Cube:
+                                var cubeModel = new CubeModel(payload);
+                                var rows = cubeModel.Rows;
+                                if (rows.Contains(model.DeepDiveSearch.Search))
+                                    updatedResults.Add(item);
+                                break;
+
+                            case PayloadType.MultiPart:
+                                break;
+
+                            default:
+                                updatedResults.Add(item);
+                                break;
+                        }
+                    }
+                }
+                model.DeepDiveResults = updatedResults;
+            }
+            else
+            {
+                model.DeepDiveResults = result.ToList();
+            }
+        }
+
+        private DeepDiveSearch GetDeepDiveSearch(HttpRequestBase request)
+        {
+            var controller = request.Form["DeepDiveSearch.Controller"];
+            var keyword = request.Form["DeepDiveSearch.Search"];
+            var id = request.Form["DeepDiveSearch.CorrelationId"];
+            var sortDirection = request.Form["SortDirection"];
+            var searchResource = (request.Form["DeepDiveSearch.SearchResource"] == null || request.Form["DeepDiveSearch.SearchResource"] == "false") ? false : true;
+            var searchMessage = (request.Form["DeepDiveSearch.SearchResultMessage"] == null || request.Form["DeepDiveSearch.SearchResultMessage"] == "false") ? false : true;
+            var searchPayload = (request.Form["DeepDiveSearch.SearchPayload"] == null || request.Form["DeepDiveSearch.SearchPayload"] == "false") ? false : true;
+            var onlyShowErrors = (request.Form["DeepDiveSearch.OnlyShowErrors"] == null || request.Form["DeepDiveSearch.OnlyShowErrors"] == "false") ? false : true;
+            var runningChildren = (request.Form["DeepDiveSearch.RunningChildren"] == null || request.Form["DeepDiveSearch.RunningChildren"] == "false") ? false : true;
+
+            if (sortDirection.Contains("_Desc"))
+                ViewBag.SortDirection = "";
+            else
+                ViewBag.SortDirection = "_Desc";
+
+            var model = new DeepDiveSearch()
+            {
+                CorrelationId = id,
+                SearchResultMessage = searchMessage,
+                SearchPayload = searchPayload,
+                SearchResource = searchResource,
+                OnlyShowErrors = onlyShowErrors,
+                SortOrder = sortDirection,
+                RunningChildren = runningChildren
+            };
+
+            if (!string.IsNullOrEmpty(keyword))
+                model.Search = keyword;
+
+            if (!string.IsNullOrEmpty(controller) && controller != "All")
+                model.Controller = controller;
+
+            return model;
         }
     }
 }

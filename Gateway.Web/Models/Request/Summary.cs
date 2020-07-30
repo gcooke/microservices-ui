@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Gateway.Web.Utils;
+using System;
 using System.Collections.Generic;
-using Gateway.Web.Utils;
 
 namespace Gateway.Web.Models.Request
 {
@@ -9,11 +9,12 @@ namespace Gateway.Web.Models.Request
         public Summary()
         {
             Items = new List<DetailRow>();
+            ErrorRows = new List<ErrorRow>();
         }
 
         public string WallClockTime { get; set; }
         public List<DetailRow> Items { get; private set; }
-
+        public List<ErrorRow> ErrorRows { get; private set; }
         public Guid CorrelationId { get; set; }
         public Guid ParentCorrelationId { get; set; }
         public string User { get; set; }
@@ -38,10 +39,12 @@ namespace Gateway.Web.Models.Request
         {
             get { return QueueTimeMs.FormatTimeTaken(true); }
         }
+
         public string TimeTakenFormatted
         {
             get { return TimeTakenMs.FormatTimeTaken(true); }
         }
+
         public bool IsBusy
         {
             get { return EndUtc == DateTime.MinValue; }
@@ -63,5 +66,13 @@ namespace Gateway.Web.Models.Request
         public int? Size { get; set; }
         public DateTime? MinStart { get; set; }
         public DateTime? MaxEnd { get; set; }
+    }
+
+    public class ErrorRow
+    {
+        public string Controller { get; set; }
+        public string ItemName { get; set; }
+        public string ErrorName { get; set; }
+        public string CorrelationId { get; set; }
     }
 }
