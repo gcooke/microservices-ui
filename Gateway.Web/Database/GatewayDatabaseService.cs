@@ -452,7 +452,7 @@ namespace Gateway.Web.Database
             return errorList;
         }
 
-        public Summary GetRequestSummary(string correlationId)
+        public Summary GetRequestSummary(string correlationId, bool includePayloadErrors = false)
         {
             var ci = new CultureInfo("en-us");
             var ps = PluralizationService.CreateService(ci);
@@ -471,7 +471,7 @@ namespace Gateway.Web.Database
 
                 foreach (var item in database.spGetRequestChildSummary(id).OrderBy(r => r.MinStartUtc))
                 {
-                    if (item.Controller == "marketdata" && item.LastCorrelationId.HasValue)
+                    if (includePayloadErrors && item.Controller == "marketdata" && item.LastCorrelationId.HasValue)
                     {
                         var marketDataPayloadErrors = GetAllMarketDataPayloadErrors(id);
                         if (marketDataPayloadErrors.Count > 0)
@@ -496,22 +496,25 @@ namespace Gateway.Web.Database
                     result.Items.Add(model);
                 }
 
-                var deepDiveSearch = new DeepDiveSearch()
+                if (includePayloadErrors)
                 {
-                    CorrelationId = id.ToString(),
-                    OnlyShowErrors = true
-                };
-
-                var deepDiveResult = GetDeepDive(deepDiveSearch).Where(x => x.PayloadId > 0 && x.PayloadType == PayloadType.Cube.ToString());
-                foreach (var item in deepDiveResult)
-                {
-                    var data = database.Payloads.FirstOrDefault(x => x.Id == item.PayloadId);
-                    if (data != null)
+                    var deepDiveSearch = new DeepDiveSearch()
                     {
-                        data.Data = GetPayloadFromSever(data);
-                        var cube = new CubeModel(new PayloadData(data));
+                        CorrelationId = id.ToString(),
+                        OnlyShowErrors = true
+                    };
 
-                        result.ErrorRows.AddRange(cube.Errors.Select(x => new ErrorRow() { Controller = item.Controller, ErrorName = x.Value, ItemName = string.Empty, CorrelationId = data.CorrelationId.ToString() }));
+                    var deepDiveResult = GetDeepDive(deepDiveSearch).Where(x => x.PayloadId > 0 && x.PayloadType == PayloadType.Cube.ToString());
+                    foreach (var item in deepDiveResult)
+                    {
+                        var data = database.Payloads.FirstOrDefault(x => x.Id == item.PayloadId);
+                        if (data != null)
+                        {
+                            data.Data = GetPayloadFromSever(data);
+                            var cube = new CubeModel(new PayloadData(data));
+
+                            result.ErrorRows.AddRange(cube.Errors.Select(x => new ErrorRow() { Controller = item.Controller, ErrorName = x.Value, ItemName = string.Empty, CorrelationId = data.CorrelationId.ToString() }));
+                        }
                     }
                 }
             }

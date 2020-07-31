@@ -51,7 +51,7 @@ namespace Gateway.Web.Database
 
         GatewayRequest GetRequestClone(string correlationId);
 
-        Summary GetRequestSummary(string correlationId);
+        Summary GetRequestSummary(string correlationId, bool includePayloadErrors = false);
 
         List<HistoryItem> GetRequestChildren(Guid correlationId);
 
