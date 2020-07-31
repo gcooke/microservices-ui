@@ -315,6 +315,24 @@ namespace Gateway.Web.Controllers
             return View(model);
         }
 
+        public ActionResult PayloadErrors(string id)
+        {
+            var summary = _dataService.GetRequestSummary(id, true);
+
+            var model = new PayloadErrors() { ErrorRows = new List<ErrorRow>() };
+            if (summary != null && summary.ErrorRows.Count > 0)
+            {
+                model.ErrorRows = summary.ErrorRows;
+            }
+
+            Guid correlationId;
+
+            if (Guid.TryParse(id, out correlationId))
+                model.CorrelationId = correlationId;
+
+            return View(model);
+        }
+
         public ActionResult DeepDive(string id, string controllername)
         {
             Guid correlationId;

@@ -1,0 +1,48 @@
+﻿@using Gateway.Web.Database
+@using Gateway.Web.Models
+@using Gateway.Web.Models.Controller
+@using Gateway.Web.Models.Request
+@using Gateway.Web.Utils
+@using Newtonsoft.Json
+@using Version = Gateway.Web.Models.Controller.Version
+@model PayloadErrors
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "Request";    
+    ViewBag.Current = "PayloadErrors";    
+}
+@{ Html.RenderPartial("_RequestNav", (PayloadErrors)@Model); }
+
+
+    <div id="page-content-wrapper">
+        <div class="hero-unit">
+
+            <h3 class="text-lowercase">Payload Errors</h3>
+            @if (Model.ErrorRows.Count > 0)
+            {
+                <table style="width: 100%;" class="datatable">
+                    <thead>
+                        <tr>
+                            <td></td>
+                            <td>Controller</td>
+                            <td>Unit</td>
+                            <td>Error</td>
+                        </tr>
+                    </thead>
+                    @foreach (var error in Model.ErrorRows)
+                    {
+                        <tr>
+                            <td>  @Html.ActionLink(" ", "Summary", "Request", new { correlationId = error.CorrelationId, filter = error.Controller }, new { @class = "glyphicon glyphicon-share hoverlink", target = "_blank", title = "Open Link" })</td>
+                            <td>@error.Controller</td>
+                            <td>@error.ItemName</td>
+                            <td>@error.ErrorName</td>
+                        </tr>
+                    }
+                </table>
+            }
+            else
+            { 
+                <h4 class="text-lowercase">No Payload Errors detected</h4>
+            }
+        </div>
+</div>
