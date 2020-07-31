@@ -300,6 +300,21 @@ namespace Gateway.Web.Controllers
             return View(model);
         }
 
+        public ActionResult BatchCompare(string id, string oldId)
+        {
+            var model = new BatchCompare()
+            {
+                CurrentSummary = new Summary(),
+                OldSummary = new Summary()
+            };
+
+            if (!string.IsNullOrEmpty(id))
+                model.CurrentSummary = _dataService.GetRequestSummary(id);
+            if (!string.IsNullOrEmpty(oldId))
+                model.OldSummary = _dataService.GetRequestSummary(oldId);
+            return View(model);
+        }
+
         public ActionResult DeepDive(string id, string controllername)
         {
             Guid correlationId;

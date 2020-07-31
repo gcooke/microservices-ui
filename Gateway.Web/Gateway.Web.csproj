@@ -529,6 +529,7 @@
     <Compile Include="Models\Redis\RedisStats.cs" />
     <Compile Include="Models\Redis\RedisStatsViewModel.cs" />
     <Compile Include="Models\Redis\RedisSummary.cs" />
+    <Compile Include="Models\Request\BatchCompare.cs" />
     <Compile Include="Models\Request\DeepDive.cs" />
     <Compile Include="Models\Request\XvaResultModel.cs" />
     <Compile Include="Models\User\ChartModel.cs" />
@@ -1293,6 +1294,7 @@
     <Content Include="Views\User\Chart.cshtml" />
     <Content Include="Views\Request\DeepDive.cshtml" />
     <Content Include="Views\Request\ViewPayLoad.cshtml" />
+    <Content Include="Views\Request\BatchCompare.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />

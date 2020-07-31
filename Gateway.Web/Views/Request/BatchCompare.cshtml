@@ -1,0 +1,314 @@
+﻿@using Gateway.Web.Helpers
+@using Gateway.Web.Models.Request
+
+@model BatchCompare
+    @{
+        Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+        ViewBag.Title = "Request";
+        ViewBag.Current = "BatchCompare";
+        var title = (string)Model.CurrentSummary.ParentCorrelationId.ToString();
+    }
+    @{ Html.RenderPartial("_RequestNav", (BatchCompare)@Model); }
+
+
+    <div id="page-content-wrapper">
+        <div class="hero-unit">
+            <h3 class="text-lowercase">Batch Compare</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <h3 class="text-lowercase">Current Batch</h3>
+                    <table style="width: 100%; white-space: nowrap" class="datatable">
+                        <tr>
+                            <td class="columnheader" style="width: 10%">Controller</td>
+                            <td style="width: 40%">
+                                <a href="~/Controller/History/@Model.CurrentSummary.Controller" class="hoverlink">@Model.CurrentSummary.Controller</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="columnheader" style="width: 10%">Version</td>
+                            <td style="width: 40%">@Model.CurrentSummary.Version</td>
+                        </tr>
+                        <tr>
+                            <td class="columnheader">Start Utc</td>
+                            <td>@Model.CurrentSummary.StartUtc</td>
+                        </tr>
+                        <tr>
+                            <td class="columnheader">End Utc</td>
+                            <td>
+                                @if (!Model.CurrentSummary.IsBusy)
+                                {
+                                    @Model.CurrentSummary.EndUtc
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="columnheader">Queue Time</td>
+                            <td>@Model.CurrentSummary.QueueTimeFormatted</td>
+                        </tr>
+                        <tr>
+                            <td class="columnheader">Time Taken</td>
+                            <td>@Model.CurrentSummary.TimeTakenFormatted</td>
+                        </tr>
+                        <tr>
+                            <td class="columnheader">User</td>
+                            <td>@Model.CurrentSummary.User</td>
+                        </tr>
+                        <tr>
+                            <td class="columnheader">Ip Address</td>
+                            <td>@Model.CurrentSummary.IpAddress</td>
+                        </tr>
+                        <tr>
+                            <td class="columnheader">Correlation Id</td>
+                            <td style="        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+">
+
+                                @Model.CurrentSummary.CorrelationId
+                                @if (Model.CurrentSummary.CorrelationId != Guid.Empty)
+                                {
+                                    <a href="~/Request/DeepDive?id=@Model.CurrentSummary.CorrelationId&controllername=@Model.CurrentSummary.Controller">
+                                        <span class="glyphicon glyphicon-eye-open" title="Eye of Sauron"></span>
+                                    </a>
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="columnheader">Parent Correlation Id</td>
+
+                            <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
+                                @if (Model.CurrentSummary.ParentCorrelationId != Guid.Empty)
+                                {
+                                    @Html.ActionLink(title, "Summary", "Request", new { correlationId = Model.CurrentSummary.ParentCorrelationId }, new { @class = "hoverlink" })
+                                    <a href="~/Request/DeepDive?id=@Model.CurrentSummary.ParentCorrelationId">
+                                        <span class="glyphicon glyphicon-eye-open" title="Eye of Sauron"></span>
+                                    </a>
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="columnheader">Resource</td>
+                            <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
+                                <div data-toggle="tooltip" title="@Model.CurrentSummary.Resource">
+                                    @if (string.IsNullOrEmpty(@Model.CurrentSummary.AdditionalInfo))
+                                    {
+                                        @Model.CurrentSummary.Resource
+                                    }
+                                    else
+                                    {
+                                        @Model.CurrentSummary.AdditionalInfo
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="columnheader">Request Type</td>
+                            <td>@Model.CurrentSummary.RequestType</td>
+                        </tr>
+                        <tr>
+                            <td class="columnheader">Priority</td>
+                            <td>@Model.CurrentSummary.Priority</td>
+                        </tr>
+                        <tr>
+                            <td class="columnheader">Is Async</td>
+                            <td>@Model.CurrentSummary.IsAsync</td>
+                        </tr>
+                        <tr>
+                            <td class="columnheader">Wall Clock Time</td>
+                            <td>@Model.CurrentSummary.WallClockTime</td>
+                        </tr>
+                        <tr>
+                            <td class="columnheader">Source System</td>
+                            <td>@Model.CurrentSummary.Client</td>
+                        </tr>
+                    </table>
+                    @if (Model.CurrentSummary.HasChildren)
+                    {
+
+
+                        <h3 class="text-lowercase">Child Requests</h3>
+
+                        <table style="width: 100%; white-space: nowrap" class="datatable">
+                            <thead>
+                                <tr>
+                                    <!--TODO: Click through to child requests-->
+                                    <td>Controller</td>
+                                    <td>Requests</td>
+                                    <td>Successful</td>
+                                    <td>Items</td>
+                                    <td>Time Taken</td>                                  
+                                </tr>
+                            </thead>
+                            @foreach (DetailRow row in Model.CurrentSummary.Items)
+                            {
+                                var errorBackround = "";
+                                if (row.Size == 0 || row.SuccessfulCount == 0 || row.CompletedCount > @row.SuccessfulCount)
+                                {
+                                    errorBackround = "background-color: lightcoral";
+                                }
+                                <tr style="@errorBackround">
+                                    <td>@row.Controller</td>
+                                    <td>@row.RequestCount</td>
+                                    <td>
+                                        <a href="@Url.Action("Children", "Request", new { correlationId = Model.CurrentSummary.CorrelationId, filter = row.Controller })" class="hoverlink">
+                                            (@row.SuccessfulCount / @row.CompletedCount)
+                                        </a>
+                                    </td>
+                                    <td>@row.Size @row.SizeUnit</td>
+                                    <td>Timetaken</td>
+                                
+                                </tr>
+                            }
+                        </table>
+                    }
+                </div>
+                <div class="col-md-6">
+                    <h3 class="text-lowercase">Old Batch</h3>
+                    <table style="width: 100%; white-space: nowrap" class="datatable">
+                        <tr>
+                            <td class="columnheader" style="width: 10%">Controller</td>
+                            <td style="width: 40%">
+                                <a href="~/Controller/History/@Model.OldSummary.Controller" class="hoverlink">@Model.OldSummary.Controller</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="columnheader" style="width: 10%">Version</td>
+                            <td style="width: 40%">@Model.OldSummary.Version</td>
+                        </tr>
+                        <tr>
+                            <td class="columnheader">Start Utc</td>
+                            <td>@Model.OldSummary.StartUtc</td>
+                        </tr>
+                        <tr>
+                            <td class="columnheader">End Utc</td>
+                            <td>
+                                @if (!Model.OldSummary.IsBusy)
+                                {
+                                    @Model.OldSummary.EndUtc
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="columnheader">Queue Time</td>
+                            <td>@Model.OldSummary.QueueTimeFormatted</td>
+                        </tr>
+                        <tr>
+                            <td class="columnheader">Time Taken</td>
+                            <td>@Model.OldSummary.TimeTakenFormatted</td>
+                        </tr>
+                        <tr>
+                            <td class="columnheader">User</td>
+                            <td>@Model.OldSummary.User</td>
+                        </tr>
+                        <tr>
+                            <td class="columnheader">Ip Address</td>
+                            <td>@Model.OldSummary.IpAddress</td>
+                        </tr>
+                        <tr>
+                            <td class="columnheader">Correlation Id</td>
+                            <td style="        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+">
+
+                                @Model.OldSummary.CorrelationId
+                                @if (Model.OldSummary.CorrelationId != Guid.Empty)
+                                {
+                                    <a href="~/Request/DeepDive?id=@Model.OldSummary.CorrelationId&controllername=@Model.OldSummary.Controller">
+                                        <span class="glyphicon glyphicon-eye-open" title="Eye of Sauron"></span>
+                                    </a>
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="columnheader">Parent Correlation Id</td>
+
+                            <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
+                                @if (Model.OldSummary.ParentCorrelationId != Guid.Empty)
+                                {
+                                    @Html.ActionLink(title, "Summary", "Request", new { correlationId = Model.OldSummary.ParentCorrelationId }, new { @class = "hoverlink" })
+                                    <a href="~/Request/DeepDive?id=@Model.OldSummary.ParentCorrelationId">
+                                        <span class="glyphicon glyphicon-eye-open" title="Eye of Sauron"></span>
+                                    </a>
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="columnheader">Resource</td>
+                            <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
+                                <div data-toggle="tooltip" title="@Model.OldSummary.Resource">
+                                    @if (string.IsNullOrEmpty(@Model.OldSummary.AdditionalInfo))
+                                    {
+                                        @Model.OldSummary.Resource
+                                    }
+                                    else
+                                    {
+                                        @Model.OldSummary.AdditionalInfo
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="columnheader">Request Type</td>
+                            <td>@Model.OldSummary.RequestType</td>
+                        </tr>
+                        <tr>
+                            <td class="columnheader">Priority</td>
+                            <td>@Model.OldSummary.Priority</td>
+                        </tr>
+                        <tr>
+                            <td class="columnheader">Is Async</td>
+                            <td>@Model.OldSummary.IsAsync</td>
+                        </tr>
+                        <tr>
+                            <td class="columnheader">Wall Clock Time</td>
+                            <td>@Model.OldSummary.WallClockTime</td>
+                        </tr>
+                        <tr>
+                            <td class="columnheader">Source System</td>
+                            <td>@Model.OldSummary.Client</td>
+                        </tr>
+                    </table>
+                    @if (Model.OldSummary.HasChildren)
+                    {
+
+
+                        <h3 class="text-lowercase">Child Requests</h3>
+
+                        <table style="width: 100%; white-space: nowrap" class="datatable">
+                            <thead>
+                                <tr>
+                                    <!--TODO: Click through to child requests-->
+                                    <td>Controller</td>
+                                    <td>Requests</td>
+                                    <td>Successful</td>
+                                    <td>Items</td>
+                                    <td>Time Taken</td>
+                                </tr>
+                            </thead>
+                            @foreach (DetailRow row in Model.OldSummary.Items)
+                            {
+                                var errorBackround = "";
+                                if (row.Size == 0 || row.SuccessfulCount == 0 || row.CompletedCount > @row.SuccessfulCount)
+                                {
+                                    errorBackround = "background-color: lightcoral";
+                                }
+                                <tr style="@errorBackround">
+                                    <td>@row.Controller</td>
+                                    <td>@row.RequestCount</td>
+                                    <td>
+                                        <a href="@Url.Action("Children", "Request", new { correlationId = Model.OldSummary.CorrelationId, filter = row.Controller })" class="hoverlink">
+                                            (@row.SuccessfulCount / @row.CompletedCount)
+                                        </a>
+                                    </td>
+                                    <td>@row.Size @row.SizeUnit</td>
+                                    <td>Timetaken</td>
+
+                                </tr>
+                            }
+                        </table>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
