@@ -20,6 +20,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Gateway.Web.Helpers;
 using QueueChartModel = Gateway.Web.Models.Controller.QueueChartModel;
 
 namespace Gateway.Web.Database
@@ -27,7 +28,6 @@ namespace Gateway.Web.Database
     public class GatewayDatabaseService : IGatewayDatabaseService
     {
         public const string UserRequestTimeFormat = "yyyyMMdd_HHmmss";
-        public const string PayloadSeverPathFormat = "\\\\{server}\\DATA\\Audit\\{requestdate}\\{direction}\\{correlationid}";
 
         private readonly string _connectionString;
         private readonly IRedisService _redisService;
@@ -337,7 +337,7 @@ namespace Gateway.Web.Database
                         var comp = (CompressionType)Enum.Parse(typeof(CompressionType), originalPayload.CompressionType);
 
                         if (!string.IsNullOrEmpty(originalPayload.Server))
-                            originalPayload.Data = GetPayloadFromSever(originalPayload);
+                            originalPayload.Data = PayloadFileRetrieval.GetPayloadFromSever(_fileService, originalPayload);
 
                         result.SetBody(originalPayload.Data, comp, originalPayload.PayloadType);
                     }
@@ -347,49 +347,7 @@ namespace Gateway.Web.Database
             }
         }
 
-        private byte[] GetPayloadFromSever(spGetPayloads_Result payload)
-        {
-            return GetPayloadFromFile(payload.CorrelationId, payload.Direction, payload.UpdateTime, payload.Server, payload.DataLengthBytes);
-        }
-
-        private byte[] GetPayloadFromFile(Guid CorrelationId, string direction, DateTime UpdateTime, string server, long? dataLengthBytes)
-        {
-            var path = PayloadSeverPathFormat
-                .Replace("{server}", server)
-                .Replace("{requestdate}", UpdateTime.ToString("yyyyMMdd"))
-                .Replace("{direction}", direction)
-                .Replace("{correlationid}", $"{CorrelationId}");
-
-            if (!_fileService.FileExists(path))
-                return null;
-
-            if (dataLengthBytes.HasValue)
-            {
-                var totalbytes = (int)dataLengthBytes.Value;
-                var data = new byte[totalbytes];
-                var numBytesRead = 0;
-
-                using (var stream = _fileService.OpenRead(path))
-                {
-                    var readbytes = 0;
-
-                    while ((readbytes = stream.Read(data, numBytesRead, totalbytes - numBytesRead)) > 0)
-                    {
-                        numBytesRead += readbytes;
-                    }
-                }
-
-                return data;
-            }
-
-            // Endless Read ?
-            return null;
-        }
-
-        private byte[] GetPayloadFromSever(Payload payload)
-        {
-            return GetPayloadFromFile(payload.CorrelationId, payload.Direction, payload.UpdateTime, payload.Server, payload.DataLengthBytes);
-        }
+        
 
         private GatewayRequest GetRequest(Request model)
         {
@@ -425,7 +383,7 @@ namespace Gateway.Web.Database
             foreach (var item in results)
             {
                 var payload = AutoMapper.Mapper.Map<spGetPayloads_Result>(item);
-                payload.Data = GetPayloadFromSever(payload);
+                payload.Data = PayloadFileRetrieval.GetPayloadFromSever(_fileService, payload);
 
                 var cube = new PayloadModel(payload);
                 if (cube.ContainsXmlResult)
@@ -485,7 +443,7 @@ namespace Gateway.Web.Database
 
                         if (data != null)
                         {
-                            data.Data = GetPayloadFromSever(data);
+                            data.Data = PayloadFileRetrieval.GetPayloadFromSever(_fileService, data);
                             var cube = new CubeModel(new PayloadData(data));
 
                             model.Size = cube.RowCount;
@@ -510,7 +468,7 @@ namespace Gateway.Web.Database
                         var data = database.Payloads.FirstOrDefault(x => x.Id == item.PayloadId);
                         if (data != null)
                         {
-                            data.Data = GetPayloadFromSever(data);
+                            data.Data = PayloadFileRetrieval.GetPayloadFromSever(_fileService, data);
                             var cube = new CubeModel(new PayloadData(data));
 
                             result.ErrorRows.AddRange(cube.Errors.Select(x => new ErrorRow() { Controller = item.Controller, ErrorName = x.Value, ItemName = string.Empty, CorrelationId = data.CorrelationId.ToString() }));
@@ -551,7 +509,7 @@ namespace Gateway.Web.Database
                 foreach (var item in database.spGetPayloads(id))
                 {
                     if (!string.IsNullOrEmpty(item.Server))
-                        item.Data = GetPayloadFromSever(item);
+                        item.Data = PayloadFileRetrieval.GetPayloadFromSever(_fileService, item);
 
                     result.Items.Add(new PayloadModel(item));
                 }
@@ -594,7 +552,7 @@ namespace Gateway.Web.Database
                 var payload = database.Payloads.FirstOrDefault(p => p.Id == id);
 
                 if (payload != null && !string.IsNullOrEmpty(payload.Server))
-                    payload.Data = GetPayloadFromSever(payload);
+                    payload.Data = PayloadFileRetrieval.GetPayloadFromSever(_fileService, payload);
 
                 return new PayloadData(payload);
             }

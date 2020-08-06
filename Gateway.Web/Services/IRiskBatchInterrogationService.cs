@@ -7,5 +7,7 @@ namespace Gateway.Web.Services
         void PopulateLookups(InterrogationModel model);
 
         void Analyze(InterrogationModel model);
+
+        XvaReportModel GetXvaReport(string correlationId, string reportDateString, string allRows);
     }
 }

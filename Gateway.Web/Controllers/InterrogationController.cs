@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Globalization;
+using System.Text;
 using System.Web.Mvc;
+using Bagl.Cib.MIT.Cube.Utils;
 using Bagl.Cib.MIT.Logging;
 using Gateway.Web.Authorization;
 using Gateway.Web.Models.Interrogation;
@@ -38,11 +40,28 @@ namespace Gateway.Web.Controllers
             model.TradeSource = tradeSource;
             model.BatchType = batchType;
             model.ReportDate = DateTime.ParseExact(reportDateString, "yyyy-MM-dd", CultureInfo.CurrentUICulture);
-            model.MinimumLevel = (MonitoringLevel) Enum.Parse(typeof(MonitoringLevel), minimumLevelInput);
+            model.MinimumLevel = (MonitoringLevel)Enum.Parse(typeof(MonitoringLevel), minimumLevelInput);
             _service.PopulateLookups(model);
             _service.Analyze(model);
 
             return View("RiskBatch", model);
+        }
+
+        public ActionResult XvaReport(string correlationId, string reportDateString, string allRows)
+        {
+            var model = _service.GetXvaReport(correlationId, reportDateString, allRows);
+            return View("XvaReport", model);
+        }
+
+        public FileResult DownloadXvaReport(string correlationId)
+        {
+            var model = _service.GetXvaReport(correlationId, string.Empty, "true");
+            var cube = model.BatchStatistics.Cube;
+            cube.Attributes.ClearAttributes();
+            var csv = cube.ToCsv();
+            var encoded = Encoding.UTF8.GetBytes(csv);
+
+            return File(encoded, "text/csv", $"XvaReport_{model.Date.Replace(" ", "_")}.csv");
         }
     }
 }

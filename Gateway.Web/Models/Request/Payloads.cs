@@ -109,10 +109,11 @@ namespace Gateway.Web.Models.Request
                 if (!payloadType.Equals("String", StringComparison.InvariantCultureIgnoreCase))
                     return false;
 
-                var xml = XElement.Load(new StringReader(data));
-                var scenarioResult = xml.Name.ToString().Equals("ScenarioResult", StringComparison.InvariantCultureIgnoreCase);
-
-                return scenarioResult;
+                return data.StartsWith("<scenarioresult", StringComparison.CurrentCultureIgnoreCase);
+                //var xml = XElement.Load(new StringReader(data));
+                //var scenarioResult = xml.Name.ToString().Equals("ScenarioResult", StringComparison.InvariantCultureIgnoreCase);
+                //
+                //return scenarioResult;
             }
             catch (Exception)
             {

@@ -1,0 +1,33 @@
+﻿@using Gateway.Web.Services.Batches.Interrogation.Models
+@using Gateway.Web.Utils
+@model Gateway.Web.Models.Interrogation.XvaReportModel
+<!-- Sidebar -->
+<div id="sidebar-wrapper">
+    <br />
+    <div style="margin-left: 10px; height: 50px">
+        <div style="float: left">
+            <img class="sidebar-img" src="@Url.Content(MvcApplication.ControllerIcon)" style="height: 48px">
+        </div>
+        <div style="float: left; margin-top: 5px">
+            <span class="sidebar-title">@ViewBag.Title</span><br />
+            <span class="sidebar-subtitle">@ViewBag.Current</span>
+        </div>
+    </div>
+    <div class="sidebar-navheader">
+        <strong>BATCHES</strong>
+    </div>
+
+    <ul class="sidebar-nav">
+        <li>
+            @foreach (var report in @Model.Reports)
+            {
+                <a href="~/Interrogation/XvaReport?correlationId=@report.CorrelationId&reportDateString=@report.BusinessDate&allRows=false"
+                   class="@(Model.CorrelationId == @report.CorrelationId ? "active" : "")">
+                    <span class="glyphicon glyphicon-th-list"></span>&nbsp;&nbsp; @report.BusinessDate <small>(@report.RunDateTime)</small>
+                </a>
+            }
+        </li>
+    </ul>
+
+</div>
+<!-- /#sidebar-wrapper -->

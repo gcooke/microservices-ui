@@ -61,6 +61,8 @@ namespace Gateway.Web.Utils
 
         public static string DecodeObject(Byte[] encodedBytes, string type)
         {
+            if (encodedBytes == null || encodedBytes.Length == 0) return null;
+
             if (IsGzipCompressed(encodedBytes))
             {
                 var payloadTypeValue = (PayloadType)Enum.Parse((typeof(PayloadType)), type);

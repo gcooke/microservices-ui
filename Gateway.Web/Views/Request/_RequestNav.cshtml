@@ -19,25 +19,31 @@
             <li>
                 <a href="~/Request/Summary?correlationId=@Model.CorrelationId"
                    class="@(ViewBag.Current == "Summary" ? "active" : "")">
-                    <span class="glyphicon glyphicon-transfer"></span>&nbsp;&nbsp;Summary
+                    <span class="glyphicon glyphicon-file"></span>&nbsp;&nbsp;Summary
                 </a>
             </li>
             <li>
                 <a href="~/Request/Transitions?correlationId=@Model.CorrelationId"
                    class="@(ViewBag.Current == "Transitions" ? "active" : "")">
-                    <span class="glyphicon glyphicon-transfer"></span>&nbsp;&nbsp;Transitions
+                    <span class="glyphicon glyphicon-random"></span>&nbsp;&nbsp;Transitions
                 </a>
-            </li>           
+            </li>
+            <li>
+                <a href="~/Request/Payloads?correlationId=@Model.CorrelationId"
+                   class="@(ViewBag.Current == "Payloads" ? "active" : "")">
+                    <span class="glyphicon glyphicon-folder-close"></span>&nbsp;&nbsp;Payloads
+                </a>
+            </li>
             <li>
                 <a href="~/Request/Children?correlationId=@Model.CorrelationId"
                    class="@(ViewBag.Current == "Children" ? "active" : "")">
-                    <span class="glyphicon glyphicon-transfer"></span>&nbsp;&nbsp;Children
+                    <span class="glyphicon glyphicon-th"></span>&nbsp;&nbsp;Children
                 </a>
             </li>
             <li>
                 <a href="~/Request/Timings?id=@Model.CorrelationId"
                    class="@(ViewBag.Current == "Timing" ? "active" : "")">
-                    <span class="glyphicon glyphicon-transfer"></span>&nbsp;&nbsp;Timing
+                    <span class="glyphicon glyphicon-time"></span>&nbsp;&nbsp;Timing
                 </a>
             </li>
         </ul>
@@ -47,27 +53,21 @@
         </div>
         <ul class="sidebar-nav">
             <li>
-                <a href="~/Request/Payloads?correlationId=@Model.CorrelationId"
-                   class="@(ViewBag.Current == "Payloads" ? "active" : "")">
-                    <span class="glyphicon glyphicon-transfer"></span>&nbsp;&nbsp;Payloads
-                </a>
-            </li>
-            <li>
                 <a href="~/Request/Logs?correlationId=@Model.CorrelationId"
                    class="@(ViewBag.Current == "Logs" ? "active" : "")">
-                    <span class="glyphicon glyphicon-transfer"></span>&nbsp;&nbsp;Logs
+                    <span class="glyphicon glyphicon-list"></span>&nbsp;&nbsp;Logs
                 </a>
             </li>
-            <li style="display:none">
+            <li style="display: none">
                 <a href="~/Request/BatchCompare?id=@Model.CorrelationId"
                    class="@(ViewBag.Current == "BatchCompare" ? "active" : "")">
-                    <span class="glyphicon glyphicon-transfer" title="Eye of Sauron"></span>&nbsp;&nbsp;BatchCompare
+                    <span class="glyphicon glyphicon-duplicate" title="Eye of Sauron"></span>&nbsp;&nbsp;BatchCompare
                 </a>
             </li>
             <li>
                 <a href="~/Request/PayloadErrors?id=@Model.CorrelationId"
                    class="@(ViewBag.Current == "PayloadErrors" ? "active" : "")">
-                    <span class="glyphicon glyphicon-warning-sign" ></span>&nbsp;&nbsp;Errors Summary
+                    <span class="glyphicon glyphicon-warning-sign"></span>&nbsp;&nbsp;Errors Summary
                 </a>
             </li>
             <li>

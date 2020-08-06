@@ -1,0 +1,40 @@
+﻿@using Gateway.Web.Services.Batches.Interrogation.Models.Enums
+@model Gateway.Web.Models.Interrogation.XvaReportModel
+@{
+    Layout = "~/Views/Shared/_Layout.NoFooter.cshtml";
+    ViewBag.Title = "XVA Report";
+    ViewBag.Current = @Model.Date;
+}
+@{ Html.RenderPartial("_XvaReportNav", @Model); }
+
+<div id="page-content-wrapper">
+    <div class="hero-unit">
+
+        <h3 class="text-lowercase">
+            XVA Report <small>@Model.Date</small>
+            @Html.ActionLink(" ", "DownloadXvaReport", "Interrogation", new { @correlationId = @Model.CorrelationId }, new { @class = "glyphicon glyphicon-download hoverlink", title = "Download (all rows)" })
+        </h3>
+
+
+        <div class="containerx bulk m-t-5">
+
+            @if (@Model.BatchStatistics != null)
+            {
+                <div style="margin-top: 20px;">
+                    @if (Model.BatchStatistics.HasAttributes)
+                    {
+                        @Html.Raw(@Model.BatchStatistics.Attributes)
+                        <br />
+                    }
+
+                    @if (!Model.IncludeAllRows)
+                    {
+                        <h4>Only error rows shown below - <a href="~/Interrogation/XvaReport?correlationId=@Model.CorrelationId&reportDateString=@Model.Date&allRows=true">show all</a></h4>
+                    }
+                    @Html.Raw(@Model.BatchStatistics.Rows)
+                </div>
+            }
+
+        </div>
+    </div>
+</div>

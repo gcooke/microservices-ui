@@ -55,6 +55,7 @@ namespace Gateway.Web.Database
         public byte[] GetBytes()
         {
             var data = LegacyCompession.DecodeObject(_model.Data, _model.PayloadType);
+            if (string.IsNullOrEmpty(data)) return new byte[0];
 
             // Fix for xml that is stored as string without line breaks. 
             if (_model.PayloadType == "String" && data.Length > 0 && data.StartsWith("<"))

@@ -518,6 +518,7 @@
       <DependentUpon>PnRFO_Gateway.tt</DependentUpon>
     </Compile>
     <Compile Include="Enums\SigmaController.cs" />
+    <Compile Include="Helpers\PayloadFileRetrieval.cs" />
     <Compile Include="Models\Batches\BatchSettingsReport.cs" />
     <Compile Include="Models\Batches\CalcStateParameters.cs" />
     <Compile Include="Models\Batches\CostGroupBatchCost.cs" />
@@ -525,6 +526,7 @@
     <Compile Include="Models\Batches\EchoCreationDto.cs" />
     <Compile Include="Models\Controllers\ControllerDetail.cs" />
     <Compile Include="Models\Controller\DeepDiveDto.cs" />
+    <Compile Include="Models\Interrogation\XvaReportModel.cs" />
     <Compile Include="Models\Redis\RedisHealth.cs" />
     <Compile Include="Models\Redis\RedisStats.cs" />
     <Compile Include="Models\Redis\RedisStatsViewModel.cs" />
@@ -1004,6 +1006,7 @@
     <Compile Include="Utils\Calculations.cs" />
     <Compile Include="Utils\Constants.cs" />
     <Compile Include="Utils\CronTabExpression.cs" />
+    <Compile Include="Utils\CubeEx.cs" />
     <Compile Include="Utils\DashboardEx.cs" />
     <Compile Include="Utils\DataContractSerializationEx.cs" />
     <Compile Include="Utils\DataMeasurementUtils.cs" />
@@ -1297,6 +1300,8 @@
     <Content Include="Views\Request\ViewPayLoad.cshtml" />
     <Content Include="Views\Request\BatchCompare.cshtml" />
     <Content Include="Views\Request\PayloadErrors.cshtml" />
+    <Content Include="Views\Interrogation\XvaReport.cshtml" />
+    <Content Include="Views\Interrogation\_XvaReportNav.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Users.cshtml" />

@@ -38,6 +38,7 @@ namespace Gateway.Web.Models.Request
             get { return !string.IsNullOrEmpty(Attributes); }
         }
 
+        public ICube Cube => _cube;
         public string Attributes { get; private set; }
         public string Rows { get; private set; }
         public int RowCount { get; private set; }
